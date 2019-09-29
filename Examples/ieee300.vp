@@ -1,0 +1,17 @@
+C 
+C                    IEEE 300 BUS AC TEST SYSTEM:
+C                        Voltage Profile Data
+C
+C This file is used to define the buses (-i option) for which the program
+C will print out the voltage (magnitude and angle) during the continuation 
+C method (-c and -H options). This output is then used to create the 
+C bifurcation diagram or "nose curve" with the help of any plotting 
+C program (e.g., MATLAB).
+C The unformatted data is given in the following order:
+C 
+C  BusNumber   Bus/AreaName  [VarType]
+      191         0
+192 0
+225 0
+221 0
+239 0

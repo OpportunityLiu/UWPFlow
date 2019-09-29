@@ -1,0 +1,41 @@
+C
+C                       173 BUS AC/DC TEST SYSTEM:
+C                       Steady State Generator Data
+C
+C
+C This file defines the internal impedances of generators and the armature
+C and rotor limits for a better steady state representation of generators 
+C in power flow and voltage collapse studies.
+C
+C The data is given in free format as follows:
+C
+C BusNumber  BusName   Ra         Xd        Xq    IaMax  EqMax  EqMin
+    0        BUS_2    0.0030     1.860     1.780   100   100      0
+    0        BUS_4    0.0030     1.810     1.730   100   100      0
+ 0 BUS_7   0.0036      1.76      1.58  100   100  0
+ 0 BUS_9   0.0020      1.70     1.650  100   100  0
+ 0 BUS_11   0.0019     1.760     1.680  100   100  0
+ 0 BUS_13   0.0035     1.980     1.850  100   100  0
+ 0 BUS_16   0.0020      1.67      1.61  100   100  0
+ 0 BUS_30   0.0020      0.90      0.60  100   100  0
+ 0 BUS_35   0.0030     1.825      1.78  100   100  0
+ 0 BUS_36   0.0047     2.070     1.990  100   100  0
+ 0 BUS_40   0.0014     0.995     0.568  100   100  0
+ 0 BUS_43   0.0016      1.70      1.62  100   100  0
+ 0 BUS_45   0.0014     1.990     1.900  100   100  0
+ 0 BUS_47   0.0037     0.619     0.365  100   100  0
+ 0 BUS_65   0.0013     1.236     1.222  100   100  0
+ 0 BUS_70   0.0040     0.890     0.500  100   100  0
+ 0 BUS_74   0.0036      0.93     0.651  100   100  0
+ 0 BUS_76   0.0020     0.638     0.424  200   100  0
+ 0 BUS_100   0.0030     2.129     2.074  100   100  0
+ 0 BUS_107   0.0062      1.05      0.67  100   100  0
+ 0 BUS_111   0.0020     0.750     0.530  100   100  0
+ 0 BUS_113   0.0020      1.70     1.650  100   100  0
+ 0 BUS_133   0.0020     0.750     0.530  100   100  0
+ 0 BUS_134   0.0025      1.62      1.57  100   100  0
+ 0 BUS_138   0.0020     1.950     1.870  100   100  0
+ 0 BUS_142   0.0036      1.76      1.58  100   100  0
+ 0 BUS_143   0.0010     1.790     1.715  100   100  0
+ 0 BUS_153   0.0040     1.640     1.570  100   100  0
+ 0 BUS_155   0.0014     1.798     1.778  100   100  0

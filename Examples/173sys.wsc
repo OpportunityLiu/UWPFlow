@@ -1,0 +1,753 @@
+C                   173 BUS AC/DC/FACTS TEST SYSTEM:
+C                         WSCC data file
+C
+C Case Title (3 A8 lines)
+HDG
+   173 BUS AC/DC/FACTS SYSTEM
+   WSCC/ETMSP DATA FORMAT
+   NOVEMBER 1999
+BAS
+C
+C
+C System Data
+C 
+C                                 AC BUSES 
+C 
+C Bus Input Data:
+C - Type (A2) -> "B " -> PQ load bus
+C                "BQ" -> PV generator bus with Q limits
+C                "BE" -> PV generator bus with no Q limits
+C                "BV" -> PQ generator bus with V limits
+C                "BG" -> PQ generator bus with Q limits controlling voltage on 
+C                        a remote PV load bus
+C                "BC" -> PV load bus with remote voltage control
+C                "BT" -> PQ load bus with voltage controlled by LTC transformer
+C                "BS" -> Swing bus
+C - Ow (A3)   -> Owner
+C - Name (A8) -> Bus Name
+C - kV (F4.0) -> Bus kV base
+C - Z (2A)    -> Zone
+C - PL (F5.0) -> P load in MW
+C - QL (F5.0) -> Q load in MVars
+C - SHUNT (2F4.0) -> MW and MVars shunts (+ for Capacitors)
+C - PM (F4.0) -> Max. generator P power in MW
+C - P (F5.0)  -> generator P power in MW
+C - QM (F5.0) -> Max. generator Q power in MVars (not needed for "BE" 
+C                PV bus types)
+C - Qm (F5.0) -> Min. generator Q power in MVars (not needed for "BE" 
+C                PV bus types)
+C - Vpu (F4.3)-> PV desired voltage magnitude in p.u. (max. voltage for 
+C                "BV" PV bus type)
+C - Vm (F4.3) -> Min. voltage for "BV" PV bus type.
+C - Remote Name (A8) -> Remote controlled bus name for "BG" type bus.
+C - Remote kV (F4.0) -> Remote controlled bus kV for "BG" type bus.
+C - Remote %Q (I3)   -> Percentage of Q of remote bus control for "BG" type bus.
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                             | SHUNT |                          |REMOTE BUS 
+C  |Ow|Name   |kV |Z|PL  |QL  |MW |Mva|PM |P   |QM  |Qm  |Vpu|Vm |Name   |kV |%Q
+B     BUS_1    345  1750.-56.0
+BQ    BUS_2   20.0                    1000700.0300.0-300.1040 
+B     BUS_3    345  2350.-127.        
+BQ    BUS_4   22.0                    1200998.0400.0-400..950
+B     BUS_5    500                -113
+B     BUS_6    345  239. -56.0    -155
+BQ    BUS_7   22.0                        2060.700.0-500.1.00
+B     BUS_8    230  139.723.8
+BQ    BUS_9   20.0                    30002000.900.0-900..980
+B     BUS_10   500  90.0070.00    -190 
+BQ    BUS_11  26.0                    16001590.700.0-280.1000
+B     BUS_12   500                -391
+BQ    BUS_13  24.0                    25402540.1300.-900..960
+B     BUS_14   500  793.4 207.    -146
+B     BUS_15   345  840.   5.0       
+BQ    BUS_16  22.0                    1000862.0300.0-300.1050
+B     BUS_17   500  617. -69.0    -427
+B     BUS_19   500
+B     BUS_20   500
+B     BUS_21   500
+B     BUS_22   500
+B     BUS_23   500
+B     BUS_24   500
+B     BUS_25   500
+B     BUS_26   500
+B     BUS_28   500
+B     BUS_29   500
+BQ    BUS_30  20.0                    79004400.4000.-40001000
+B     BUS_31   500   44001000.      0.
+B     BUS_32   500           
+B     BUS_33   230     
+B     BUS_34   230   3600 700.      0.
+BQ    BUS_35  20.0                    50004600.5320.-35001020
+BQ    BUS_36    22                    20001590.600.0-525.1009
+B     BUS_37   500                912.
+B     BUS_38   500
+B     BUS_39   230
+BQ    BUS_40  18.0                    424.-400.268.0-134.1020
+B     BUS_41   230  135.027.00
+B     BUS_42   230
+BQ    BUS_43  18.0                    460.160.0300.0-220.1000
+B     BUS_44   345   52.5-32.9    430.
+BQ    BUS_45  26.0                    20001680.850.0-440.1050
+B     BUS_46   230  -72.8-17.
+BQ    BUS_47  11.5                    113.110.0100.0-100.1020
+B     BUS_48   230  121. 25.00
+B     BUS_49   500                -80.
+B     BUS_50   230  320.065.00
+B     BUS_51   138  237.2-63.2
+B     BUS_52   287
+B     BUS_53   287
+B     BUS_54   230  138.028.00
+B     BUS_55   230  907.8132.1
+B     BUS_56   500
+B     BUS_57   230  117.024.00
+B     BUS_58   230  121.025.00
+B     BUS_59   230  987.7 -6.2
+B     BUS_60   230                 200
+B     BUS_61   230  401. 80.6
+B     BUS_62   230  205.217.6
+B     BUS_63   287  -129. 32.2    -108
+B     BUS_64   500  
+BQ    BUS_65  20.0                    3100 28601500.-10001000
+B     BUS_66   500  1700. 300.      0.                   1000
+B     BUS_67   115  160.031.25                           1035                   
+B     BUS_68   230  -67.5160.0    83.6                   1043                   
+B     BUS_69   500  -44.222.00                                                  
+BQ    BUS_70  13.8                    15001201.692.0-711.1055
+B     BUS_71   230                792.
+B     BUS_72   500                462.                                          
+B     BUS_73   500  3200.1100.    1200                   1085
+BQ    BUS_74  13.8                    60004045.2649.-18501000
+B     BUS_75   500  3500.500.0    550.
+BQ    BUS_76  20.0                    99999900.5780.-20001000
+B     BUS_77   500  5000.400.0    1200                       
+B     BUS_78   500                -220
+B     BUS_79   500  -66.6 -97.    -674
+B     BUS_80   500  -339.-119.    -110
+B     BUS_81   500                -220
+B     BUS_82   345  610. -414.    -870
+B     BUS_83   500  
+B     BUS_84   500
+B     BUS_85   500
+B     BUS_86   500
+B     BUS_87   500
+B     BUS_88   500
+B     BUS_89   500
+B     BUS_90   500
+B     BUS_91   500
+B     BUS_92   500
+B     BUS_93   500
+B     BUS_94   500
+B     BUS_95   500
+B     BUS_96   500   
+B     BUS_97   200  -43.3 20.0
+B     BUS_98   200  210.4 -77.
+B     BUS_99   500  50.0025.00        
+BQ    BUS_100 25.0                    1180600.0330.0-310.0.98
+B     BUS_101  500  305. -7.6     -91.
+B     BUS_102  200  27.50 -0.1
+B     BUS_103  200  8.010
+B     BUS_104  500  55.6 -329.    -327
+B     BUS_105  200  777.6 32.6    -130
+B     BUS_106  500  -189.61.5
+BQ    BUS_107 20.0                    1500957. 400. -400.1.02
+B     BUS_108  200  148.          -128
+B     BUS_109  500                -91.
+B     BUS_110  500  -0.7 118.5    -91.
+BQ    BUS_111 20.0                        454. 300. -300.1.05
+B     BUS_112  200   884. 54.8    -32.
+BQ    BUS_113 20.0                        3367.2500.-10001000
+B     BUS_114  500  5661.3491.    1500
+B     BUS_115  500
+B     BUS_116  500
+B     BUS_117  500
+B     BUS_118  500
+B     BUS_119  500
+B     BUS_120  500
+B     BUS_121  500
+B     BUS_122  500
+B     BUS_123  500
+B     BUS_124  500
+B     BUS_126  500
+B     BUS_127  500
+B     BUS_128  500
+B     BUS_129  500 
+B     BUS_130  500   
+B     BUS_131  500  856.  19.6
+B     BUS_132  230  175. 18.0
+BQ    BUS_133 20.0                        882.7300. -300.1.02
+B     BUS_27   500  902.3-11.4    -319
+BQ    BUS_134 20.0                        3055.2000.-900.1.02
+B     BUS_135  230  3191. 630.
+B     BUS_136  500  204.2-28.2    
+B     BUS_137  230  377.464.5
+BQ    BUS_138 20.0                        1570.900.0-400.1.05
+B     BUS_139  500  3098.1189.    400.
+B     BUS_140  230
+B     BUS_141  500                -196
+BQ    BUS_142 22.0                    15801580.700.0-300.1050
+BQ    BUS_143 20.0                        2100.600. -600.1010
+B     BUS_144  230  3118.78.0
+B     BUS_145  500  1230. 72.8
+B     BUS_146  500  406.  41.0
+B     BUS_147  500
+B     BUS_148  230  1066.-10.8    -190
+B     BUS_149  345  457.7 81.7    -60.
+B     BUS_150  345  33.9 11.9
+B     BUS_151  230  148. -7.9
+B     BUS_152  345  116.1 38.4    -220
+BQ    BUS_153 20.0                        1590.9999.-99991.05 
+B     BUS_18   345   -62. 12.8    
+B     BUS_154  230  255. 100.
+BQ    BUS_155 20.0                        370.09999.-99991.00
+B     BUS_156  345
+B     BUS_157  345  31.6 11.5     -18.
+B     BUS_158  345  141.271.4
+B     BUS_159  345  379. -43.     -50.
+B     BUS_160  345  185. 78.5
+B     BUS_161  500
+B     BUS_162  500
+B     BUS_163  500
+B     BUS_164  500
+B     BUS_165  500
+B     BUS_166  500
+B     BUS_167  500
+B     BUS_168  500
+B     BUS_169  500
+B     BUS_170  500
+B     BUS_171  500
+B     BUS_172  500
+B     BUS_173  500                -220
+C
+C*******************************************************************************
+C
+C                                  AC LINES
+C
+C Line Input Data:
+C - Type (A2)   -> "L " 
+C - Ow (A3)     -> Owner
+C - Name_1 (A8) -> Name of sending bus
+C - kV1 (F4.0)  -> kV base for sending bus
+C - M (I1)      -> Metered bus for flow interchange
+C - Name_2 (A8) -> Name of receiving bus
+C - kV2 (F4.0)  -> kV base for receiving bus
+C - C (I1)      -> Circuit ID 
+C - S (I1)      -> Section number
+C - In (F4.0)   -> Rated Amps.
+C - N (I1)      -> Circuit number
+C - R (F6.5)    -> p.u. series R of PI equivalent
+C - X (F6.5)    -> p.u. series X of PI equivalent
+C - G/2 (F6.5)  -> p.u. shunt G/2 of PI equivalent
+C - B/2 (F6.5)  -> p.u. shunt B/2 of PI equivalent
+C - Mil (F4.1)  -> Length in miles
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                 M            CS    N 
+C  |Ow|Name_1 |kV1||Name_2 |kV2|||In || R   | X   | G/2 | B/2 |Mil|
+L     BUS_3    345 BUS_18   3451      .00811.13690      1.2174
+L     BUS_6    345 BUS_1    3451      .00179.01988      1.2880
+L     BUS_6    345 BUS_15   3451      .0005 .00530      .04410
+L     BUS_15   345 BUS_3    3451      .00977.11000      1.0000 
+L     BUS_10   500 BUS_19   5001            -00634
+L     BUS_19   500 BUS_20   5001      .00077.01804      .69921
+L     BUS_20   500 BUS_12   5001            -00634
+L     BUS_10   500 BUS_21   5001            -01188
+L     BUS_21   500 BUS_22   5001      .00241.05865      243280
+L     BUS_22   500 BUS_17   5001            -01188      
+L     BUS_12   500 BUS_23   5001            -00826  
+L     BUS_23   500 BUS_24   5001      .00179.04244      169610
+L     BUS_24   500 BUS_17   5001            -00826            
+L     BUS_12   500 BUS_25   5001            -01795   
+L     BUS_25   500 BUS_26   5001      .00207.04959      197580
+L     BUS_26   500 BUS_27   5001            -01795            
+L     BUS_14   500 BUS_17   5001      .00040.00960      .45190
+L     BUS_14   500 BUS_17   5002      .00040.00960      .45190
+L     BUS_5    500 BUS_28   5001            -00408 
+L     BUS_28   500 BUS_29   5001      .00177.04189      167230
+L     BUS_29   500 BUS_12   5001            -00612            
+L     BUS_31   500 BUS_32   5001      .0035 .07000       2.303
+L     BUS_33   230 BUS_34   2301      .0020 .02000       .4000
+L     BUS_52   287 BUS_63   2871      .01070.07905      .18335
+L     BUS_53   287 BUS_63   2871      .01070.07905      .18335
+L     BUS_55   230 BUS_41   2301      .00047.00723      .00812
+L     BUS_55   230 BUS_58   2301      .00119.01244      .01399
+L     BUS_55   230 BUS_58   2302      .00119.01244      .01399
+L     BUS_57   230 BUS_42   2301      .00201.03074      .03443
+L     BUS_57   230 BUS_54   2301      .00073.01025      .01279
+L     BUS_57   230 BUS_54   2302      .00073.01025      .01279
+L     BUS_57   230 BUS_58   2301      .00110.01189      .01257
+L     BUS_62   230 BUS_55   2301      .00128.00979      .01060
+L     BUS_64   500 BUS_49   5001      .00083.01884      .83334
+L     BUS_41   230 BUS_58   2301      .00035.00536      .00602
+L     BUS_37   500 BUS_38   5001      .00074.01861      .70132
+L     BUS_37   500 BUS_56   5001      .00082.01668      .59401
+L     BUS_37   500 BUS_64   5001            .00159      .06001
+L     BUS_37   500 BUS_64   5002            .00159      .06001
+L     BUS_42   230 BUS_58   2301      .00281.04296      .04824
+L     BUS_48   230 BUS_62   2301      .00138.01116      .01235
+L     BUS_48   230 BUS_62   2302      .00138.01116      .01235
+L     BUS_50   230 BUS_42   2301      .00220.03422      .03858
+L     BUS_50   230 BUS_42   2302      .00238.03669      .04142
+L     BUS_50   230 BUS_57   2301      .00037.00366      .00415
+L     BUS_50   230 BUS_58   2301      .00055.00586      .00623
+L     BUS_48   230 BUS_55   2301      .00229.01583      .01530
+L     BUS_48   230 BUS_55   2302      .00229.01583      .01530
+L     BUS_39   230 BUS_46   2301      .00221.03346      .03669
+L     BUS_39   230 BUS_48   2301      .00290.03800      .04120
+L     BUS_39   230 BUS_59   2301      .00309.04677      .05040
+L     BUS_39   230 BUS_60   2301      .00226.03422      .03753
+L     BUS_48   230 BUS_46   2301      .00029.00434      .00475
+L     BUS_48   230 BUS_59   2301      .00141.00967      .00970
+L     BUS_48   230 BUS_59   2302      .00141.00967      .00970
+L     BUS_48   230 BUS_59   2303      .00161.00971      .00964
+L     BUS_48   230 BUS_59   2304      .00161.00971      .00964
+L     BUS_48   230 BUS_60   2301      .00027.00393      .00459
+L     BUS_48   230 BUS_60   2302      .00027.00393      .00459
+L     BUS_48   230 BUS_60   2303      .00027.00393      .00459
+L     BUS_75   500 BUS_73   5001      .00120.02316       .8576
+L     BUS_75   500 BUS_73   5002      .00030.02000       1.800      
+L     BUS_77   500 BUS_75   5001      .00020.00820       .6500      
+L     BUS_77   500 BUS_75   5002      .00020.00820       .6500      
+L     BUS_68   230 BUS_71   2301 3020 .00006.00131      .00189                  
+L     BUS_68   230 BUS_71   2302 3020 .00006.00116      .00166                  
+L     BUS_69   500 BUS_72   5001 3450 .00001.00030      .00717                  
+L     BUS_69   500 BUS_72   5002 3450 .00001.00030      .00922                  
+L     BUS_69   500 BUS_73   5001 2175 .00023.00451      .16660                  
+L     BUS_69   500 BUS_73   5002 2175 .00020.00446      .15250                  
+L     BUS_79   500 BUS_73   5001 3450 .00063.01412      .54878
+L     BUS_79   500 BUS_73   5002 3020 .00109.02408      .77771
+L     BUS_79   500 BUS_73   5003 3020 .00108.02409      .77674
+L     BUS_79   500 BUS_84   5001 3450 .00041.00737      .36347
+L     BUS_84   500 BUS_85   5001 2000       -01263
+L     BUS_85   500 BUS_83   5001 3450 .00060.01036      .50728
+L     BUS_80   500 BUS_86   5001 3600 .00072.01382      .63786
+L     BUS_86   500 BUS_87   5001 2000       -00858
+L     BUS_87   500 BUS_83   5001 3600 .00012.00238      .10963  
+L     BUS_79   500 BUS_88   5001 3020 .00066.01266      .47988
+L     BUS_88   500 BUS_89   5001 2400       -01263
+L     BUS_89   500 BUS_90   5001 3020 .00074.01428      .5411
+L     BUS_90   500 BUS_91   5001 2400       -01263
+L     BUS_91   500 BUS_80   5001 3020 .00078.01502      .56905
+L     BUS_79   500 BUS_92   5001 3020 .00066.01266      .47988
+L     BUS_92   500 BUS_93   5001 2000       -01263
+L     BUS_93   500 BUS_94   5001 3020 .00074.01428      .5411
+L     BUS_94   500 BUS_95   5001 2000       -01263
+L     BUS_95   500 BUS_80   5001 3020 .00074.01413      .53317
+L     BUS_78   500 BUS_96   5001 3600 .00264.05356      264533
+L     BUS_96   500 BUS_81   5001 1732       -02667      
+L     BUS_106  500 BUS_115  5001 2667       -01000
+L     BUS_115  500 BUS_116  5001 2894 .00076.01952      .91225
+L     BUS_116  500 BUS_117  5001 2667       -01000
+L     BUS_117  500 BUS_118  5001 2894 .00082.02119      .99210
+L     BUS_118  500 BUS_114  5001 2667       -01000
+L     BUS_109  500 BUS_119  5001 1800 .00002-00998
+L     BUS_119  500 BUS_120  5001 2396 .00140.02338      .73750
+L     BUS_120  500 BUS_110  5001 1800 .00001-00666
+L     BUS_109  500 BUS_121  5001 1800 .00002-00998
+L     BUS_121  500 BUS_122  5001 2396 .00140.02338      .73750
+L     BUS_122  500 BUS_110  5001 1800 .00001-00666
+L     BUS_110  500 BUS_123  5001 2667 .00001-01120
+L     BUS_123  500 BUS_124  5001 2450 .00154.03409      115570
+L     BUS_124  500 BUS_114  5001 2667 .00001-01120
+L     BUS_110  500 BUS_126  5001 2450 .00095.02102      .71260
+L     BUS_98   200 BUS_108  2001 752. .01113.06678      .03643
+L     BUS_98   200 BUS_108  2002 602. .01050.06540      .03430
+L     BUS_98   200 BUS_108  2003 752. .01105.06642      .03580
+L     BUS_98   200 BUS_112  2001 747. .03903.27403      .15536
+L     BUS_98   200 BUS_97   2001 838. .02482.16938      .10116
+L     BUS_97   200 BUS_112  2001 838. .0148 .10101      .06033
+L     BUS_98   200 BUS_102  2001 747. .01382.09268      .05530
+L     BUS_102  200 BUS_112  2001 747. .03058.20460      .12236
+L     BUS_98   200 BUS_103  2001 838. .01668.11381      .06804
+L     BUS_103  200 BUS_112  2001 838. .02235.16106      .09171
+L     BUS_114  500 BUS_127  5001      .00001-00755
+L     BUS_127  500 BUS_128  5001 2450 .00165.05719      123870
+L     BUS_128  500 BUS_104  5001 1800 .00002-01331
+L     BUS_114  500 BUS_129  5001 2450 .00001-01098
+L     BUS_129  500 BUS_101  5001 2450 .00093.03644      .69475
+L     BUS_101  500 BUS_130  5001 2450 .00072.01600      .54395
+L     BUS_130  500 BUS_104  5001 2450 .00002-00998
+L     BUS_101  500 BUS_99   5001      .00079.01937      .66425
+L     BUS_99   500 BUS_104  5001      .00087.02087      .72855
+L     BUS_99   500 BUS_104  5002      .00087.02087      .72855
+L     BUS_136  500 BUS_147  5001 3600 .00044.01125      .41460
+L     BUS_136  500 BUS_147  5002 3600 .00044.01125      .41460
+L     BUS_136  500 BUS_141  5001 3600 .00190.03100      207010
+L     BUS_27   500 BUS_136  5001 3600 .00193.02779      233560
+L     BUS_141  500 BUS_27   5001 3600 .00056.01415      .52145
+L     BUS_131  500 BUS_146  5001 3600 .00042.00905      .33397
+L     BUS_136  500 BUS_145  5001 3600 .00060.01280      .47310
+L     BUS_139  500 BUS_145  5001 3600 .00021.00457      .16168
+L     BUS_145  500 BUS_146  5001 3600 .00040.00930      .34280
+L     BUS_136  500 BUS_139  5001 3600 .00028.00753      .25868
+L     BUS_136  500 BUS_139  5002 3600 .00035.00750      .27680
+L     BUS_144  230 BUS_148  2301 2320 .00285.03649      .06328
+L     BUS_144  230 BUS_148  2302 2320 .00138.03399      .05626
+L     BUS_132  230 BUS_137  2301 2320 .00190.02580      .04920
+L     BUS_132  230 BUS_144  2301 1160 .00845.07034      .07977
+L     BUS_135  230 BUS_137  2301 2320 .00110.01270      .02400
+L     BUS_148  230 BUS_137  2301 2320 .00320.03950      .07200
+L     BUS_140  230 BUS_137  2301 2320 .00138.05399      .07626 
+L     BUS_150  345 BUS_160  3451      .00160.02260      .19050
+L     BUS_149  345 BUS_160  3451      .00080.01060      .10195
+L     BUS_150  345 BUS_149  3451      .00240.03320      .29245
+L     BUS_149  345 BUS_18   3451      .00170.02250      .19960
+L     BUS_149  345 BUS_18   3452      .00210.02380      .19225
+L     BUS_152  345 BUS_157  3451      .00960.08780      .71325
+L     BUS_149  345 BUS_152  3451      .00520.06020      .50500
+L     BUS_149  345 BUS_152  3452      .00490.05370      .44215
+L     BUS_149  345 BUS_158  3451      .00120.01720      .14935
+L     BUS_152  345 BUS_159  3451      .00340.03740      .31040
+L     BUS_152  345 BUS_159  3452      .00340.03720      .30910
+L     BUS_18   345 BUS_159  3451      .00380.03400      .29120
+L     BUS_18   345 BUS_159  3452      .00320.03490      .28610
+L     BUS_151  230 BUS_154  2301      .01080.09650      .16480
+L     BUS_152  345 BUS_158  3451      .00340.03920      .32620
+L     BUS_31   500 BUS_77   5001          83.02390       1.650      
+L     BUS_75   500 BUS_66   5001          70.07400       2.435
+L     BUS_80   500 BUS_161  5001 1800       -00720
+L     BUS_161  500 BUS_162  5001 3020 .00103.02338      .79020
+L     BUS_162  500 BUS_109  5001 1800       -00720
+L     BUS_80   500 BUS_163  5001 1800       -00864
+L     BUS_163  500 BUS_164  5001 3020 .00107.02470      .76350
+L     BUS_164  500 BUS_109  5001 1800       -00720
+L     BUS_80   500 BUS_165  5001            -01000
+L     BUS_165  500 BUS_166  5001      .00103.03230      139800
+L     BUS_166  500 BUS_106  5001            -01000
+L     BUS_104  500 BUS_167  5001 2134       -00935
+L     BUS_167  500 BUS_168  5001 3600 .00123.02659      .99351
+L     BUS_168  500 BUS_147  5001 2134       -00935
+L     BUS_104  500 BUS_169  5001 2134       -00944
+L     BUS_169  500 BUS_170  5001 3600 .00123.02662      .99440
+L     BUS_170  500 BUS_147  5001 2134       -00935
+L     BUS_104  500 BUS_171  5001 2134       -00935
+L     BUS_171  500 BUS_172  5001 3600 .00112.02517      .91793
+L     BUS_172  500 BUS_147  5001 2100       -00840
+L     BUS_136  500 BUS_64   5001      .00020.00410      .14810
+L     BUS_27   500 BUS_64   5001      .00179.02524      .26773
+L     BUS_27   500 BUS_64   5002      .00179.02524      .26773
+L     BUS_144  230 BUS_61   2301 3070 .00065.01187      .02336
+L     BUS_144  230 BUS_61   2302 3070 .00065.01187      .02336
+L     BUS_132  230 BUS_61   2301 3070 .00140.02640      .05100
+L     BUS_10   500 BUS_27   5001 1630 .00280.02110      .50970
+L     BUS_14   500 BUS_131  5001 1800 .00259.02967      107650
+L     BUS_14   500 BUS_131  5002 1800 .00259.02967      107650
+L     BUS_78   500 BUS_173  5001 1732       -02667
+L     BUS_173  500 BUS_83   5001 3600 .00122.02373      110355
+L     BUS_150  345 BUS_82   3451      .00620.06730      .55780
+L     BUS_44   345 BUS_18   3451      .00180.02450      .21960
+L     BUS_44   345 BUS_18   3452      .00180.02450      .21960
+L     BUS_156  345 BUS_6    3451      .00480.04360      .35390
+C
+C Line Input Data:
+C - Type (A2)   -> "L " 
+C - Ow (A3)     -> Owner
+C - Name_1 (A8) -> Name of sending bus
+C - kV1 (F4.0)  -> kV base for sending bus
+C - M (I1)      -> Metered bus for flow interchange
+C - Name_2 (A8) -> Name of receiving bus
+C - kV2 (F4.0)  -> kV base for receiving bus
+C - C (I1)      -> Circuit ID 
+C - S (I1)      -> Section number
+C - In (F4.0)   -> Rated amps.
+C - N (I1)      -> Circuit number
+C - R (F6.5)    -> p.u. series R of PI equivalent
+C - X (F6.5)    -> p.u. series X of PI equivalent
+C - G/2 (F6.5)  -> p.u. shunt G/2 of PI equivalent
+C - B/2 (F6.5)  -> p.u. shunt B/2 of PI equivalent
+C - Mil (F4.1)  -> Length in miles
+C
+C*******************************************************************************
+C
+C                               TRANSFORMERS
+C
+C Transformer Input Data:
+C - Type (A2)   -> "T " 
+C - Ow (A3)     -> Owner
+C - Name_1 (A8) -> Name of sending bus
+C - kV1 (F4.0)  -> kV base for sending bus
+C - M (I1)      -> Metered bus for flow interchange
+C - Name_2 (A8) -> Name of receiving bus
+C - kV2 (F4.0)  -> kV base for receiving bus
+C - C (I1)      -> Circuit ID 
+C - S (I1)      -> Section number
+C - Sn (F4.0)   -> Rated MVA
+C - N (I1)      -> Circuit number
+C - R (F6.5)    -> p.u. series R of equivalent circuit
+C - X (F6.5)    -> p.u. series X of equivalent circuit
+C - G (F6.5)    -> p.u. shunt G of equivalent circuit
+C - B (F6.5)    -> p.u. shunt B of equivalent circuit
+C - Tap1 (F5.2) -> kV tap for sending bus
+C - Tap2 (F5.2) -> kV tap for receiving bus
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                 M            CS
+C  |Ow|Name_1 |kV1||Name_2 |kV2|||Sn  | R   | X   | G   | B   |Tap1|Tap2|
+T     BUS_3    345 BUS_9   20.01            .01500            3450020.00
+T     BUS_14   500 BUS_13  24.01 3066 .00006.00539            5300023.00
+T     BUS_1    345 BUS_2   20.01            .01200            3550020.00
+T     BUS_15   345 BUS_16  22.01            .00600            3600022.00
+T     BUS_5    500 BUS_6    3451            .01100            5315034500
+T     BUS_5    500 BUS_6    3452            .01100            5315034500
+T     BUS_6    345 BUS_7   22.01 3000 .00000.00590            3450022.00
+T     BUS_6    345 BUS_8    2301 430. .00028.01380            3450023000
+T     BUS_6    345 BUS_8    2302 430. .00029.01390            3450023000
+T     BUS_10   500 BUS_11  26.01 2000       .00666            5400026.00
+T     BUS_32   500 BUS_33   2301            .01000            5500023000
+T     BUS_31   500 BUS_30  20.01            .00150            52500 2000
+T     BUS_34   230 BUS_35  20.01            .00200            23000 2000
+T     BUS_64   500 BUS_63   2871      .00020.02330            4902828750
+T     BUS_44   345 BUS_45  26.01      .00000.00520            3536226.00
+T     BUS_66   500 BUS_65  20.01               500            54500 2000
+T     BUS_81   500 BUS_82   3451 1500       .00720            5250034500
+T     BUS_77   500 BUS_76  20.01            .00250            53300 2000
+T     BUS_72   500 BUS_71   2301 2500       .00200            5373024150        
+T     BUS_68   230 BUS_67   1151 250. .00085.02845            2328011790        
+T     BUS_69   500 BUS_68   2301 1008 .00018.01071            5375024150        
+T     BUS_69   500 BUS_68   2302 1300 .00008.00667            5375024150        
+T     BUS_73   500 BUS_74  13.81 5000       .00410            5250013.20        
+T     BUS_68   230 BUS_70  13.81 2000       .01130            2300013.20        
+T     BUS_107 20.0 BUS_108  2001            .0192             20.0 218. 
+T     BUS_108  200 BUS_109  5001 840. .00009.01578            2350052500
+T     BUS_113 20.0 BUS_114  5001            .004              20.0 529.
+T     BUS_111 20.0 BUS_112  2001            .015              20.0 220.
+T     BUS_112  200 BUS_114  5001 1120 .00018.01134            2350052500
+T     BUS_105  200 BUS_104  5001 840. .00027.01578            2350052500
+T     BUS_105  200 BUS_104  5002 1120 .00018.01079            2350052500
+T     BUS_99   500 BUS_100 25.01      .00000.00980            5250025.00
+T     BUS_147  500 BUS_148  2301 1120       .01149            5315623000
+T     BUS_147  500 BUS_148  2302 1120       .01149            5315623000
+T     BUS_147  500 BUS_148  2303 1120       .01149            5315623000
+T     BUS_133 20.0 BUS_27   5001            .015              20.0 502. 
+T     BUS_141  500 BUS_142 22.01            .00980            5250022.00
+T     BUS_134 20.0 BUS_135  2301            .0035             20.0 235. 
+T     BUS_138 20.0 BUS_139  5001            .005              20.0 508. 
+T     BUS_139  500 BUS_140  2301            .005              5000023000
+T     BUS_52   287 BUS_51   1381      .00059.01491            2875013800
+T     BUS_53   287 BUS_51   1381      .00059.01491            2875013800
+T     BUS_54   230 BUS_51   1381      .00030.01330            2300013800
+T     BUS_54   230 BUS_51   1382      .00030.01340            2300013800
+T     BUS_56   500 BUS_55   2301      .00013.01386            5053023000
+T     BUS_56   500 BUS_55   2302      .00013.01386            5053023000
+T     BUS_38   500 BUS_48   2301      .00013.00693            5250023000
+T     BUS_42   230 BUS_43  18.01      .00058.02535            2413018.00
+T     BUS_49   500 BUS_48   2301      .00026.01386            5250023000
+T     BUS_48   230 BUS_47  11.51      .00499.11473            2410011.50
+T     BUS_39   230 BUS_40  18.01      .00050.02380            2300018.00
+T     BUS_60   230 BUS_61   2301            .00120            2280022500
+T     BUS_143 20.0 BUS_144  2301            .010              20.0 233. 
+T     BUS_3    345 BUS_4   22.01            .01238            3450022.00
+T     BUS_152  345 BUS_153 20.01      .00020.00580            3400020.00
+T     BUS_157  345 BUS_156  3451            .01950            3450034500
+T     BUS_150  345 BUS_151  2301      .00030.01810            3450023000
+T     BUS_154  230 BUS_155 20.01      .00050.01410            2435220.00
+T     BUS_82   345 BUS_36    221 2000 .00000.00460            3450022.00
+C
+C*******************************************************************************
+C
+C                                  DC BUS DATA
+C
+C DC Bus Input Data:
+C - Type (A2)   -> "BD"
+C - Name_1 (A8) -> Converter dc bus 1 name
+C - Name_2 (A8) -> Converter dc bus 2 name
+C - AC bus Name (A8) -> Converter ac bus name
+C - AC bus kV (F4.0) -> Converter ac bus kV base
+C - C (I1)      -> Circuit number
+C - Gr (A3)     -> Group 
+C - Z (A2)      -> Zone
+C - N (I2)      -> Number of converter bridges
+C - Xc (F5.3)   -> Commutation reactance in Ohms
+C - Rat (F5.4)  -> Nominal voltage ratio of transformer
+C - Tstp (F5.3) -> Tap steps in %
+C - Tmin (F5.3) -> Min. tap in p.u.
+C - Tmax (F5.3) -> Max. tap in p.u.
+C - Amn (F4.1)  -> Min. alpha
+C - Amx (F4.1)  -> Max. alpha
+C - Gmn (F4.1)  -> Min. gamma
+C - Imx (F4.1)  -> Max. current in amps.
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                  |AC bus     C
+C  |Name_1 |Name_2 |Name   |kV ||Gr|Z|N|Xc  |Rat |Tstp|Tmin|Tmax|Amn|Amx|Gmn|Imx
+BD DC1-R-P+GROUND  BUS_71   2301      117.6 1.843 .001 .80 1.40  5. 100. 0. 5.E3
+BD GROUND  DC1-R-P-BUS_71   2301      117.6 1.843 .001 .80 1.40  5. 100. 0. 5.E3
+BD DC1-I-P+GROUND  BUS_60   2301      117.3 1.843 .001 .80 1.40 90. 170.18. 5.E3
+BD GROUND  DC1-I-P-BUS_60   2301      117.3 1.843 .001 .80 1.40 90. 170.18. 5.E3
+BD DC2-R-P+GROUND  BUS_44   3451      124.7 1.194 .001 .92 1.15  5. 100. 0. 4.E3
+BD GROUND  DC2-R-P-BUS_44   3451      124.7 1.194 .001 .92 1.15  5. 100. 0. 4.E3
+BD DC2-I-P+GROUND  BUS_37   5001      123.7 0.808 .001 .92 1.20 90. 170.16. 4.E3
+BD GROUND  DC2-I-P-BUS_37   5001      123.7 0.808 .001 .92 1.20 90. 170.16. 4.E3
+C
+C*******************************************************************************
+C
+C                                DC BUS CONTROL DATA
+C
+C DC Bus Control Input Data:
+C - Type (A2)         -> "BZ"
+C - Name_1 (A8)       -> Converter dc bus 1 name
+C - Name_2 (A8)       -> Converter dc bus 2 name
+C - AC bus Name (A8)  -> Converter ac bus name
+C - AC bus kV (F4.0)  -> Converter ac bus kV base
+C - C (I1)            -> Circuit number
+C - Mod 1 & 2 (2A2)   -> Converter control modes: ID=current; AL=alpha; GA=gamma; 
+C                        VD=Voltage; PA=P_power; QA=Q_power
+C - Set Points (2F5.2)-> Control mode values: A, kV, MW, Mvar, or deg.
+C - T (A1)            -> Type: R=rectifier; I=inverter
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                              C|Mod|Set Points T
+C  |Name_1 |Name_2 |AC bus |kV ||1|2|  1  |  2  |
+BZ DC1-R-P+GROUND  BUS_71   2301IDAL 3100. 15.  R
+BZ GROUND  DC1-R-P-BUS_71   2301IDAL 3100. 15.  R
+BZ DC1-I-P+GROUND  BUS_60   2301VDGA 447.  18.  I
+BZ GROUND  DC1-I-P-BUS_60   2301VDGA 447.  18.  I
+BZ DC2-R-P+GROUND  BUS_44   3451IDAL 1920. 15.  R
+BZ GROUND  DC2-R-P-BUS_44   3451IDAL 1920. 15.  R
+BZ DC2-I-P+GROUND  BUS_37   5001VDGA 485.  16.  I
+BZ GROUND  DC2-I-P-BUS_37   5001VDGA 485.  16.  I
+C
+C*******************************************************************************
+C
+C                                DC LINE DATA
+C
+C DC Line Input Data:
+C - Type (A2)   -> "BD"
+C - Name_1 (A8) -> Converter dc bus 1 name
+C - Name_2 (A8) -> Converter dc bus 2 name
+C - C (I1)      -> Circuit number
+C - Gr (A3)     -> Group 
+C - Z (A2)      -> Zone
+C - Ow (A3)     -> Owner
+C - R (F6.2)    -> Resistance in Ohms
+C - L (F6.2)    -> Inductance in mH (optional)
+C - C (F6.2)    -> Capacitance in uF (optional)
+C - Imax (F6.1) -> Max. current in amps. (optional)
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                  C
+C  |Name_1 |Name_2 ||Gr|Z|Ow|R ohm|L  mH|C  uF|Imax |
+LD DC1-R-P+DC1-I-P+1        19.   1300.               
+LD DC1-R-P-DC1-I-P-1        19.   1300.            
+LD DC2-R-P+DC2-I-P+1        7.82  693.
+LD DC2-R-P-DC2-I-P-1        7.82  693.
+C
+C*******************************************************************************
+C
+C                                   SVC DATA
+C
+C SVC Input Data: 
+C  - Type (A2)  -> "FS" (F for FACTS, S for SVC).
+C  - Ow (A3)    -> Owner  
+C  - Bus1 (A8)  -> System bus where SVC is connected.
+C  - kV1 (F4.0) -> Bus 1 kV base.
+C  - Bus2 (A8)  -> System bus that SVC controls.
+C  - kV2 (F4.0) -> Bus 2 kV base.
+C  - Xc (F8.7)  -> Per unit SVC capacitive X w.r.t. MVA and kV1 base.
+C  - Xl (F8.7)  -> Per unit SVC inductive X w.r.t. MVA and kV1 base.
+C  - am (F3.0)  -> Minimum firing angle alpha in degrees.
+C  - aM (F3.0)  -> Maximum firing angle alpha in degrees.
+C  - s (F2.0)   -> SVC control slope in % w.r.t. to MVA and kV1 base.
+C  - MVA (F4.0) -> SVC maximum rating in MVAr (capacitive).
+C  - Vrf (F4.3) -> p.u. reference control voltage.
+C  - kV (F4.0)  -> Low kV side of step-down transformer (optional).
+C  - Xth (F8.7) -> Step-down transformer reactance in p.u. w.r.t. to SVC MVA 
+C                  rating and kV1 (optional).
+C  - al (F5.1)  -> Initial value of firing angle in degrees (optional).
+C
+C        1         2         3         4         5         6         7         8
+C2345678901234567890123456789012345678901234567890123456789012345678901234567890
+C  
+C  |Ow|Bus1   |kV1 |Bus2   |kV2|Xc     |Xl     |am|aM|s|MVA|Vrf|kV |Xth    |al
+FS    BUS_114  500 BUS_114  500  1.1708  0.4925 90175 2 200  1. 26.     0.1
+C
+C*******************************************************************************
+C
+C                                   TCSC DATA
+C
+C TCSC Input Data: 
+C  - Type (A2)  -> "FC" (F for FACTS, C for TCSC).
+C  - Bus1 (A8)  -> Sending bus where TCSC is connected.
+C  - kV1 (F4.0) -> Bus 1 kV base.
+C  - Bus2 (A8)  -> Receiving bus where TCSC is connected.
+C  - kV2 (F4.0) -> Bus 2 kV base.
+C  - Xc (F8.7)  -> Per unit TCSC capacitive X w.r.t MVA and kV1 base.
+C  - Xl (F8.7)  -> Per unit TCSC inductive X w.r.t MVA and kV1 base.
+C  - am (F3.0)  -> Minimum firing angle alpha in degrees.
+C  - aM (F3.0)  -> Maximum firing angle alpha in degrees.
+C  - cont (F8.3)-> TCSC control value: % of X; MW for P; KA for I; degrees for D.
+C  - Mode (A1)  -> Control mode: X for reactance; P for power; I for current; 
+C                  D for angle.
+C  - MVA (F4.0) -> TCSC rating in MVA.  Defaults to MVA system base.
+C  - al (F5.1)  -> Initial value of firing angle in degrees (optional).
+C  - M1 (F4.0)  -> Needed for determining series line reactance for % X 
+C                  control:   M1=Xc/Xline.
+C
+C        1         2         3         4         5         6         7         8
+C2345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                                                            M
+C     |Bus1   |kV1 |Bus2   |kV2|Xc     |Xl     |am|aM|cont   ||MVA|al  |M1 |
+FC    BUS_126  500 BUS_114  500 .00526 .000526 144175  90.0  X           4.
+C
+C*******************************************************************************
+C
+C                                  STATCOM DATA
+C
+C STATCOM Input Data: 
+C  - Type (A2)  -> "FT" (F for FACTS, T for STATCOM).
+C  - Ow (A3)    -> Owner  
+C  - Bus1 (A8)  -> System bus where STATCOM is connected.
+C  - kV1 (F4.0) -> Bus 1 kV base.
+C  - Bus2 (A8)  -> System bus that STATCOM controls.
+C  - kV2 (F4.0) -> Bus 2 kV base.
+C  - R (F6.0)   -> AC R in p.u. w.r.t. MVA and kV1 base.
+C  - X (F6.5)   -> AC X in p.u. w.r.t. MVA and kV1 base.
+C  - Gc (F6.5)  -> DC G in p.u. w.r.t. MVA and a kVdc base defined by the
+C                  secondary side of the STATCOM transformer(s).
+C  - Im (F6.4)  -> Max. capacitive current (Imin>0) in p.u. w.r.t. 
+C                  MVA and kV1 base.
+C  - IM (F6.4)  -> Max. inductive current (Imax>0) in p.u. w.r.t. 
+C                  MVA and kV1 base.
+C  - s (F3.0)   -> AC voltage control slope in % w.r.t. to MVA and kV1 base.
+C  - MVA (F5.0) -> Rating in MVA (defaults to the system base).
+C  - Vrf (F4.3) -> AC reference voltage in p.u. w.r.t. kV1 base.
+C  - M (A1)     -> Control mode: W for PWM control (default); P for phase 
+C                  control.
+C  - Con (F6.5) -> Control variable value:
+C                  - k constant for phase control (defaults to a value
+C                    of 0.9 for a 12 pulse VSI if no value is given).
+C                  - DC reference voltage for PWM control in p.u. w.r.t.
+C                    a kVdc base (defaults to 1 p.u.).
+C
+C        1         2         3         4         5         6         7         8
+C2345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                                                                        M
+C  |Ow|Bus1   |kV1 |Bus2   |kV2|R    |X    |Gc   |Im   |IM   |s |MVA |Vrf||Con  
+FT    BUS_60   230 BUS_60   230 0.0   0.145 .0017 1.    1.    2.2000. 1. P 0.9   
+C 
+C*******************************************************************************
+C
+C                            SOLUTION CONTROL CARD
+C
+C Solution control card:
+C - Max Iter (I5) -> Maximum number of Newton-Raphson iteration
+C - Name (A8)     -> Name of the slack bus
+C - kV (F4.0)     -> kV base for slack bus
+C - Angle (F10.4) -> Reference angle for slack bus in degrees
+C
+C        1         2         3         4         5         6         7         8
+C 345678901234567890123456789012345678901234567890123456789012345678901234567890
+C                      |Max|  |SLACK BUS |
+C                      |Itr|  |Name   |kV|   |Angle    |
+SOL                       50  BUS_74  13.8    0.
+C
+C
+ZZ
+END
+
