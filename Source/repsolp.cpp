@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /*  Perform Repeat Solution.
     Remarks: Matrix1 must be already factored (see FACTOR or FACTORNS).
              The input vector is not permuted, this is done internally
@@ -8,11 +5,7 @@
              by the ordering routine (see FACTORNS).                  */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include "constant.h"
 #include "param.h"
@@ -144,7 +137,7 @@ IntegerVector *PermR,*PermC;
   FullVector= new VALUETYPE[Nstop1+1];
 #else
   FullVector=(VALUETYPE *) malloc((Nstop1+1)*sizeof(VALUETYPE));
-  if (FullVector==NULL) {ErrorHalt("Insufficient memory for solution vector"); stopExecute(ERROREXIT);}
+  if (FullVector==NULL) {ErrorHalt("Insufficient memory for solution vector"); exit(ERROREXIT);}
 #endif
   for (i=1;i<=Nstop1;i++) FullVector[i]=Vptr[PermR->p[i]];
   ForwardSubstitution();
@@ -158,5 +151,5 @@ IntegerVector *PermR,*PermC;
   free(DiagPtr);
   free(FullVector);
 #endif
-/*  fCustomPrint(stderr,"  Repeat Solution Multiplications (Tau+N): %ld\n",Nmult1);*/
+/*  fprintf(stderr,"  Repeat Solution Multiplications (Tau+N): %ld\n",Nmult1);*/
 }

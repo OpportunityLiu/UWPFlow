@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Update AC/DC variables. */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"

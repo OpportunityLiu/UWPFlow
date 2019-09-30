@@ -1,9 +1,7 @@
+#pragma once
+
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>

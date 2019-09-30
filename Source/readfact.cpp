@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Read SVC data in WSCC type format  */
 
 #include "readdata.h"
@@ -50,18 +47,18 @@ char *Line;
       ptrac->V=1.00;
       /*  Create new element between buses Name2 & Name */
       if (KV==0){
-         fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
          ErrorHalt("Base voltage at bus 1 is zero.");
       }
       if (KV2==0){
-         fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
          ErrorHalt("Base voltage at bus 2 is zero.");
       }
       Ssvc=GetValue(Line,56,4,0);
       if(Ssvc==0.0)Ssvc=Sn;
       X=Xth_l*Sn/Ssvc;
       if (fabs(X)<0.0001) {
-         fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
          ErrorHalt("AC element is a short circuit. Try eliminating it.");
          B=0;
       } else {
@@ -97,7 +94,7 @@ char *Line;
     else ptrac=ACbusInList(0,Name,KV,Nac,1);
     SVCptr=SVCbusInList(Name2,0,ptrac,ptrac1);
     if (SVCptr->Xc>0) {
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("The SVC bus was previously defined (check FS cards).");
     }
     if (SVCptr->N==0) { Nsvc++; SVCptr->N=Nsvc;}
@@ -109,7 +106,7 @@ char *Line;
     if(ptrac->SVC==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate SVC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrac->SVC->SVC=SVCptr;
@@ -157,20 +154,20 @@ char *Line;
     ptrac1=ACbusInList(0,Name1,KV1,Nac,1);
     if (ptrac1->N==0) { Nac++; ptrac1->Num=ptrac1->N=Nac;}
     if (KV==0){
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("Base voltage at bus From is zero.");
     }
     if (KV1==0){
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("Base voltage at bus To is zero.");
     }
     if (ptrac==ptrac1){
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("Both TCSC buses are the same.");
     }
     TCSCptr=TCSCbusInList(Name,0,ptrac,ptrac1);
     if (TCSCptr->Xc>0) {
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("The TCSC bus was previously defined (check FC cards).");
     }
     if (TCSCptr->N==0) { Ntcsc++; TCSCptr->N=Ntcsc;}
@@ -182,7 +179,7 @@ char *Line;
     if(ptrac->TCSC==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrac->TCSC->TCSC=TCSCptr;
@@ -196,7 +193,7 @@ char *Line;
     if(ptrac1->TCSC==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrac1->TCSC->TCSC=TCSCptr;
@@ -244,7 +241,7 @@ char *Line;
     ptrac1=ACbusInList(0,Name1,KV1,Nac,1);
     STATCOMptr=STATCOMbusInList(Name,0,ptrac,ptrac1);
     if (STATCOMptr->B>0) {
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("The STATCOM bus was previously defined (check FT cards).");
     }
     if (STATCOMptr->N==0) { Nstatcom++; STATCOMptr->N=Nstatcom;}
@@ -256,26 +253,26 @@ char *Line;
     if(ptrac->STATCOM==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate STATCOM element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrac->STATCOM->STATCOM=STATCOMptr;
     ptrac->STATCOM->Next=ptr;
     R=GetValue(Line,32,6,5);
     if(R<0){
-      fCustomPrint(stderr,"***Warning: The STATCOM ac resistance R is negative. The corresponding \n");
-      fCustomPrint(stderr,"            positive value will be used.");
+      fprintf(stderr,"***Warning: The STATCOM ac resistance R is negative. The corresponding \n");
+      fprintf(stderr,"            positive value will be used.");
       R=-R;
     }
     X=GetValue(Line,38,6,5);
     if(X<=0){
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
       ErrorHalt("The STATCOM reactance must be greater than zero.");
     }
     Gc=GetValue(Line,44,6,5);
     if(Gc<0){
-      fCustomPrint(stderr,"***Warning: The STATCOM dc conductance Gc is negative. The corresponding \n");
-      fCustomPrint(stderr,"            positive value will be used.");
+      fprintf(stderr,"***Warning: The STATCOM dc conductance Gc is negative. The corresponding \n");
+      fprintf(stderr,"            positive value will be used.");
       Gc=-Gc;
     }
     MVA=GetValue(Line,65,5,0);

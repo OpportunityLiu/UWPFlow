@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /*  Read data: Basic routines. */
 
 #include "readdata.h"
@@ -136,7 +133,7 @@ INDEX BusN,N1,N2;
     if (dataPtr->ACbus==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->ACbus;
@@ -157,7 +154,7 @@ INDEX BusN,N1,N2;
     if (ptr==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrp->Next=ptr;
@@ -250,7 +247,7 @@ INDEX i,N;
     if (dataPtr->Area==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate Area data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->Area;
@@ -269,7 +266,7 @@ INDEX i,N;
     if (ptr==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate Area data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     prevptr->Next=ptr;
@@ -309,7 +306,7 @@ ElementData *Eptr;
   if (ELptr==NULL) {
     fclose(InputDataFile);
     ErrorHalt("Insufficient memory to allocate AC element data.");
-    stopExecute(ERROREXIT);
+    exit(ERROREXIT);
   }
 #endif
   ptr=ELptr;
@@ -341,7 +338,7 @@ char *Type,*Ckt;
     if (dataPtr->Element==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->Element;
@@ -416,7 +413,7 @@ INDEX N;
     if (dataPtr->DCbus==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate DC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->DCbus;
@@ -435,7 +432,7 @@ INDEX N;
     if (ptr==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate DC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     prevptr->Next=ptr;

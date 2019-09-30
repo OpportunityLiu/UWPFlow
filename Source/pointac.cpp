@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Point of Collapse:  AC Hessian. */
 
 #include "pointl.h"

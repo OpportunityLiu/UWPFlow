@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Homotopy Continuation Method:  Group 2. */
 
 #include "homot.h"
@@ -71,8 +68,8 @@ FILE *Out;
       strcpy_s(Type,"");
       if (fgets(Line,BUFLEN,Input)==NULL) break;
       if ((count=sscanf(Line,"%d %s %s",&N,BusName,Type))>3 && strncmp(Line,"C",1)) {
-        fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-        fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
+        fprintf(stderr,"***Warning: Line-> %s",Line);
+        fprintf(stderr,"            will be ignored in file %s.\n",Name);
       }
       else if (count>=2) {
         if (BusName[0]=='\"'||BusName[0]=='\'') {
@@ -108,7 +105,7 @@ FILE *Out;
               fclose(Out);
               fclose(Input);
               ErrorHalt("Insufficient memory to allocate profile List.");
-              stopExecute(ERROREXIT);
+              exit(ERROREXIT);
             }
 #endif
             Vlist->AC=ACptr;
@@ -123,8 +120,8 @@ FILE *Out;
             if(Lptr!=NULL) Lptr->Prev=Vlist;
           }
           else if (strncmp(Line,"C",1)) {
-            fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-            fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
+            fprintf(stderr,"***Warning: Line-> %s",Line);
+            fprintf(stderr,"            will be ignored in file %s.\n",Name);
           }
         }
       }
@@ -164,7 +161,7 @@ FILE *Out;
         if (Vlistp==NULL) {
           fclose(Out);
           ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-          stopExecute(ERROREXIT);
+          exit(ERROREXIT);
         }
 #endif
         Vlistp->AC=ACptrM;
@@ -193,7 +190,7 @@ FILE *Out;
           if (Vlist==NULL) {
             fclose(Out);
             ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-            stopExecute(ERROREXIT);
+            exit(ERROREXIT);
           }
 #endif
           Vlist->AC=DCptr->AC;
@@ -214,7 +211,7 @@ FILE *Out;
           if (Vlist==NULL) {
             fclose(Out);
             ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-            stopExecute(ERROREXIT);
+            exit(ERROREXIT);
           }
 #endif
           Vlist->AC=DCptr->AC;
@@ -228,9 +225,9 @@ FILE *Out;
       }
     }
 	//extra % because when it's read by fprintf, one % will be ignored
-    fCustomPrint(Out,"%s ", "%%");
+    fprintf(Out,"%s ", "%%");
   }
-  fCustomPrint(Out,"L.F.    ");
+  fprintf(Out,"L.F.    ");
 
 #ifdef WINDOWS
   GraphDlg->totalElements = 0;
@@ -243,7 +240,7 @@ FILE *Out;
 
   for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) 
   {
-	  fCustomPrint(Out,"%s%-5d    ",Lptr->Type,Lptr->N);
+	  fprintf(Out,"%s%-5d    ",Lptr->Type,Lptr->N);
 
 #ifdef WINDOWS
 		//initialize elements of the graph here where headings are printed
@@ -272,67 +269,67 @@ FILE *Out;
   if (ExistParameter('e')) {
     for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) if (Lptr->AC!=NULL) {
       if (Lptr->AC->Gen!=NULL) {
-        fCustomPrint(Out,"Ia%-5d    ",Lptr->N);
-        fCustomPrint(Out,"Eq%-5d    ",Lptr->N);
-        fCustomPrint(Out,"dg%-5d    ",Lptr->N);
+        fprintf(Out,"Ia%-5d    ",Lptr->N);
+        fprintf(Out,"Eq%-5d    ",Lptr->N);
+        fprintf(Out,"dg%-5d    ",Lptr->N);
       }
     }
   }
   if (ExistParameter('O')) {
-    fCustomPrint(Out,"Vac    ");
-    if (field>7) fCustomPrint(Out,"    ");
+    fprintf(Out,"Vac    ");
+    if (field>7) fprintf(Out,"    ");
   }
   if (ExistParameter('O') || ExistParameter('e')) {
     for (i=0,DCptr=dataPtr->DCbus;DCptr!=NULL;DCptr=DCptr->Next) if(!strcmp(DCptr->Type,"R")) {
       i+=2;
       if (ExistParameter('O')) {
-        fCustomPrint(Out,"a%1d    ",i-1); if (field>7) fCustomPrint(Out,"    ");
-        fCustomPrint(Out,"b%1d    ",i-1); if (field>7) fCustomPrint(Out,"    ");
-        fCustomPrint(Out,"d%1d    ",i-1); if (field>7) fCustomPrint(Out,"    ");
-        fCustomPrint(Out,"a%1d    ",i);   if (field>7) fCustomPrint(Out,"    ");
-        fCustomPrint(Out,"b%1d    ",i);   if (field>7) fCustomPrint(Out,"    ");
-        fCustomPrint(Out,"d%1d    ",i);   if (field>7) fCustomPrint(Out,"    ");
+        fprintf(Out,"a%1d    ",i-1); if (field>7) fprintf(Out,"    ");
+        fprintf(Out,"b%1d    ",i-1); if (field>7) fprintf(Out,"    ");
+        fprintf(Out,"d%1d    ",i-1); if (field>7) fprintf(Out,"    ");
+        fprintf(Out,"a%1d    ",i);   if (field>7) fprintf(Out,"    ");
+        fprintf(Out,"b%1d    ",i);   if (field>7) fprintf(Out,"    ");
+        fprintf(Out,"d%1d    ",i);   if (field>7) fprintf(Out,"    ");
       } else if (ExistParameter('e')) {
-        fCustomPrint(Out,"alR_%1d    ",i);
-        fCustomPrint(Out,"gaI_%1d    ",i);
-        fCustomPrint(Out,"Id_%1d    ",i);
+        fprintf(Out,"alR_%1d    ",i);
+        fprintf(Out,"gaI_%1d    ",i);
+        fprintf(Out,"Id_%1d    ",i);
       }
     }
   }
-  if (flagPrintTotalPl) fCustomPrint(Out,"PL        ");
-  if (flagPrintTotalQl) fCustomPrint(Out,"QL        ");
-  if (flagPrintTotalPg) fCustomPrint(Out,"PG        ");
-  if (flagPrintTotalQg) fCustomPrint(Out,"QG        ");
+  if (flagPrintTotalPl) fprintf(Out,"PL        ");
+  if (flagPrintTotalQl) fprintf(Out,"QL        ");
+  if (flagPrintTotalPg) fprintf(Out,"PG        ");
+  if (flagPrintTotalQg) fprintf(Out,"QG        ");
   if (ExistParameter('f')) {
-    fCustomPrint(Out,"VSFone    ");
-    fCustomPrint(Out,"VSFbus    ");
-    fCustomPrint(Out,"VSFinf    ");
-    fCustomPrint(Out,"SF    ");
-    if (TVI!=0) fCustomPrint(Out,"TVI_%d    %d_Rank",TVIbus,TVIbus);
+    fprintf(Out,"VSFone    ");
+    fprintf(Out,"VSFbus    ");
+    fprintf(Out,"VSFinf    ");
+    fprintf(Out,"SF    ");
+    if (TVI!=0) fprintf(Out,"TVI_%d    %d_Rank",TVIbus,TVIbus);
 
   }
-  if (ExistParameter('m')) fCustomPrint(Out,"\nx=[\n");
-  else fCustomPrint(Out,"\n");
+  if (ExistParameter('m')) fprintf(Out,"\nx=[\n");
+  else fprintf(Out,"\n");
   if (ExistParameter('d') && (Out!=stdout || !NullName(NameParameter('l')))) {
-    fCustomPrint(stderr,"L.F.    ");
-    for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) fCustomPrint(stderr,"%s%-5d    ",Lptr->Type,Lptr->N);
+    fprintf(stderr,"L.F.    ");
+    for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) fprintf(stderr,"%s%-5d    ",Lptr->Type,Lptr->N);
     for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) if (Lptr->AC!=NULL) {
       if (Lptr->AC->Gen!=NULL) {
-        fCustomPrint(stderr,"Ia%-5d    ",Lptr->N);
-        fCustomPrint(stderr,"Eq%-5d    ",Lptr->N);
-        fCustomPrint(stderr,"dg%-5d    ",Lptr->N);
+        fprintf(stderr,"Ia%-5d    ",Lptr->N);
+        fprintf(stderr,"Eq%-5d    ",Lptr->N);
+        fprintf(stderr,"dg%-5d    ",Lptr->N);
       }
     }
     for (i=0,DCptr=dataPtr->DCbus;DCptr!=NULL;DCptr=DCptr->Next) if(!strcmp(DCptr->Type,"R")) {
       i++;
-      fCustomPrint(stderr,"alR_%-2d    ",i);
-      fCustomPrint(stderr,"muR_%-2d    ",i);
-      fCustomPrint(stderr,"tpR_%-2d    ",i);
-      fCustomPrint(stderr,"gaI_%-2d    ",i);
-      fCustomPrint(stderr,"muI_%-2d    ",i);
-      fCustomPrint(stderr,"tpI_%-2d    ",i);
+      fprintf(stderr,"alR_%-2d    ",i);
+      fprintf(stderr,"muR_%-2d    ",i);
+      fprintf(stderr,"tpR_%-2d    ",i);
+      fprintf(stderr,"gaI_%-2d    ",i);
+      fprintf(stderr,"muI_%-2d    ",i);
+      fprintf(stderr,"tpI_%-2d    ",i);
     }
-    fCustomPrint(stderr,"\n");
+    fprintf(stderr,"\n");
   }
 }
 
@@ -360,7 +357,7 @@ FILE *Out;
   int currElement=0;
 #endif
 
-  Print(Out,0,6,4,lambda_o+lambda); fCustomPrint(Out,"    ");
+  Print(Out,0,6,4,lambda_o+lambda); fprintf(Out,"    ");
   for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) {
     ACptr=Lptr->AC;
     Aptr=Lptr->Area;
@@ -368,7 +365,7 @@ FILE *Out;
       if (!strcmp(Lptr->Type,"V")) 
 	  {
 		  Print(Out,0,6,4,ACptr->V); 
-		  fCustomPrint(Out,"    "); 
+		  fprintf(Out,"    "); 
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -384,7 +381,7 @@ FILE *Out;
       else if (!strcmp(Lptr->Type,"D")) 
 	  {
 		  Print(Out,0,6,2,ACptr->Ang*AngTr); 
-		  fCustomPrint(Out,"    ");
+		  fprintf(Out,"    ");
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -400,7 +397,7 @@ FILE *Out;
       else if (!strcmp(Lptr->Type,"PG")) 
 	  {
 		  Print(Out,0,6,2,ACptr->PG*Sn); 
-		  fCustomPrint(Out,"    ");
+		  fprintf(Out,"    ");
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -416,7 +413,7 @@ FILE *Out;
       else if (!strcmp(Lptr->Type,"QG")) 
 	  {
 		  Print(Out,0,6,2,ACptr->Qg*Sn); 
-		  fCustomPrint(Out,"    ");
+		  fprintf(Out,"    ");
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -432,7 +429,7 @@ FILE *Out;
       else if (!strcmp(Lptr->Type,"PL")) 
 	  {
 		  Print(Out,0,6,2,ACptr->PL*Sn); 
-		  fCustomPrint(Out,"    ");
+		  fprintf(Out,"    ");
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -448,7 +445,7 @@ FILE *Out;
       else if (!strcmp(Lptr->Type,"QL")) 
 	  {
 		  Print(Out,0,6,2,ACptr->QL*Sn); 
-		  fCustomPrint(Out,"    ");
+		  fprintf(Out,"    ");
 #ifdef WINDOWS
 		  if (GraphDlg!=NULL)
 		  {
@@ -488,67 +485,67 @@ FILE *Out;
         if(Eptr->Meter->Area!=Aptr) P= -P;
         Aptr->SPg=Aptr->SPg+P;
       }
-      Print(Out,0,6,2,Aptr->SPg*Sn); fCustomPrint(Out,"    ");
+      Print(Out,0,6,2,Aptr->SPg*Sn); fprintf(Out,"    ");
     }
   }
   if (ExistParameter('e')) for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) {
     ACptr=Lptr->AC;
     if (ACptr!=NULL && ACptr->Gen!=NULL) {
-      Print(Out,0,6,4,ACptr->Gen->Ia); fCustomPrint(Out,"    ");
-      Print(Out,0,6,4,ACptr->Gen->Eq); fCustomPrint(Out,"    ");
-      Print(Out,0,6,2,ACptr->Gen->dg*AngTr); fCustomPrint(Out,"    ");
+      Print(Out,0,6,4,ACptr->Gen->Ia); fprintf(Out,"    ");
+      Print(Out,0,6,4,ACptr->Gen->Eq); fprintf(Out,"    ");
+      Print(Out,0,6,2,ACptr->Gen->dg*AngTr); fprintf(Out,"    ");
    }
   }
   if (ExistParameter('O')) {
     TEFac(flag);
-    Print(Out,0,field,4,Vac);  fCustomPrint(Out,"    ");
+    Print(Out,0,field,4,Vac);  fprintf(Out,"    ");
     TEFdc(Out);
   }
   else if (ExistParameter('e')) {
     for (DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
       DCptrI=DCptrR->To;
-      Print(Out,0,6,2,DCptrR->Alfa*AngTr); fCustomPrint(Out,"    ");
-      Print(Out,0,6,2,DCptrI->Gamma*AngTr); fCustomPrint(Out,"    ");
-      Print(Out,0,6,2,DCptrI->Id*1000.*Sn/DCptrR->Vn); fCustomPrint(Out,"    ");
+      Print(Out,0,6,2,DCptrR->Alfa*AngTr); fprintf(Out,"    ");
+      Print(Out,0,6,2,DCptrI->Gamma*AngTr); fprintf(Out,"    ");
+      Print(Out,0,6,2,DCptrI->Id*1000.*Sn/DCptrR->Vn); fprintf(Out,"    ");
     }
   }
-  if (flagPrintTotalPl) { Print(Out,0,8,2,TotalPl*Sn); fCustomPrint(Out,"    "); }
-  if (flagPrintTotalQl) { Print(Out,0,8,2,TotalQl*Sn); fCustomPrint(Out,"    "); }
-  if (flagPrintTotalPg) { Print(Out,0,8,2,TotalPg*Sn); fCustomPrint(Out,"    "); }
-  if (flagPrintTotalQg) { Print(Out,0,8,2,TotalQg*Sn); fCustomPrint(Out,"    "); }
+  if (flagPrintTotalPl) { Print(Out,0,8,2,TotalPl*Sn); fprintf(Out,"    "); }
+  if (flagPrintTotalQl) { Print(Out,0,8,2,TotalQl*Sn); fprintf(Out,"    "); }
+  if (flagPrintTotalPg) { Print(Out,0,8,2,TotalPg*Sn); fprintf(Out,"    "); }
+  if (flagPrintTotalQg) { Print(Out,0,8,2,TotalQg*Sn); fprintf(Out,"    "); }
   if (ExistParameter('d') && (Out!=stdout || !NullName(NameParameter('l')))) {
-    Print(stderr,0,6,4,lambda_o+lambda); fCustomPrint(stderr,"    ");
+    Print(stderr,0,6,4,lambda_o+lambda); fprintf(stderr,"    ");
     for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) {
       ACptr=Lptr->AC;
       Aptr=Lptr->Area;
       if (ACptr!=NULL) {
-        if (!strcmp(Lptr->Type,"V")) {Print(stderr,0,6,4,ACptr->V); fCustomPrint(stderr,"    "); }
-        else if (!strcmp(Lptr->Type,"D")) {Print(stderr,0,6,2,ACptr->Ang*AngTr); fCustomPrint(stderr,"    ");}
-        else if (!strcmp(Lptr->Type,"PG")) {Print(stderr,0,6,2,ACptr->PG*Sn); fCustomPrint(stderr,"    ");}
-        else if (!strcmp(Lptr->Type,"QG")) {Print(stderr,0,6,2,ACptr->Qg*Sn); fCustomPrint(stderr,"    ");}
-        else if (!strcmp(Lptr->Type,"PL")) {Print(stderr,0,6,2,ACptr->PL*Sn); fCustomPrint(stderr,"    ");}
-        else if (!strcmp(Lptr->Type,"QL")) {Print(stderr,0,6,2,ACptr->QL*Sn); fCustomPrint(stderr,"    ");}
+        if (!strcmp(Lptr->Type,"V")) {Print(stderr,0,6,4,ACptr->V); fprintf(stderr,"    "); }
+        else if (!strcmp(Lptr->Type,"D")) {Print(stderr,0,6,2,ACptr->Ang*AngTr); fprintf(stderr,"    ");}
+        else if (!strcmp(Lptr->Type,"PG")) {Print(stderr,0,6,2,ACptr->PG*Sn); fprintf(stderr,"    ");}
+        else if (!strcmp(Lptr->Type,"QG")) {Print(stderr,0,6,2,ACptr->Qg*Sn); fprintf(stderr,"    ");}
+        else if (!strcmp(Lptr->Type,"PL")) {Print(stderr,0,6,2,ACptr->PL*Sn); fprintf(stderr,"    ");}
+        else if (!strcmp(Lptr->Type,"QL")) {Print(stderr,0,6,2,ACptr->QL*Sn); fprintf(stderr,"    ");}
       }
-      else if (Aptr!=NULL) {Print(stderr,0,6,2,Aptr->SPg*Sn); fCustomPrint(stderr,"    ");}
+      else if (Aptr!=NULL) {Print(stderr,0,6,2,Aptr->SPg*Sn); fprintf(stderr,"    ");}
     }
     for(Lptr=Vlist;Lptr!=NULL;Lptr=Lptr->Next) {
       ACptr=Lptr->AC;
       if (ACptr!=NULL && ACptr->Gen!=NULL) {
-        Print(stderr,0,6,4,ACptr->Gen->Ia); fCustomPrint(stderr,"    ");
-        Print(stderr,0,6,4,ACptr->Gen->Eq); fCustomPrint(stderr,"    ");
-        Print(stderr,0,6,2,ACptr->Gen->dg*AngTr); fCustomPrint(stderr,"    ");
+        Print(stderr,0,6,4,ACptr->Gen->Ia); fprintf(stderr,"    ");
+        Print(stderr,0,6,4,ACptr->Gen->Eq); fprintf(stderr,"    ");
+        Print(stderr,0,6,2,ACptr->Gen->dg*AngTr); fprintf(stderr,"    ");
      }
     }
     for (DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
       DCptrI=DCptrR->To;
-      Print(stderr,0,6,2,DCptrR->Alfa*AngTr); fCustomPrint(stderr,"    ");
-      Print(stderr,0,6,2,(PI-DCptrR->Alfa-DCptrR->Gamma)*AngTr); fCustomPrint(stderr,"    ");
-      Print(stderr,0,6,4,DCptrR->Tap); fCustomPrint(stderr,"    ");
-      Print(stderr,0,6,2,DCptrI->Gamma*AngTr); fCustomPrint(stderr,"    ");
-      Print(stderr,0,6,2,(PI-DCptrI->Alfa-DCptrI->Gamma)*AngTr); fCustomPrint(stderr,"    ");
-      Print(stderr,0,6,4,DCptrI->Tap); fCustomPrint(stderr,"    ");
+      Print(stderr,0,6,2,DCptrR->Alfa*AngTr); fprintf(stderr,"    ");
+      Print(stderr,0,6,2,(PI-DCptrR->Alfa-DCptrR->Gamma)*AngTr); fprintf(stderr,"    ");
+      Print(stderr,0,6,4,DCptrR->Tap); fprintf(stderr,"    ");
+      Print(stderr,0,6,2,DCptrI->Gamma*AngTr); fprintf(stderr,"    ");
+      Print(stderr,0,6,2,(PI-DCptrI->Alfa-DCptrI->Gamma)*AngTr); fprintf(stderr,"    ");
+      Print(stderr,0,6,4,DCptrI->Tap); fprintf(stderr,"    ");
     }
-    fCustomPrint(stderr,"\n");
+    fprintf(stderr,"\n");
   }
 
 }
@@ -577,31 +574,31 @@ VALUETYPE *vector,Max;
 
   Out=OpenOutput(NameParameter(Option));
   N=Jac->n1;
-  fCustomPrint(Out,"%d 1\n",N);
+  fprintf(Out,"%d 1\n",N);
   for (i=0,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
     if (ACptr->Cont!=NULL){
       if (strpbrk(ACptr->Type,"S")) sprintf_s(str,"kg%-d",ACptr->Num);
       else                          sprintf_s(str,"d%-d",ACptr->Num);
       i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       sprintf_s(str,"V%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"L")){
       sprintf_s(str,"d%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,"l",vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,"l",vector[i]/Max);
     }
     else if(QRcont && strpbrk(ACptr->Type,"C")){
       sprintf_s(str,"d%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       sprintf_s(str,"Q%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(Rcont && strpbrk(ACptr->Type,"T")){
       sprintf_s(str,"d%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
          Eptr=ELptr->Eptr;
          I=Eptr->From->Num;
@@ -609,31 +606,31 @@ VALUETYPE *vector,Max;
          if(!strcmp(Eptr->Type,"R")) break;
       }
       sprintf_s(str,"1/t%-d_%-d",I,J); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"Q") || strpbrk(ACptr->Type,"V") || (!QRcont && strpbrk(ACptr->Type,"G"))){
       if (strpbrk(ACptr->Type,"S")) sprintf_s(str,"kg%-d",ACptr->Num);
       else                          sprintf_s(str,"d%-d",ACptr->Num);
       i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       sprintf_s(str,"Qg%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"Z")) {
       sprintf_s(str,"d%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       sprintf_s(str,"Qz%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"S")){
       sprintf_s(str,"kg%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       sprintf_s(str,"Qg%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     if(Acont && strpbrk(ACptr->Type,"A")){
       sprintf_s(str,"kg%-d",ACptr->Num); i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
@@ -647,16 +644,16 @@ VALUETYPE *vector,Max;
          }
          if(!strcmp(Eptr->Type,"RP")){
            sprintf_s(str,"a%-d_%-d",I,J); i++;
-           fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else if(strpbrk(Eptr->Type,"PM")){
            sprintf_s(str,"P%-d_%-d",I,J); i++;
-           fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else if(!strcmp(Eptr->Type,"RQ")){
            sprintf_s(str,"1/t%-d_%-d",I,J); i++;
-           fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else {
            sprintf_s(str,"Q%-d_%-d",I,J); i++;
-           fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          }
       }
     }
@@ -664,19 +661,19 @@ VALUETYPE *vector,Max;
       i=ACptr->Gen->Nvar;
       if (!strpbrk(ACptr->cont,"E")) sprintf_s(str,"Eq%-d",ACptr->Num);
       else                           sprintf_s(str,"Qg%-d",ACptr->Num);
-      i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"dg%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vr%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vi%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Ir%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Ii%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vq%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vd%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Iq%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Id%-d",ACptr->Num); i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"dg%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Vr%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Vi%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Ir%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Ii%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Vq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Vd%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Iq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf_s(str,"Id%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       if (!strpbrk(ACptr->cont,"I")) sprintf_s(str,"Ia%-d",ACptr->Num);
       else                           sprintf_s(str,"Qg%-d",ACptr->Num);
-      i++; fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
   }
   for(k=0,DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
@@ -688,35 +685,35 @@ VALUETYPE *vector,Max;
         else { DCptr=DCptrI; strcpy_s(type,"i"); }
         if(strcmp(DCptr->Cont1,"VD")&&strcmp(DCptr->Cont2,"VD")) {
           sprintf_s(str,"Vd%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"AT")&&strcmp(DCptr->Cont2,"AT")) {
           sprintf_s(str,"t%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"AL")&&strcmp(DCptr->Cont2,"AL")) {
           sprintf_s(str,"al%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"GA")&&strcmp(DCptr->Cont2,"GA")) {
           sprintf_s(str,"ga%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         sprintf_s(str,"S%1s%-d",type,k); i++;
-        fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+        fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         if(strcmp(DCptr->Cont1,"PA")&&strcmp(DCptr->Cont2,"PA")) {
           sprintf_s(str,"P%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"QA")&&strcmp(DCptr->Cont2,"QA")) {
           sprintf_s(str,"Q%1s%-d",type,k); i++;
-          fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+          fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
       }
       if(strcmp(DCptrR->Cont1,"ID")&&strcmp(DCptrR->Cont2,"ID")&&
          strcmp(DCptrI->Cont1,"ID")&&strcmp(DCptrI->Cont2,"ID")) {
         sprintf_s(str,"Id%-d",k); i++;
-        fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+        fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       }
     }
   }
@@ -724,69 +721,69 @@ VALUETYPE *vector,Max;
   for(k=0,SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
     k++;
     sprintf_s(str,"Qsvc%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Bv%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     if(!strcmp(SVCptr->Cont,"AL")){
       sprintf_s(str,"alpha%-d",k);i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else {
       sprintf_s(str,"Vrefc%-d",k);i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
   }
 
   for(k=0,TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
     k++;
     sprintf_s(str,"Ptcsc%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Qtcsck%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Qtcscm%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Be%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"alpha%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Itcsc%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"delta%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
   }
 
   for(k=0,STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
     k++;
     if(!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")){
       sprintf_s(str,"Istat%-d",k);i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     } else {
       sprintf_s(str,"Vrefc%-d",k);i++;
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     sprintf_s(str,"theta%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Vdc%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"k%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"alpha%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Pstat%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     sprintf_s(str,"Qstat%-d",k);i++;
-    fCustomPrint(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+    fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
   }
                              /* END FACTS */
 
   if (Option!='Y') {
-    if (!Bl) fCustomPrint(Out,"%4d %8s %-11.5g\n",++i,"l",Dparam);
+    if (!Bl) fprintf(Out,"%4d %8s %-11.5g\n",++i,"l",Dparam);
     else {
       sprintf_s(str,"V%-d",BlPtr->Num);
-      fCustomPrint(Out,"%4d %8s %-11.5g\n",++i,str,Dparam);
+      fprintf(Out,"%4d %8s %-11.5g\n",++i,str,Dparam);
     }
   }
-  fCustomPrint(Out,"0 0 0.0\n");
+  fprintf(Out,"0 0 0.0\n");
   fclose(Out);
 }
 
@@ -809,116 +806,116 @@ INDEX count;
   if(NullName(Namebase)) return;
   sprintf_s(Name,"%s.m",Namebase);
   OutFile=OpenOutput(Name);
-  fCustomPrint(OutFile,"clear lambda evJ svJ evPF svPF evQV svQV detD_ll t_ll\n");
-  fCustomPrint(OutFile,"clear crsvJ crevJ crsvPF crevPF crsvQV crevQV\n");
-  fCustomPrint(OutFile,"warning off\n");
-  for(i=1; i<=count; i++) fCustomPrint(OutFile,"%s%d\n",Namebase,i);
-  fCustomPrint(OutFile,"figure; plot(lambda,evJ); \n");
-  fCustomPrint(OutFile,"title('Full matrix |e-val.| index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,svJ); \n");
-  fCustomPrint(OutFile,"title('Full matrix sing. val. index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank for J indices are stored in crevJ and crsvJ')\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,evPF); \n");
-  fCustomPrint(OutFile,"title('Power flow matrix |e-val.| index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,svPF); \n");
-  fCustomPrint(OutFile,"title('Power flow matrix sing. val. index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank for J_PV indices are stored in crevPF and crsvPF')\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,evQV,lambda,svQV,'-.'); \n");
-  fCustomPrint(OutFile,"title('J_{QV} matrix |e-val.| and sing. val. indices');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"legend('e-v','s.v.');\n");
-  fCustomPrint(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank the J_QV indices are stored in crevQV and crsvQV')\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,detD_ll); \n");
-  fCustomPrint(OutFile,"title('Reduced det. index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"figure; plot(lambda,-t_ll); \n");
-  fCustomPrint(OutFile,"title('Test func. index');\n");
-  fCustomPrint(OutFile,"xlabel('lambda [p.u.]');\n");
-  fCustomPrint(OutFile,"disp(' '); disp('Bus l used for the red. det. and test func. indices is: %d %s')\n",TFbus,TFname);
-  fCustomPrint(OutFile,"warning on\n\n");
+  fprintf(OutFile,"clear lambda evJ svJ evPF svPF evQV svQV detD_ll t_ll\n");
+  fprintf(OutFile,"clear crsvJ crevJ crsvPF crevPF crsvQV crevQV\n");
+  fprintf(OutFile,"warning off\n");
+  for(i=1; i<=count; i++) fprintf(OutFile,"%s%d\n",Namebase,i);
+  fprintf(OutFile,"figure; plot(lambda,evJ); \n");
+  fprintf(OutFile,"title('Full matrix |e-val.| index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"figure; plot(lambda,svJ); \n");
+  fprintf(OutFile,"title('Full matrix sing. val. index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank for J indices are stored in crevJ and crsvJ')\n");
+  fprintf(OutFile,"figure; plot(lambda,evPF); \n");
+  fprintf(OutFile,"title('Power flow matrix |e-val.| index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"figure; plot(lambda,svPF); \n");
+  fprintf(OutFile,"title('Power flow matrix sing. val. index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank for J_PV indices are stored in crevPF and crsvPF')\n");
+  fprintf(OutFile,"figure; plot(lambda,evQV,lambda,svQV,'-.'); \n");
+  fprintf(OutFile,"title('J_{QV} matrix |e-val.| and sing. val. indices');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"legend('e-v','s.v.');\n");
+  fprintf(OutFile,"disp(' '); disp('Critical bus numbers and bus l rank the J_QV indices are stored in crevQV and crsvQV')\n");
+  fprintf(OutFile,"figure; plot(lambda,detD_ll); \n");
+  fprintf(OutFile,"title('Reduced det. index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"figure; plot(lambda,-t_ll); \n");
+  fprintf(OutFile,"title('Test func. index');\n");
+  fprintf(OutFile,"xlabel('lambda [p.u.]');\n");
+  fprintf(OutFile,"disp(' '); disp('Bus l used for the red. det. and test func. indices is: %d %s')\n",TFbus,TFname);
+  fprintf(OutFile,"warning on\n\n");
   fclose(OutFile);
   /* --------------- Create 'rankbus.m' file needed for Matlab computations --------------- */
   OutFile=OpenOutput("rankbus.m");
-  fCustomPrint(OutFile,"function num_rank=rankbus(vec,num)\n");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s Rank entry 'num' in abs(vec).\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"\n");
-  fCustomPrint(OutFile,"N=length(vec);\n");
-  fCustomPrint(OutFile,"[val,I]=sort(abs(vec));\n");
-  fCustomPrint(OutFile,"I=flipud(I);\n");
-  fCustomPrint(OutFile,"for i=1:N,\n");
-  fCustomPrint(OutFile,"  if (I(i)==num), num_rank=i; break; end\n");
-  fCustomPrint(OutFile,"end\n");
+  fprintf(OutFile,"function num_rank=rankbus(vec,num)\n");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s Rank entry 'num' in abs(vec).\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"\n");
+  fprintf(OutFile,"N=length(vec);\n");
+  fprintf(OutFile,"[val,I]=sort(abs(vec));\n");
+  fprintf(OutFile,"I=flipud(I);\n");
+  fprintf(OutFile,"for i=1:N,\n");
+  fprintf(OutFile,"  if (I(i)==num), num_rank=i; break; end\n");
+  fprintf(OutFile,"end\n");
   fclose(OutFile);
   /* ----------------  Create 'inviter.m' file needed for Matlab computations --------------- */
   OutFile=OpenOutput("inviter.m");
-  fCustomPrint(OutFile,"function [e_val,v]=inviter(A,e_o,tol,iter,warn)\n");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s Inverse iteration method to compute a real e-value.\n","%%");
-  fCustomPrint(OutFile,"%s Designed for sparse matrices, but works with full matrices.\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s      [v,e_val]=inviter(A,e_o,tol,iter,warn)\n","%%");
-  fCustomPrint(OutFile,"%s \n","%%");
-  fCustomPrint(OutFile,"%s Input:  A    -> NxN matrix\n","%%");
-  fCustomPrint(OutFile,"%s         e_o  -> Optional eigenvalue guess (default 0)\n","%%");
-  fCustomPrint(OutFile,"%s          tol  -> Optional convergence tolerance (default 1e-4)\n","%%");
-  fCustomPrint(OutFile,"%s         iter -> Optional maximum number of iterations (default 30)\n","%%");
-  fCustomPrint(OutFile,"%s         warn -> Use 0 to cancel display of no convergence warning message\n","%%");
-  fCustomPrint(OutFile,"%s                 (default 1, i.e., display warning)\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s OutFileput: e_val -> Eigenvalue\n","%%");
-  fCustomPrint(OutFile,"%s         v     -> Eigenvector\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"%s Copyright (c) Claudio Canizares, Shu Zhang, 1996, 2006.\n","%%");
-  fCustomPrint(OutFile,"%s University of Waterloo, Waterloo, Canada\n","%%");
-  fCustomPrint(OutFile,"%s\n","%%");
-  fCustomPrint(OutFile,"if nargin<2, e_o=0; sign=1;\n");
-  fCustomPrint(OutFile,"else\n");
-  fCustomPrint(OutFile,"  if e_o<0, sign=-1;  else, sign=1;  end\n");
-  fCustomPrint(OutFile,"end\n");
-  fCustomPrint(OutFile,"if nargin<3, tol=1e-4; else, tol=abs(tol); end\n");
-  fCustomPrint(OutFile,"if nargin<4, iter=30; else, iter=abs(iter); end\n");
-  fCustomPrint(OutFile,"if nargin<5, warn=1; end\n");
-  fCustomPrint(OutFile,"\n");
-  fCustomPrint(OutFile,"N=size(A);\n");
-  fCustomPrint(OutFile,"count=1; \n");
-  fCustomPrint(OutFile,"conv=0;\n");
-  fCustomPrint(OutFile,"J=sparse(A-e_o*eye(N(1)));\n");
-  fCustomPrint(OutFile,"[L,U,P]=lu(J);\n");
-  fCustomPrint(OutFile,"while (count<=2)\n");
-  fCustomPrint(OutFile,"  v=ones(N(1),1);\n");
-  fCustomPrint(OutFile,"  for I=1:iter,\n");
-  fCustomPrint(OutFile,"   e_val=sign*1/norm(v,1);\n");
-  fCustomPrint(OutFile,"   v=v*e_val;\n");
-  fCustomPrint(OutFile,"   z=L\\(P*v);\n");
-  fCustomPrint(OutFile,"   vp=U\\z;\n");
-  fCustomPrint(OutFile,"   if(norm((1/e_val)*v-vp,1)<tol) break; end,\n");
-  fCustomPrint(OutFile,"   v=vp;\n");
-  fCustomPrint(OutFile,"  end\n");
-  fCustomPrint(OutFile,"  if (I<iter)\n");
-  fCustomPrint(OutFile,"    conv=1;\n");
-  fCustomPrint(OutFile,"    break;\n");
-  fCustomPrint(OutFile,"  else\n");
-  fCustomPrint(OutFile,"    sign=-sign;\n");
-  fCustomPrint(OutFile,"  end\n");
-  fCustomPrint(OutFile,"  count=count+1;\n");
-  fCustomPrint(OutFile,"end\n");
-  fCustomPrint(OutFile,"e_val=e_o+sign*1/norm(vp,1);\n");
-  fCustomPrint(OutFile,"v=e_val*vp;\n");
-  fCustomPrint(OutFile,"\n");
-  fCustomPrint(OutFile,"if (conv==0 & warn==1)\n");
-  fCustomPrint(OutFile,"  disp(' ')\n");
-  fCustomPrint(OutFile,"  disp('Warning: Inverse iteration method failed to converge')\n");
-  fCustomPrint(OutFile,"  str=sprintf_s('         for tol=%s6.4e, iter=%sd.',tol,iter);\n","%%","%%");
-  fCustomPrint(OutFile,"  disp(str)\n");
-  fCustomPrint(OutFile,"  disp(' ')\n");
-  fCustomPrint(OutFile,"end\n");
+  fprintf(OutFile,"function [e_val,v]=inviter(A,e_o,tol,iter,warn)\n");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s Inverse iteration method to compute a real e-value.\n","%%");
+  fprintf(OutFile,"%s Designed for sparse matrices, but works with full matrices.\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s      [v,e_val]=inviter(A,e_o,tol,iter,warn)\n","%%");
+  fprintf(OutFile,"%s \n","%%");
+  fprintf(OutFile,"%s Input:  A    -> NxN matrix\n","%%");
+  fprintf(OutFile,"%s         e_o  -> Optional eigenvalue guess (default 0)\n","%%");
+  fprintf(OutFile,"%s          tol  -> Optional convergence tolerance (default 1e-4)\n","%%");
+  fprintf(OutFile,"%s         iter -> Optional maximum number of iterations (default 30)\n","%%");
+  fprintf(OutFile,"%s         warn -> Use 0 to cancel display of no convergence warning message\n","%%");
+  fprintf(OutFile,"%s                 (default 1, i.e., display warning)\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s OutFileput: e_val -> Eigenvalue\n","%%");
+  fprintf(OutFile,"%s         v     -> Eigenvector\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"%s Copyright (c) Claudio Canizares, Shu Zhang, 1996, 2006.\n","%%");
+  fprintf(OutFile,"%s University of Waterloo, Waterloo, Canada\n","%%");
+  fprintf(OutFile,"%s\n","%%");
+  fprintf(OutFile,"if nargin<2, e_o=0; sign=1;\n");
+  fprintf(OutFile,"else\n");
+  fprintf(OutFile,"  if e_o<0, sign=-1;  else, sign=1;  end\n");
+  fprintf(OutFile,"end\n");
+  fprintf(OutFile,"if nargin<3, tol=1e-4; else, tol=abs(tol); end\n");
+  fprintf(OutFile,"if nargin<4, iter=30; else, iter=abs(iter); end\n");
+  fprintf(OutFile,"if nargin<5, warn=1; end\n");
+  fprintf(OutFile,"\n");
+  fprintf(OutFile,"N=size(A);\n");
+  fprintf(OutFile,"count=1; \n");
+  fprintf(OutFile,"conv=0;\n");
+  fprintf(OutFile,"J=sparse(A-e_o*eye(N(1)));\n");
+  fprintf(OutFile,"[L,U,P]=lu(J);\n");
+  fprintf(OutFile,"while (count<=2)\n");
+  fprintf(OutFile,"  v=ones(N(1),1);\n");
+  fprintf(OutFile,"  for I=1:iter,\n");
+  fprintf(OutFile,"   e_val=sign*1/norm(v,1);\n");
+  fprintf(OutFile,"   v=v*e_val;\n");
+  fprintf(OutFile,"   z=L\\(P*v);\n");
+  fprintf(OutFile,"   vp=U\\z;\n");
+  fprintf(OutFile,"   if(norm((1/e_val)*v-vp,1)<tol) break; end,\n");
+  fprintf(OutFile,"   v=vp;\n");
+  fprintf(OutFile,"  end\n");
+  fprintf(OutFile,"  if (I<iter)\n");
+  fprintf(OutFile,"    conv=1;\n");
+  fprintf(OutFile,"    break;\n");
+  fprintf(OutFile,"  else\n");
+  fprintf(OutFile,"    sign=-sign;\n");
+  fprintf(OutFile,"  end\n");
+  fprintf(OutFile,"  count=count+1;\n");
+  fprintf(OutFile,"end\n");
+  fprintf(OutFile,"e_val=e_o+sign*1/norm(vp,1);\n");
+  fprintf(OutFile,"v=e_val*vp;\n");
+  fprintf(OutFile,"\n");
+  fprintf(OutFile,"if (conv==0 & warn==1)\n");
+  fprintf(OutFile,"  disp(' ')\n");
+  fprintf(OutFile,"  disp('Warning: Inverse iteration method failed to converge')\n");
+  fprintf(OutFile,"  str=sprintf_s('         for tol=%s6.4e, iter=%sd.',tol,iter);\n","%%","%%");
+  fprintf(OutFile,"  disp(str)\n");
+  fprintf(OutFile,"  disp(' ')\n");
+  fprintf(OutFile,"end\n");
   fclose(OutFile);
 }
 

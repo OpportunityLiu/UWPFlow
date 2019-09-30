@@ -1,12 +1,5 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
@@ -85,14 +78,14 @@ void SVCinit()
    if (alpha <= SVCptr->AlphaMin) {
      alpha=SVCptr->alpha_svc=SVCptr->AlphaMin;
      strcpy_s(SVCptr->Cont,"MN");
-     fCustomPrint(stderr,"***Warning: SVC %s initial firing angle is at its minimum limit.\n",SVCptr->Name);
-     fCustomPrint(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
+     fprintf(stderr,"***Warning: SVC %s initial firing angle is at its minimum limit.\n",SVCptr->Name);
+     fprintf(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
    }
    else if (alpha >= SVCptr->AlphaMax) {
      alpha=SVCptr->alpha_svc=SVCptr->AlphaMax;
      strcpy_s(SVCptr->Cont,"MX");
-     fCustomPrint(stderr,"***Warning: SVC %s initial firing angle is at its maximum limit.\n",SVCptr->Name);
-     fCustomPrint(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
+     fprintf(stderr,"***Warning: SVC %s initial firing angle is at its maximum limit.\n",SVCptr->Name);
+     fprintf(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
    }
    Bv=(2.0*(PI-alpha)+sin(2.0*alpha))/(PI*Xl);
    SVCptr->alpha_svc=alpha;
@@ -142,12 +135,12 @@ void TCSCinit()
     if(alpha==0) alpha=2.8;
     else if (alpha < TCSCptr->AlphaMin) {
       TCSCptr->alpha_tcsc=alpha=2.8;
-      fCustomPrint(stderr,"***Warning: %s TCSC firing angle is below its minimum limit.\n",TCSCptr->Name);
-      fCustomPrint(stderr,"            The TCSC will be initialized with a flat start.\n");
+      fprintf(stderr,"***Warning: %s TCSC firing angle is below its minimum limit.\n",TCSCptr->Name);
+      fprintf(stderr,"            The TCSC will be initialized with a flat start.\n");
     } else if (alpha > TCSCptr->AlphaMax) {
       TCSCptr->alpha_tcsc=alpha=2.8;
-      fCustomPrint(stderr,"***Warning: %s TCSC firing angle is above its maximum limit.\n",TCSCptr->Name);
-      fCustomPrint(stderr,"            The TCSC will be initialized with a flat start.\n");
+      fprintf(stderr,"***Warning: %s TCSC firing angle is above its maximum limit.\n",TCSCptr->Name);
+      fprintf(stderr,"            The TCSC will be initialized with a flat start.\n");
     }
     if(!strcmp(TCSCptr->Cont,"X")) {
       Be=100.0/(Ctrl*Max*Xc);
@@ -223,14 +216,14 @@ void STATCOMinit()
     if (Io<-Imin) {
        Io=-Imin;
        strcpy_s(STATCOMptr->Cont,"MN");
-       fCustomPrint(stderr,"***Warning: STATCOM %s has been initialized at its minimum current limit.\n",STATCOMptr->Name);
-       fCustomPrint(stderr,"            It will be treated as a fixed capacitive current source. \n");
+       fprintf(stderr,"***Warning: STATCOM %s has been initialized at its minimum current limit.\n",STATCOMptr->Name);
+       fprintf(stderr,"            It will be treated as a fixed capacitive current source. \n");
     }
     else if (Io>Imax) {
        Io=Imax;
        strcpy_s(STATCOMptr->Cont,"MX");
-       fCustomPrint(stderr,"***Warning: STATCOM %s has been initialized at its maximum current limit.\n",STATCOMptr->Name);
-       fCustomPrint(stderr,"            It will be treated as a fixed inductive current source. \n");
+       fprintf(stderr,"***Warning: STATCOM %s has been initialized at its maximum current limit.\n",STATCOMptr->Name);
+       fprintf(stderr,"            It will be treated as a fixed inductive current source. \n");
     }
     if (Io<=0) thetao=STATCOMptr->theta=deltao+PI/2.0;       /* capacitive */
     else       thetao=STATCOMptr->theta=deltao-PI/2.0;        /* inductive  */

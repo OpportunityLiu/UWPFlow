@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Power Flow. */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"
@@ -197,20 +190,20 @@ INDEX j,N1;
         if (k+1>Nac || N1<ACvar[k+1]) {N1=N1-ACvar[k]+1; break;}
      }
   } else N=0;
-  if (j!=0) fCustomPrint(stderr,"%15s","");
-  fCustomPrint(stderr,"Maximum mismatch: %8.4lg  ",val);
-  if (N) fCustomPrint(stderr,"PoC-");
-  fCustomPrint(stderr,"Equation: %d  ",N1);
+  if (j!=0) fprintf(stderr,"%15s","");
+  fprintf(stderr,"Maximum mismatch: %8.4lg  ",val);
+  if (N) fprintf(stderr,"PoC-");
+  fprintf(stderr,"Equation: %d  ",N1);
   if (N2) {
     ACptr=(ACbusData *) GetACbus(N2);
-    if (ACptr!=NULL) fCustomPrint(stderr,"AC bus: %d\n",ACptr->Num);
+    if (ACptr!=NULL) fprintf(stderr,"AC bus: %d\n",ACptr->Num);
   }
-  else if(N3) fCustomPrint(stderr,"DC link: %d\n",N3);
-  else if(N4) fCustomPrint(stderr,"SVC: %d\n",N4);          /* FACTS */
-  else if(N5) fCustomPrint(stderr,"TCSC: %d\n",N5);         /* FACTS */
-  else if(N6) fCustomPrint(stderr,"STATCOM: %d\n",N6);      /* FACTS */
-  else if (flagH) fCustomPrint(stderr,"Continuation Equation\n");
-  else fCustomPrint(stderr,"PoC Eigenvector Equation\n");
+  else if(N3) fprintf(stderr,"DC link: %d\n",N3);
+  else if(N4) fprintf(stderr,"SVC: %d\n",N4);          /* FACTS */
+  else if(N5) fprintf(stderr,"TCSC: %d\n",N5);         /* FACTS */
+  else if(N6) fprintf(stderr,"STATCOM: %d\n",N6);      /* FACTS */
+  else if (flagH) fprintf(stderr,"Continuation Equation\n");
+  else fprintf(stderr,"PoC Eigenvector Equation\n");
 }
 
 /* ------------------------ DeleteJac --------------------------------- */
@@ -280,14 +273,14 @@ BOOLEAN flagDCLimits,flagLimits,flagFirst;
     STATCOMFunHes(TRUE,FALSE);               /* FACTS  */
   }
   MaxdFi=Norm(dF,Jac->n1,&N1);
-  fCustomPrint(stderr,"\nIteration: %2d  ",N3);
+  fprintf(stderr,"\nIteration: %2d  ",N3);
   PrintMismatch(MaxdFi,0,N1);
   for (i=N3;i<=MaxIterRun;i++){
     N=Jac->n1;
-    /* if (ExistParameter('d')) fCustomPrint(stderr,"i %d   MaxdFi %lf   Tol %lf\n",i,MaxdFi,Tol); */
+    /* if (ExistParameter('d')) fprintf(stderr,"i %d   MaxdFi %lf   Tol %lf\n",i,MaxdFi,Tol); */
     if ((MaxdFi>Tol) || flagDCLimits) {
       if ((i>1 || flagR || flagL) && !flagDCLimits && (flagLimits || (i==N3))) {
-        if(ExistParameter('d')) fCustomPrint(stderr,"Factor Jacobian.\n");
+        if(ExistParameter('d')) fprintf(stderr,"Factor Jacobian.\n");
         for(k=1; k<=N; k++) for(Jptr=Jac->RowHead[k];Jptr!=NULL;Jptr->Value=0,Jptr=Jptr->RowNext);
         Aptr=ACFunJac(Jac,&PgMax,TRUE,TRUE,flagFirst);
         if(DCFunJac(Jac,TRUE,TRUE)) return(-iter);
@@ -304,21 +297,21 @@ BOOLEAN flagDCLimits,flagLimits,flagFirst;
         }
         if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
            if (Aptr!=NULL) {
-              fCustomPrint(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
-              fCustomPrint(stderr,"       Increase the maximum P generation in this area, otherwise\n");
+              fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
+              fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
            } else {
-              fCustomPrint(stderr,"\nError: The system does not have any spinning reserves.\n");
-              fCustomPrint(stderr,"       Increase the maximum P generation in this system, otherwise\n");
+              fprintf(stderr,"\nError: The system does not have any spinning reserves.\n");
+              fprintf(stderr,"       Increase the maximum P generation in this system, otherwise\n");
            }
-           fCustomPrint(stderr,"       the Jacobian matrix becomes singular.\n");
+           fprintf(stderr,"       the Jacobian matrix becomes singular.\n");
            if (flagFirst) InitializeLoad();
            WriteSolution(--i,TrueParamStr(2),"Pg Max. Problems:");
-           stopExecute(1);
+           exit(1);
         }
         m=factor(Jac);
       }
       if ((i==1 && !flagR && !flagL) || m==WARNINGEXIT || flagDCLimits) {
-        if(ExistParameter('d')) fCustomPrint(stderr,"Order and factor Jacobian.\n");
+        if(ExistParameter('d')) fprintf(stderr,"Order and factor Jacobian.\n");
         flagDCLimits=FALSE;
         if (i>1 || flagR || flagL) DeleteJac(Jac,NewRow,NewCol,OldRow,OldCol);
         Aptr=ACFunJac(Jac,&PgMax,TRUE,TRUE,flagFirst);
@@ -336,28 +329,28 @@ BOOLEAN flagDCLimits,flagLimits,flagFirst;
         }
         if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
            if (Aptr!=NULL) {
-              fCustomPrint(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
-              fCustomPrint(stderr,"       Increase the maximum P generation in this area, otherwise\n");
+              fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
+              fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
            } else {
-              fCustomPrint(stderr,"\nError: The system does not have any spinning reserves.\n");
-              fCustomPrint(stderr,"       Increase the maximum P generation in this system, otherwise\n");
+              fprintf(stderr,"\nError: The system does not have any spinning reserves.\n");
+              fprintf(stderr,"       Increase the maximum P generation in this system, otherwise\n");
            }
-           fCustomPrint(stderr,"       the Jacobian matrix becomes singular.\n");
+           fprintf(stderr,"       the Jacobian matrix becomes singular.\n");
            if (flagFirst) InitializeLoad();
            WriteSolution(--i,TrueParamStr(2),"Pg Max. Problems:");
-           stopExecute(1);
+           exit(1);
         }
         SortRowsColumns(Jac);
         if(factorns(Jac,alpha,RowPartition,ColPartition,NewRow,NewCol,OldRow,OldCol)){
-           fCustomPrint(stderr,"*** Singular Jacobian (possible voltage collapse, contol or limit problems).\n");
-           fCustomPrint(stderr,"    Try changing the load levels, controls or limits, or use the -F option.\n");
+           fprintf(stderr,"*** Singular Jacobian (possible voltage collapse, contol or limit problems).\n");
+           fprintf(stderr,"    Try changing the load levels, controls or limits, or use the -F option.\n");
            if (flagFirst) InitializeLoad();
            WriteSolution(--i,TrueParamStr(2),"Singular Jacobian:");
-           stopExecute(1);
+           exit(1);
         }
         SortRowsColumns(Jac);
       }
-      fCustomPrint(stderr,"Iteration: %2d  ",i);
+      fprintf(stderr,"Iteration: %2d  ",i);
       for(j=1;j<=N;j++) dx[j]=dF[j];
       repsolp(Jac,dx,OldRow,NewCol);
       if (m==WARNINGEXIT) SD0=0;
@@ -398,7 +391,7 @@ BOOLEAN flagDCLimits,flagLimits,flagFirst;
         }
         j++;
       }
-      /* if (ExistParameter('d')) fCustomPrint(stderr,"j %d   MaxdFi %lf   Tol %lf   MaxdFi1 %lf   tol %lf\n",j,MaxdFi,Tol,MaxdFi1,tol); */
+      /* if (ExistParameter('d')) fprintf(stderr,"j %d   MaxdFi %lf   Tol %lf   MaxdFi1 %lf   tol %lf\n",j,MaxdFi,Tol,MaxdFi1,tol); */
       if ((MaxdFi>Tol) && (j>N2 || (fabs(MaxdFi1-MaxdFi)/MaxdFi)<=tol)) {
         if (flagL) return(-(++i));
         if (!flagR) {
@@ -425,27 +418,27 @@ BOOLEAN flagDCLimits,flagLimits,flagFirst;
        if(!flagp) {
           if (flagR) return(-(++i));
           MaxdFi=val;
-          fCustomPrint(stderr,"\n *** The case diverges (possible voltage collapse or AC/DC/FACTS control\n");
-          fCustomPrint(stderr,"     problems).  Try changing the load levels or AC/DC/FACTS controls, or\n");
-          fCustomPrint(stderr,"     use the -F option or decrease the tolerance between two\n");
-          fCustomPrint(stderr,"     consecutive iterations with the -t option.\n");
+          fprintf(stderr,"\n *** The case diverges (possible voltage collapse or AC/DC/FACTS control\n");
+          fprintf(stderr,"     problems).  Try changing the load levels or AC/DC/FACTS controls, or\n");
+          fprintf(stderr,"     use the -F option or decrease the tolerance between two\n");
+          fprintf(stderr,"     consecutive iterations with the -t option.\n");
           if (flagFirst) InitializeLoad();
           WriteSolution(i,TrueParamStr(2),"Divergence:");
-          stopExecute(1);
+          exit(1);
         }
       }
     } else break;
   }
-  /* if (ExistParameter('d')) fCustomPrint(stderr,"i %d   MaxdFi %lf   Tol %lf\n",i,MaxdFi,Tol); */
+  /* if (ExistParameter('d')) fprintf(stderr,"i %d   MaxdFi %lf   Tol %lf\n",i,MaxdFi,Tol); */
   if (i>MaxIterRun && MaxdFi>Tol) {
      if (flagR) return(-i);
-     fCustomPrint(stderr,"\n *** The case has not been solved (possible voltage collapse, AC/DC/FACTS control\n");
-     fCustomPrint(stderr,"     problems, or too few iterations).  Try running the case using the -F\n");
-     fCustomPrint(stderr,"     option, or change load levels, AC/DC/FACTS controls, or increase the maximum\n");
-     fCustomPrint(stderr,"     number of iterations with the -M option.\n");
+     fprintf(stderr,"\n *** The case has not been solved (possible voltage collapse, AC/DC/FACTS control\n");
+     fprintf(stderr,"     problems, or too few iterations).  Try running the case using the -F\n");
+     fprintf(stderr,"     option, or change load levels, AC/DC/FACTS controls, or increase the maximum\n");
+     fprintf(stderr,"     number of iterations with the -M option.\n");
      if (flagFirst) InitializeLoad();
      WriteSolution(--i,TrueParamStr(2),"Unsolved case:");
-     stopExecute(1);
+     exit(1);
   }
   /*    Apply Q limits after convergence
   N3=i;

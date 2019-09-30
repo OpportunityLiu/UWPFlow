@@ -1,3 +1,5 @@
+#pragma once
+
 /* param.h 030390 */
 
 #include "constant.h"

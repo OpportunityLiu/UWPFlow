@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 #include "readdata.h"
 
 /* --------- Global Input File --------- */
@@ -28,7 +25,7 @@ ACbusData *ptrac,*ptrac1;
     if (dataPtr->SVCbus==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate SVC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->SVCbus;
@@ -89,7 +86,7 @@ ACbusData *ptrac,*ptrac1;
     if (dataPtr->TCSCbus==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->TCSCbus;
@@ -152,7 +149,7 @@ ACbusData *ptrac,*ptrac1;
     if (dataPtr->STATCOMbus==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate STATCOM bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->STATCOMbus;

@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Homotopy Continuation Method: Main. */
 
 #include "homot.h"
@@ -63,30 +60,30 @@ BOOLEAN DCsetup()
     if (DCptrR->Tap>DCptrR->TapMax) {
       flag=TRUE;
       DCptrR->TapMax=DCptrR->Tap;
-      fCustomPrint(stderr,"***Warning: The program will change the maximum tap limit for rect. %s\n",DCptrR->Name);
+      fprintf(stderr,"***Warning: The program will change the maximum tap limit for rect. %s\n",DCptrR->Name);
     }
     if (DCptrR->Tap<DCptrR->TapMin) {
       flag=TRUE;
       DCptrR->TapMin=DCptrR->Tap;
-      fCustomPrint(stderr,"***Warning: The program will change the minimum tap limit for rect. %s\n",DCptrR->Name);
+      fprintf(stderr,"***Warning: The program will change the minimum tap limit for rect. %s\n",DCptrR->Name);
     }
     if (DCptrI->Tap>DCptrI->TapMax) {
       flag=TRUE;
       DCptrI->TapMax=DCptrI->Tap;
-      fCustomPrint(stderr,"***Warning: The program will change the maximum tap limit for inv. %s\n",DCptrI->Name);
+      fprintf(stderr,"***Warning: The program will change the maximum tap limit for inv. %s\n",DCptrI->Name);
     }
     if (DCptrI->Tap<DCptrI->TapMin) {
       flag=TRUE;
       DCptrI->TapMin=DCptrI->Tap;
-      fCustomPrint(stderr,"***Warning: The program will change the minimum tap limit for inv. %s\n",DCptrI->Name);
+      fprintf(stderr,"***Warning: The program will change the minimum tap limit for inv. %s\n",DCptrI->Name);
     }
     if (DCptrI->Gamma!=DCptrI->GammaMin) {
       DCptrI->GammaMin=DCptrI->Gamma;
-      fCustomPrint(stderr,"***Warning: The program will change the minimum gamma limit for inv. %s\n",DCptrI->Name);
+      fprintf(stderr,"***Warning: The program will change the minimum gamma limit for inv. %s\n",DCptrI->Name);
     }
-    fCustomPrint(stderr,"***Warning: The startup control mode for HVDC link from %s to %s\n",DCptrR->Name,DCptrI->Name);
-    fCustomPrint(stderr,"            is: rectifier -> %s-%s\n",DCptrR->Cont1,DCptrR->Cont2);
-    fCustomPrint(stderr,"                inverter  -> %s-%s\n",DCptrI->Cont1,DCptrI->Cont2);
+    fprintf(stderr,"***Warning: The startup control mode for HVDC link from %s to %s\n",DCptrR->Name,DCptrI->Name);
+    fprintf(stderr,"            is: rectifier -> %s-%s\n",DCptrR->Cont1,DCptrR->Cont2);
+    fprintf(stderr,"                inverter  -> %s-%s\n",DCptrI->Cont1,DCptrI->Cont2);
   }
   return(flag);
 }
@@ -200,9 +197,9 @@ BOOLEAN ChangeDCmode()
     }
     if (flagp) {
       flagp=FALSE;
-      fCustomPrint(stderr,"***Warning: HVDC link from %s to %s will switch control mode\n",DCptrR->Name,DCptrI->Name);
-      fCustomPrint(stderr,"            to: rectifier -> %s-%s\n",DCptrR->Cont1,DCptrR->Cont2);
-      fCustomPrint(stderr,"                inverter  -> %s-%s\n",DCptrI->Cont1,DCptrI->Cont2);
+      fprintf(stderr,"***Warning: HVDC link from %s to %s will switch control mode\n",DCptrR->Name,DCptrI->Name);
+      fprintf(stderr,"            to: rectifier -> %s-%s\n",DCptrR->Cont1,DCptrR->Cont2);
+      fprintf(stderr,"                inverter  -> %s-%s\n",DCptrI->Cont1,DCptrI->Cont2);
     }
   }
   return(flag);
@@ -227,7 +224,7 @@ BOOLEAN flag;
 
   N=Mptr->n1;
   if(!flag) {
-    if(ExistParameter('d')) fCustomPrint(stderr,"Direction Factor Jacobian.\n");
+    if(ExistParameter('d')) fprintf(stderr,"Direction Factor Jacobian.\n");
     for(i=1;i<=N;i++) for(vec[i]=dx[i]=0,Jptr=Mptr->RowHead[i];Jptr!=NULL;Jptr->Value=0,Jptr=Jptr->RowNext);
     Aptr=ACFunJac(Mptr,&PgMax,FALSE,TRUE,FALSE);
     if(DCFunJac(Mptr,FALSE,TRUE)) return(-1);
@@ -247,22 +244,22 @@ BOOLEAN flag;
     }
     if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
       if (Aptr!=NULL) {
-        fCustomPrint(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
-        fCustomPrint(stderr,"       Increase the maximum P generation in this area, otherwise\n");
+        fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
+        fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
       } else {
-        fCustomPrint(stderr,"\nError: The system does not have any spinning reserves.\n");
-        fCustomPrint(stderr,"       Increase the maximum P generation in this system, otherwise\n");
+        fprintf(stderr,"\nError: The system does not have any spinning reserves.\n");
+        fprintf(stderr,"       Increase the maximum P generation in this system, otherwise\n");
       }
-      fCustomPrint(stderr,"       the Jacobian matrix becomes singular.\n");
-      fCustomPrint(stderr,"Loading Factor -> %-6.3lf\n",lambda);
+      fprintf(stderr,"       the Jacobian matrix becomes singular.\n");
+      fprintf(stderr,"Loading Factor -> %-6.3lf\n",lambda);
       WriteSolution(0,TrueParamStr(2),"Pg Max. Problems:");
-      stopExecute(1);
+      exit(1);
     }
     if(NewCol->p[N]!=0) m=factor(Mptr);
     else m=WARNINGEXIT;
   }
   if (m==WARNINGEXIT || flag) {
-    if(ExistParameter('d')) fCustomPrint(stderr,"Direction Order and Factor Jacobian.\n");
+    if(ExistParameter('d')) fprintf(stderr,"Direction Order and Factor Jacobian.\n");
     DeleteJac(Mptr,NewRow,NewCol,OldRow,OldCol);
     Aptr=ACFunJac(Mptr,&PgMax,FALSE,TRUE,FALSE);
     if(DCFunJac(Mptr,FALSE,TRUE)) return(-1);
@@ -279,24 +276,24 @@ BOOLEAN flag;
     }
     if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
       if (Aptr!=NULL) {
-        fCustomPrint(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
-        fCustomPrint(stderr,"       Increase the maximum P generation in this area, otherwise\n");
+        fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
+        fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
       } else {
-        fCustomPrint(stderr,"\nError: The system does not have any spinning reserves.\n");
-        fCustomPrint(stderr,"       Increase the maximum P generation in this system, otherwise\n");
+        fprintf(stderr,"\nError: The system does not have any spinning reserves.\n");
+        fprintf(stderr,"       Increase the maximum P generation in this system, otherwise\n");
       }
-      fCustomPrint(stderr,"       the Jacobian matrix becomes singular.\n");
-      fCustomPrint(stderr,"Loading Factor -> %-6.3lf\n",lambda);
+      fprintf(stderr,"       the Jacobian matrix becomes singular.\n");
+      fprintf(stderr,"Loading Factor -> %-6.3lf\n",lambda);
       WriteSolution(0,TrueParamStr(2),"Pg Max. Problems:");
-      stopExecute(1);
+      exit(1);
     }
     SortRowsColumns(Mptr);
     if(factorns(Mptr,alpha,RowPartition,ColPartition,NewRow,NewCol,OldRow,OldCol)){
-      fCustomPrint(stderr,"*** Singular Jacobian (possible voltage collapse, contol or limit problems).\n");
-      fCustomPrint(stderr,"    Try changing the load levels, controls or limits, or use the -F option.\n");
-      fCustomPrint(stderr,"Loading Factor -> %-6.3lf\n",lambda);
+      fprintf(stderr,"*** Singular Jacobian (possible voltage collapse, contol or limit problems).\n");
+      fprintf(stderr,"    Try changing the load levels, controls or limits, or use the -F option.\n");
+      fprintf(stderr,"Loading Factor -> %-6.3lf\n",lambda);
       WriteSolution(0,TrueParamStr(2),"Singular Jacobian:");
-      stopExecute(1);
+      exit(1);
     }
     SortRowsColumns(Mptr);
   }
@@ -332,14 +329,14 @@ BOOLEAN ChangeParam()
       if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
       Bl=0;
       BlPtr->Cont=BlPtr;
-      if(ExistParameter('d')) fCustomPrint(stderr,"Change param. to lambda.\n");
+      if(ExistParameter('d')) fprintf(stderr,"Change param. to lambda.\n");
       return(TRUE);
     } else {
       strcpy_s(BlPtr->Type,"BL");
       if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
       Bl=BlPtr->N;
       BlPtr->Cont=NULL;
-      if(ExistParameter('d')) fCustomPrint(stderr,"Change param. to V at %s %d %s.\n",BlPtr->Type,BlPtr->Num,BlPtr->Name);
+      if(ExistParameter('d')) fprintf(stderr,"Change param. to V at %s %d %s.\n",BlPtr->Type,BlPtr->Num,BlPtr->Name);
       return(TRUE);
     }
   } else return(FALSE);
@@ -373,7 +370,7 @@ BOOLEAN first;
       RankList= new ACranklist;
 #else
       RankList=(ACranklist *) malloc(sizeof(ACranklist));
-      if (RankList==NULL) {ErrorHalt("Insufficient memory to allocate rank data (option -fnum)."); stopExecute(ERROREXIT);}
+      if (RankList==NULL) {ErrorHalt("Insufficient memory to allocate rank data (option -fnum)."); exit(ERROREXIT);}
 #endif
       RankList->AC=ACptr;
       RankList->val=val;
@@ -405,8 +402,8 @@ BOOLEAN first;
       if (PrevPtrMax!=PtrMax) PrevPtrMax->Next=PtrMax->Next;
       else RankList=PtrMax->Next;
       if (ExistParameter('d')) {
-        fCustomPrint(stderr,"Ranked List: ");
-        fCustomPrint(stderr,"%4d %12s %-11.5g\n",PtrMax->AC->Num,PtrMax->AC->Name,PtrMax->val);
+        fprintf(stderr,"Ranked List: ");
+        fprintf(stderr,"%4d %12s %-11.5g\n",PtrMax->AC->Num,PtrMax->AC->Name,PtrMax->val);
       }
       if (TVIbus==PtrMax->AC->Num) {TVIrank=l; break;}
 #ifdef WINDOWS
@@ -456,12 +453,12 @@ BOOLEAN flagVoltage,flagCurrent;
     TotalQg=TotalQg+ACptr->Qg;
     if(ACptr->CheckVlimits && ACptr->Vlmax>ACptr->Vlmin && flagVoltage) {
       if(ACptr->V<=ACptr->Vlmin) {
-        fCustomPrint(stderr,"***Warning: Bus %d %s has reached or exceeded its minimum V limit.\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"***Warning: Bus %d %s has reached or exceeded its minimum V limit.\n",ACptr->Num,ACptr->Name);
         ACptr->CheckVlimits=FALSE;
         FlagStopContinuation=TRUE;
       }
       else if(ACptr->V>=ACptr->Vlmax) {
-        fCustomPrint(stderr,"***Warning: Bus %d %s has reached or exceeded its maximum V limit.\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"***Warning: Bus %d %s has reached or exceeded its maximum V limit.\n",ACptr->Num,ACptr->Name);
         ACptr->CheckVlimits=FALSE;
         FlagStopContinuation=TRUE;
       }
@@ -486,14 +483,14 @@ BOOLEAN flagVoltage,flagCurrent;
         Qji= -Vj*Vj*(Bj+Bp)-Vi*Vj*(Gp*sin(dj-di)-Bp*cos(dj-di));
         Iji=sqrt(Pji*Pji+Qji*Qji)/Vj;
         if(Iij>=Eptr->Imax) {
-          fCustomPrint(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-          fCustomPrint(stderr,"            or exceeded its maximum I limit at its first bus.\n");
+          fprintf(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
+          fprintf(stderr,"            or exceeded its maximum I limit at its first bus.\n");
           Eptr->CheckIlimits=FALSE;
           FlagStopContinuation=TRUE;
         }
         else if(Iji>=Eptr->Imax) {
-          fCustomPrint(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-          fCustomPrint(stderr,"            or exceeded its maximum I limit at its second bus.\n");
+          fprintf(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
+          fprintf(stderr,"            or exceeded its maximum I limit at its second bus.\n");
           Eptr->CheckIlimits=FALSE;
           FlagStopContinuation=TRUE;
         }
@@ -557,7 +554,7 @@ int Homot()
   NumSteps=IntegerParameter('U',10,2,100);
   iter=Pflow(1,FALSE,TRUE,TRUE);
   if(iter<0) { fclose(OutputHomot); return(iter);}
-  else fCustomPrint(stderr,"**** Initial Power Flow Solved ****    \n\n");
+  else fprintf(stderr,"**** Initial Power Flow Solved ****    \n\n");
   lambda=SD0=0;
   RealParameter('L',&lambda,-1e6,1e6);
   lambda_o=lambda;
@@ -568,8 +565,8 @@ int Homot()
     if ((ExistParameter('D') && (!NullName(NameParameter('D')))) || flagVloads) flagD=TRUE;
     iter=Pflow(iter,flagD,TRUE,FALSE);
     if (iter>0) {
-      fCustomPrint(stderr,"**** Initial Lambda Case Solved ****    ");
-      fCustomPrint(stderr,"Starting loading factor -> %-10.6lg\n\n",lambda);
+      fprintf(stderr,"**** Initial Lambda Case Solved ****    ");
+      fprintf(stderr,"Starting loading factor -> %-10.6lg\n\n",lambda);
       AddLoad();
     } else {fclose(OutputHomot); return(iter);}
     lambda=0;
@@ -588,7 +585,7 @@ int Homot()
     if (DxZero==NULL) {
       fclose(OutputHomot);
       ErrorHalt("Insufficient memory to allocate vector for system reduction in the Cont. Method.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     RealParameter('u',&ZeroDx,0.,0.2);
@@ -597,7 +594,7 @@ int Homot()
   for (i=1; i<=N; i++) { if (DxZero!=NULL) DxZero[i]=FALSE;}
   for (flagL=flagR=TRUE,CountCyclingSteps=CountVupSteps=Steps=1;;) {
     Homotopy:
-    if(ExistParameter('d')) fCustomPrint(stderr,"\nContinuation Step=%d\n",Steps);
+    if(ExistParameter('d')) fprintf(stderr,"\nContinuation Step=%d\n",Steps);
     Dparam=0;
     PreviousLambda=lambda;
     /* Predictor Step */
@@ -623,21 +620,21 @@ int Homot()
     if (ExistParameter('f')) {
       if (Kh<0) {VSFone=VSFinf=SF=TVI=0; VSFbus=TVIrank=0;}
       Print(OutputHomot,0,6,4,VSFone);
-      fCustomPrint(OutputHomot,"    %6d    ",VSFbus);
+      fprintf(OutputHomot,"    %6d    ",VSFbus);
       Print(OutputHomot,0,6,4,VSFinf);
-      fCustomPrint(OutputHomot,"    ");
+      fprintf(OutputHomot,"    ");
       Print(OutputHomot,0,6,4,SF);
-      fCustomPrint(OutputHomot,"    ");
+      fprintf(OutputHomot,"    ");
       if (TVI!=0) Print(OutputHomot,0,6,4,1./TVI);
-      else fCustomPrint(OutputHomot,"%6d",0);
-      fCustomPrint(OutputHomot,"    %6d",TVIrank);
+      else fprintf(OutputHomot,"%6d",0);
+      fprintf(OutputHomot,"    %6d",TVIrank);
     }
-    fCustomPrint(OutputHomot,"\n");
+    fprintf(OutputHomot,"\n");
     if (NDx) {
-      if(ExistParameter('d')) fCustomPrint(stderr,"Lambda->%lf  SD0=%2d  Det.Sign=%2d  Kh=%lf\n",lambda,SD0,DetSign,Kh);
+      if(ExistParameter('d')) fprintf(stderr,"Lambda->%lf  SD0=%2d  Det.Sign=%2d  Kh=%lf\n",lambda,SD0,DetSign,Kh);
       if (Bl) { cons= -1; Kh= -fabs(Kh); SD0=0;}
       else { if(SD0*DetSign<0) { SD0=DetSign; Kh= -Kh;} cons=Kh;}
-      if(ExistParameter('d')) fCustomPrint(stderr,"%38s Kh=%lf\n","",Kh);
+      if(ExistParameter('d')) fprintf(stderr,"%38s Kh=%lf\n","",Kh);
       Dparam=cons/NDx;
       for (i=1;i<=N-1;i++) Dx[i]=Dparam*Dx[i];
       if (flagSTOP) {
@@ -663,8 +660,8 @@ int Homot()
         CountSteps=0;
         if (NewNumEq<RedNumEq) { RedNumEq=NewNumEq; SD0=0; }
       }
-      if(ExistParameter('d')) fCustomPrint(stderr,"cons=%lf Dparam=%lf\n",cons,Dparam);
-      if(ExistParameter('d')) fCustomPrint(stderr,"Num.Steps=%d  Num.Eqs.System=%d   Num.Eqs.Reduced=%d\n",CountSteps,N-1,RedNumEq);
+      if(ExistParameter('d')) fprintf(stderr,"cons=%lf Dparam=%lf\n",cons,Dparam);
+      if(ExistParameter('d')) fprintf(stderr,"Num.Steps=%d  Num.Eqs.System=%d   Num.Eqs.Reduced=%d\n",CountSteps,N-1,RedNumEq);
       if(!flagt) { if (ExistParameter('H')) flagt=ChangeParam();}
       else flagt=FALSE;
       if (flagt) goto Homotopy;
@@ -672,7 +669,7 @@ int Homot()
       /*  Enforce Limits */
       if (cons>0) {
         Dparam=fabs(1-cons+Htol*0.1)*Dparam;
-        if(ExistParameter('d')) fCustomPrint(stderr,"(1-%lf)Dparam->%lf\n",cons,Dparam);
+        if(ExistParameter('d')) fprintf(stderr,"(1-%lf)Dparam->%lf\n",cons,Dparam);
         for (i=1;i<=N-1;i++) Dx[i]=fabs(1-cons+Htol*0.1)*Dx[i];
         LoadX0(FALSE,TRUE,TRUE);
         if ((!ExistParameter('G') || !flagCountVupAfterFirstLimit || !CountVupSteps) && fabs(Dparam)<=Htol) {
@@ -702,13 +699,13 @@ int Homot()
         Dparam=Dparam/2;
         for (i=1;i<=N-1;i++) Dx[i]=Dx[i]/2;
         LoadX0(FALSE,TRUE,TRUE);
-        if(ExistParameter('d')) fCustomPrint(stderr,"Dparam/2^%d->%lf\n",n,Dparam);
+        if(ExistParameter('d')) fprintf(stderr,"Dparam/2^%d->%lf\n",n,Dparam);
       }
 
       /* Turning point computations */
       if (flagCountVupAfterFirstLimit && VoltageSum>FirstVoltageSumUp && Kh<0) CountVupSteps++;
       else CountVupSteps=0;
-      if(ExistParameter('d')) fCustomPrint(stderr,"V summation->%lf     First V sum Up->%lf    Vup Steps->%d\n",VoltageSum,FirstVoltageSumUp,CountVupSteps);
+      if(ExistParameter('d')) fprintf(stderr,"V summation->%lf     First V sum Up->%lf    Vup Steps->%d\n",VoltageSum,FirstVoltageSumUp,CountVupSteps);
       if (ExistParameter('G') && flagCountVupAfterFirstLimit &&
           (CountVupSteps>=NumHVsolutions || (CountCyclingSteps>0 && iterp<0))) {
         Kh= -Kh;
@@ -723,7 +720,7 @@ int Homot()
         RealParameter('S',&StoplambdaVal,0.,1.);
         StoplambdaVal = PreviousLambda*StoplambdaVal;
         if (ExistParameter('E') && !NullName(NameParameter('E'))) {
-          if(ExistParameter('d')) fCustomPrint(stderr,"Write right e-vector at lambda->%lf\n",PreviousLambda);
+          if(ExistParameter('d')) fprintf(stderr,"Write right e-vector at lambda->%lf\n",PreviousLambda);
           PrintDirection('E',Dx,1.0);
         }
       }
@@ -736,11 +733,11 @@ int Homot()
       if ((MaxSteps>0 && Steps>=MaxSteps) || (lambda-StoplambdaVal)<=1e-5 ) flagSTOP=TRUE;
       if (iterp<0)  {
         iter= -iterp;
-        fCustomPrint(stderr,"\n *** The case diverges (possible AC/DC control problems).\n");
-        fCustomPrint(stderr,"     Try reducing the step size (-k option).\n");
-        fCustomPrint(stderr,"Loading Factor -> %-6.3lf\n",lambda);
+        fprintf(stderr,"\n *** The case diverges (possible AC/DC control problems).\n");
+        fprintf(stderr,"     Try reducing the step size (-k option).\n");
+        fprintf(stderr,"Loading Factor -> %-6.3lf\n",lambda);
         WriteSolution(--iter,TrueParamStr(2),"Divergence:");
-        stopExecute(1);
+        exit(1);
       } else iter=iterp;
       flagVIlimits=CheckVIlimits(flagVoltage,flagCurrent);
       VoltProf(FALSE,OutputHomot);
@@ -750,11 +747,11 @@ int Homot()
       else CountCyclingSteps=0;
       if (CountCyclingSteps>=5 && !CountVupSteps){
         if (flagCycling) {
-          fCustomPrint(stderr,"\n *** Cycling due to possible AC/DC/FACTS control problems.  Try using the debug (-d)\n");
-          fCustomPrint(stderr,"     option to detect the limit that is creating the problem.\n");
-          fCustomPrint(stderr,"Loading Factor -> %-6.3lf\n",lambda);
+          fprintf(stderr,"\n *** Cycling due to possible AC/DC/FACTS control problems.  Try using the debug (-d)\n");
+          fprintf(stderr,"     option to detect the limit that is creating the problem.\n");
+          fprintf(stderr,"Loading Factor -> %-6.3lf\n",lambda);
           WriteSolution(iter,TrueParamStr(2),"Divergence:");
-          stopExecute(1);
+          exit(1);
         } 
 		else Kh=-Kh;
         flagCycling=TRUE;

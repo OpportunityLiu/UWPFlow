@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Check AC/DC limits. */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"
@@ -83,9 +76,9 @@ BOOLEAN CheckRlimits()
           if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
         }
         strcpy_s(Eptr->Type,"TR");
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to a fixed tap transf. at t%3s.\n",str);
+        fprintf(stderr,"            has been changed to a fixed tap transf. at t%3s.\n",str);
       }
       else if(Rcont&&!strcmp(Eptr->Type,"RV")&&(ACptr->V>=Eptr->Max||ACptr->V<=Eptr->Min)){
         flag=TRUE;
@@ -98,9 +91,9 @@ BOOLEAN CheckRlimits()
           ACptr->Cont=NULL;
           if (flagH) x0[ACvar[ACptr->N]+1]=Eptr->Tap;
         }
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
 				Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to an LTC at V%3s for bus %d %s.\n",
+        fprintf(stderr,"            has been changed to an LTC at V%3s for bus %d %s.\n",
                 str,ACptr->Num,ACptr->Name);
       }
       else if(Tlim&&!strcmp(Eptr->Type,"RP")&&(Eptr->Ang>=Eptr->Tmax || Eptr->Ang<=Eptr->Tmin)){
@@ -111,9 +104,9 @@ BOOLEAN CheckRlimits()
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Cvar;
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to a fixed angle transf. at a%3s.\n",str);
+        fprintf(stderr,"            has been changed to a fixed angle transf. at a%3s.\n",str);
       }
       else if(Tlim&&!strcmp(Eptr->Type,"RQ")&&(Eptr->Tap<=1/Eptr->Tmax+0.00001||
                                                  Eptr->Tap>=1/Eptr->Tmin-0.00001)){
@@ -124,9 +117,9 @@ BOOLEAN CheckRlimits()
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Cvar;
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to a fixed tap at t%3s.\n",str);
+        fprintf(stderr,"            has been changed to a fixed tap at t%3s.\n",str);
       }
       else if(PQcont&&PQlim&&strpbrk(Eptr->Type,"M")&&(Eptr->Cvar>=Eptr->Max||Eptr->Cvar<=Eptr->Min)){
         flag=TRUE;
@@ -136,9 +129,9 @@ BOOLEAN CheckRlimits()
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Ang;
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to control %1s at P%3s.\n",Eptr->Ctype,str);
+        fprintf(stderr,"            has been changed to control %1s at P%3s.\n",Eptr->Ctype,str);
       }
       else if(PQcont&&PQlim&&strpbrk(Eptr->Type,"N")&&(Eptr->Cvar>=Eptr->Max||Eptr->Cvar<=Eptr->Min)){
         flag=TRUE;
@@ -148,9 +141,9 @@ BOOLEAN CheckRlimits()
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Tap;
-        fCustomPrint(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
+        fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
-        fCustomPrint(stderr,"            has been changed to control %1s at Q%3s.\n",Eptr->Ctype,str);
+        fprintf(stderr,"            has been changed to control %1s at Q%3s.\n",Eptr->Ctype,str);
       }
     }
   }
@@ -184,8 +177,8 @@ BOOLEAN CheckVlimits()
         ACptr->VCont=ACptr->Qg;
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
-        fCustomPrint(stderr,"***Warning: Generator %d %s will start controlling the voltage\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            due to V_%3s problems.\n",str);
+        fprintf(stderr,"***Warning: Generator %d %s will start controlling the voltage\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            due to V_%3s problems.\n",str);
       }
       else if (Vlim && Recover && strpbrk(ACptr->cont,"V") &&
                ((ACptr->V==ACptr->Vmax && ACptr->Qg>=ACptr->VCont)||
@@ -195,8 +188,8 @@ BOOLEAN CheckVlimits()
         ACptr->Qg=ACptr->VCont;
         ACptr->Cont=ACptr;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
-        fCustomPrint(stderr,"***Warning: Generator %d %s voltage is back\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            within limits.\n",str);
+        fprintf(stderr,"***Warning: Generator %d %s voltage is back\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            within limits.\n",str);
       }
       else if (ACptr->Gen!=NULL) {
         if (Ilim && strpbrk(ACptr->cont,"Q") && ACptr->Gen->Ia>=ACptr->Gen->IaMax) {
@@ -206,8 +199,8 @@ BOOLEAN CheckVlimits()
           ACptr->VCont=ACptr->Qg;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Qg;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost Q control\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            due to Ia_max limit problems.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has lost Q control\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            due to Ia_max limit problems.\n");
         }
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&
                  ACptr->Gen->Ia==ACptr->Gen->IaMax && ACptr->Qg>=ACptr->VCont) {
@@ -215,8 +208,8 @@ BOOLEAN CheckVlimits()
           strcpy_s(ACptr->cont,"Q");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Gen->Ia;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            Q control as Ia is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            Q control as Ia is again within limits.\n");
         }
         else if (Elim && strpbrk(ACptr->cont,"Q") &&
                  (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)) {
@@ -232,8 +225,8 @@ BOOLEAN CheckVlimits()
           ACptr->VCont=ACptr->Qg;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Qg;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost Q control\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            due to Eq_%3s limit problems.\n",str);
+          fprintf(stderr,"***Warning: Generator %d %s has lost Q control\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            due to Eq_%3s limit problems.\n",str);
         }
         else if (Elim && Recover && strpbrk(ACptr->cont,"E") &&
                  ((ACptr->Gen->Eq==ACptr->Gen->EqMax && ACptr->Qg>=ACptr->VCont) ||
@@ -243,32 +236,32 @@ BOOLEAN CheckVlimits()
           ACptr->Qg=ACptr->VCont;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Gen->Eq;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            Q control as Eq is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            Q control as Eq is again within limits.\n");
         }
         else if (strpbrk(ACptr->cont,"V") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Elim &&(ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at a V limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Ia and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at a V limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Ia and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"Ia/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"I") &&
                  ((Vlim && (ACptr->V>=ACptr->Vmax || ACptr->V<=ACptr->Vmin)) ||
                   (Elim && (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing V and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing V and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"V/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"E") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Vlim && (ACptr->V>=ACptr->Vmax || ACptr->V<=ACptr->Vmin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing V and/or Ia limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing V and/or Ia limits.\n");
           WriteSolution(0,TrueParamStr(2),"V/Ia Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
       }
     }
@@ -280,23 +273,23 @@ BOOLEAN CheckVlimits()
           i=ACptr->Cont->step;
           if (i<=ACptr->Cont->steps) {
             ACptr->Cont->B=ACptr->Cont->B+ACptr->Cont->Bx[i];
-            fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
-            fCustomPrint(stderr,"            increment of %4.0lf MVar due to V_min problems.\n",Sn*ACptr->Cont->Bx[i]);
+            fprintf(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
+            fprintf(stderr,"            increment of %4.0lf MVar due to V_min problems.\n",Sn*ACptr->Cont->Bx[i]);
           }
         } else {
           i=ACptr->Cont->step;
           if (i>=1) {
             ACptr->Cont->B=ACptr->Cont->B-ACptr->Cont->Bx[i];
-            fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
-            fCustomPrint(stderr,"            reduction of %4.0lf MVar due to V_min problems.\n",-Sn*ACptr->Cont->Bx[i]);
+            fprintf(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
+            fprintf(stderr,"            reduction of %4.0lf MVar due to V_min problems.\n",-Sn*ACptr->Cont->Bx[i]);
             ACptr->Cont->step--;
           }
         }
         if (ACptr->Cont->step>ACptr->Cont->steps || ACptr->Cont->step<1) {
           NXvolt--;
           strcpy_s(ACptr->cont,"m");
-          fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            reactance support due to V_min problems.\n");
+          fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            reactance support due to V_min problems.\n");
         }
       }
       else if (Xlim && strpbrk(ACptr->cont,"X") && ACptr->V>=ACptr->Vmax) {
@@ -305,8 +298,8 @@ BOOLEAN CheckVlimits()
           i=ACptr->Cont->step;
           if (i>=1) {
             ACptr->Cont->B=ACptr->Cont->B-ACptr->Cont->Bx[i];
-            fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
-            fCustomPrint(stderr,"            reduction of %4.0lf MVar due to V_max problems.\n",Sn*ACptr->Cont->Bx[i]);
+            fprintf(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
+            fprintf(stderr,"            reduction of %4.0lf MVar due to V_max problems.\n",Sn*ACptr->Cont->Bx[i]);
             ACptr->Cont->step--;
           }
         } else {
@@ -314,28 +307,28 @@ BOOLEAN CheckVlimits()
           i=ACptr->Cont->step;
           if (i<=ACptr->Cont->steps) {
             ACptr->Cont->B=ACptr->Cont->B+ACptr->Cont->Bx[i];
-            fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
-            fCustomPrint(stderr,"            increment of %4.0lf MVar due to V_max problems.\n",-Sn*ACptr->Cont->Bx[i]);
+            fprintf(stderr,"***Warning: Reactance-controlled bus %d %s requires a %d st/nd/rd/th\n",ACptr->Num,ACptr->Name,i);
+            fprintf(stderr,"            increment of %4.0lf MVar due to V_max problems.\n",-Sn*ACptr->Cont->Bx[i]);
           }
         }
         if (ACptr->Cont->step>ACptr->Cont->steps || ACptr->Cont->step<1) {
           NXvolt--;
           strcpy_s(ACptr->cont,"M");
-          fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            reactance support due to V_max problems.\n");
+          fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            reactance support due to V_max problems.\n");
         }
       }
       else if (Xlim && Recover && strpbrk(ACptr->cont,"M") && ACptr->V<=ACptr->Vmax) {
         flag=TRUE; NXvolt++;
         strcpy_s(ACptr->cont,"X");
-        fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            reactance support as V < V_max.\n");
+        fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            reactance support as V < V_max.\n");
       }
       else if (Xlim && Recover && strpbrk(ACptr->cont,"m") && ACptr->V>=ACptr->Vmin) {
         flag=TRUE; NXvolt++;
         strcpy_s(ACptr->cont,"X");
-        fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            reactance support as V > V_min.\n");
+        fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            reactance support as V > V_min.\n");
       }
     }
   }
@@ -356,8 +349,8 @@ BOOLEAN CheckQlimits()
   if(ExistParameter('G')) Recover=FALSE;
   if (Qlim || Elim || Ilim || Zlim) for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
     if (ACptr->flagPgMax==1) {
-      fCustomPrint(stderr,"***Warning: Generating bus %d %s has reached the maximum P/S limit;\n",ACptr->Num,ACptr->Name);
-      fCustomPrint(stderr,"            hence, Pg will be fixed at its max. MW limit -> %lf.\n",ACptr->Pmax*Sn);
+      fprintf(stderr,"***Warning: Generating bus %d %s has reached the maximum P/S limit;\n",ACptr->Num,ACptr->Name);
+      fprintf(stderr,"            hence, Pg will be fixed at its max. MW limit -> %lf.\n",ACptr->Pmax*Sn);
       ACptr->flagPgMax++;
     }
     if (ACptr->Qmax==ACptr->Max) strcpy_s(Qmax,"Qmax");
@@ -370,8 +363,8 @@ BOOLEAN CheckQlimits()
         if(ACptr->Qg>=ACptr->Max) {ACptr->Qg=ACptr->Max; strcpy_s(str,Qmax);}
         else                      {ACptr->Qg=ACptr->Min; strcpy_s(str,Qmin);}
         strcpy_s(ACptr->cont,"Q");
-        fCustomPrint(stderr,"***Warning: Generator %d %s has lost remote voltage control\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            due to %4s problems.\n",str);
+        fprintf(stderr,"***Warning: Generator %d %s has lost remote voltage control\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            due to %4s problems.\n",str);
         ACptr->Cont->Kbg--;
         if (ACptr->Cont->Kbg<1) {
           RemoteVlost=TRUE;
@@ -380,8 +373,8 @@ BOOLEAN CheckQlimits()
           ACptr->Cont->VCont=ACptr->Cont->V;
           ACptr->Cont->Qr=ACptr->Qg/ACptr->Kbg;
           if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Cont->V;
-          fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-          fCustomPrint(stderr,"            has lost all generator support.\n");
+          fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+          fprintf(stderr,"            has lost all generator support.\n");
         }
       }
       else if (Qlim && Recover && strpbrk(ACptr->cont,"Q") &&  ACptr->Cont->Kbg==0 &&
@@ -390,15 +383,15 @@ BOOLEAN CheckQlimits()
         flag=TRUE; Nvolt++;
         strcpy_s(ACptr->cont,"V");
         ACptr->Cont->Kbg++;
-        fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            remote voltage control as Qg/Sg is again within limits.\n");
+        fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            remote voltage control as Qg/Sg is again within limits.\n");
         if (ACptr->Cont->Kbg==1) {
           ACptr->Cont->Cont=NULL;
           ACptr->Cont->V=ACptr->Cont->VCont;
           ACptr->Cont->Qr=ACptr->Qg/ACptr->Kbg;
           if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Cont->Qr;
-          fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-          fCustomPrint(stderr,"            has recovered generator support.\n");
+          fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+          fprintf(stderr,"            has recovered generator support.\n");
         }
       }
       else if (ACptr->Gen!=NULL) {
@@ -407,15 +400,15 @@ BOOLEAN CheckQlimits()
           ACptr->Gen->Ia=ACptr->Gen->IaMax;
           strcpy_s(ACptr->cont,"I");
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Qg;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost remote\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            V control due to Ia_max limit problems.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has lost remote\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            V control due to Ia_max limit problems.\n");
           ACptr->Cont->Kbg--;
           if (ACptr->Cont->Kbg<1) {
             ACptr->Cont->Cont=ACptr->Cont;
             ACptr->Cont->VCont=ACptr->Cont->V;
             if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Cont->V;
-            fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-            fCustomPrint(stderr,"            has lost all generator support.\n");
+            fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+            fprintf(stderr,"            has lost all generator support.\n");
           }
         }
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&   ACptr->Cont->Kbg<1 &&
@@ -423,15 +416,15 @@ BOOLEAN CheckQlimits()
           flag=TRUE;  Nvolt++;
           strcpy_s(ACptr->cont,"V");
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Gen->Ia;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            remote V control as Ia is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            remote V control as Ia is again within limits.\n");
           ACptr->Cont->Kbg++;
           if (ACptr->Cont->Kbg==1) {
             ACptr->Cont->Cont=NULL;
             ACptr->Cont->V=ACptr->Cont->VCont;
             if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Qg/ACptr->Kbg;
-            fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-            fCustomPrint(stderr,"            has recovered generator support.\n");
+            fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+            fprintf(stderr,"            has recovered generator support.\n");
           }
         }
         else if (Elim && strpbrk(ACptr->cont,"V") &&
@@ -446,15 +439,15 @@ BOOLEAN CheckQlimits()
           }
           strcpy_s(ACptr->cont,"E");
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Qg;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            remote V control due to Eq_%3s limit problems.\n",str);
+          fprintf(stderr,"***Warning: Generator %d %s has lost\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            remote V control due to Eq_%3s limit problems.\n",str);
           ACptr->Cont->Kbg--;
           if (ACptr->Cont->Kbg<1) {
             ACptr->Cont->Cont=ACptr->Cont;
             ACptr->Cont->VCont=ACptr->Cont->V;
             if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Cont->V;
-            fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-            fCustomPrint(stderr,"            has lost all generator support.\n");
+            fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+            fprintf(stderr,"            has lost all generator support.\n");
           }
         }
         else if (Elim && Recover && strpbrk(ACptr->cont,"E") &&   ACptr->Cont->Kbg<1  &&
@@ -463,40 +456,40 @@ BOOLEAN CheckQlimits()
           flag=TRUE;  Nvolt++;
           strcpy_s(ACptr->cont,"V");
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Gen->Eq;
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            remote V control as Eq is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            remote V control as Eq is again within limits.\n");
           ACptr->Cont->Kbg++;
           if (ACptr->Cont->Kbg==1) {
             ACptr->Cont->Cont=NULL;
             ACptr->Cont->V=ACptr->Cont->VCont;
             if (flagH) x0[ACvar[ACptr->Cont->N]+1]=ACptr->Qg/ACptr->Kbg;
-            fCustomPrint(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
-            fCustomPrint(stderr,"            has recovered generator support.\n");
+            fprintf(stderr,"***Warning: Remote voltage controlled bus %d %s\n",ACptr->Cont->Num,ACptr->Cont->Name);
+            fprintf(stderr,"            has recovered generator support.\n");
           }
         }
         else if (strpbrk(ACptr->cont,"Q") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Elim && (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at a Q limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Ia and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at a Q limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Ia and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"Ia/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"I") &&
                  ((Qlim && (ACptr->Qg>=ACptr->Max || ACptr->Qg<=ACptr->Min)) ||
                   (Elim && (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Q and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Q and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"Q/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"E") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Qlim && (ACptr->Qg>=ACptr->Max || ACptr->Qg<=ACptr->Min)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Q and/or Ia limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Q and/or Ia limits.\n");
           WriteSolution(0,TrueParamStr(2),"Q/Ia Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
       }
     }
@@ -516,8 +509,8 @@ BOOLEAN CheckQlimits()
         if (strpbrk(ACptr->Type,"G")) ACptr->Cont=ACptr->ContBus->AC;
         else                          ACptr->Cont=ACptr;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
-        fCustomPrint(stderr,"***Warning: Generator %d %s has lost voltage control\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            due to %4s problems.\n",str);
+        fprintf(stderr,"***Warning: Generator %d %s has lost voltage control\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            due to %4s problems.\n",str);
       }
       else if (Qlim && Recover && strpbrk(ACptr->cont,"Q") &&
                ((ACptr->Qg>=ACptr->Max && ACptr->V>=ACptr->VCont) ||
@@ -527,8 +520,8 @@ BOOLEAN CheckQlimits()
         strcpy_s(ACptr->cont,"V");
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
-        fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            voltage control as Qg/Sg is again within limits.\n");
+        fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            voltage control as Qg/Sg is again within limits.\n");
       }
       else if (ACptr->Gen!=NULL) {
         if (Ilim && strpbrk(ACptr->cont,"V") && ACptr->Gen->Ia>=ACptr->Gen->IaMax) {
@@ -542,8 +535,8 @@ BOOLEAN CheckQlimits()
             x0[ACvar[ACptr->N]+1]=ACptr->V;
             x0[ACptr->Gen->Nvar+11]=ACptr->Qg;
           }
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost V control\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            due to Ia_max limit problems.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has lost V control\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            due to Ia_max limit problems.\n");
         }
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&
                  ACptr->Gen->Ia==ACptr->Gen->IaMax && ACptr->V>=ACptr->VCont) {
@@ -555,8 +548,8 @@ BOOLEAN CheckQlimits()
             x0[ACvar[ACptr->N]+1]=ACptr->Qg;
             x0[ACptr->Gen->Nvar+11]=ACptr->Gen->Ia;
           }
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            V control as Ia is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            V control as Ia is again within limits.\n");
         }
         else if (Elim && strpbrk(ACptr->cont,"V") &&
                  (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)) {
@@ -576,8 +569,8 @@ BOOLEAN CheckQlimits()
             x0[ACvar[ACptr->N]+1]=ACptr->V;
             x0[ACptr->Gen->Nvar+1]=ACptr->Qg;
           }
-          fCustomPrint(stderr,"***Warning: Generator %d %s has lost V control\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            due to Eq_%3s limit problems.\n",str);
+          fprintf(stderr,"***Warning: Generator %d %s has lost V control\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            due to Eq_%3s limit problems.\n",str);
         }
         else if (Elim && Recover && strpbrk(ACptr->cont,"E") &&
                  ((ACptr->Gen->Eq==ACptr->Gen->EqMax && ACptr->V>=ACptr->VCont) ||
@@ -590,32 +583,32 @@ BOOLEAN CheckQlimits()
             x0[ACvar[ACptr->N]+1]=ACptr->Qg;
             x0[ACptr->Gen->Nvar+1]=ACptr->Gen->Eq;
           }
-          fCustomPrint(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"            V control as Eq is again within limits.\n");
+          fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"            V control as Eq is again within limits.\n");
         }
         else if (strpbrk(ACptr->cont,"Q") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Elim && (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at a Q limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Ia and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at a Q limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Ia and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"Ia/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"I") &&
                  ((Qlim && (ACptr->Qg>=ACptr->Max || ACptr->Qg<=ACptr->Min)) ||
                   (Elim && (ACptr->Gen->Eq>=ACptr->Gen->EqMax || ACptr->Gen->Eq<=ACptr->Gen->EqMin)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Q and/or Eq limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Ia limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Q and/or Eq limits.\n");
           WriteSolution(0,TrueParamStr(2),"Q/Eq Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
         else if (strpbrk(ACptr->cont,"E") &&
                  ((Ilim && ACptr->Gen->Ia>=ACptr->Gen->IaMax) ||
                   (Qlim && (ACptr->Qg>=ACptr->Max || ACptr->Qg<=ACptr->Min)))) {
-          fCustomPrint(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
-          fCustomPrint(stderr,"          Try changing Q and/or Ia limits.\n");
+          fprintf(stderr,"***Error: Generator %d %s it's already at an Eq limit.\n",ACptr->Num,ACptr->Name);
+          fprintf(stderr,"          Try changing Q and/or Ia limits.\n");
           WriteSolution(0,TrueParamStr(2),"Q/Ia Limit Problems:");
-          stopExecute(1);
+          exit(1);
         }
       }
     }
@@ -635,8 +628,8 @@ BOOLEAN CheckQlimits()
         ACptr->VCont=ACptr->V;
         ACptr->Cont=ACptr;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
-        fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has lost\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            voltage control due to %4s problems.\n",str);
+        fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has lost\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            voltage control due to %4s problems.\n",str);
       }
       else if (Zlim && strpbrk(ACptr->cont,"Q") &&
                ((ACptr->Qg>=ACptr->Qmax && ACptr->V>=ACptr->VCont) ||
@@ -646,8 +639,8 @@ BOOLEAN CheckQlimits()
         strcpy_s(ACptr->cont,"V");
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
-        fCustomPrint(stderr,"***Warning: Reactance-controlled bus %d %s has recovered\n",ACptr->Num,ACptr->Name);
-        fCustomPrint(stderr,"            voltage control as Q is again within limits.\n");
+        fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered\n",ACptr->Num,ACptr->Name);
+        fprintf(stderr,"            voltage control as Q is again within limits.\n");
       }
     }
   }
@@ -677,7 +670,7 @@ BOOLEAN CheckDClimits()
         (strcmp(DCptrI->Cont1,"AT") && strcmp(DCptrI->Cont2,"AT") &&
          (DCptrI->Tap>=DCptrI->TapMax || DCptrI->Tap<=DCptrI->TapMin))){
       flag=TRUE;
-      fCustomPrint(stderr,"***Warning: The program will release tap limits in the HVDC links.\n");
+      fprintf(stderr,"***Warning: The program will release tap limits in the HVDC links.\n");
       break;
     }
   }

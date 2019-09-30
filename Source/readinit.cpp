@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /*    This routine reads initial values for AC voltage phasors.
       The input format is in "i V Ang" format, i.e., bus number
       and Voltage magnitude and angle (terminate list with a 0). */
@@ -66,8 +63,8 @@ BOOLEAN ReadInit()
            }
         } else ACptr=NULL;
         if (ACptr==NULL) {
-           fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-           fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
+           fprintf(stderr,"***Warning: Line-> %s",Line);
+           fprintf(stderr,"            will be ignored in file %s.\n",Name);
         }
       }
     }
@@ -89,23 +86,23 @@ BOOLEAN ReadInit()
   }
   if (!flagKdirection) {
     if (ExistParameter('v') && !Sum) {
-      fCustomPrint(stderr,"ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
-      fCustomPrint(stderr,"       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
-      stopExecute(ERROREXIT);
+      fprintf(stderr,"ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
+      fprintf(stderr,"       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
+      exit(ERROREXIT);
     } else if (ExistParameter('L') && !Sum) {
-      fCustomPrint(stderr,"***Warning: The loading factor lambda will not yield different results\n");
-      fCustomPrint(stderr,"            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
-      fCustomPrint(stderr,"            in all load buses.\n");
+      fprintf(stderr,"***Warning: The loading factor lambda will not yield different results\n");
+      fprintf(stderr,"            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
+      fprintf(stderr,"            in all load buses.\n");
     } else if ((ExistParameter('H') || ExistParameter('c')) && !Sum) {
-      fCustomPrint(stderr,"ERROR: The Homotopy Continuation Method will not yield different results\n");
-      fCustomPrint(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
-      fCustomPrint(stderr,"       load buses.\n");
-      stopExecute(ERROREXIT);
+      fprintf(stderr,"ERROR: The Homotopy Continuation Method will not yield different results\n");
+      fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
+      fprintf(stderr,"       load buses.\n");
+      exit(ERROREXIT);
     } else if (ExistParameter('C') && !Sum) {
-      fCustomPrint(stderr,"ERROR: The Point of Collapse Method will not yield different results\n");
-      fCustomPrint(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
-      fCustomPrint(stderr,"       all load buses.\n");
-      stopExecute(ERROREXIT);
+      fprintf(stderr,"ERROR: The Point of Collapse Method will not yield different results\n");
+      fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
+      fprintf(stderr,"       all load buses.\n");
+      exit(ERROREXIT);
     }
   }
 
@@ -146,14 +143,14 @@ BOOLEAN ReadInit()
                 if (ptr!=NULL) count=sscanf(ptr,"%s",Vars);
                 else count=0;
                 val=0;
-                if(ExistParameter('d')) CustomPrint("Read initial values for DC bus %s -> %s\n",DCptr->Name,Vars);
+                if(ExistParameter('d')) printf("Read initial values for DC bus %s -> %s\n",DCptr->Name,Vars);
                 if (count) for(i=1;i<=strlen(Vars) && count;i=i+2) {
                    GetStr(Vars,i,2,2,variable);
                    if (ptr!=NULL && *ptr!='\0') for(;*ptr==' '&&*ptr!='\n';ptr++);
                    if (ptr!=NULL && *ptr!='\0') for(;*ptr!=' '&&*ptr!='\n';ptr++);
                    if (ptr!=NULL) {
                       count=sscanf(ptr,"%lf",&val);
-                      if(ExistParameter('d')) CustomPrint("                                           %lf\n",val);
+                      if(ExistParameter('d')) printf("                                           %lf\n",val);
                    } else count=0;
                    if(!strcmp(variable,"PA") && strcmp(DCptr->Cont1,"PA") && strcmp(DCptr->Cont2,"PA")) DCptr->P=val;
                    if(!strcmp(variable,"AL") && strcmp(DCptr->Cont1,"AL") && strcmp(DCptr->Cont2,"AL")) DCptr->Alfa=val;
@@ -166,8 +163,8 @@ BOOLEAN ReadInit()
              }
           } else { ACptr=NULL; DCptr=NULL;}
           if (ACptr==NULL && DCptr==NULL) {
-             fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-             fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
+             fprintf(stderr,"***Warning: Line-> %s",Line);
+             fprintf(stderr,"            will be ignored in file %s.\n",Name);
           }
         }
       }
@@ -207,10 +204,10 @@ BOOLEAN ReadInit()
            }
            if(ACptr!=NULL){
               if (strpbrk(ACptr->Type,"G,Q,E,S,V")==NULL || Xd<=0) {
-                 fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-                 fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
-                 if (Xd<=0) fCustomPrint(stderr,"            The value of Xd is less than or equal to zero.\n");
-                 else       fCustomPrint(stderr,"            The bus is not a generator type (BQ,BG,BE,BV,BS).\n");
+                 fprintf(stderr,"***Warning: Line-> %s",Line);
+                 fprintf(stderr,"            will be ignored in file %s.\n",Name);
+                 if (Xd<=0) fprintf(stderr,"            The value of Xd is less than or equal to zero.\n");
+                 else       fprintf(stderr,"            The bus is not a generator type (BQ,BG,BE,BV,BS).\n");
               }
               else {
 #ifdef WINDOWS
@@ -220,44 +217,44 @@ BOOLEAN ReadInit()
                  if (ACptr->Gen==NULL) {
                     fclose(InputFile);
                     ErrorHalt("Insufficient memory to allocate steady-state Generator data.");
-                    stopExecute(ERROREXIT);
+                    exit(ERROREXIT);
                  }
 #endif
                  ACptr->Gen->Ra=fabs(Ra);
                  if (Xd<Ra) {
-                    fCustomPrint(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            has Ra > Xd.\n");
+                    fprintf(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
+                    fprintf(stderr,"            has Ra > Xd.\n");
                  }
                  ACptr->Gen->Xd=Xd;
                  if (Xq==0) Xq=Xd;
                  if (Xq>Xd) {
-                    fCustomPrint(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            has Xq > Xd.  The program will force Xq=Xd.\n");
+                    fprintf(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
+                    fprintf(stderr,"            has Xq > Xd.  The program will force Xq=Xd.\n");
                     Xq=Xd;
                  }
                  ACptr->Gen->Xq=fabs(Xq);
                    /*
                  if (IaMax!=0 && strpbrk(ACptr->Type,"S")) {
-                    fCustomPrint(stderr,"***Warning: The IaMax limit in slack generator:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            will be assumed large.\n");
+                    fprintf(stderr,"***Warning: The IaMax limit in slack generator:%s\n",ACptr->Name);
+                    fprintf(stderr,"            will be assumed large.\n");
                     IaMax=9999999999.;
                  }
                  */
                  if (IaMax<=0) {
-                    fCustomPrint(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            has IaxMax<=0.  The program will force IaMax=9999999999.\n");
+                    fprintf(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
+                    fprintf(stderr,"            has IaxMax<=0.  The program will force IaMax=9999999999.\n");
                     IaMax=9999999999.;
                  }
                  ACptr->Gen->IaMax=IaMax;
                  if (EqMax<=0) {
-                    fCustomPrint(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            has EqMax<=0.  The program will force EqMax=9999999999.\n");
+                    fprintf(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
+                    fprintf(stderr,"            has EqMax<=0.  The program will force EqMax=9999999999.\n");
                     EqMax=9999999999.;
                  }
                  ACptr->Gen->EqMax=EqMax;
                  if (EqMin>EqMax || EqMin<0) {
-                    fCustomPrint(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
-                    fCustomPrint(stderr,"            has EqMin>EqMax or EqMin<0.  The program will force EqMin=0.\n");
+                    fprintf(stderr,"***Warning: The generator steady-state data for bus:%s\n",ACptr->Name);
+                    fprintf(stderr,"            has EqMin>EqMax or EqMin<0.  The program will force EqMin=0.\n");
                     EqMax=0.;
                  }
                  ACptr->Gen->EqMin=EqMin;
@@ -298,8 +295,8 @@ BOOLEAN ReadInit()
            }
         } else ACptr=NULL;
         if (ACptr==NULL) {
-            fCustomPrint(stderr,"***Warning: Line-> %s",Line);
-            fCustomPrint(stderr,"            will be ignored in file %s.\n",Name);
+            fprintf(stderr,"***Warning: Line-> %s",Line);
+            fprintf(stderr,"            will be ignored in file %s.\n",Name);
         }
       }
    }
@@ -309,8 +306,8 @@ BOOLEAN ReadInit()
  /* -------------------- Read OH Load Model --------------------- */
   if (!ReadOHload(NameParameter('D'))) {
     if (!NullName(NameParameter('D'))) {
-      fCustomPrint(stderr,"Error in file %s.  The program will assume constant\n",NameParameter('D'));
-      fCustomPrint(stderr,"P-Q load models.\n");
+      fprintf(stderr,"Error in file %s.  The program will assume constant\n",NameParameter('D'));
+      fprintf(stderr,"P-Q load models.\n");
     }
     if (!flagVloads) for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
       ACptr->Pn=ACptr->Pl;
@@ -332,7 +329,7 @@ BOOLEAN ReadInit()
          for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next)
          if((!strcmp(ACptr->Type,"B")||!strcmp(ACptr->Type,"BA")) && ACptr->Num==N) break;
          if (ACptr==NULL) {
-            fCustomPrint(stderr,"***Warning: The program will ignore the number in -B option (not a PQ bus).\n");
+            fprintf(stderr,"***Warning: The program will ignore the number in -B option (not a PQ bus).\n");
          }
       }
       if (ACptr==NULL) {
@@ -345,10 +342,10 @@ BOOLEAN ReadInit()
          return(TRUE);
       }
       else {
-         fCustomPrint(stderr,"***Warning: The program will ignore the -v option (there is no PQ bus).\n");
+         fprintf(stderr,"***Warning: The program will ignore the -v option (there is no PQ bus).\n");
       }
     } else {
-      fCustomPrint(stderr,"***Warning: The program will ignore the -v option (mag=0).\n");
+      fprintf(stderr,"***Warning: The program will ignore the -v option (mag=0).\n");
     }
   }
   return(FALSE);
@@ -425,8 +422,8 @@ char *File;
                }
             }
             if (ACptr==NULL) {
-               fCustomPrint(stderr,"***Warning: Line #%d-> %s",LineNum,Line);
-               fCustomPrint(stderr,"            will be ignored in file %s.\n",File);
+               fprintf(stderr,"***Warning: Line #%d-> %s",LineNum,Line);
+               fprintf(stderr,"            will be ignored in file %s.\n",File);
             }
          }
 
@@ -440,14 +437,14 @@ char *File;
             b=GetValue(Line,26,10,5);
             LineNum++;
             if (fgets(Line,BUFLEN,Input)==NULL || !strncmp(Line,"EDATA",5) || !strncmp(Line,"  END",5)) {
-               fCustomPrint(stderr,"Range card is missing in line #%d of file %s.\n",LineNum,File);
+               fprintf(stderr,"Range card is missing in line #%d of file %s.\n",LineNum,File);
                fclose(Input);
                return(FALSE);
             }
             NA=GetInt(Line,1,5);
             if (!strncmp(Name,"50000",5) && Narea<=1 ) {
-               fCustomPrint(stderr,"***Warning: Area %d doen't exist (line #%d of file %s).\n",NA,LineNum,File);
-               fCustomPrint(stderr,"            The program will assume these data for all system loads.\n");
+               fprintf(stderr,"***Warning: Area %d doen't exist (line #%d of file %s).\n",NA,LineNum,File);
+               fprintf(stderr,"            The program will assume these data for all system loads.\n");
             }
             Nlow=GetInt(Line,6,5);
             if (Nlow<=0) Nlow=1;

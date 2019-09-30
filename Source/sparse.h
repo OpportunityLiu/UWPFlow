@@ -1,3 +1,5 @@
+#pragma once
+
 /* sparse.h 030990 */
 
 #include "constant.h"

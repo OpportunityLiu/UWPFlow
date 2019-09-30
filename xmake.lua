@@ -2,7 +2,7 @@
 add_rules("mode.debug", "mode.release")
 
 -- define target
-target("main")
+target("uwpflow")
 
     -- set kind
     set_kind("binary")
@@ -11,3 +11,6 @@ target("main")
     add_headerfiles("Source/*.h")
     add_includedirs("Source")
     add_files("Source/*.cpp")
+
+    -- set run envs
+    set_rundir("Examples")

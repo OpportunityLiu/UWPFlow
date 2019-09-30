@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Read AC data in ITALIAN format  */
 
 #include "readdata.h"
@@ -46,7 +43,7 @@ BOOLEAN flagAddBus;
     if (dataPtr->ACbus==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->ACbus;
@@ -68,7 +65,7 @@ BOOLEAN flagAddBus;
     if (ptr==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptrp->Next=ptr;
@@ -166,7 +163,7 @@ BOOLEAN flagAddElement;
     if (dataPtr->Element==NULL){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->Element;
@@ -188,7 +185,7 @@ BOOLEAN flagAddElement;
     if (ptr==NULL) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
 #endif
   }
@@ -289,7 +286,7 @@ void ReadITALY()
       sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->V>0) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The AC bus was previously defined (check N cards).");
       }
       if (ACptr->N==0) {
@@ -300,7 +297,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KV=1;
         }
@@ -318,8 +315,8 @@ void ReadITALY()
       if (Line[20]=='T') {
         EstimatePl=TRUE;
         ACptrEstimate=ACptr;
-        fCustomPrint(stderr,"***Warning: The P load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
-        fCustomPrint(stderr,"            oncoming element data for this bus.\n");
+        fprintf(stderr,"***Warning: The P load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
+        fprintf(stderr,"            oncoming element data for this bus.\n");
       }
       else {
         EstimatePl=FALSE;
@@ -329,8 +326,8 @@ void ReadITALY()
       if (Line[42]=='T') {
         EstimateQl=TRUE;
         ACptrEstimate=ACptr;
-        fCustomPrint(stderr,"***Warning: The Q load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
-        fCustomPrint(stderr,"            oncoming element data for this bus.\n");
+        fprintf(stderr,"***Warning: The Q load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
+        fprintf(stderr,"            oncoming element data for this bus.\n");
       }
       else {
         EstimateQl=FALSE;
@@ -341,7 +338,7 @@ void ReadITALY()
       ACptr->Vmin=GetValue(Line,53,3,0)/KV;
       if (ACptr->Vmin<=0) ACptr->Vmin=0.001;
       if (ACptr->Vmax<=ACptr->Vmin) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("AC bus V limits are wrong: Vmin >= Vmax.");
       }
       if (Line[22]=='T') {
@@ -375,7 +372,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KV=1;
         }
@@ -392,19 +389,19 @@ void ReadITALY()
       if (ACptr->Smax==0) ACptr->Smax=99999999.;
       if (ACptr->PgMax>ACptr->Smax) {
         ACptr->PgMax=ACptr->Smax;
-        fCustomPrint(stderr,"***Warning: Bus %d %s has PgMax > Smax.\n",ACptr->N,ACptr->Name);
-        fCustomPrint(stderr,"            PgMax will be set to Smax.\n");
+        fprintf(stderr,"***Warning: Bus %d %s has PgMax > Smax.\n",ACptr->N,ACptr->Name);
+        fprintf(stderr,"            PgMax will be set to Smax.\n");
       }
       if (ACptr->Pg>ACptr->PgMax) {
         ACptr->Pg=ACptr->PgMax;
-        fCustomPrint(stderr,"***Warning: Bus %d %s has Pg > PgMax.\n",ACptr->N,ACptr->Name);
-        fCustomPrint(stderr,"            Pg will be set to PgMax.\n");
+        fprintf(stderr,"***Warning: Bus %d %s has Pg > PgMax.\n",ACptr->N,ACptr->Name);
+        fprintf(stderr,"            Pg will be set to PgMax.\n");
       }
       ACptr->Qg+=-GetValue(Line,36,6,0)/Sn;
       ACptr->Qmax+=-GetValue(Line,47,5,0)/Sn;
       ACptr->Qmin+=-GetValue(Line,43,4,0)/Sn;
       if (ACptr->Qmax<=ACptr->Qmin) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("AC bus Q limits are wrong: Qmin >= Qmax.");
       }
     }
@@ -424,7 +421,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KV=1;
         }
@@ -438,7 +435,7 @@ void ReadITALY()
       ACptr->Qmax+=-GetValue(Line,47,5,0)/Sn;
       ACptr->Qmin+=-GetValue(Line,43,4,0)/Sn;
       if (ACptr->Qmax<=ACptr->Qmin) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("AC bus Q limits are wrong: Qmin >= Qmax.");
       }
     }
@@ -458,7 +455,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KV=1;
         }
@@ -487,7 +484,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KV=1;
         }
@@ -510,7 +507,7 @@ void ReadITALY()
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KVp==0){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Base voltage is zero.");
           KVp=1;
         }
@@ -521,14 +518,14 @@ void ReadITALY()
         ACptrp->KV=KVp;
       } else KVp=ACptrp->KV;
       if (ACptr==ACptrp){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("Both AC element buses are the same.");
       }
       if (EstimatePl) {
         if (Line[20]=='T') {
-          fCustomPrint(stderr,"***Warning: The P load estimate at bus %d %s may be incorrect\n",ACptrEstimate->N,ACptrEstimate->Name);
-          fCustomPrint(stderr,"            due to lack of P flow information in the corresponding element data:\n");
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"***Warning: The P load estimate at bus %d %s may be incorrect\n",ACptrEstimate->N,ACptrEstimate->Name);
+          fprintf(stderr,"            due to lack of P flow information in the corresponding element data:\n");
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         }
         else {
           if (ACptrEstimate==ACptr) ACptrEstimate->Pl+=-GetValue(Line,14,6,0)/Sn;
@@ -537,9 +534,9 @@ void ReadITALY()
       }
       if (EstimateQl) {
         if (Line[42]=='T') {
-          fCustomPrint(stderr,"***Warning: The Q load estimate at bus %d %s may be incorrect\n",ACptrEstimate->N,ACptrEstimate->Name);
-          fCustomPrint(stderr,"            due to lack of Q flow information in the corresponding element data:\n");
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"***Warning: The Q load estimate at bus %d %s may be incorrect\n",ACptrEstimate->N,ACptrEstimate->Name);
+          fprintf(stderr,"            due to lack of Q flow information in the corresponding element data:\n");
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         }
         else {
           if (ACptrEstimate==ACptr) ACptrEstimate->Ql+=-GetValue(Line,36,6,0)/Sn;
@@ -568,7 +565,7 @@ void ReadITALY()
         R=GetValue(Line,45,7,5)/Zb;
         X=GetValue(Line,52,8,5)/Zb;
         if (fabs(R)<1e-10 && fabs(X)<1e-10) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("AC element is a short circuit. Try eliminating it.");
           G=B=0;
         } else {
@@ -629,8 +626,8 @@ void ReadITALY()
 
     else if (Line[79]=='F') break;
     else {
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-      fCustomPrint(stderr,"***Warning: The program will ignore this line.\n");
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"***Warning: The program will ignore this line.\n");
     }
   }
   fclose(InputDataFile);
@@ -686,15 +683,15 @@ BOOLEAN ReadADDfile()
         sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
         if (ACptr==NULL) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-          fCustomPrint(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
-          fCustomPrint(stderr,"            This line in the ADD file will be ignored.\n");
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
+          fprintf(stderr,"            This line in the ADD file will be ignored.\n");
         } else {
           KV=GetValue(Line,6,7,0);
           if (KV==0){
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-            fCustomPrint(stderr,"***Warning: This bus has a zero base bus voltage.\n");
-            fCustomPrint(stderr,"            This line in the ADD file will be ignored.\n");
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"***Warning: This bus has a zero base bus voltage.\n");
+            fprintf(stderr,"            This line in the ADD file will be ignored.\n");
           } else {
             sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
             KVp=ACptr->KV;
@@ -738,10 +735,10 @@ BOOLEAN ReadADDfile()
               ACptr->Qmax=99999999.;
               ACptr->Qmin=-99999999.;
             } else {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-              fCustomPrint(stderr,"***Warning: This bus was not defined as a PV bus in the main input data file; \n");
-              fCustomPrint(stderr,"            hence, its Q-limits cannot be released (check field 50).\n");
-              fCustomPrint(stderr,"            This line in the ADD file will be ignored.\n");
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"***Warning: This bus was not defined as a PV bus in the main input data file; \n");
+              fprintf(stderr,"            hence, its Q-limits cannot be released (check field 50).\n");
+              fprintf(stderr,"            This line in the ADD file will be ignored.\n");
             }
           }
           GetStr(Line,58,1,1,Code);
@@ -776,9 +773,9 @@ BOOLEAN ReadADDfile()
       /* --------------- Generators --------------------------- */
       else if (Line[79]=='G'  || Line[79]=='H') {
         if (flagPrint) {
-           fCustomPrint(stderr,"***Warning: The program ignores the G and H cards, as capability curves\n");
-           fCustomPrint(stderr,"            are implemented here through direct limits on Sg, Pg, Qg,\n");
-           fCustomPrint(stderr,"            Ef and Ia (see -3 option).\n");
+           fprintf(stderr,"***Warning: The program ignores the G and H cards, as capability curves\n");
+           fprintf(stderr,"            are implemented here through direct limits on Sg, Pg, Qg,\n");
+           fprintf(stderr,"            Ef and Ia (see -3 option).\n");
            flagPrint=FALSE;
         }
       }
@@ -807,10 +804,10 @@ BOOLEAN ReadADDfile()
           Tap=GetValue(Line,14,8,0)*Taps;
           if (Tap>0) Eptr->Tap=Tap;
           else {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-            fCustomPrint(stderr,"***Warning: This transformer data has a negative tap setting.\n");
-            fCustomPrint(stderr,"            The tap will be assumed to be equal to the nominal\n");
-            fCustomPrint(stderr,"            voltage ratio.\n");
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"***Warning: This transformer data has a negative tap setting.\n");
+            fprintf(stderr,"            The tap will be assumed to be equal to the nominal\n");
+            fprintf(stderr,"            voltage ratio.\n");
             Eptr->Tap=Tap=1;
           }
           Tmin=GetValue(Line,24,8,0)*Taps;
@@ -819,10 +816,10 @@ BOOLEAN ReadADDfile()
             Eptr->Tmax=Tmax;
             Eptr->Tmin=Tmin;
           } else {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-            fCustomPrint(stderr,"***Warning: The max. and min. tap settings of this transformer are incorrect.\n");
-            fCustomPrint(stderr,"            These limits will be assumed to be equal to 1.1 and 0.9 p.u.,\n");
-            fCustomPrint(stderr,"            respectively.\n");
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"***Warning: The max. and min. tap settings of this transformer are incorrect.\n");
+            fprintf(stderr,"            These limits will be assumed to be equal to 1.1 and 0.9 p.u.,\n");
+            fprintf(stderr,"            respectively.\n");
             Eptr->Tmax=1.1;
             Eptr->Tmin=0.9;
           }
@@ -867,9 +864,9 @@ BOOLEAN ReadADDfile()
           }
         }
         else {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-          fCustomPrint(stderr,"***Warning: This transformer has not been defined in the main data file.\n");
-          fCustomPrint(stderr,"            This line in the ADD file will be ignored.\n");
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"***Warning: This transformer has not been defined in the main data file.\n");
+          fprintf(stderr,"            This line in the ADD file will be ignored.\n");
         }
       }
 
@@ -881,9 +878,9 @@ BOOLEAN ReadADDfile()
         sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
         if (ACptr==NULL) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-          fCustomPrint(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
-          fCustomPrint(stderr,"            This line in the ADD file will be ignored.\n");
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
+          fprintf(stderr,"            This line in the ADD file will be ignored.\n");
         }
         else {
           Q=GetValue(Line,15,8,0)/Sn;
@@ -894,9 +891,9 @@ BOOLEAN ReadADDfile()
               Qmin=GetValue(Line,7,8,0)/Sn;
               Qmax=GetValue(Line,23,8,0)/Sn;
               if (Qmax<=Qmin || Qmax<Q || Q<Qmin){
-                fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-                fCustomPrint(stderr,"***Warning: The Q limits are inconsistent on this bus and hence will\n");
-                fCustomPrint(stderr,"            be given arbitrarily large values (~+/-10^8 p.u.).\n");
+                fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+                fprintf(stderr,"***Warning: The Q limits are inconsistent on this bus and hence will\n");
+                fprintf(stderr,"            be given arbitrarily large values (~+/-10^8 p.u.).\n");
                 Qmax=99999999.;
                 Qmin=-99999999.;
               }
@@ -913,9 +910,9 @@ BOOLEAN ReadADDfile()
               ACptr->Cont=NULL;
               strcpy_s(ACptr->cont,"V");
             } else {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-              fCustomPrint(stderr,"***Warning: This bus cannot be defined as a voltage controlled bus, as it\n");
-              fCustomPrint(stderr,"            has already been defined as a controlled bus in the main file.\n");
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"***Warning: This bus cannot be defined as a voltage controlled bus, as it\n");
+              fprintf(stderr,"            has already been defined as a controlled bus in the main file.\n");
             }
           } else {
             GetStr(Line,33,1,1,Code);
@@ -969,8 +966,8 @@ BOOLEAN ReadADDfile()
               ACptrp->VCont=ACptr->V;
             }
             else {
-              fCustomPrint(stderr,"***Warning: Secondary voltage control area %s has more than 1 pilot node.\n",Code);
-              fCustomPrint(stderr,"            The pilot node %d %s will be ignored.\n",ACptr->N,ACptr->Name);
+              fprintf(stderr,"***Warning: Secondary voltage control area %s has more than 1 pilot node.\n",Code);
+              fprintf(stderr,"            The pilot node %d %s will be ignored.\n",ACptr->N,ACptr->Name);
               strcpy_s(ACptr->Type,"B");
             }
           }
@@ -985,16 +982,16 @@ BOOLEAN ReadADDfile()
             }
           }
         } else {
-           fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-           fCustomPrint(stderr,"***Warning: The secondary voltage control area does not have a pilot node.\n",Code);
-           fCustomPrint(stderr,"            This area in the ADD file will be ignored.\n");
+           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+           fprintf(stderr,"***Warning: The secondary voltage control area does not have a pilot node.\n",Code);
+           fprintf(stderr,"            This area in the ADD file will be ignored.\n");
         }
       }
 
       /* --------------- Ignore data  ------------------------- */
       else {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-        fCustomPrint(stderr,"***Warning: This line in the ADD file will be ignored.\n");
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"***Warning: This line in the ADD file will be ignored.\n");
       }
 
     }
@@ -1017,22 +1014,22 @@ BOOLEAN ReadADDfile()
   if (Sum!=0) flagKdirection=TRUE;
   else {
     if (ExistParameter('v')) {
-      fCustomPrint(stderr,"ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
-      fCustomPrint(stderr,"       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
+      fprintf(stderr,"ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
+      fprintf(stderr,"       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
       InputError=TRUE;
     } else if (ExistParameter('L')) {
-      fCustomPrint(stderr,"***Warning: The loading factor lambda will not yield different results\n");
-      fCustomPrint(stderr,"            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
-      fCustomPrint(stderr,"            in all load buses.\n");
+      fprintf(stderr,"***Warning: The loading factor lambda will not yield different results\n");
+      fprintf(stderr,"            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
+      fprintf(stderr,"            in all load buses.\n");
     } else if ((ExistParameter('H') || ExistParameter('c'))) {
-      fCustomPrint(stderr,"ERROR: The Homotopy Continuation Method will not yield different results\n");
-      fCustomPrint(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
-      fCustomPrint(stderr,"       load buses.\n");
+      fprintf(stderr,"ERROR: The Homotopy Continuation Method will not yield different results\n");
+      fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
+      fprintf(stderr,"       load buses.\n");
       InputError=TRUE;
     } else if (ExistParameter('C')) {
-      fCustomPrint(stderr,"ERROR: The Point of Collapse Method will not yield different results\n");
-      fCustomPrint(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
-      fCustomPrint(stderr,"       all load buses.\n");
+      fprintf(stderr,"ERROR: The Point of Collapse Method will not yield different results\n");
+      fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
+      fprintf(stderr,"       all load buses.\n");
       InputError=TRUE;
     }
   }

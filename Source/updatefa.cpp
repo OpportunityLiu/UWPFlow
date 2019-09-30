@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Update FACTS variables. */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"
@@ -99,8 +92,8 @@ BOOLEAN ChangeSVCmode()
     SVCptr->alpha_svc=SVCptr->AlphaMax;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->Vvar;
-    fCustomPrint(stderr,"***Warning: %s SVC firing angle is at its maximum limit.\n",SVCptr->Name);
-    fCustomPrint(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
+    fprintf(stderr,"***Warning: %s SVC firing angle is at its maximum limit.\n",SVCptr->Name);
+    fprintf(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"AL") && SVCptr->alpha_svc<=SVCptr->AlphaMin){
@@ -108,8 +101,8 @@ BOOLEAN ChangeSVCmode()
     SVCptr->alpha_svc=SVCptr->AlphaMin;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->Vvar;
-    fCustomPrint(stderr,"***Warning: %s SVC firing angle is at its minimum limit.\n",SVCptr->Name);
-    fCustomPrint(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
+    fprintf(stderr,"***Warning: %s SVC firing angle is at its minimum limit.\n",SVCptr->Name);
+    fprintf(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"MX") && SVCptr->Vvar>=SVCptr->Vref){
@@ -117,8 +110,8 @@ BOOLEAN ChangeSVCmode()
     SVCptr->alpha_svc=SVCptr->AlphaMax;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
-    fCustomPrint(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
-    fCustomPrint(stderr,"            The SVC voltage is now within controllable range.\n");
+    fprintf(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
+    fprintf(stderr,"            The SVC voltage is now within controllable range.\n");
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"MN") && SVCptr->Vvar<=SVCptr->Vref){
@@ -126,8 +119,8 @@ BOOLEAN ChangeSVCmode()
     SVCptr->alpha_svc=SVCptr->AlphaMin;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
-    fCustomPrint(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
-    fCustomPrint(stderr,"            The SVC voltage is now within controllable range.\n");
+    fprintf(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
+    fprintf(stderr,"            The SVC voltage is now within controllable range.\n");
     flag=TRUE;
   }
   i=i+3;
@@ -183,16 +176,16 @@ BOOLEAN ChangeTCSCmode()
       strcpy_s(TCSCptr->Cont,"X");
       Be=1.0/Xc-(2.0*PI-2.0*alpha+sin(2.0*alpha))/(PI*Xl);
       TCSCptr->Bset=Be;
-      fCustomPrint(stderr,"***Warning: %s TCSC firing angle is at its maximum limit.\n",TCSCptr->Name);
-      fCustomPrint(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
+      fprintf(stderr,"***Warning: %s TCSC firing angle is at its maximum limit.\n",TCSCptr->Name);
+      fprintf(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
       flag=TRUE;
     }
     else if(!strpbrk(TCSCptr->Cont,"X")&& TCSCptr->alpha_tcsc<=TCSCptr->AlphaMin){
       strcpy_s(TCSCptr->Cont,"X");
       Be=1.0/Xc-(2.0*PI-2.0*alpha+sin(2.0*alpha))/(PI*Xl);
       TCSCptr->Bset=Be;
-      fCustomPrint(stderr,"***Warning: %s TCSC firing angle is at its minimum limit.\n",TCSCptr->Name);
-      fCustomPrint(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
+      fprintf(stderr,"***Warning: %s TCSC firing angle is at its minimum limit.\n",TCSCptr->Name);
+      fprintf(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
       flag=TRUE;
     }
   }
@@ -269,8 +262,8 @@ BOOLEAN ChangeSTATCOMmode()
     STATCOMptr->I=STATCOMptr->Imax;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
-    fCustomPrint(stderr,"***Warning: %s STATCOM current is at its maximum limit.\n",STATCOMptr->Name);
-    fCustomPrint(stderr,"            The STATCOM will be treated as a fixed inductive current source.\n");
+    fprintf(stderr,"***Warning: %s STATCOM current is at its maximum limit.\n",STATCOMptr->Name);
+    fprintf(stderr,"            The STATCOM will be treated as a fixed inductive current source.\n");
     flag=TRUE;
   }
   else if((!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL"))&&
@@ -279,8 +272,8 @@ BOOLEAN ChangeSTATCOMmode()
     STATCOMptr->I=STATCOMptr->Imin;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
-    fCustomPrint(stderr,"***Warning: %s STATCOM current is at its minimum limit.\n",STATCOMptr->Name);
-    fCustomPrint(stderr,"            The STATCOM will be treated as a fixed capacitive current source.\n");
+    fprintf(stderr,"***Warning: %s STATCOM current is at its minimum limit.\n",STATCOMptr->Name);
+    fprintf(stderr,"            The STATCOM will be treated as a fixed capacitive current source.\n");
     flag=TRUE;
   }
   else if(!strcmp(STATCOMptr->Cont,"MN") && STATCOMptr->Vvar>=STATCOMptr->Vref){
@@ -288,8 +281,8 @@ BOOLEAN ChangeSTATCOMmode()
     STATCOMptr->I=STATCOMptr->Imax;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->I;
-    fCustomPrint(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
-    fCustomPrint(stderr,"            The STATCOM voltage is now within controllable range.\n");
+    fprintf(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
+    fprintf(stderr,"            The STATCOM voltage is now within controllable range.\n");
     flag=TRUE;
   }
   else if(!strcmp(STATCOMptr->Cont,"MX") && STATCOMptr->Vvar<=STATCOMptr->Vref){
@@ -297,8 +290,8 @@ BOOLEAN ChangeSTATCOMmode()
     STATCOMptr->I=STATCOMptr->Imin;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->I;
-    fCustomPrint(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
-    fCustomPrint(stderr,"            The STATCOM voltage is now within controllable range.\n");
+    fprintf(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
+    fprintf(stderr,"            The STATCOM voltage is now within controllable range.\n");
     flag=TRUE;
   }
   i=i+7;

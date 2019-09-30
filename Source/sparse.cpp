@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* sparse.c 030590 */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"
@@ -26,9 +19,9 @@ void ErrorHalt(Msg)
 char *Msg;
 #endif
 {
-  fCustomPrint(stderr,"ERROR: %s\n",Msg);
+  fprintf(stderr,"ERROR: %s\n",Msg);
   InputError=TRUE;
-  /* stopExecute(ERROREXIT) */
+  /* exit(ERROREXIT) */
 }
 
 
@@ -97,9 +90,9 @@ INDEX Size;
   Vector->p = new INDEX[Size+1];
 #else
   Vector = (IntegerVector *) malloc(sizeof(IntegerVector));
-  if (Vector == NULL) {ErrorHalt("Insufficient memory to allocate integer vector"); stopExecute(ERROREXIT);}
+  if (Vector == NULL) {ErrorHalt("Insufficient memory to allocate integer vector"); exit(ERROREXIT);}
   Vector->p = (INDEX *) calloc((Size+1),sizeof(INDEX));
-  if (Vector->p == NULL) {ErrorHalt("Insufficient memory to allocate permutation vector"); stopExecute(ERROREXIT);}
+  if (Vector->p == NULL) {ErrorHalt("Insufficient memory to allocate permutation vector"); exit(ERROREXIT);}
 #endif
   Vector->N = Size;
   for(i=0;i<Size+1;i++) Vector->p[i]=0;

@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* SVC and TCSC mismatch vector and Jacobian for Direct Method */
 
 #include "pointl.h"

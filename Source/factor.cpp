@@ -1,12 +1,5 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #ifdef ANSIPROTO
 #include <float.h>
@@ -63,8 +56,8 @@ int factor();
      }
      for (I=1; I<=Matrix2->n1; I++) {
       if (DiagPtr2[I] == NULL) {
-        fCustomPrint(stderr,"\nError: Diagonal element missing in the Jacobian.\n");
-        stopExecute(ERROREXIT);
+        fprintf(stderr,"\nError: Diagonal element missing in the Jacobian.\n");
+        exit(ERROREXIT);
       }
      }
     }

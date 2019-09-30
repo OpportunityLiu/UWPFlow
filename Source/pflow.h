@@ -1,16 +1,19 @@
-typedef struct AreaData {
-    INDEX N;
-    INDEX i;
-    char Name[31];
-    VALUETYPE P;
-    VALUETYPE SPg;
-    char Zone[11][4];
-    struct ACbusData *Slack;
-    struct ACbusData *BSptr;
-    struct AClist *AC;
-    struct DClist *DC;
-    struct ElementList *Elem;
-    struct AreaData *Next;
+#pragma once
+
+typedef struct AreaData
+{
+  INDEX N;
+  INDEX i;
+  char Name[31];
+  VALUETYPE P;
+  VALUETYPE SPg;
+  char Zone[11][4];
+  struct ACbusData *Slack;
+  struct ACbusData *BSptr;
+  struct AClist *AC;
+  struct DClist *DC;
+  struct ElementList *Elem;
+  struct AreaData *Next;
   } AreaData;
 
 

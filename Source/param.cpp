@@ -1,14 +1,7 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* param.c 030390 */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #include <ctype.h>
 #include <string.h>
@@ -287,14 +280,14 @@ char * Name;
 #endif
          sprintf_s(s,"No input data file -> %s",Name);
          ErrorHalt(s);
-         stopExecute(ERROREXIT);
-         /* fCustomPrint(stderr,"Input from standard input\n");
+         exit(ERROREXIT);
+         /* fprintf(stderr,"Input from standard input\n");
          InputFile = stdin;*/
       } 
   } else {
     sprintf_s(s,"No input data file -> %s",Name);
     ErrorHalt(s);
-    stopExecute(ERROREXIT);
+    exit(ERROREXIT);
     /* InputFile = stdin;*/
   }
   return(InputFile);
@@ -321,7 +314,7 @@ char * Name;
 #else
     if ((OutputFile = fopen(Name,"wt")) == NULL) {
 #endif
-       fCustomPrint(stderr,"Output to standard output\n");
+       fprintf(stderr,"Output to standard output\n");
 #ifdef WINDOWS
 	   OutputFile = NULL;
 #else

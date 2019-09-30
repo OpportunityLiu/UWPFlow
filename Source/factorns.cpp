@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Factor unsymmetric square or rectangular matrix, add fills.
    Purpose: Factor Unsymmetric Matrix, add fills and
             Generate Permutation Vectors.
@@ -8,11 +5,7 @@
             Order within row partitions if partition vector is given. */
 
 #include <stdlib.h>
-//#ifndef WINDOWS
-//#include <stdio.h>
-//#else
-#include "pfwstdio.h"
-//#endif
+#include <stdio.h>
 #include <math.h>
 #ifdef ANSIPROTO
 #include <float.h>
@@ -100,7 +93,7 @@ void InitializeLSWR()
 #else
   Lswr = (BOOLEAN *) calloc((Matrix->n1+1),sizeof(BOOLEAN));
   Swr =  (ELEMENTVALUETYPE *) calloc((Matrix->n1+1),sizeof(ELEMENTVALUETYPE));
-  if (Lswr==NULL || Swr==NULL) {ErrorHalt("Insufficient memory for arrays"); stopExecute(ERROREXIT);}
+  if (Lswr==NULL || Swr==NULL) {ErrorHalt("Insufficient memory for arrays"); exit(ERROREXIT);}
 #endif
   for(i=1;i<=Matrix->n1;i++) Lswr[i]=FALSE;
 }
@@ -122,7 +115,7 @@ void AllocateOrderArrays()
   FwdLink = (INDEX *) malloc((n0+1)*sizeof(INDEX));  /* array 0..maxN */
   BckLink = (INDEX *) malloc((n0+1)*sizeof(INDEX));  /* array 0..maxN */
   ValClass = (INDEX *) calloc((maxVal+1),sizeof(INDEX)); /* array 0..maxVal */
-  if (ValClass==NULL) {ErrorHalt("Insufficient memory to allocate order vectors"); stopExecute(ERROREXIT);}
+  if (ValClass==NULL) {ErrorHalt("Insufficient memory to allocate order vectors"); exit(ERROREXIT);}
 #endif
   for(i=0;i<n0+1;i++) { Valence[i]=0; FwdLink[i]=BckLink[i]=0; }
   for(i=0;i<maxVal+1;i++) ValClass[i]=0;
@@ -176,7 +169,7 @@ void AllocateOrderArrays()
                 PutPtr->ColNext = PutCNext;
     } else {
       ErrorHalt("Insufficient memory for fills");
-      stopExecute(ERROREXIT);
+      exit(ERROREXIT);
     }
     return(PutPtr);
   } /* PutMatrix */
@@ -438,8 +431,8 @@ void AllocateOrderArrays()
             if (Jpivot == 0) {
               UNLinkVal(Ipivot);
               if (Matrix->n1 == Matrix->n2) {
-                fCustomPrint(stderr,"\nUnable to find a nonzero pivot for row %d\n",RowOld->p[Ipivot]);
-                fCustomPrint(stderr,"Matrix is probably numerically singular\n");
+                fprintf(stderr,"\nUnable to find a nonzero pivot for row %d\n",RowOld->p[Ipivot]);
+                fprintf(stderr,"Matrix is probably numerically singular\n");
                 return(WARNINGEXIT);
               }
               Valence[Ipivot] = Valence[Ipivot] + DeltaValence;
@@ -449,16 +442,16 @@ void AllocateOrderArrays()
                   (LinkCount > 0) && (LoopLimit >= 0));
 
           if (Jpivot <= 0) {
-            fCustomPrint(stderr,"\nUnable to find an available pivot for row %d\n",RowOld->p[Ipivot]);
-            fCustomPrint(stderr,"Matrix is probably topologically singular\n");
+            fprintf(stderr,"\nUnable to find an available pivot for row %d\n",RowOld->p[Ipivot]);
+            fprintf(stderr,"Matrix is probably topologically singular\n");
             return(WARNINGEXIT);
             /* Iorder = Istop; */
           } else {
             RowNew->p[Ipivot] = Iorder;
             RowOld->p[Iorder] = Ipivot;
             if (NearZero(PivotV)) {
-              fCustomPrint(stderr,"\nEquation %d Depends on Other Equations\n",RowOld->p[Ipivot]);
-              fCustomPrint(stderr,"Matrix is probably numerically singular\n");
+              fprintf(stderr,"\nEquation %d Depends on Other Equations\n",RowOld->p[Ipivot]);
+              fprintf(stderr,"Matrix is probably numerically singular\n");
               return(WARNINGEXIT);
               /* Iorder = Istop; */
             } else {
@@ -573,10 +566,10 @@ IntegerVector *PartRow,*PartCol,*P1Row,*P1Col,*P2Row,*P2Col;
     Iend = PartitionAt[Ipart];
     if (OrderMatrix(Ibeg,Iend)) return(1);
   }
-/*  fCustomPrint(stderr,"  Factorization Fills: %d",Nfills);*/
+/*  fprintf(stderr,"  Factorization Fills: %d",Nfills);*/
   FinishVectors();   /* For the case of rectangular matrix factorization */
   InvertNormalize(); /* To convert to true LDU factors, as expected by REPSOL */
-/*  fCustomPrint(stderr,"    Multiplications: %d\n",Nmult);*/
+/*  fprintf(stderr,"    Multiplications: %d\n",Nmult);*/
   for (i=1; i<=Matrix->n1; i++) {
     Ptr=Matrix->RowHead[i];
     while(Ptr!=NULL){
@@ -603,14 +596,14 @@ IntegerVector *PartRow,*PartCol,*P1Row,*P1Col,*P2Row,*P2Col;
 /*
   if (ExistParameter('d')) {
     OutFile=(FILE *) OpenOutput("prow.dat");
-    fCustomPrint(OutFile,"%d\n",RowOld->N);
-    for (i=1; i<=RowOld->N; i++) fCustomPrint(OutFile,"%d ",RowOld->p[i]);
-    fCustomPrint(OutFile,"\n");
+    fprintf(OutFile,"%d\n",RowOld->N);
+    for (i=1; i<=RowOld->N; i++) fprintf(OutFile,"%d ",RowOld->p[i]);
+    fprintf(OutFile,"\n");
     fclose(OutFile);
     OutFile=(FILE *) OpenOutput("pcol.dat");
-    fCustomPrint(OutFile,"%d\n",ColOld->N);
-    for (i=1; i<=ColOld->N; i++) fCustomPrint(OutFile,"%d ",ColOld->p[i]);
-    fCustomPrint(OutFile,"\n");
+    fprintf(OutFile,"%d\n",ColOld->N);
+    for (i=1; i<=ColOld->N; i++) fprintf(OutFile,"%d ",ColOld->p[i]);
+    fprintf(OutFile,"\n");
     fclose(OutFile);
   }
 */

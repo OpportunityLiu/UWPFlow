@@ -1,12 +1,9 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* AC/DC Power Flow Program.
 
 */
 
 #include <stdlib.h>
-#include "pfwstdio.h"
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "constant.h"
@@ -210,7 +207,7 @@ void InitializeLoad()
 #endif
   }
 
-  fCustomPrint(stderr,"UW Continuation Power Flow (c)1992,1996,1999, 2006 C. Canizares, F. Alvarado and S. Zhang.\n");
+  fprintf(stderr,"UW Continuation Power Flow (c)1992,1996,1999, 2006 C. Canizares, F. Alvarado and S. Zhang.\n");
   if (ExistParameter('A') || ExistParameter('6')) Acont=FALSE;
   else Acont=TRUE;
   if (ExistParameter('P')) PQcont=FALSE;
@@ -255,7 +252,7 @@ void InitializeLoad()
   RealParameter('F',&alpha,0.001,1.);
   MaxIter=(INDEX) IntegerParameter('M',MaxIter,0,1000);
   if (ExistParameter('d')) {
-         fCustomPrint(stderr,"Tol %lf   tol %lf   alpha %lf\n",Tol,tol,alpha);
+         fprintf(stderr,"Tol %lf   tol %lf   alpha %lf\n",Tol,tol,alpha);
   }
   flagL=flagR=FALSE;
   if ((ExistParameter('H') || ExistParameter('c')) && (!NullName(NameParameter('K')) || flagKdirection)) flagH=TRUE;
@@ -279,41 +276,41 @@ void InitializeLoad()
          i=Homot();
          if(i<0) {
                 i= -i;
-                fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                fCustomPrint(stderr,"     Try changing the DC controls.\n");
-                fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+                fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                fprintf(stderr,"     Try changing the DC controls.\n");
+                fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
                 WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                stopExecute(1);
+                exit(1);
          }
-         fCustomPrint(stderr,"**** Voltage Profile Case Solved **** \n\n");
+         fprintf(stderr,"**** Voltage Profile Case Solved **** \n\n");
          WriteSolution(--i,TrueParamStr(2),"U.E.P. Solution:");
          if (ExistParameter('y') && !NullName(NameParameter('y'))) {
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,FALSE,&EigenValue);
-                fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+                fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
                 PrintEvalue=TRUE;
                 Out=OpenOutput(NameParameter('y'));
                 N1=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;   /* FACTS */
                 PrintLeftEvector(N1,Out);
          }
          if (ExistParameter('Y') && !NullName(NameParameter('Y'))){
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,TRUE,&EigenValue);
-                if (!PrintEvalue) fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+                if (!PrintEvalue) fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
                 PrintDirection('Y',x0,1.0);
          }
   } else if (flagPoC) {
          i=PoCPoint();
          if(i<0) {
                 i= -i;
-                fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                fCustomPrint(stderr,"     Try changing the DC controls.\n");
-                fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+                fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                fprintf(stderr,"     Try changing the DC controls.\n");
+                fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
                 WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                stopExecute(1);
+                exit(1);
          }
-         fCustomPrint(stderr,"**** Point of Collapse Case Solved ****   ");
-         fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+         fprintf(stderr,"**** Point of Collapse Case Solved ****   ");
+         fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
          WriteSolution(--i,TrueParamStr(2),"PoC Solution:");
   } else if (flagv) {
          i=1;
@@ -322,12 +319,12 @@ void InitializeLoad()
                 i=Pflow(i,FALSE,TRUE,TRUE);
                 if(i<0) {
                   i= -i;
-                  fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                  fCustomPrint(stderr,"     Try changing the DC controls.\n");
+                  fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                  fprintf(stderr,"     Try changing the DC controls.\n");
                   WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                  stopExecute(1);
+                  exit(1);
                 }
-                fCustomPrint(stderr,"**** Base Case Solved (to calculate OH load parameters) ****\n\n");
+                fprintf(stderr,"**** Base Case Solved (to calculate OH load parameters) ****\n\n");
          } else InitializeLoad();
          RealParameter('L',&lambda,-1e6,1e6);
          strcpy_s(BlPtr->Type,"BL");
@@ -338,14 +335,14 @@ void InitializeLoad()
          i=Pflow(i,flagD,TRUE,FALSE);
          if(i<0) {
                 i= -i;
-                fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                fCustomPrint(stderr,"     Try changing the DC controls.\n");
-                fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+                fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                fprintf(stderr,"     Try changing the DC controls.\n");
+                fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
                 WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                stopExecute(1);
+                exit(1);
          }
-         fCustomPrint(stderr,"**** Voltage/Lambda Case Solved ****    ");
-         fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+         fprintf(stderr,"**** Voltage/Lambda Case Solved ****    ");
+         fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
          WriteSolution(--i,TrueParamStr(2),"Voltage/Lambda Solution:");
   } else if (ExistParameter('L') && (ExistParameter('K') || flagKdirection)) {
          i=1;
@@ -353,41 +350,41 @@ void InitializeLoad()
                 i=Pflow(i,FALSE,TRUE,TRUE);
                 if(i<0) {
                   i= -i;
-                  fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                  fCustomPrint(stderr,"     Try changing the DC controls.\n");
+                  fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                  fprintf(stderr,"     Try changing the DC controls.\n");
                   WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                  stopExecute(1);
+                  exit(1);
                 }
-                fCustomPrint(stderr,"**** Base Case Solved (to initialize power flow) ****\n\n");
+                fprintf(stderr,"**** Base Case Solved (to initialize power flow) ****\n\n");
          } else InitializeLoad();
          RealParameter('L',&lambda,-1e6,1e6);
          if (lambda==0 || (NullName(NameParameter('K')) && !flagKdirection)) {
-                fCustomPrint(stderr,"***Warning: The program has detected the -L option but either lambda is zero\n");
-                fCustomPrint(stderr,"            or there is no gen./load variations defined.\n");
+                fprintf(stderr,"***Warning: The program has detected the -L option but either lambda is zero\n");
+                fprintf(stderr,"            or there is no gen./load variations defined.\n");
                 if (!ExistParameter('b') && !flagD  ) {
-                  fCustomPrint(stderr,"            The program will just solve the base case.\n");
+                  fprintf(stderr,"            The program will just solve the base case.\n");
                   i=Pflow(i,FALSE,TRUE,TRUE);
                   if(i<0) {
                          i= -i;
-                         fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                         fCustomPrint(stderr,"     Try changing the DC controls.\n");
+                         fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                         fprintf(stderr,"     Try changing the DC controls.\n");
                          WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                         stopExecute(1);
+                         exit(1);
                   }
-                  fCustomPrint(stderr,"**** Base Case Solved ****\n\n");
+                  fprintf(stderr,"**** Base Case Solved ****\n\n");
                 }
          } else {
                 i=Pflow(i,flagD,TRUE,FALSE);
                 if(i<0) {
                   i= -i;
-                  fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                  fCustomPrint(stderr,"     Try changing the DC controls.\n");
-                  fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+                  fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                  fprintf(stderr,"     Try changing the DC controls.\n");
+                  fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
                   WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                  stopExecute(1);
+                  exit(1);
                 }
-                fCustomPrint(stderr,"**** Lambda Case Solved ****    ");
-                fCustomPrint(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
+                fprintf(stderr,"**** Lambda Case Solved ****    ");
+                fprintf(stderr,"Loading factor -> %-10.6lg\n\n",lambda);
          }
          WriteSolution(--i,TrueParamStr(2),"Lambda Solution:");
          if (ExistParameter('y') && !NullName(NameParameter('y'))) {
@@ -396,11 +393,11 @@ void InitializeLoad()
                 x0= new VALUETYPE[N1];
 #else
                 x0=(VALUETYPE *) calloc(N1,sizeof(VALUETYPE));
-                if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. left e-vector."); stopExecute(ERROREXIT);}
+                if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. left e-vector."); exit(ERROREXIT);}
 #endif
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,FALSE,&EigenValue);
-                fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+                fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
                 PrintEvalue=TRUE;
                 Out=OpenOutput(NameParameter('y'));
                 PrintLeftEvector(N1,Out);
@@ -412,24 +409,24 @@ void InitializeLoad()
                   x0= new VALUETYPE[N1];
 #else
                   x0=(VALUETYPE *) calloc(N1,sizeof(VALUETYPE));
-                  if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. right e-vector."); stopExecute(ERROREXIT);}
+                  if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. right e-vector."); exit(ERROREXIT);}
 #endif
                 }
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,TRUE,&EigenValue);
-                if (!PrintEvalue) fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+                if (!PrintEvalue) fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
                 PrintDirection('Y',x0,1.0);
          }
   } else {
          i=Pflow(1,FALSE,TRUE,TRUE);
          if(i<0) {
                 i= -i;
-                fCustomPrint(stderr,"\n *** The DC equations have a square root of a negative number.\n");
-                fCustomPrint(stderr,"     Try changing the DC controls.\n");
+                fprintf(stderr,"\n *** The DC equations have a square root of a negative number.\n");
+                fprintf(stderr,"     Try changing the DC controls.\n");
                 WriteSolution(--i,TrueParamStr(2),"DC problems:");
-                stopExecute(1);
+                exit(1);
          }
-         fCustomPrint(stderr,"**** Base Case Solved ****\n\n");
+         fprintf(stderr,"**** Base Case Solved ****\n\n");
          WriteSolution(--i,TrueParamStr(2),"Base Solution:");
          if (ExistParameter('y') && !NullName(NameParameter('y'))) {
                 N1=NacVar+11*Ndc/2+1+3*Nsvc+NtcscVar+7*Nstatcom;   /* FACTS */
@@ -437,11 +434,11 @@ void InitializeLoad()
                 x0= new VALUETYPE[N1];
 #else
                 x0=(VALUETYPE *) calloc(N1,sizeof(VALUETYPE));
-                if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. left e-vector."); stopExecute(ERROREXIT);}
+                if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. left e-vector."); exit(ERROREXIT);}
 #endif
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write left e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,FALSE,&EigenValue);
-        fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+        fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
         PrintEvalue=TRUE;
                 Out=OpenOutput(NameParameter('y'));
                 PrintLeftEvector(N1,Out);
@@ -453,12 +450,12 @@ void InitializeLoad()
                   x0= new VALUETYPE[N1];
 #else
                   x0=(VALUETYPE *) calloc(N1,sizeof(VALUETYPE));
-                  if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. right e-vector."); stopExecute(ERROREXIT);}
+                  if (x0==NULL) {ErrorHalt("Insufficient memory to allocate approx. right e-vector."); exit(ERROREXIT);}
 #endif
                 }
-                if(ExistParameter('d')) fCustomPrint(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
+                if(ExistParameter('d')) fprintf(stderr,"Write right e-vector for base case (see file 'evect.dat').\n");
                 Evector(40,0,0.00001,TRUE,&EigenValue);
-                if (!PrintEvalue) fCustomPrint(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
+                if (!PrintEvalue) fprintf(stderr,"Minimum |e_value| -> %-10.6lg\n\n",EigenValue);
                 PrintDirection('Y',x0,1.0);
          }
   }

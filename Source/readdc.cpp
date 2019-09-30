@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Read DC data in WSCC/EPRI/BPA format   */
 
 #include "readdata.h"
@@ -41,14 +38,14 @@ char *Line;
           if(strncmp(Name,"GROUND",6)){
             DCptr=(DCbusData *) DCbusInList(Name,Ndc);
             if (DCptr->Nbr!=0) {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
               ErrorHalt("The DC bus was previously defined (check BD cards).");
             }
             if (DCptr->N==0) { Ndc++; DCptr->N=Ndc;}
           } else flag=TRUE;
         }
         if (!flag){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("One of the DC buses must be GROUND (2 terminal HVDC links).");
         }
         GetStr(Line,20,12,12,Name);
@@ -64,7 +61,7 @@ char *Line;
         if(ACptr->DC==NULL) {
           fclose(InputDataFile);
           ErrorHalt("Insufficient memory to allocate DC elemet data");
-          stopExecute(ERROREXIT);
+          exit(ERROREXIT);
         }
 #endif
         ACptr->DC->DC=DCptr;
@@ -75,7 +72,7 @@ char *Line;
         DCptr->Xc=GetValue(Line,40,5,3);
         DCptr->Ntrf=GetValue(Line,45,5,4);
         if (DCptr->Nbr<1 || DCptr->Ntrf<0.0001) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Wrong number of AC/DC bridges or transf. ratio too small.");
         }
         DCptr->Xc=DCptr->Xc*DCptr->Nbr;
@@ -106,7 +103,7 @@ char *Line;
         }
         DCptr=(DCbusData *) DCbusInList(Name,Ndc);
         if (DCptr->Nbr!=0) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("The DC bus was previously defined (check BD cards).");
         }
         if (DCptr->N==0) { Ndc++; DCptr->N=Ndc;}
@@ -116,7 +113,7 @@ char *Line;
         KV=GetValue(Line,59,4,0);
         DCptr->Ntrf=(KVp/KV)*DCptr->Nbr;
         if (DCptr->Nbr<1 || DCptr->Ntrf<0.0001) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Wrong number of AC/DC bridges or transf. ratio too small.");
         }
         ACptr=ACbusInList(0,Name,KV,Nac,1);
@@ -130,7 +127,7 @@ char *Line;
         if(ACptr->DC==NULL) {
           fclose(InputDataFile);
           ErrorHalt("Insufficient memory to allocate DC elemet data");
-          stopExecute(ERROREXIT);
+          exit(ERROREXIT);
         }
 #endif
         ACptr->DC->DC=DCptr;
@@ -152,14 +149,14 @@ char *Line;
         if(strncmp(Name,"GROUND",6)){
           DCptr=(DCbusData *) DCbusInList(Name,Ndc);
           if (strcmp(DCptr->Type,"")) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("The DC bus was previously defined (check BD cards).");
           }
           if (DCptr->N==0) { Ndc++; DCptr->N=Ndc;}
         } else flag=TRUE;
       }
       if (!flag){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("One of the DC buses must be GROUND (2 terminal HVDC links).");
       }
       GetStr(Line,33,2,2,DCptr->Cont1);
@@ -174,28 +171,28 @@ char *Line;
            strcmp(DCptr->Cont2,"AL") && strcmp(DCptr->Cont2,"GA") &&
            strcmp(DCptr->Cont2,"AT"))||
           (strcmp(DCptr->Type,"R") && strcmp(DCptr->Type,"I"))){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("DC link has invalid type and/or control modes.");
       }
       if ((!strcmp(DCptr->Cont1,"ID") && !strcmp(DCptr->Cont2,"VD")) ||
           (!strcmp(DCptr->Cont1,"VD") && !strcmp(DCptr->Cont2,"ID"))){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("DC link has an invalid control mode: ID VD.");
       }
       if ((!strcmp(DCptr->Cont1,"PA") && !strcmp(DCptr->Cont2,"VD")) ||
           (!strcmp(DCptr->Cont1,"VD") && !strcmp(DCptr->Cont2,"PA"))){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("DC link has an invalid control mode: VD PA.");
       }
       if ((!strcmp(DCptr->Cont1,"ID") && !strcmp(DCptr->Cont2,"PA")) ||
           (!strcmp(DCptr->Cont1,"PA") && !strcmp(DCptr->Cont2,"ID"))){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("DC link has an invalid control mode: ID PA.");
       }
       Set1=fabs(GetValue(Line,37,6,2));
       Set2=fabs(GetValue(Line,43,6,2));
       if (Set1==0 || Set2==0){
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("Zero DC control set point.");
       }
       if (!strcmp(DCptr->Cont1,"ID")) DCptr->Id=Set1;
@@ -230,17 +227,17 @@ char *Line;
         DCptrp=(DCbusData *) DCbusInList(Name,Ndc);
         if (DCptrp->N==0) { Ndc++; DCptrp->N=Ndc;}
         if (DCptr->N==DCptrp->N){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Both DC line buses are the same.");
         }
         R=GetValue(Line,29,6,2);
         L=GetValue(Line,35,6,2)/1000.;
         if (R<0.01) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("DC line is a short circuit or has negative R.");
         }
         if (ExistParameter('O') && L<=0) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Program needs a DC L>0 to calculate ac/dc TEF.");
         }
         DCptr->Rd=DCptrp->Rd=R;
@@ -263,17 +260,17 @@ char *Line;
         DCptrp=(DCbusData *) DCbusInList(Name,Ndc);
         if (DCptrp->N==0) { Ndc++; DCptrp->N=Ndc;}
         if (DCptr->N==DCptrp->N){
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Both DC line buses are the same.");
         }
         R=GetValue(Line,38,6,2);
         L=GetValue(Line,44,6,2)/1000.;
         if (R<0.01) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("DC line is a short circuit or has negative R.");
         }
         if (ExistParameter('O') && L<=0) {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("Program needs a DC L>0 to calculate ac/dc TEF.");
         }
         DCptr->Rd=DCptrp->Rd=R;

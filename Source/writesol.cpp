@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Write solution in files: -Printed output.
                             -Bus voltages and angles.
                             -IEEE common format for SSSP or other
@@ -35,39 +32,39 @@ char *File1,*str;
   VALUETYPE Xc,Max,Vn;                            /* FACTS */
 
   OutFile=OpenOutput(File1);
-  fCustomPrint(OutFile,"\n%s\n",str);
+  fprintf(OutFile,"\n%s\n",str);
   i=0;
   while(i<=2 && dataPtr->Title[0][0]!='\0'){
-    fCustomPrint(OutFile,"%s",dataPtr->Title[i]);
+    fprintf(OutFile,"%s",dataPtr->Title[i]);
     i++;
   }
   if (!flagH) lambda_o=0;
-  fCustomPrint(OutFile,"      Loading factor -> %-10.6lg\n",lambda+lambda_o);
-  fCustomPrint(OutFile,"            AC buses -> %d\n",Nac);
-  fCustomPrint(OutFile,"            PV buses -> %d\n",Nvolt);
-  fCustomPrint(OutFile,"            X buses  -> %d\n",NXvolt);
-  fCustomPrint(OutFile,"            Z buses  -> %d\n",NZvolt);
-  fCustomPrint(OutFile,"            AC elem. -> %d\n",NacEl);
-  fCustomPrint(OutFile,"         V Reg. Trf. -> %d\n",NregV);
-  fCustomPrint(OutFile,"        PQ Reg. Trf. -> %d\n",NregPQ);
-  fCustomPrint(OutFile,"            DC buses -> %d\n",Ndc);
-  fCustomPrint(OutFile,"            DC lines -> %d\n",Ndc/2);
-  fCustomPrint(OutFile,"                SVCs -> %d\n",Nsvc);     /* FACTS */
-  fCustomPrint(OutFile,"               TCSCs -> %d\n",Ntcsc);    /* FACTS */
-  fCustomPrint(OutFile,"            STATCOMs -> %d\n",Nstatcom); /* FACTS */
-  fCustomPrint(OutFile,"           No. Areas -> %d\n",Narea);
-  fCustomPrint(OutFile,"           Iterations -> %d (Maximum = %d)\n",Iter,MaxIter);
-  fCustomPrint(OutFile,"   Max. p.u. mismatch -> %-8.4lg (Tolerance = %-8.4lg)\n",MaxdFi,Tol);
-  fCustomPrint(OutFile,"    Reference Bus(es) -> ");
+  fprintf(OutFile,"      Loading factor -> %-10.6lg\n",lambda+lambda_o);
+  fprintf(OutFile,"            AC buses -> %d\n",Nac);
+  fprintf(OutFile,"            PV buses -> %d\n",Nvolt);
+  fprintf(OutFile,"            X buses  -> %d\n",NXvolt);
+  fprintf(OutFile,"            Z buses  -> %d\n",NZvolt);
+  fprintf(OutFile,"            AC elem. -> %d\n",NacEl);
+  fprintf(OutFile,"         V Reg. Trf. -> %d\n",NregV);
+  fprintf(OutFile,"        PQ Reg. Trf. -> %d\n",NregPQ);
+  fprintf(OutFile,"            DC buses -> %d\n",Ndc);
+  fprintf(OutFile,"            DC lines -> %d\n",Ndc/2);
+  fprintf(OutFile,"                SVCs -> %d\n",Nsvc);     /* FACTS */
+  fprintf(OutFile,"               TCSCs -> %d\n",Ntcsc);    /* FACTS */
+  fprintf(OutFile,"            STATCOMs -> %d\n",Nstatcom); /* FACTS */
+  fprintf(OutFile,"           No. Areas -> %d\n",Narea);
+  fprintf(OutFile,"           Iterations -> %d (Maximum = %d)\n",Iter,MaxIter);
+  fprintf(OutFile,"   Max. p.u. mismatch -> %-8.4lg (Tolerance = %-8.4lg)\n",MaxdFi,Tol);
+  fprintf(OutFile,"    Reference Bus(es) -> ");
   i=0;
   for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next)
     if(strpbrk(ACptr->Type,"S")){
-      if (i>0)   fCustomPrint(OutFile,"                         ");
-      fCustomPrint(OutFile,"%d %s (Angle=%6.2lf deg.)\n",ACptr->Num,ACptr->Name,ACptr->Ang/K3);
+      if (i>0)   fprintf(OutFile,"                         ");
+      fprintf(OutFile,"%d %s (Angle=%6.2lf deg.)\n",ACptr->Num,ACptr->Name,ACptr->Ang/K3);
       i++;
     }
-  if (i==0) fCustomPrint(OutFile,"\n");
-  fCustomPrint(OutFile,"\n");
+  if (i==0) fprintf(OutFile,"\n");
+  fprintf(OutFile,"\n");
 
   if (Narea<2) ACptr=dataPtr->ACbus;
   else {
@@ -75,65 +72,65 @@ char *File1,*str;
     ACLptr=Aptr->AC;
     ACptr=ACLptr->AC;
   }
-  fCustomPrint(OutFile,"\n                                      ***** AC RESULTS *****\n");
-  fCustomPrint(OutFile,"                   L=lower limit    H=higher limit      O=over limit    U=under limit\n");
-  fCustomPrint(OutFile,"--|----|------------|------|-------|--------|--------|--------|----|------------|-|--------|--------|--------|-------|-|-----------------\n");
-  fCustomPrint(OutFile," A    i Bus           V(pu)   V(kV)   Pg(MW)    Pload   Pshunt|   j Bus          C      Pij  Plosses |Iij|(A) kVi/kVj T  Controlled Bus  \n");
-  fCustomPrint(OutFile," n      Name         d(deg)  d(rad) Qg(MVAR)    Qload   Qshunt|     Name         r      Qij  Qlosses           a(deg)      k Name        \n");
+  fprintf(OutFile,"\n                                      ***** AC RESULTS *****\n");
+  fprintf(OutFile,"                   L=lower limit    H=higher limit      O=over limit    U=under limit\n");
+  fprintf(OutFile,"--|----|------------|------|-------|--------|--------|--------|----|------------|-|--------|--------|--------|-------|-|-----------------\n");
+  fprintf(OutFile," A    i Bus           V(pu)   V(kV)   Pg(MW)    Pload   Pshunt|   j Bus          C      Pij  Plosses |Iij|(A) kVi/kVj T  Controlled Bus  \n");
+  fprintf(OutFile," n      Name         d(deg)  d(rad) Qg(MVAR)    Qload   Qshunt|     Name         r      Qij  Qlosses           a(deg)      k Name        \n");
   while(ACptr!=NULL){
-    fCustomPrint(OutFile,"--|----|------------|------|-------|--------|--------|--------|----|------------|-|--------|--------|--------|-------|-|----|------------\n");
+    fprintf(OutFile,"--|----|------------|------|-------|--------|--------|--------|----|------------|-|--------|--------|--------|-------|-|----|------------\n");
     if(ACptr->Area!=NULL) {
-      fCustomPrint(OutFile,"%2d ",ACptr->Area->N);
-    } else fCustomPrint(OutFile,"%2d ",0);
-    fCustomPrint(OutFile,"%4d ",ACptr->Num);
-    fCustomPrint(OutFile,"%12s ",ACptr->Name);
-    fCustomPrint(OutFile,"%6.4lf ",ACptr->V);
+      fprintf(OutFile,"%2d ",ACptr->Area->N);
+    } else fprintf(OutFile,"%2d ",0);
+    fprintf(OutFile,"%4d ",ACptr->Num);
+    fprintf(OutFile,"%12s ",ACptr->Name);
+    fprintf(OutFile,"%6.4lf ",ACptr->V);
     KVi=ACptr->KV;
-    if (KVi > 0) fCustomPrint(OutFile,"%7.2lf",KVi*ACptr->V);
-    else fCustomPrint(OutFile,"%7s","");
+    if (KVi > 0) fprintf(OutFile,"%7.2lf",KVi*ACptr->V);
+    else fprintf(OutFile,"%7s","");
     if(ACptr->Vmax==ACptr->Vmin) {
-      if(ACptr->Vlmax==ACptr->Vlmin) fCustomPrint(OutFile," ");
-      else if(ACptr->V==ACptr->Vlmin) fCustomPrint(OutFile,"L");
-      else if(ACptr->V==ACptr->Vlmax) fCustomPrint(OutFile,"H");
-      else if(ACptr->V<ACptr->Vlmin) fCustomPrint(OutFile,"U");
-      else if(ACptr->V>ACptr->Vlmax) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
+      if(ACptr->Vlmax==ACptr->Vlmin) fprintf(OutFile," ");
+      else if(ACptr->V==ACptr->Vlmin) fprintf(OutFile,"L");
+      else if(ACptr->V==ACptr->Vlmax) fprintf(OutFile,"H");
+      else if(ACptr->V<ACptr->Vlmin) fprintf(OutFile,"U");
+      else if(ACptr->V>ACptr->Vlmax) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
     }
-    else if(ACptr->V==ACptr->Vmin) fCustomPrint(OutFile,"L");
-    else if(ACptr->V==ACptr->Vmax) fCustomPrint(OutFile,"H");
-    else if(ACptr->V<ACptr->Vmin) fCustomPrint(OutFile,"U");
-    else if(ACptr->V>ACptr->Vmax) fCustomPrint(OutFile,"O");
-    else fCustomPrint(OutFile," ");
+    else if(ACptr->V==ACptr->Vmin) fprintf(OutFile,"L");
+    else if(ACptr->V==ACptr->Vmax) fprintf(OutFile,"H");
+    else if(ACptr->V<ACptr->Vmin) fprintf(OutFile,"U");
+    else if(ACptr->V>ACptr->Vmax) fprintf(OutFile,"O");
+    else fprintf(OutFile," ");
     Pg=ACptr->PG;
-    fCustomPrint(OutFile,"%8.2lf",Pg*Sn);
-    if(Pg==ACptr->Pmax) fCustomPrint(OutFile,"H");
-    else if(Pg>ACptr->Pmax) fCustomPrint(OutFile,"O");
-    else fCustomPrint(OutFile," ");
+    fprintf(OutFile,"%8.2lf",Pg*Sn);
+    if(Pg==ACptr->Pmax) fprintf(OutFile,"H");
+    else if(Pg>ACptr->Pmax) fprintf(OutFile,"O");
+    else fprintf(OutFile," ");
     Pl=(ACptr->Pn+lambda*ACptr->Pnl)*pow(ACptr->V,ACptr->a)+
        (ACptr->Pz+lambda*ACptr->Pzl)*ACptr->V*ACptr->V;
     Ql=(ACptr->Qn+lambda*ACptr->Qnl)*pow(ACptr->V,ACptr->b)+
        (ACptr->Qz+lambda*ACptr->Qzl)*ACptr->V*ACptr->V;
-    fCustomPrint(OutFile,"%8.2lf ",Pl*Sn);
-    fCustomPrint(OutFile,"%8.2lf|",ACptr->G*ACptr->V*ACptr->V*Sn);
+    fprintf(OutFile,"%8.2lf ",Pl*Sn);
+    fprintf(OutFile,"%8.2lf|",ACptr->G*ACptr->V*ACptr->V*Sn);
     i=0;
 
   /* -------------------------------------- DC element results ------------------------------------------- */
     for (DCLptr=ACptr->DC;DCLptr!=NULL;DCLptr=DCLptr->Next) {
-      if (i!=0) fCustomPrint(OutFile,"%62s|","");
+      if (i!=0) fprintf(OutFile,"%62s|","");
       DCptr=DCLptr->DC;
-      fCustomPrint(OutFile,"  DC %-12s %1s ",DCptr->Name,DCptr->Type);
-      fCustomPrint(OutFile,"%8.2lf ",-DCptr->P*Sn);
-      fCustomPrint(OutFile," Alpha=%6.2lf",DCptr->Alfa/K3);
-      if(DCptr->Alfa<=DCptr->AlfaMin) fCustomPrint(OutFile,"L");
-      else if(DCptr->Alfa>=DCptr->AlfaMax) fCustomPrint(OutFile,"H");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile," Tap=%6.4lf",DCptr->Tap);
-      if(DCptr->Tap==DCptr->TapMin) fCustomPrint(OutFile,"L");
-      else if(DCptr->Tap==DCptr->TapMax) fCustomPrint(OutFile,"H");
-      else if(DCptr->Tap<DCptr->TapMin) fCustomPrint(OutFile,"U");
-      else if(DCptr->Tap>DCptr->TapMax) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"\n");
+      fprintf(OutFile,"  DC %-12s %1s ",DCptr->Name,DCptr->Type);
+      fprintf(OutFile,"%8.2lf ",-DCptr->P*Sn);
+      fprintf(OutFile," Alpha=%6.2lf",DCptr->Alfa/K3);
+      if(DCptr->Alfa<=DCptr->AlfaMin) fprintf(OutFile,"L");
+      else if(DCptr->Alfa>=DCptr->AlfaMax) fprintf(OutFile,"H");
+      else fprintf(OutFile," ");
+      fprintf(OutFile," Tap=%6.4lf",DCptr->Tap);
+      if(DCptr->Tap==DCptr->TapMin) fprintf(OutFile,"L");
+      else if(DCptr->Tap==DCptr->TapMax) fprintf(OutFile,"H");
+      else if(DCptr->Tap<DCptr->TapMin) fprintf(OutFile,"U");
+      else if(DCptr->Tap>DCptr->TapMax) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
+      fprintf(OutFile,"\n");
       if (i==0) {
         Qm=ACptr->Smax*ACptr->Smax-Pg*Pg;
         if (!flagSmax && Qm>0) {
@@ -146,31 +143,31 @@ char *File1,*str;
           ACptr->Max=ACptr->Qmax;
           ACptr->Min=ACptr->Qmin;
         }
-        i++; fCustomPrint(OutFile,"%21s","");
+        i++; fprintf(OutFile,"%21s","");
         delta=ACptr->Ang;
         if (delta>=0) vals=1.00;
         else          vals=-1.00;
         if (fabs(delta)>2*PI) delta=delta-vals*floor(fabs(delta)/(2*PI))*2*PI;
         if (fabs(delta)>PI) delta=delta-vals*2*PI;
         ACptr->Ang=delta;
-        fCustomPrint(OutFile,"%6.2lf ",ACptr->Ang/K3);
-        fCustomPrint(OutFile,"%7.4lf ",ACptr->Ang);
-        fCustomPrint(OutFile,"%8.2lf",ACptr->Qg*Sn);
-        if(ACptr->Max==ACptr->Min) fCustomPrint(OutFile," ");
-        else if(ACptr->Qg==ACptr->Min) fCustomPrint(OutFile,"L");
-        else if(ACptr->Qg==ACptr->Max) fCustomPrint(OutFile,"H");
-        else if(ACptr->Qg<ACptr->Min) fCustomPrint(OutFile,"U");
-        else if(ACptr->Qg>ACptr->Max) fCustomPrint(OutFile,"O");
-        else fCustomPrint(OutFile," ");
-        fCustomPrint(OutFile,"%8.2lf ",Ql*Sn);
-        fCustomPrint(OutFile,"%8.2lf|",ACptr->B*ACptr->V*ACptr->V*Sn);
-      } else fCustomPrint(OutFile,"%62s|","");
-      fCustomPrint(OutFile,"%19s ","");
-      fCustomPrint(OutFile,"%8.2lf ",-DCptr->Q*Sn);
-      fCustomPrint(OutFile," Gamma=%6.2lf",DCptr->Gamma/K3);
-      if(DCptr->Gamma<=DCptr->GammaMin) fCustomPrint(OutFile,"L");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"\n");
+        fprintf(OutFile,"%6.2lf ",ACptr->Ang/K3);
+        fprintf(OutFile,"%7.4lf ",ACptr->Ang);
+        fprintf(OutFile,"%8.2lf",ACptr->Qg*Sn);
+        if(ACptr->Max==ACptr->Min) fprintf(OutFile," ");
+        else if(ACptr->Qg==ACptr->Min) fprintf(OutFile,"L");
+        else if(ACptr->Qg==ACptr->Max) fprintf(OutFile,"H");
+        else if(ACptr->Qg<ACptr->Min) fprintf(OutFile,"U");
+        else if(ACptr->Qg>ACptr->Max) fprintf(OutFile,"O");
+        else fprintf(OutFile," ");
+        fprintf(OutFile,"%8.2lf ",Ql*Sn);
+        fprintf(OutFile,"%8.2lf|",ACptr->B*ACptr->V*ACptr->V*Sn);
+      } else fprintf(OutFile,"%62s|","");
+      fprintf(OutFile,"%19s ","");
+      fprintf(OutFile,"%8.2lf ",-DCptr->Q*Sn);
+      fprintf(OutFile," Gamma=%6.2lf",DCptr->Gamma/K3);
+      if(DCptr->Gamma<=DCptr->GammaMin) fprintf(OutFile,"L");
+      else fprintf(OutFile," ");
+      fprintf(OutFile,"\n");
     }
 
   /* --------------------------------------- AC element results -------------------------------------------- */
@@ -202,120 +199,120 @@ char *File1,*str;
         KV=KVi;  KVi=KVj;  KVj=KV;
         ratio=1/ratio;
       }
-      if (i!=0) fCustomPrint(OutFile,"%62s|","");
-      fCustomPrint(OutFile,"%4d ",To->Num);
-      fCustomPrint(OutFile,"%12s ",To->Name);
-      fCustomPrint(OutFile,"%1s ",Eptr->Ckt);
-      fCustomPrint(OutFile,"%8.2lf",Pij*Sn);
-      if(ACptr!=Eptr->Cont || strcmp(Eptr->Ctype,"P") || Eptr->Max==Eptr->Min) fCustomPrint(OutFile," ");
-      else if(Pij==Eptr->Min) fCustomPrint(OutFile,"L");
-      else if(Pij==Eptr->Max) fCustomPrint(OutFile,"H");
-      else if(Pij<Eptr->Min) fCustomPrint(OutFile,"U");
-      else if(Pij>Eptr->Max) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"%8.2lf ",(Pij+Pji)*Sn);
-      if (KVi > 0) fCustomPrint(OutFile,"%8.2lf",Iij*1000*Sn/(sqrt(3.0)*KVi));
-      else fCustomPrint(OutFile,"%8s","");
-      if(Eptr->Imax<=0) fCustomPrint(OutFile," ");
-      else if(Iij==Eptr->Imax) fCustomPrint(OutFile,"H");
-      else if(Iij>Eptr->Imax) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
+      if (i!=0) fprintf(OutFile,"%62s|","");
+      fprintf(OutFile,"%4d ",To->Num);
+      fprintf(OutFile,"%12s ",To->Name);
+      fprintf(OutFile,"%1s ",Eptr->Ckt);
+      fprintf(OutFile,"%8.2lf",Pij*Sn);
+      if(ACptr!=Eptr->Cont || strcmp(Eptr->Ctype,"P") || Eptr->Max==Eptr->Min) fprintf(OutFile," ");
+      else if(Pij==Eptr->Min) fprintf(OutFile,"L");
+      else if(Pij==Eptr->Max) fprintf(OutFile,"H");
+      else if(Pij<Eptr->Min) fprintf(OutFile,"U");
+      else if(Pij>Eptr->Max) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
+      fprintf(OutFile,"%8.2lf ",(Pij+Pji)*Sn);
+      if (KVi > 0) fprintf(OutFile,"%8.2lf",Iij*1000*Sn/(sqrt(3.0)*KVi));
+      else fprintf(OutFile,"%8s","");
+      if(Eptr->Imax<=0) fprintf(OutFile," ");
+      else if(Iij==Eptr->Imax) fprintf(OutFile,"H");
+      else if(Iij>Eptr->Imax) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
       if (strpbrk(Eptr->Type,"TR")) {
-        fCustomPrint(OutFile,"%7.4lf",ratio);
-        if(!strcmp(Eptr->Ctype,"P")||Eptr->Tmax==Eptr->Tmin) fCustomPrint(OutFile," ");
-        else if(Eptr->Tap==1/Eptr->Tmin) fCustomPrint(OutFile,"L");
-        else if(Eptr->Tap==1/Eptr->Tmax) fCustomPrint(OutFile,"H");
-        else if(Eptr->Tap>1/Eptr->Tmin) fCustomPrint(OutFile,"U");
-        else if(Eptr->Tap<1/Eptr->Tmax) fCustomPrint(OutFile,"O");
-        else fCustomPrint(OutFile," ");
+        fprintf(OutFile,"%7.4lf",ratio);
+        if(!strcmp(Eptr->Ctype,"P")||Eptr->Tmax==Eptr->Tmin) fprintf(OutFile," ");
+        else if(Eptr->Tap==1/Eptr->Tmin) fprintf(OutFile,"L");
+        else if(Eptr->Tap==1/Eptr->Tmax) fprintf(OutFile,"H");
+        else if(Eptr->Tap>1/Eptr->Tmin) fprintf(OutFile,"U");
+        else if(Eptr->Tap<1/Eptr->Tmax) fprintf(OutFile,"O");
+        else fprintf(OutFile," ");
       }
-      else  fCustomPrint(OutFile,"%8s","");
-      fCustomPrint(OutFile,"%1s ",Eptr->Ctype);
+      else  fprintf(OutFile,"%8s","");
+      fprintf(OutFile,"%1s ",Eptr->Ctype);
       if (Eptr->Cont!=NULL) {
-        fCustomPrint(OutFile,"%4d ",Eptr->Cont->Num);
-        fCustomPrint(OutFile,"%12s ",Eptr->Cont->Name);
+        fprintf(OutFile,"%4d ",Eptr->Cont->Num);
+        fprintf(OutFile,"%12s ",Eptr->Cont->Name);
       }
-      fCustomPrint(OutFile,"\n");
+      fprintf(OutFile,"\n");
       if (i==0) {
-        i++; fCustomPrint(OutFile,"%21s","");
+        i++; fprintf(OutFile,"%21s","");
         delta=ACptr->Ang;
         if (delta>=0) vals=1.00;
         else          vals=-1.00;
         if (fabs(delta)>2*PI) delta=delta-vals*floor(fabs(delta)/(2*PI))*2*PI;
         if (fabs(delta)>PI) delta=delta-vals*2*PI;
         ACptr->Ang=delta;
-        fCustomPrint(OutFile,"%6.2lf ",ACptr->Ang/K3);
-        fCustomPrint(OutFile,"%7.4lf ",ACptr->Ang);
-        fCustomPrint(OutFile,"%8.2lf",ACptr->Qg*Sn);
-        if(ACptr->Qmax==ACptr->Qmin) fCustomPrint(OutFile," ");
-        else if(ACptr->Qg==ACptr->Qmin) fCustomPrint(OutFile,"L");
-        else if(ACptr->Qg==ACptr->Qmax) fCustomPrint(OutFile,"H");
-        else if(ACptr->Qg<ACptr->Qmin) fCustomPrint(OutFile,"U");
-        else if(ACptr->Qg>ACptr->Qmax) fCustomPrint(OutFile,"O");
-        else fCustomPrint(OutFile," ");
-        fCustomPrint(OutFile,"%8.2lf ",Ql*Sn);
-        fCustomPrint(OutFile,"%8.2lf|",ACptr->B*ACptr->V*ACptr->V*Sn);
-      } else fCustomPrint(OutFile,"%62s|","");
-      fCustomPrint(OutFile,"%19s ","");
-      fCustomPrint(OutFile,"%8.2lf",Qij*Sn);
+        fprintf(OutFile,"%6.2lf ",ACptr->Ang/K3);
+        fprintf(OutFile,"%7.4lf ",ACptr->Ang);
+        fprintf(OutFile,"%8.2lf",ACptr->Qg*Sn);
+        if(ACptr->Qmax==ACptr->Qmin) fprintf(OutFile," ");
+        else if(ACptr->Qg==ACptr->Qmin) fprintf(OutFile,"L");
+        else if(ACptr->Qg==ACptr->Qmax) fprintf(OutFile,"H");
+        else if(ACptr->Qg<ACptr->Qmin) fprintf(OutFile,"U");
+        else if(ACptr->Qg>ACptr->Qmax) fprintf(OutFile,"O");
+        else fprintf(OutFile," ");
+        fprintf(OutFile,"%8.2lf ",Ql*Sn);
+        fprintf(OutFile,"%8.2lf|",ACptr->B*ACptr->V*ACptr->V*Sn);
+      } else fprintf(OutFile,"%62s|","");
+      fprintf(OutFile,"%19s ","");
+      fprintf(OutFile,"%8.2lf",Qij*Sn);
       if(ACptr!=Eptr->Cont || strcmp(Eptr->Ctype,"Q") || Eptr->Max==Eptr->Min)
-        fCustomPrint(OutFile," ");
-      else if(Qij==Eptr->Min) fCustomPrint(OutFile,"L");
-      else if(Qij==Eptr->Max) fCustomPrint(OutFile,"H");
-      else if(Qij<Eptr->Min) fCustomPrint(OutFile,"U");
-      else if(Qij>Eptr->Max) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"%8.2lf ",(Qij+Qji)*Sn);
-      fCustomPrint(OutFile,"%9s","");
+        fprintf(OutFile," ");
+      else if(Qij==Eptr->Min) fprintf(OutFile,"L");
+      else if(Qij==Eptr->Max) fprintf(OutFile,"H");
+      else if(Qij<Eptr->Min) fprintf(OutFile,"U");
+      else if(Qij>Eptr->Max) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
+      fprintf(OutFile,"%8.2lf ",(Qij+Qji)*Sn);
+      fprintf(OutFile,"%9s","");
       if (strpbrk(Eptr->Type,"TR")) {
-        fCustomPrint(OutFile,"%7.3lf",Eptr->Ang/K3);
-        if(strpbrk(Eptr->Ctype,"QV")||Eptr->Tmax==Eptr->Tmin) fCustomPrint(OutFile," ");
-        else if(Eptr->Ang==Eptr->Tmin) fCustomPrint(OutFile,"L");
-        else if(Eptr->Ang==Eptr->Tmax) fCustomPrint(OutFile,"H");
-        else if(Eptr->Ang<Eptr->Tmin) fCustomPrint(OutFile,"U");
-        else if(Eptr->Ang>Eptr->Tmax) fCustomPrint(OutFile,"O");
-        else fCustomPrint(OutFile," ");
+        fprintf(OutFile,"%7.3lf",Eptr->Ang/K3);
+        if(strpbrk(Eptr->Ctype,"QV")||Eptr->Tmax==Eptr->Tmin) fprintf(OutFile," ");
+        else if(Eptr->Ang==Eptr->Tmin) fprintf(OutFile,"L");
+        else if(Eptr->Ang==Eptr->Tmax) fprintf(OutFile,"H");
+        else if(Eptr->Ang<Eptr->Tmin) fprintf(OutFile,"U");
+        else if(Eptr->Ang>Eptr->Tmax) fprintf(OutFile,"O");
+        else fprintf(OutFile," ");
       }
-      fCustomPrint(OutFile,"\n");
+      fprintf(OutFile,"\n");
     }
     if (i==0) {
-      i++; fCustomPrint(OutFile,"%21s","");
+      i++; fprintf(OutFile,"%21s","");
       delta=ACptr->Ang;
       if (delta>=0) vals=1.00;
       else          vals=-1.00;
       if (fabs(delta)>2*PI) delta=delta-vals*floor(fabs(delta)/(2*PI))*2*PI;
       if (fabs(delta)>PI) delta=delta-vals*2*PI;
       ACptr->Ang=delta;
-      fCustomPrint(OutFile,"%6.2lf ",ACptr->Ang/K3);
-      fCustomPrint(OutFile,"%7.4lf ",ACptr->Ang);
-      fCustomPrint(OutFile,"%8.2lf",ACptr->Qg*Sn);
-      if(ACptr->Qmax==ACptr->Qmin) fCustomPrint(OutFile," ");
-      else if(ACptr->Qg==ACptr->Qmin) fCustomPrint(OutFile,"L");
-      else if(ACptr->Qg==ACptr->Qmax) fCustomPrint(OutFile,"H");
-      else if(ACptr->Qg<ACptr->Qmin) fCustomPrint(OutFile,"U");
-      else if(ACptr->Qg>ACptr->Qmax) fCustomPrint(OutFile,"O");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"%8.2lf ",Ql*Sn);
-      fCustomPrint(OutFile,"%8.2lf|\n",ACptr->B*ACptr->V*ACptr->V*Sn);
+      fprintf(OutFile,"%6.2lf ",ACptr->Ang/K3);
+      fprintf(OutFile,"%7.4lf ",ACptr->Ang);
+      fprintf(OutFile,"%8.2lf",ACptr->Qg*Sn);
+      if(ACptr->Qmax==ACptr->Qmin) fprintf(OutFile," ");
+      else if(ACptr->Qg==ACptr->Qmin) fprintf(OutFile,"L");
+      else if(ACptr->Qg==ACptr->Qmax) fprintf(OutFile,"H");
+      else if(ACptr->Qg<ACptr->Qmin) fprintf(OutFile,"U");
+      else if(ACptr->Qg>ACptr->Qmax) fprintf(OutFile,"O");
+      else fprintf(OutFile," ");
+      fprintf(OutFile,"%8.2lf ",Ql*Sn);
+      fprintf(OutFile,"%8.2lf|\n",ACptr->B*ACptr->V*ACptr->V*Sn);
     }
 
   /* -------------------------------------- Generator results -------------------------------------------- */
     if (ACptr->Gen!=NULL){
-      fCustomPrint(OutFile," Gen.-> Ia=%7.4lf[pu]",ACptr->Gen->Ia);
-      if (ACptr->Gen->Ia>ACptr->Gen->IaMax) fCustomPrint(OutFile,"O");
-      else if (ACptr->Gen->Ia==ACptr->Gen->IaMax) fCustomPrint(OutFile,"H");
-      else fCustomPrint(OutFile," ");
-      if (ACptr->Gen->Ii==0 && ACptr->Gen->Ir==0) fCustomPrint(OutFile," al=%7.2lf[deg]",0.0);
-      else fCustomPrint(OutFile," al=%7.2lf[deg]",atan2(ACptr->Gen->Ii,ACptr->Gen->Ir)/K3);
-      fCustomPrint(OutFile,"%23s|\n","");
-      fCustomPrint(OutFile,"        Eq=%7.4lf[pu]",ACptr->Gen->Eq);
-      if (ACptr->Gen->Eq>ACptr->Gen->EqMax) fCustomPrint(OutFile,"O");
-      else if (ACptr->Gen->Eq==ACptr->Gen->EqMax) fCustomPrint(OutFile,"H");
-      else if (ACptr->Gen->Eq<ACptr->Gen->EqMin) fCustomPrint(OutFile,"U");
-      else if (ACptr->Gen->Eq==ACptr->Gen->EqMin) fCustomPrint(OutFile,"L");
-      else fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile," dg=%7.2lf[deg]",ACptr->Gen->dg/K3);
-      fCustomPrint(OutFile,"%23s|\n","");
+      fprintf(OutFile," Gen.-> Ia=%7.4lf[pu]",ACptr->Gen->Ia);
+      if (ACptr->Gen->Ia>ACptr->Gen->IaMax) fprintf(OutFile,"O");
+      else if (ACptr->Gen->Ia==ACptr->Gen->IaMax) fprintf(OutFile,"H");
+      else fprintf(OutFile," ");
+      if (ACptr->Gen->Ii==0 && ACptr->Gen->Ir==0) fprintf(OutFile," al=%7.2lf[deg]",0.0);
+      else fprintf(OutFile," al=%7.2lf[deg]",atan2(ACptr->Gen->Ii,ACptr->Gen->Ir)/K3);
+      fprintf(OutFile,"%23s|\n","");
+      fprintf(OutFile,"        Eq=%7.4lf[pu]",ACptr->Gen->Eq);
+      if (ACptr->Gen->Eq>ACptr->Gen->EqMax) fprintf(OutFile,"O");
+      else if (ACptr->Gen->Eq==ACptr->Gen->EqMax) fprintf(OutFile,"H");
+      else if (ACptr->Gen->Eq<ACptr->Gen->EqMin) fprintf(OutFile,"U");
+      else if (ACptr->Gen->Eq==ACptr->Gen->EqMin) fprintf(OutFile,"L");
+      else fprintf(OutFile," ");
+      fprintf(OutFile," dg=%7.2lf[deg]",ACptr->Gen->dg/K3);
+      fprintf(OutFile,"%23s|\n","");
     }
 
 
@@ -331,30 +328,30 @@ char *File1,*str;
   }
 
   if (dataPtr->Area!=NULL) {
-    fCustomPrint(OutFile,"\n\n                                ***** AC AREA RESULTS *****\n");
-    fCustomPrint(OutFile,"---------------------------------|-----------------|----|------------|----|------------|-|--------|----\n");
-    fCustomPrint(OutFile," Area                                Slack Bus     |   i Bus Name        j Bus          C  Pmeter   To \n");
-    fCustomPrint(OutFile," n Name                              k Name        |     (Meter)           Name         k   (MW)   Area\n");
+    fprintf(OutFile,"\n\n                                ***** AC AREA RESULTS *****\n");
+    fprintf(OutFile,"---------------------------------|-----------------|----|------------|----|------------|-|--------|----\n");
+    fprintf(OutFile," Area                                Slack Bus     |   i Bus Name        j Bus          C  Pmeter   To \n");
+    fprintf(OutFile," n Name                              k Name        |     (Meter)           Name         k   (MW)   Area\n");
     for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next){
-    fCustomPrint(OutFile,"--|------------------------------|----|------------|----|------------|----|------------|-|--------|----\n");
+    fprintf(OutFile,"--|------------------------------|----|------------|----|------------|----|------------|-|--------|----\n");
       Aptr->SPg=0;
-      fCustomPrint(OutFile,"%2d ",Aptr->N);
-      fCustomPrint(OutFile,"%30s ",Aptr->Name);
-      fCustomPrint(OutFile,"%4d ",Aptr->BSptr->Num);
-      fCustomPrint(OutFile,"%12s|",Aptr->BSptr->Name);
+      fprintf(OutFile,"%2d ",Aptr->N);
+      fprintf(OutFile,"%30s ",Aptr->Name);
+      fprintf(OutFile,"%4d ",Aptr->BSptr->Num);
+      fprintf(OutFile,"%12s|",Aptr->BSptr->Name);
       i=0;
       for (DCLptr=Aptr->DC;DCLptr!=NULL;DCLptr=DCLptr->Next) {
         DCptr=DCLptr->DC->Meter;
         DCptrp=DCptr->To;
-        if (i!=0) fCustomPrint(OutFile,"%51s|",""); else i++;
-        fCustomPrint(OutFile,"DC %1s %-12s ",DCptr->Type,DCptr->Name);
-        fCustomPrint(OutFile,"   %1s %-12s   ",DCptrp->Type,DCptrp->Name);
+        if (i!=0) fprintf(OutFile,"%51s|",""); else i++;
+        fprintf(OutFile,"DC %1s %-12s ",DCptr->Type,DCptr->Name);
+        fprintf(OutFile,"   %1s %-12s   ",DCptrp->Type,DCptrp->Name);
         P= -DCptr->P;
         if(DCptr->Area!=Aptr) P= -P;
         Aptr->SPg=Aptr->SPg+P;
-        fCustomPrint(OutFile,"%8.2lf ",P*Sn);
-        if(DCptr->Area!=Aptr) fCustomPrint(OutFile,"%2d\n",DCptr->Area->N);
-        else fCustomPrint(OutFile,"%2d\n",DCptrp->Area->N);
+        fprintf(OutFile,"%8.2lf ",P*Sn);
+        if(DCptr->Area!=Aptr) fprintf(OutFile,"%2d\n",DCptr->Area->N);
+        else fprintf(OutFile,"%2d\n",DCptrp->Area->N);
       }
       for(ELptr=Aptr->Elem;ELptr!=NULL;ELptr=ELptr->Next) { 
         Eptr=ELptr->Eptr;
@@ -377,35 +374,35 @@ char *File1,*str;
           To=Eptr->From;
           P=Vj*Vj*(Gj+Gp)-Vi*Vj*(Gp*cos(dj-di)+Bp*sin(dj-di));
         }
-        if (i!=0) fCustomPrint(OutFile,"%51s|",""); else i++;
-        fCustomPrint(OutFile,"%4d ",From->Num);
-        fCustomPrint(OutFile,"%12s ",From->Name);
-        fCustomPrint(OutFile,"%4d ",To->Num);
-        fCustomPrint(OutFile,"%12s ",To->Name);
-        fCustomPrint(OutFile,"%1s ",Eptr->Ckt);
+        if (i!=0) fprintf(OutFile,"%51s|",""); else i++;
+        fprintf(OutFile,"%4d ",From->Num);
+        fprintf(OutFile,"%12s ",From->Name);
+        fprintf(OutFile,"%4d ",To->Num);
+        fprintf(OutFile,"%12s ",To->Name);
+        fprintf(OutFile,"%1s ",Eptr->Ckt);
         if(Eptr->Meter->Area!=Aptr) P= -P;
         Aptr->SPg=Aptr->SPg+P;
-        fCustomPrint(OutFile,"%8.2lf ",P*Sn);
-        if(From->Area!=Aptr) fCustomPrint(OutFile,"%2d\n",From->Area->N);
-        else fCustomPrint(OutFile,"%2d\n",To->Area->N);
+        fprintf(OutFile,"%8.2lf ",P*Sn);
+        if(From->Area!=Aptr) fprintf(OutFile,"%2d\n",From->Area->N);
+        else fprintf(OutFile,"%2d\n",To->Area->N);
       }
-      if(i==0) fCustomPrint(OutFile,"\n");
-      else fCustomPrint(OutFile,"%51s| MW Export = %-10.2lf  MW Sched. = %-10.2lf\n","",Aptr->SPg*Sn,Aptr->P*Sn);
+      if(i==0) fprintf(OutFile,"\n");
+      else fprintf(OutFile,"%51s| MW Export = %-10.2lf  MW Sched. = %-10.2lf\n","",Aptr->SPg*Sn,Aptr->P*Sn);
     }
   }
 
   if (dataPtr->DCbus!=NULL) {
-    fCustomPrint(OutFile,"\n\n                                  ***** DC RESULTS *****\n");
-    fCustomPrint(OutFile,"                   L=lower limit    H=higher limit      O=over limit    U=under limit\n");
-    fCustomPrint(OutFile,"---|--|----|------------|--------|-|--|--|--------|--------|--------|--------|--------|--------|---------\n");
-    fCustomPrint(OutFile,"  i  A    j AC Bus       DC Bus   C S1 S2    Vd       Id       P        Q      Alpha    Gamma      Tap   \n");
-    fCustomPrint(OutFile,"     n      Name         Name     v         (KV)      (A)     (MW)    (MVAR)   (deg)    (deg)      (pu)  \n");
+    fprintf(OutFile,"\n\n                                  ***** DC RESULTS *****\n");
+    fprintf(OutFile,"                   L=lower limit    H=higher limit      O=over limit    U=under limit\n");
+    fprintf(OutFile,"---|--|----|------------|--------|-|--|--|--------|--------|--------|--------|--------|--------|---------\n");
+    fprintf(OutFile,"  i  A    j AC Bus       DC Bus   C S1 S2    Vd       Id       P        Q      Alpha    Gamma      Tap   \n");
+    fprintf(OutFile,"     n      Name         Name     v         (KV)      (A)     (MW)    (MVAR)   (deg)    (deg)      (pu)  \n");
     i=0;
     for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
       DCptrI=DCptrR->To;
       if(!strcmp(DCptrR->Type,"R")){
-    fCustomPrint(OutFile,"---|--|----|------------|--------|-|--|--|--------|--------|--------|--------|--------|--------|---------\n");
-        fCustomPrint(OutFile,"%3d ",++i);
+    fprintf(OutFile,"---|--|----|------------|--------|-|--|--|--------|--------|--------|--------|--------|--------|---------\n");
+        fprintf(OutFile,"%3d ",++i);
         for (j=1;j<=2;j++) {
           if(j==1) {
             DCptr=DCptrR;
@@ -414,33 +411,33 @@ char *File1,*str;
           else {
             DCptr=DCptrI;
             DCptrp=DCptrR;
-            fCustomPrint(OutFile,"%4s","");
+            fprintf(OutFile,"%4s","");
           }
-          if(DCptr->Area!=NULL) fCustomPrint(OutFile,"%2d ",DCptr->Area->N);
-          else fCustomPrint(OutFile,"%2d ",0);
-          fCustomPrint(OutFile,"%4d %12s ",DCptr->AC->Num,DCptr->AC->Name);
-          fCustomPrint(OutFile,"%8s ",DCptr->Name);
-          fCustomPrint(OutFile,"%1s ",DCptr->Type);
-          fCustomPrint(OutFile,"%2s ",DCptr->Cont1);
-          fCustomPrint(OutFile,"%2s ",DCptr->Cont2);
-          fCustomPrint(OutFile,"%8.2lf ",DCptr->Vd*DCptr->Vn);
-          fCustomPrint(OutFile,"%8.2lf ",DCptr->Id*Sn/DCptr->Vn*1000);
-          fCustomPrint(OutFile,"%8.2lf ",DCptr->P*Sn);
-          fCustomPrint(OutFile,"%8.2lf ",DCptr->Q*Sn);
-          fCustomPrint(OutFile,"%8.2lf",DCptr->Alfa/K3);
-          if(DCptr->Alfa<=DCptr->AlfaMin) fCustomPrint(OutFile,"L");
-          else if(DCptr->Alfa>=DCptr->AlfaMax) fCustomPrint(OutFile,"H");
-          else fCustomPrint(OutFile," ");
-          fCustomPrint(OutFile,"%8.2lf",DCptr->Gamma/K3);
-          if(DCptr->Gamma<=DCptr->GammaMin) fCustomPrint(OutFile,"L");
-          else fCustomPrint(OutFile," ");
-          fCustomPrint(OutFile,"%8.4lf",DCptr->Tap);
-          if(DCptr->Tap==DCptr->TapMin) fCustomPrint(OutFile,"L");
-          else if(DCptr->Tap==DCptr->TapMax) fCustomPrint(OutFile,"H");
-          else if(DCptr->Tap<DCptr->TapMin) fCustomPrint(OutFile,"U");
-          else if(DCptr->Tap>DCptr->TapMax) fCustomPrint(OutFile,"O");
-          else fCustomPrint(OutFile," ");
-          fCustomPrint(OutFile,"\n");
+          if(DCptr->Area!=NULL) fprintf(OutFile,"%2d ",DCptr->Area->N);
+          else fprintf(OutFile,"%2d ",0);
+          fprintf(OutFile,"%4d %12s ",DCptr->AC->Num,DCptr->AC->Name);
+          fprintf(OutFile,"%8s ",DCptr->Name);
+          fprintf(OutFile,"%1s ",DCptr->Type);
+          fprintf(OutFile,"%2s ",DCptr->Cont1);
+          fprintf(OutFile,"%2s ",DCptr->Cont2);
+          fprintf(OutFile,"%8.2lf ",DCptr->Vd*DCptr->Vn);
+          fprintf(OutFile,"%8.2lf ",DCptr->Id*Sn/DCptr->Vn*1000);
+          fprintf(OutFile,"%8.2lf ",DCptr->P*Sn);
+          fprintf(OutFile,"%8.2lf ",DCptr->Q*Sn);
+          fprintf(OutFile,"%8.2lf",DCptr->Alfa/K3);
+          if(DCptr->Alfa<=DCptr->AlfaMin) fprintf(OutFile,"L");
+          else if(DCptr->Alfa>=DCptr->AlfaMax) fprintf(OutFile,"H");
+          else fprintf(OutFile," ");
+          fprintf(OutFile,"%8.2lf",DCptr->Gamma/K3);
+          if(DCptr->Gamma<=DCptr->GammaMin) fprintf(OutFile,"L");
+          else fprintf(OutFile," ");
+          fprintf(OutFile,"%8.4lf",DCptr->Tap);
+          if(DCptr->Tap==DCptr->TapMin) fprintf(OutFile,"L");
+          else if(DCptr->Tap==DCptr->TapMax) fprintf(OutFile,"H");
+          else if(DCptr->Tap<DCptr->TapMin) fprintf(OutFile,"U");
+          else if(DCptr->Tap>DCptr->TapMax) fprintf(OutFile,"O");
+          else fprintf(OutFile," ");
+          fprintf(OutFile,"\n");
         }
       }
     }
@@ -448,104 +445,104 @@ char *File1,*str;
 
                                         /* FACTS */
   if(dataPtr->SVCbus!=NULL){
-    fCustomPrint(OutFile,"\n\n                        ***** SVC RESULTS *****\n\n");
-    fCustomPrint(OutFile,"                         L=lower limit    H=higher limit\n\n");
-    fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------\n");
-    fCustomPrint(OutFile,"  i  A    j Cont. Bus      Vj     dj      k SVC Bus        Vk    dk     Qsvc    Alpha     Bv   \n");
-    fCustomPrint(OutFile,"     n      Na    me      (pu)   (deg)      Name          (pu)  (deg)  (MVar)   (deg)    (pu)  \n");
+    fprintf(OutFile,"\n\n                        ***** SVC RESULTS *****\n\n");
+    fprintf(OutFile,"                         L=lower limit    H=higher limit\n\n");
+    fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------\n");
+    fprintf(OutFile,"  i  A    j Cont. Bus      Vj     dj      k SVC Bus        Vk    dk     Qsvc    Alpha     Bv   \n");
+    fprintf(OutFile,"     n      Na    me      (pu)   (deg)      Name          (pu)  (deg)  (MVar)   (deg)    (pu)  \n");
     i=0;
     for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
-      fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------\n");
-      fCustomPrint(OutFile,"%3d ",++i);
-      if(SVCptr->From->Area!=NULL) fCustomPrint(OutFile,"%2d ",SVCptr->From->Area->N);
-      else fCustomPrint(OutFile,"%2d ",0);
-      fCustomPrint(OutFile,"%4d %12s ",SVCptr->Ctrl->Num,SVCptr->Ctrl->Name);
-      fCustomPrint(OutFile,"%6.4lf %6.2lf ",SVCptr->Ctrl->V,SVCptr->Ctrl->Ang/K3);
-      fCustomPrint(OutFile,"%4d %12s ",SVCptr->From->Num,SVCptr->Name);
-      fCustomPrint(OutFile,"%6.4lf %6.2lf ",SVCptr->From->V,SVCptr->From->Ang/K3);
-      fCustomPrint(OutFile,"%8.2lf ",SVCptr->Qsvc*Sn);
-      fCustomPrint(OutFile,"%8.2lf",SVCptr->alpha_svc/K3);
-      if(SVCptr->alpha_svc<=SVCptr->AlphaMin)      fCustomPrint(OutFile,"L");
-      else if(SVCptr->alpha_svc>=SVCptr->AlphaMax) fCustomPrint(OutFile,"H");
-      else                                         fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"%8.4lf ",SVCptr->Bv);
-      fCustomPrint(OutFile,"\n\n");
+      fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------\n");
+      fprintf(OutFile,"%3d ",++i);
+      if(SVCptr->From->Area!=NULL) fprintf(OutFile,"%2d ",SVCptr->From->Area->N);
+      else fprintf(OutFile,"%2d ",0);
+      fprintf(OutFile,"%4d %12s ",SVCptr->Ctrl->Num,SVCptr->Ctrl->Name);
+      fprintf(OutFile,"%6.4lf %6.2lf ",SVCptr->Ctrl->V,SVCptr->Ctrl->Ang/K3);
+      fprintf(OutFile,"%4d %12s ",SVCptr->From->Num,SVCptr->Name);
+      fprintf(OutFile,"%6.4lf %6.2lf ",SVCptr->From->V,SVCptr->From->Ang/K3);
+      fprintf(OutFile,"%8.2lf ",SVCptr->Qsvc*Sn);
+      fprintf(OutFile,"%8.2lf",SVCptr->alpha_svc/K3);
+      if(SVCptr->alpha_svc<=SVCptr->AlphaMin)      fprintf(OutFile,"L");
+      else if(SVCptr->alpha_svc>=SVCptr->AlphaMax) fprintf(OutFile,"H");
+      else                                         fprintf(OutFile," ");
+      fprintf(OutFile,"%8.4lf ",SVCptr->Bv);
+      fprintf(OutFile,"\n\n");
     }
   }
 
   if(dataPtr->TCSCbus!=NULL){
-    fCustomPrint(OutFile,"\n\n                                             ***** TCSC RESULTS *****\n\n");
-    fCustomPrint(OutFile,"                                              L=lower limit    H=higher limit\n\n");
-    fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------|--------|--------|--------|--------|----|--------\n");
-    fCustomPrint(OutFile,"  i  A    k From Bus       Vk     dk      m To Bus         Vm     dm    Ptcsc    Qtcsck   Qtcscm     Be     Alpha    Itcsc    delta_t Ctrl   Ctrl  \n");
-    fCustomPrint(OutFile,"     n      Name          (pu)   (deg)      Name          (pu)   (deg)  (MW)     (MVar)   (MVar)    (pu)    (deg)    (kA)      (deg)  mode    val  \n");
+    fprintf(OutFile,"\n\n                                             ***** TCSC RESULTS *****\n\n");
+    fprintf(OutFile,"                                              L=lower limit    H=higher limit\n\n");
+    fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------|--------|--------|--------|--------|----|--------\n");
+    fprintf(OutFile,"  i  A    k From Bus       Vk     dk      m To Bus         Vm     dm    Ptcsc    Qtcsck   Qtcscm     Be     Alpha    Itcsc    delta_t Ctrl   Ctrl  \n");
+    fprintf(OutFile,"     n      Name          (pu)   (deg)      Name          (pu)   (deg)  (MW)     (MVar)   (MVar)    (pu)    (deg)    (kA)      (deg)  mode    val  \n");
     i=0;
     for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
-      fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------|--------|--------|--------|--------|----|--------\n");
+      fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|------|--------|--------|--------|--------|--------|--------|--------|----|--------\n");
       Vn=TCSCptr->From->KV;
       Xc=TCSCptr->Xc;
       Max=TCSCptr->Max;
-      fCustomPrint(OutFile,"%3d ",++i);
-      if(TCSCptr->From->Area!=NULL) fCustomPrint(OutFile,"%2d ",TCSCptr->From->Area->N);
-      else fCustomPrint(OutFile,"%2d ",0);
-      fCustomPrint(OutFile,"%4d %12s ",TCSCptr->From->Num,TCSCptr->From->Name);
-      fCustomPrint(OutFile,"%6.4lf %6.2lf ",TCSCptr->From->V,TCSCptr->From->Ang/K3);
-      fCustomPrint(OutFile,"%4d %12s ",TCSCptr->To->Num,TCSCptr->To->Name);
-      fCustomPrint(OutFile,"%6.4lf %6.2lf ",TCSCptr->To->V,TCSCptr->To->Ang/K3);
-      fCustomPrint(OutFile,"%8.2lf ",TCSCptr->Ptcsc*Sn);
-      fCustomPrint(OutFile,"%8.2lf ",TCSCptr->Qtcsck*Sn);
-      fCustomPrint(OutFile,"%8.2lf ",TCSCptr->Qtcscm*Sn);
-      fCustomPrint(OutFile,"%8.2lf ",TCSCptr->Be);
-      fCustomPrint(OutFile,"%8.2lf",TCSCptr->alpha_tcsc/K3);
-      if(TCSCptr->alpha_tcsc<=TCSCptr->AlphaMin)      fCustomPrint(OutFile,"L");
-      else if(TCSCptr->alpha_tcsc>=TCSCptr->AlphaMax) fCustomPrint(OutFile,"H");
-      else                                            fCustomPrint(OutFile," ");
-      fCustomPrint(OutFile,"%8.3lf ",TCSCptr->Itcsc*Sn/(sqrt(3.0)*Vn));
-      fCustomPrint(OutFile,"%8.4lf ",TCSCptr->delta_t/K3);
-      fCustomPrint(OutFile," %c  ",TCSCptr->Cont[0]);
-      if (!strcmp(TCSCptr->Cont,"X"))      fCustomPrint(OutFile," %8.3lf",100.0/(TCSCptr->Bset*Max*Xc));
-      else if (!strcmp(TCSCptr->Cont,"P")) fCustomPrint(OutFile," %8.3lf",TCSCptr->Control*Sn);
-      else if (!strcmp(TCSCptr->Cont,"I")) fCustomPrint(OutFile," %8.3lf",TCSCptr->Control*Sn/(sqrt(3.0)*Vn));
-      else if (!strcmp(TCSCptr->Cont,"D")) fCustomPrint(OutFile," %8.3lf",TCSCptr->Control/K3);
-      fCustomPrint(OutFile,"\n\n");
+      fprintf(OutFile,"%3d ",++i);
+      if(TCSCptr->From->Area!=NULL) fprintf(OutFile,"%2d ",TCSCptr->From->Area->N);
+      else fprintf(OutFile,"%2d ",0);
+      fprintf(OutFile,"%4d %12s ",TCSCptr->From->Num,TCSCptr->From->Name);
+      fprintf(OutFile,"%6.4lf %6.2lf ",TCSCptr->From->V,TCSCptr->From->Ang/K3);
+      fprintf(OutFile,"%4d %12s ",TCSCptr->To->Num,TCSCptr->To->Name);
+      fprintf(OutFile,"%6.4lf %6.2lf ",TCSCptr->To->V,TCSCptr->To->Ang/K3);
+      fprintf(OutFile,"%8.2lf ",TCSCptr->Ptcsc*Sn);
+      fprintf(OutFile,"%8.2lf ",TCSCptr->Qtcsck*Sn);
+      fprintf(OutFile,"%8.2lf ",TCSCptr->Qtcscm*Sn);
+      fprintf(OutFile,"%8.2lf ",TCSCptr->Be);
+      fprintf(OutFile,"%8.2lf",TCSCptr->alpha_tcsc/K3);
+      if(TCSCptr->alpha_tcsc<=TCSCptr->AlphaMin)      fprintf(OutFile,"L");
+      else if(TCSCptr->alpha_tcsc>=TCSCptr->AlphaMax) fprintf(OutFile,"H");
+      else                                            fprintf(OutFile," ");
+      fprintf(OutFile,"%8.3lf ",TCSCptr->Itcsc*Sn/(sqrt(3.0)*Vn));
+      fprintf(OutFile,"%8.4lf ",TCSCptr->delta_t/K3);
+      fprintf(OutFile," %c  ",TCSCptr->Cont[0]);
+      if (!strcmp(TCSCptr->Cont,"X"))      fprintf(OutFile," %8.3lf",100.0/(TCSCptr->Bset*Max*Xc));
+      else if (!strcmp(TCSCptr->Cont,"P")) fprintf(OutFile," %8.3lf",TCSCptr->Control*Sn);
+      else if (!strcmp(TCSCptr->Cont,"I")) fprintf(OutFile," %8.3lf",TCSCptr->Control*Sn/(sqrt(3.0)*Vn));
+      else if (!strcmp(TCSCptr->Cont,"D")) fprintf(OutFile," %8.3lf",TCSCptr->Control/K3);
+      fprintf(OutFile,"\n\n");
     }
   }
 
   if(dataPtr->STATCOMbus!=NULL){
-    fCustomPrint(OutFile,"\n\n                                ***** STATCOM RESULTS *****\n\n");
-    fCustomPrint(OutFile,"                                  L=lower limit    H=higher limit\n\n");
-    fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|--------|--------|--------|--------|--------|--------|--------------|--------\n");
-    fCustomPrint(OutFile,"  i  A    j Cont. Bus      Vj     dj      l STATCOM Bus   Vinv     K       Vdc     Alpha      P        Q        I      I (pu w.r.t.    Theta \n");
-    fCustomPrint(OutFile,"     n      Name          (pu)   (deg)      Name          (pu)    (pu)     (pu)    (deg)     (MW)    (MVar)    (kA)    STATCOM base)   (deg) \n");
+    fprintf(OutFile,"\n\n                                ***** STATCOM RESULTS *****\n\n");
+    fprintf(OutFile,"                                  L=lower limit    H=higher limit\n\n");
+    fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|--------|--------|--------|--------|--------|--------|--------------|--------\n");
+    fprintf(OutFile,"  i  A    j Cont. Bus      Vj     dj      l STATCOM Bus   Vinv     K       Vdc     Alpha      P        Q        I      I (pu w.r.t.    Theta \n");
+    fprintf(OutFile,"     n      Name          (pu)   (deg)      Name          (pu)    (pu)     (pu)    (deg)     (MW)    (MVar)    (kA)    STATCOM base)   (deg) \n");
     i=0;
     for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
-      fCustomPrint(OutFile,"---|--|----|------------|------|------|----|------------|------|--------|--------|--------|--------|--------|--------|--------------|--------\n");
-      fCustomPrint(OutFile,"%3d ",++i);
-      if(STATCOMptr->From->Area!=NULL) fCustomPrint(OutFile,"%2d ",STATCOMptr->From->Area->N);
-      else fCustomPrint(OutFile,"%2d ",0);
-      fCustomPrint(OutFile,"%4d %12s ",STATCOMptr->Ctrl->Num,STATCOMptr->Ctrl->Name);
-      fCustomPrint(OutFile,"%6.4lf %6.2lf ",STATCOMptr->Ctrl->V,STATCOMptr->Ctrl->Ang/K3);
-      fCustomPrint(OutFile,"%4d %12s ",STATCOMptr->From->Num,STATCOMptr->Name);
-      fCustomPrint(OutFile,"%6.4lf ",STATCOMptr->k*STATCOMptr->Vdc);
-      fCustomPrint(OutFile,"%8.6lf ",STATCOMptr->k);
+      fprintf(OutFile,"---|--|----|------------|------|------|----|------------|------|--------|--------|--------|--------|--------|--------|--------------|--------\n");
+      fprintf(OutFile,"%3d ",++i);
+      if(STATCOMptr->From->Area!=NULL) fprintf(OutFile,"%2d ",STATCOMptr->From->Area->N);
+      else fprintf(OutFile,"%2d ",0);
+      fprintf(OutFile,"%4d %12s ",STATCOMptr->Ctrl->Num,STATCOMptr->Ctrl->Name);
+      fprintf(OutFile,"%6.4lf %6.2lf ",STATCOMptr->Ctrl->V,STATCOMptr->Ctrl->Ang/K3);
+      fprintf(OutFile,"%4d %12s ",STATCOMptr->From->Num,STATCOMptr->Name);
+      fprintf(OutFile,"%6.4lf ",STATCOMptr->k*STATCOMptr->Vdc);
+      fprintf(OutFile,"%8.6lf ",STATCOMptr->k);
       KV=STATCOMptr->From->KV;
-      fCustomPrint(OutFile,"%8.6lf ",STATCOMptr->Vdc);
-      fCustomPrint(OutFile,"%8.3lf ",STATCOMptr->alpha/K3);
-      fCustomPrint(OutFile,"%8.4lf ",STATCOMptr->P*Sn);
-      fCustomPrint(OutFile,"%8.2lf ",STATCOMptr->Q*Sn);
+      fprintf(OutFile,"%8.6lf ",STATCOMptr->Vdc);
+      fprintf(OutFile,"%8.3lf ",STATCOMptr->alpha/K3);
+      fprintf(OutFile,"%8.4lf ",STATCOMptr->P*Sn);
+      fprintf(OutFile,"%8.2lf ",STATCOMptr->Q*Sn);
       Q=STATCOMptr->Q;
-      fCustomPrint(OutFile,"%8.3lf ",STATCOMptr->I*Sn/(sqrt(3.0)*KV));
-      fCustomPrint(OutFile,"      %8.3lf",STATCOMptr->I*Sn/STATCOMptr->MVA);
-      if(STATCOMptr->I>=STATCOMptr->Imin && Q<0)      fCustomPrint(OutFile,"L");
-      else if(STATCOMptr->I>=STATCOMptr->Imax && Q>0) fCustomPrint(OutFile,"H");
-      else                                            fCustomPrint(OutFile," ");
+      fprintf(OutFile,"%8.3lf ",STATCOMptr->I*Sn/(sqrt(3.0)*KV));
+      fprintf(OutFile,"      %8.3lf",STATCOMptr->I*Sn/STATCOMptr->MVA);
+      if(STATCOMptr->I>=STATCOMptr->Imin && Q<0)      fprintf(OutFile,"L");
+      else if(STATCOMptr->I>=STATCOMptr->Imax && Q>0) fprintf(OutFile,"H");
+      else                                            fprintf(OutFile," ");
       theta=STATCOMptr->theta;
       if (theta>=0) vals=1.00;
       else          vals=-1.00;
       if (fabs(theta)>2*PI) theta=theta-vals*floor(fabs(theta)/(2*PI))*2*PI;
       if (fabs(theta)>PI) theta=theta-vals*2*PI;
-      fCustomPrint(OutFile,"%8.3lf ",theta/K3);
-      fCustomPrint(OutFile,"\n\n");
+      fprintf(OutFile,"%8.3lf ",theta/K3);
+      fprintf(OutFile,"\n\n");
     }
   }
 

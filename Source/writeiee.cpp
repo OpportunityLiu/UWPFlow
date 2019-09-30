@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Write output in IEEE format. */
 
 #include "write.h"
@@ -23,7 +20,7 @@ VALUETYPE val;
   BOOLEAN flagNegative=FALSE;
   char str[50],*ptr;
 
-  if (spaces>0) fCustomPrint(File,"%*s",spaces,"");
+  if (spaces>0) fprintf(File,"%*s",spaces,"");
   width=abs(width); decimals=abs(decimals);
   if(val<0) {
     width--;
@@ -43,15 +40,15 @@ VALUETYPE val;
       strcpy_s(str,"0.");
       for(i=2;i<=width-1;i++) strcat_s(str,"0");
     }
-    fCustomPrint(File,"%*s",width,str);
+    fprintf(File,"%*s",width,str);
     return;
   }
   if(width==1 && flagNegative) {
-    fCustomPrint(File,"*");
+    fprintf(File,"*");
     return;
   }
   if(val<(pow(10.,(double)width)-0.5)){
-    if(flagNegative) fCustomPrint(File,"-");
+    if(flagNegative) fprintf(File,"-");
     j=0;
     for(i=width-1;i>=0;i--) {
       if(val>(pow(10.,(double)i)-0.5*pow(10.,(double)-j))) break;
@@ -67,7 +64,7 @@ VALUETYPE val;
       ptr=str;
     }
     else ptr=str;
-    fCustomPrint(File,"%*s",width,ptr);
+    fprintf(File,"%*s",width,ptr);
     return;
   }
   else {
@@ -80,7 +77,7 @@ VALUETYPE val;
     if(decimals) str[width-1]='.';
     else         str[width-1]='9';
     str[width]='\0';
-    fCustomPrint(File,"%s",str);
+    fprintf(File,"%s",str);
     return;
   }
 }
@@ -121,34 +118,34 @@ void IEEE()
     OutFile=OpenOutput(NameParameter('w'));
     card=TRUE;
   }
-  if(card) fCustomPrint(OutFile,"CARD\n");
-  else fCustomPrint(OutFile,"TAPE\n");
+  if(card) fprintf(OutFile,"CARD\n");
+  else fprintf(OutFile,"TAPE\n");
   t = time(NULL);
   localt=localtime(&t);
-  if (localt->tm_mday<10) fCustomPrint(OutFile," 0%1d/",localt->tm_mday);
-  else                    fCustomPrint(OutFile," %2d/",localt->tm_mday);
+  if (localt->tm_mday<10) fprintf(OutFile," 0%1d/",localt->tm_mday);
+  else                    fprintf(OutFile," %2d/",localt->tm_mday);
   month=localt->tm_mon+1;
-  if (month<10) fCustomPrint(OutFile,"0%1d/",month);
-  else          fCustomPrint(OutFile,"%2d/",month);
+  if (month<10) fprintf(OutFile,"0%1d/",month);
+  else          fprintf(OutFile,"%2d/",month);
   year=localt->tm_year;
   yearp=year+1900;
   if (year>=100) year=year-100;
-  if (year<10) fCustomPrint(OutFile,"0%1d",year);
-  else         fCustomPrint(OutFile,"%2d",year);
-  fCustomPrint(OutFile," Generated with PFLOW");
+  if (year<10) fprintf(OutFile,"0%1d",year);
+  else         fprintf(OutFile,"%2d",year);
+  fprintf(OutFile," Generated with PFLOW");
   Print(OutFile,1,6,0,Sn);
-  fCustomPrint(OutFile," %4d",yearp);
-  if (month>3 && month<10) fCustomPrint(OutFile," S ");
-  else                     fCustomPrint(OutFile," W ");
+  fprintf(OutFile," %4d",yearp);
+  if (month>3 && month<10) fprintf(OutFile," S ");
+  else                     fprintf(OutFile," W ");
   strncpy_s(str,dataPtr->Title[0],29);
   for(i=0;i<=28;i++){
     if (str[i]=='\n') str[i]='\0';
   }
   str[28]='\0';
-  fCustomPrint(OutFile,"%s\n",str);
+  fprintf(OutFile,"%s\n",str);
 
  /* --------------------- AC bus results -----------------------------*/
-  fCustomPrint(OutFile,"BUS DATA FOLLOWS                  %5d ITEMS\n",Nac);
+  fprintf(OutFile,"BUS DATA FOLLOWS                  %5d ITEMS\n",Nac);
   for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
     if (ACptr->Num<=9999) sprintf_s(Num,"%4d",ACptr->Num);
     else strcpy_s(Num,"****");
@@ -164,7 +161,7 @@ void IEEE()
       if(strpbrk(ACptr->Type,"G,Q,Z")) Type=2;
       if(strpbrk(ACptr->Type,"S")) Type=3;
     }
-    fCustomPrint(OutFile,"%4s %12s %2s%3s %2d",Num,ACptr->Name,Area,Zone,Type);
+    fprintf(OutFile,"%4s %12s %2s%3s %2d",Num,ACptr->Name,Area,Zone,Type);
     Print(OutFile,1,6,4,ACptr->V);
     delta=ACptr->Ang;
     if (delta>=0) vals=1.00;
@@ -181,7 +178,7 @@ void IEEE()
     Print(OutFile,1,8,2,Ql*Sn);
     Print(OutFile,1,8,2,ACptr->PG*Sn);
     Print(OutFile,1,7,2,ACptr->Qg*Sn);
-    if(card) fCustomPrint(OutFile,"\n");
+    if(card) fprintf(OutFile,"\n");
     Print(OutFile,1,7,2,ACptr->KV);
     if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=NULL) Print(OutFile,1,6,4,ACptr->Cont->VCont);
     else if(strpbrk(ACptr->Type,"Q,S")) Print(OutFile,1,6,4,ACptr->VCont);
@@ -212,13 +209,13 @@ void IEEE()
       else strcpy_s(Num,"****");
     }
          else strcpy_s(Num,"   0");
-    fCustomPrint(OutFile," %4s\n",Num);
+    fprintf(OutFile," %4s\n",Num);
   }
-  fCustomPrint(OutFile,"-999\n");
+  fprintf(OutFile,"-999\n");
 
  /* --------------------- AC element results ---------------------------*/
   Nties=0;
-  fCustomPrint(OutFile,"BRANCH DATA FOLLOWS               %5d ITEMS\n",NacEl);
+  fprintf(OutFile,"BRANCH DATA FOLLOWS               %5d ITEMS\n",NacEl);
   for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
     if(Narea>1 && Eptr->From->Area!=Eptr->To->Area) Nties++;
     if (Eptr->From->Num<=9999) sprintf_s(Num,"%4d",Eptr->From->Num);
@@ -241,7 +238,7 @@ void IEEE()
     else if(strpbrk(Eptr->Type,"QN")) Type=3;
     else Type=4;
     if(!strcmp(Eptr->Ckt," ")) strcpy_s(Eptr->Ckt,"1");
-    fCustomPrint(OutFile,"%4s %4s %2s%3s %1s %1d",Num,Nump,Area,Zone,Eptr->Ckt,Type);
+    fprintf(OutFile,"%4s %4s %2s%3s %1s %1d",Num,Nump,Area,Zone,Eptr->Ckt,Type);
     R=Eptr->G/(Eptr->G*Eptr->G+Eptr->B*Eptr->B);
     X= -Eptr->B/(Eptr->G*Eptr->G+Eptr->B*Eptr->B);
     Print(OutFile,1,9,6,R);
@@ -249,21 +246,21 @@ void IEEE()
     if (Eptr->B1==Eptr->B2) Print(OutFile,1,9,5,Eptr->B1+Eptr->B2);
     else Print(OutFile,1,9,5,0.);
     Imax=ceil(Eptr->Imax*Sn);
-    if (Imax>99999) fCustomPrint(OutFile,"99999");
-    else fCustomPrint(OutFile," %5.0lf",Imax);
-    fCustomPrint(OutFile,"%12s","");
+    if (Imax>99999) fprintf(OutFile,"99999");
+    else fprintf(OutFile," %5.0lf",Imax);
+    fprintf(OutFile,"%12s","");
     if(strpbrk(Eptr->Type,"R")) {
       if (Eptr->Cont->Num<=9999) sprintf_s(Num,"%4d",Eptr->Cont->Num);
       else strcpy_s(Num,"****");
-      fCustomPrint(OutFile," %4s",Num);
-      if (strpbrk(Eptr->Type,"PQNM")) fCustomPrint(OutFile," 0 ");
+      fprintf(OutFile," %4s",Num);
+      if (strpbrk(Eptr->Type,"PQNM")) fprintf(OutFile," 0 ");
       else {
-        if(Eptr->Cont==Eptr->From||Eptr->Cont==Eptr->To) fCustomPrint(OutFile," 0 ");
-        else fCustomPrint(OutFile," 1 ");
+        if(Eptr->Cont==Eptr->From||Eptr->Cont==Eptr->To) fprintf(OutFile," 0 ");
+        else fprintf(OutFile," 1 ");
       }
-    } else fCustomPrint(OutFile,"    0 0 ");
+    } else fprintf(OutFile,"    0 0 ");
     if(strpbrk(Eptr->Type,"RT")) {
-      if(card) fCustomPrint(OutFile,"\n");
+      if(card) fprintf(OutFile,"\n");
       if(Eptr->Tap) Print(OutFile,1,6,4,1/Eptr->Tap);
       else Print(OutFile,1,6,4,0.);
       Print(OutFile,1,7,2,Eptr->Ang/K3);
@@ -309,26 +306,26 @@ void IEEE()
       Print(OutFile,1,6,5,0.);
       Print(OutFile,1,6,5,0.);
 	}
-    fCustomPrint(OutFile,"\n");
+    fprintf(OutFile,"\n");
   }
-  fCustomPrint(OutFile,"-999\n");
+  fprintf(OutFile,"-999\n");
 
  /* ------------------------- Area results ---------------------------*/
-  fCustomPrint(OutFile,"LOSS ZONES FOLLOW                 %5d ITEMS\n",0);
-  fCustomPrint(OutFile,"-99\n");
-  if(Narea>1) fCustomPrint(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",Narea);
-  else fCustomPrint(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",0);
+  fprintf(OutFile,"LOSS ZONES FOLLOW                 %5d ITEMS\n",0);
+  fprintf(OutFile,"-99\n");
+  if(Narea>1) fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",Narea);
+  else fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",0);
   if(Narea>1) for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next){
     if (Aptr->N<=99) sprintf_s(Area,"%2d",Aptr->N);
     else strcpy_s(Area,"**");
     if (Aptr->BSptr->Num<=9999) sprintf_s(Num,"%4d",Aptr->BSptr->Num);
     else strcpy_s(Num,"****");
-    fCustomPrint(OutFile,"%2s %4s %12s",Area,Num,Aptr->BSptr->Name);
+    fprintf(OutFile,"%2s %4s %12s",Area,Num,Aptr->BSptr->Name);
     Print(OutFile,1,7,1,Aptr->P*Sn);
-    fCustomPrint(OutFile,"%15s  %30s\n","",Aptr->Name);
+    fprintf(OutFile,"%15s  %30s\n","",Aptr->Name);
   }
-  fCustomPrint(OutFile,"-9\n");
-  fCustomPrint(OutFile,"TIE LINES FOLLOW                  %5d ITEMS\n",Nties);
+  fprintf(OutFile,"-9\n");
+  fprintf(OutFile,"TIE LINES FOLLOW                  %5d ITEMS\n",Nties);
   if(Nties) for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
     if(Eptr->From->Area!=Eptr->To->Area) {
       ACptr=Eptr->Meter;
@@ -336,17 +333,17 @@ void IEEE()
       else strcpy_s(Num,"****");
       if (ACptr->Area->N<=99) sprintf_s(Area,"%2d",ACptr->Area->N);
       else strcpy_s(Area,"**");
-      fCustomPrint(OutFile,"%4s  %2s",Num,Area);
+      fprintf(OutFile,"%4s  %2s",Num,Area);
       if (Eptr->Meter==Eptr->From) ACptr=Eptr->To;
       else ACptr=Eptr->From;
       if (ACptr->Num<=9999) sprintf_s(Num,"%4d",ACptr->Num);
       else strcpy_s(Num,"****");
       if (ACptr->Area->N<=99) sprintf_s(Area,"%2d",ACptr->Area->N);
       else strcpy_s(Area,"**");
-      fCustomPrint(OutFile,"  %4s  %2s  %1s\n",Num,Area,Eptr->Ckt);
+      fprintf(OutFile,"  %4s  %2s  %1s\n",Num,Area,Eptr->Ckt);
     }
   }
-  fCustomPrint(OutFile,"-999\n");
+  fprintf(OutFile,"-999\n");
 
  /* --------------------- DC bus results -----------------------------*/
   for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
@@ -361,8 +358,8 @@ void IEEE()
       for(i=1;i<=2;i++){
         if(i==1) DCptr=DCptrR;
         else DCptr=DCptrI;
-        fCustomPrint(OutFile,"BD %8sGROUND  %12s",DCptr->Name,DCptr->AC->Name);
-        fCustomPrint(OutFile,"    %2s%2.0lf",DCptr->Zone,DCptr->Nbr);
+        fprintf(OutFile,"BD %8sGROUND  %12s",DCptr->Name,DCptr->AC->Name);
+        fprintf(OutFile,"    %2s%2.0lf",DCptr->Zone,DCptr->Nbr);
         Print(OutFile,0,5,3,DCptr->Xc);
         Print(OutFile,0,5,4,DCptr->Ntrf);
         Print(OutFile,0,5,3,0.);
@@ -385,8 +382,8 @@ void IEEE()
         Print(OutFile,0,4,1,DCptr->AlfaMin/K3);
         Print(OutFile,0,4,1,DCptr->AlfaMax/K3);
         Print(OutFile,0,4,1,DCptr->GammaMin/K3);
-        fCustomPrint(OutFile,"\nBZ %8sGROUND  %12s",DCptr->Name,DCptr->AC->Name);
-        fCustomPrint(OutFile," %2s%2s",DCptr->Cont1,DCptr->Cont2);
+        fprintf(OutFile,"\nBZ %8sGROUND  %12s",DCptr->Name,DCptr->AC->Name);
+        fprintf(OutFile," %2s%2s",DCptr->Cont1,DCptr->Cont2);
         for(j=1;j<=2;j++){
           if(j==1) strcpy_s(str,DCptr->Cont1);
           else strcpy_s(str,DCptr->Cont2);
@@ -398,24 +395,24 @@ void IEEE()
           if(!strcmp(str,"AL")) Print(OutFile,0,6,2,DCptr->Alfa/K3);
           if(!strcmp(str,"GA")) Print(OutFile,0,6,2,DCptr->Gamma/K3);
         }
-        fCustomPrint(OutFile,"%1s\n",DCptr->Type);
+        fprintf(OutFile,"%1s\n",DCptr->Type);
       }
-      fCustomPrint(OutFile,"LD %8s%8s",DCptrR->Name,DCptrI->Name);
-      fCustomPrint(OutFile,"    %2s",DCptrR->Lzone);
+      fprintf(OutFile,"LD %8s%8s",DCptrR->Name,DCptrI->Name);
+      fprintf(OutFile,"    %2s",DCptrR->Lzone);
       Print(OutFile,3,6,2,DCptrR->Rd*Vn/In);
       Print(OutFile,0,6,2,DCptrR->Ld*Vn/In*1000);
-      fCustomPrint(OutFile,"\n");
+      fprintf(OutFile,"\n");
     }
   }
 
                         /* FACTS */
 /* --------------------- SVC results ----------------------------- */
   for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
-     fCustomPrint(OutFile,"%2s",SVCptr->Type);
-     if(SVCptr->From->Area!=NULL) fCustomPrint(OutFile," %2d ",SVCptr->From->Area->N);
-     else fCustomPrint(OutFile," %2d ",0);
-     fCustomPrint(OutFile,"%12s ",SVCptr->From->Name);
-     fCustomPrint(OutFile,"%12s",SVCptr->Ctrl->Name);
+     fprintf(OutFile,"%2s",SVCptr->Type);
+     if(SVCptr->From->Area!=NULL) fprintf(OutFile," %2d ",SVCptr->From->Area->N);
+     else fprintf(OutFile," %2d ",0);
+     fprintf(OutFile,"%12s ",SVCptr->From->Name);
+     fprintf(OutFile,"%12s",SVCptr->Ctrl->Name);
      Vn=SVCptr->Ctrl->KV;
      Ssvc=SVCptr->SVC_base;
      Print(OutFile,1,7,6,SVCptr->Xc*Ssvc/Sn);
@@ -425,17 +422,17 @@ void IEEE()
      Print(OutFile,0,2,0,SVCptr->slope*100.0*Ssvc/Sn);
      Print(OutFile,0,4,1,SVCptr->SVC_base);
      Print(OutFile,1,3,2,SVCptr->Vref);
-     fCustomPrint(OutFile,"%12s","            ");
+     fprintf(OutFile,"%12s","            ");
      Print(OutFile,1,4,1,SVCptr->alpha_svc/K3);
-     fCustomPrint(OutFile,"\n");
+     fprintf(OutFile,"\n");
   }
 /* --------------------- TCSC results ----------------------------- */
   for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
-     fCustomPrint(OutFile,"%2s",TCSCptr->Type);
-     if(TCSCptr->From->Area!=NULL) fCustomPrint(OutFile," %2d ",TCSCptr->From->Area->N);
-     else fCustomPrint(OutFile," %2d ",0);
-     fCustomPrint(OutFile,"%12s ",TCSCptr->From->Name);
-     fCustomPrint(OutFile,"%12s",TCSCptr->To->Name);
+     fprintf(OutFile,"%2s",TCSCptr->Type);
+     if(TCSCptr->From->Area!=NULL) fprintf(OutFile," %2d ",TCSCptr->From->Area->N);
+     else fprintf(OutFile," %2d ",0);
+     fprintf(OutFile,"%12s ",TCSCptr->From->Name);
+     fprintf(OutFile,"%12s",TCSCptr->To->Name);
      Vn=TCSCptr->From->KV;
      Stcsc=TCSCptr->TCSC_base;
      Xc=TCSCptr->Xc;
@@ -448,19 +445,19 @@ void IEEE()
      else if (!strcmp(TCSCptr->Cont,"P")) Print(OutFile,1,7,3,TCSCptr->Control*Sn);
      else if (!strcmp(TCSCptr->Cont,"I")) Print(OutFile,1,7,3,TCSCptr->Control*Sn/Vn);
      else if (!strcmp(TCSCptr->Cont,"D")) Print(OutFile,1,7,3,TCSCptr->Control/K3);
-     fCustomPrint(OutFile,"%c",TCSCptr->Cont[0]);
+     fprintf(OutFile,"%c",TCSCptr->Cont[0]);
      Print(OutFile,0,4,1,Stcsc);
      Print(OutFile,0,5,1,TCSCptr->alpha_tcsc/K3);
      Print(OutFile,0,3,1,TCSCptr->Max);
-     fCustomPrint(OutFile,"\n");
+     fprintf(OutFile,"\n");
   }
 /* --------------------- STATCOM results ----------------------------- */
   for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
-     fCustomPrint(OutFile,"%2s",STATCOMptr->Type);
-     if(STATCOMptr->From->Area!=NULL) fCustomPrint(OutFile," %2d ",STATCOMptr->From->Area->N);
-     else fCustomPrint(OutFile," %2d ",0);
-     fCustomPrint(OutFile,"%12s ",STATCOMptr->From->Name);
-     fCustomPrint(OutFile,"%12s",STATCOMptr->Ctrl->Name);
+     fprintf(OutFile,"%2s",STATCOMptr->Type);
+     if(STATCOMptr->From->Area!=NULL) fprintf(OutFile," %2d ",STATCOMptr->From->Area->N);
+     else fprintf(OutFile," %2d ",0);
+     fprintf(OutFile,"%12s ",STATCOMptr->From->Name);
+     fprintf(OutFile,"%12s",STATCOMptr->Ctrl->Name);
      Vn=STATCOMptr->From->KV;
      Sstatcom=STATCOMptr->MVA;
      G=STATCOMptr->G;
@@ -475,16 +472,16 @@ void IEEE()
      Print(OutFile,1,4,0,STATCOMptr->MVA);
      Print(OutFile,1,3,2,STATCOMptr->Vref);
      if (!strcmp(STATCOMptr->Cont1,"PW")) {
-       fCustomPrint(OutFile,"%1s","W");
+       fprintf(OutFile,"%1s","W");
        Print(OutFile,1,5,4,STATCOMptr->Vdc);
      } else {
-       fCustomPrint(OutFile,"%1s","P");
+       fprintf(OutFile,"%1s","P");
        Print(OutFile,1,5,4,STATCOMptr->k);
      }
-     fCustomPrint(OutFile,"\n");
+     fprintf(OutFile,"\n");
   }
                      /* END OF FACTS */
 
-  fCustomPrint(OutFile,"END OF DATA\n");
+  fprintf(OutFile,"END OF DATA\n");
   fclose(OutFile);
 }

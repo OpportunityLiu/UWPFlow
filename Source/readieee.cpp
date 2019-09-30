@@ -1,6 +1,3 @@
-#define WINVER 0x0601
-#define _WIN32_WINNT_ 0x0601
-
 /* Read AC data in IEEE common fotmat. */
 
 #include "readdata.h"
@@ -39,7 +36,7 @@ void ReadIEEE()
   for(;;){ /* Reading Loop */
     if(LineNum && Line[0]!='%')  strcpy_s(Linep,Line);
     if (fgets(Line,BUFLEN,InputDataFile)==NULL) {
-      fCustomPrint(stderr,"***Warning: END OF DATA card missing in IEEE input data file.");
+      fprintf(stderr,"***Warning: END OF DATA card missing in IEEE input data file.");
       break;
     }
     LineNum++;
@@ -134,7 +131,7 @@ void ReadIEEE()
           ACptr->Vmin=GetValue(Line,99,8,2);
           if (ACptr->Vmin<=0) ACptr->Vmin=0.001;
           if (ACptr->Vmax<=ACptr->Vmin) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("AC bus V limits are wrong: Vmin >= Vmax.");
           }
           ACptr->Cont=ACptr;
@@ -146,7 +143,7 @@ void ReadIEEE()
           ACptr->Qmax=GetValue(Line,91,8,2)/Sn;
           ACptr->Qmin=GetValue(Line,99,8,2)/Sn;
           if (ACptr->Qmax<ACptr->Qmin) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("AC bus Q limits are wrong: Qmin > Qmax.");
           }
           /*if (ACptr->Qmax==ACptr->Qmin && ACptr->Qmax==0.) {
@@ -179,7 +176,7 @@ void ReadIEEE()
               ACptr->Area->i++;
               if (ACptr->Area->i>1) {
                 if (card) LineNum--;
-                fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+                fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
                 ErrorHalt("The Area has more than one slack bus.");
               }
             }
@@ -214,21 +211,21 @@ void ReadIEEE()
       ACptr=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
       if (ACptr->N==0) {
         if (card) LineNum--;
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The tap bus has not been defined (check BUS DATA cards).");
       }
       j=GetInt(Line,6,NumBusDigits);
       ACptrp=(ACbusData *) ACbusInList(j,"",0.,Nac,1);
       if (ACptrp->N==0) {
         if (card) LineNum--;
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The Z bus has not been defined (check BUS DATA cards).");
       }
       Eptr=(ElementData *) ElemInList(ACptr,ACptrp,NacEl++,0,"","");
       R=GetValue(Line,20,10,6);
       X=GetValue(Line,30,10,6);
       if (fabs(R)<0.0000001 && fabs(X)<0.0000001) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("AC element is a short circuit. Try eliminating it.");
       } else {
         Eptr->G= R/(R*R+X*X);
@@ -241,7 +238,7 @@ void ReadIEEE()
         Eptr->Area=(AreaData *) AreaInList(i,"",Narea);
         if (Eptr->Area->N==0) {
           if (card) LineNum--;
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           ErrorHalt("The Area has not been defined (check BUS DATA cards).");
         }
       }
@@ -255,7 +252,7 @@ void ReadIEEE()
         if (j>0) {
           ACptrs=(ACbusData *) ACbusInList(j,"",0.,Nac,1);
           if (ACptrs->N==0) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("The controlled bus has not been defined (check BUS DATA cards).");
           }
         } else ACptrs=ACptr;
@@ -266,7 +263,7 @@ void ReadIEEE()
           if(Eptr->Tmax<0) Eptr->Tmax=1.1;
           if(Eptr->Tmin<0) Eptr->Tmin=0.9;
           if(Eptr->Tmax<Eptr->Tmin) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin) {
@@ -282,7 +279,7 @@ void ReadIEEE()
             if(Eptr->Max<0) Eptr->Max=1.;
             if(Eptr->Min<0) Eptr->Min=1.;
             if(Eptr->Max<Eptr->Min) {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
               ErrorHalt("LTC limits are wrong: Vmin > Vmax.");
             }
             if(Eptr->Max==Eptr->Min) {
@@ -306,9 +303,9 @@ void ReadIEEE()
 	  else {
             strcpy_s(Eptr->Type,"T");
             Eptr->Tmax=Eptr->Tmin=0;
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-            fCustomPrint(stderr,"***Warning: The controlled bus of this LTC is not PQ (check BUS DATA cards).\n");
-            fCustomPrint(stderr,"            It will be treated as a fixed tap transformer.\n");
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"***Warning: The controlled bus of this LTC is not PQ (check BUS DATA cards).\n");
+            fprintf(stderr,"            It will be treated as a fixed tap transformer.\n");
           }
         }
         else if(k==3) {
@@ -317,7 +314,7 @@ void ReadIEEE()
           if(Eptr->Tmax<0) Eptr->Tmax=1.1;
           if(Eptr->Tmin<0) Eptr->Tmin=0.9;
           if(Eptr->Tmax<Eptr->Tmin) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin) {
@@ -332,7 +329,7 @@ void ReadIEEE()
             Eptr->Min=GetValue(Line,113,7,5)/Sn;
             Eptr->Max=GetValue(Line,120,7,5)/Sn;
             if(Eptr->Max<Eptr->Min) {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
               ErrorHalt("LTC limits are wrong: Qmin > Qmax.");
             }
             if(Eptr->Max==Eptr->Min) {
@@ -349,7 +346,7 @@ void ReadIEEE()
           Eptr->Tmin=GetValue(Line,91,7,2)*K3;
           Eptr->Tmax=GetValue(Line,98,7,2)*K3;
           if(Eptr->Tmax<Eptr->Tmin) {
-            fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+            fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin){
@@ -364,7 +361,7 @@ void ReadIEEE()
             Eptr->Min=GetValue(Line,113,7,5)/Sn;
             Eptr->Max=GetValue(Line,120,7,5)/Sn;
             if(Eptr->Max<Eptr->Min) {
-              fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+              fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
               ErrorHalt("LTC limits are wrong: Pmin > Pmax.");
             }
             if(Eptr->Max==Eptr->Min) {
@@ -394,7 +391,7 @@ void ReadIEEE()
       i=GetInt(Line,1,NumAreaDigits);
       Aptr=(AreaData *) AreaInList(i,"",Narea);
       if (Aptr->N==0) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The Area does not contain any buses (check BUS DATA cards).");
       }
       GetStr(Line,46,30,30,Name);
@@ -415,11 +412,11 @@ void ReadIEEE()
       i=GetInt(Line,4,NumBusDigits);
       ACptr=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
       if (ACptr->N==0) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The area slack bus has not been defined (check BUS DATA cards).");
       }
       if (ACptr->Area!=Aptr) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The slack bus is not in the area (check BUS DATA cards).");
       }
       Aptr->Slack=Aptr->BSptr=ACptr;
@@ -439,13 +436,13 @@ void ReadIEEE()
       i=GetInt(Line,1,NumBusDigits);
       ACptr=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
       if (ACptr->N==0) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The metered bus has not been defined (check BUS DATA cards).");
       }
       i=GetInt(Line,11,NumBusDigits);
       ACptrp=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
       if (ACptrp->N==0) {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The nonmetered bus has not been defined (check BUS DATA cards).");
       }
       GetStr(Line,CircData,1,1,str);
@@ -458,12 +455,12 @@ void ReadIEEE()
       if (ELptr!=NULL) {
         if (Eptr->Meter==NULL) Eptr->Meter=ACptr;
         else {
-          fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-		  fCustomPrint(stderr,"***Warning: This tie line was already defined (check circuit code).\n");        }
+          fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+		  fprintf(stderr,"***Warning: This tie line was already defined (check circuit code).\n");        }
       }
       else {
-        fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-        fCustomPrint(stderr,"***Warning: This element has not been defined (check BRANCH DATA cards).\n");
+        fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+        fprintf(stderr,"***Warning: This element has not been defined (check BRANCH DATA cards).\n");
       }
     }
 
@@ -486,8 +483,8 @@ void ReadIEEE()
 
     else if(!strncmp(Line,"END OF DATA",11)) break;
     else if(flagp && Line[0]!='C' ) {
-      fCustomPrint(stderr,"Input Line-> %d\n%s",LineNum,Line);
-      fCustomPrint(stderr,"***Warning: The program will ignore this line.\n");
+      fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
+      fprintf(stderr,"***Warning: The program will ignore this line.\n");
     }
   }
   fclose(InputDataFile);
@@ -501,16 +498,16 @@ void ReadIEEE()
     if(strpbrk(ACptr->Type,"G")){
       ACptrp=(ACbusData *) ACbusInList(ACptr->Nc,"",0.,Nac,1);
       if (ACptrp->N==0) {
-         fCustomPrint(stderr,"Error: The voltage controlled bus %d %s\n",ACptrp->Num,ACptrp->Name);
-         fCustomPrint(stderr,"       has not been defined.  Check AC bus data.\n");
+         fprintf(stderr,"Error: The voltage controlled bus %d %s\n",ACptrp->Num,ACptrp->Name);
+         fprintf(stderr,"       has not been defined.  Check AC bus data.\n");
          /*WriteSummary();
          exit(ERROREXIT);*/
          InputError=TRUE;
       }
       if(!strcmp(ACptrp->Type,"B")) strcpy_s(ACptrp->Type,"BC");
       else if(strcmp(ACptrp->Type,"BC")) {
-         fCustomPrint(stderr,"Error: The voltage controlled bus %d %s\n",ACptrp->Num,ACptrp->Name);
-         fCustomPrint(stderr,"       is not a PQ bus.  Check AC bus data.\n");
+         fprintf(stderr,"Error: The voltage controlled bus %d %s\n",ACptrp->Num,ACptrp->Name);
+         fprintf(stderr,"       is not a PQ bus.  Check AC bus data.\n");
          /*WriteSummary();
          exit(ERROREXIT);*/
          InputError=TRUE;
@@ -525,12 +522,12 @@ void ReadIEEE()
       }
       if(ACptrp->Kbg>1) {
         if (!flag2Vcontrol) {
-           fCustomPrint(stderr,"***Warning: The IEEE common format assumes that multiple generators\n");
-           fCustomPrint(stderr,"            controlling voltage at bus %d %s\n",ACptrp->Num,ACptrp->Name);
-           fCustomPrint(stderr,"            share equally the control.\n");
+           fprintf(stderr,"***Warning: The IEEE common format assumes that multiple generators\n");
+           fprintf(stderr,"            controlling voltage at bus %d %s\n",ACptrp->Num,ACptrp->Name);
+           fprintf(stderr,"            share equally the control.\n");
         }
-        fCustomPrint(stderr,"***Warning: The program will use the first generator controlling bus \n");
-        fCustomPrint(stderr,"            to define the remote voltage at bus %d %s\n",ACptrp->Num,ACptrp->Name);
+        fprintf(stderr,"***Warning: The program will use the first generator controlling bus \n");
+        fprintf(stderr,"            to define the remote voltage at bus %d %s\n",ACptrp->Num,ACptrp->Name);
       }
     }
 }
