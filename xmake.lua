@@ -7,7 +7,7 @@ target("uwpflow")
     -- set kind
     set_kind("binary")
 
-    set_languages("cxx20")
+    set_languages("cxx17")
 
     -- add files
     add_headerfiles("Source/*.h")
