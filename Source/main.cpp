@@ -24,7 +24,7 @@ void WriteSolution(INDEX Iter,char *File1,char *str);
 int  Pflow(int iter,BOOLEAN flagF,BOOLEAN flagD,BOOLEAN flagP);
 int Homot(void);
 int PoCPoint(void);
-int main(int argc,char **argv);
+int main(int argc,const char **argv);
 void InitializeLoad(void);
 int Evector(int M,int iter,VALUETYPE tol,BOOLEAN RightEvector,VALUETYPE *EigenValue);
 void PrintLeftEvector(INDEX N,FILE *Out);
@@ -172,7 +172,7 @@ void InitializeLoad()
 
 /* --------------------------- Main Program  ------------------------------ */
 #ifdef ANSIPROTO
-  int main(int argc,char **argv)
+  int main(int argc,const char **argv)
 #else
   int main(argc,argv)
   int argc;
