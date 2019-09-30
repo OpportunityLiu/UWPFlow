@@ -14,11 +14,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef WINDOWS
-#include "Win UWPflow.h"
-#include "GraphDLG.h"
-#endif
-
 #ifdef ANSIPROTO
 void ErrorStop(char *Msg);
 void DCinit(void);
@@ -32,12 +27,7 @@ void WriteSolution(INDEX Iter,char *File1,char *str);
 int  Pflow(int iter,BOOLEAN flagF,BOOLEAN flagD,BOOLEAN flagP);
 int Homot(void);
 int PoCPoint(void);
-#ifdef WINDOWS
-  int pfw_main(int argc, char **argv);
-  void initFile();
-#else
-  int main(int argc,char **argv);
-#endif
+int main(int argc,char **argv);
 void InitializeLoad(void);
 int Evector(int M,int iter,VALUETYPE tol,BOOLEAN RightEvector,VALUETYPE *EigenValue);
 void PrintLeftEvector(INDEX N,FILE *Out);
@@ -85,11 +75,6 @@ BOOLEAN Acont,PQcont,QRcont,Rcont,Xcont,
 extern VALUETYPE *x0,*x0p,*Dx;
 extern BOOLEAN *DxZero;
 extern AClist *Vlist,*Vlistp;
-
-#ifdef WINDOWS
-extern CString dir;
-extern GraphDLG* GraphDlg;
-#endif
 
 /* ------------------- DCinit -------------------- */
 #ifdef ANSIPROTO
@@ -189,16 +174,12 @@ void InitializeLoad()
 
 
 /* --------------------------- Main Program  ------------------------------ */
-#ifdef WINDOWS
-  int pfw_main(int argc, char **argv)
-#else
 #ifdef ANSIPROTO
   int main(int argc,char **argv)
 #else
   int main(argc,argv)
   int argc;
   char **argv;
-#endif
 #endif
 /* Main Routine. */
 {
@@ -210,11 +191,6 @@ void InitializeLoad()
   int i;
 
   SetArguments(argc,argv);
-
-#ifdef WINDOWS
-  if (setjmp(exit_main)) return(1);	 
-  
-#endif
 
   if (HelpRequested())
   {
@@ -486,160 +462,8 @@ void InitializeLoad()
                 PrintDirection('Y',x0,1.0);
          }
   }
-#ifdef WINDOWS
 
-  CleanUp();
-#endif
   return(0);
 }
 
-
-/* -------------------- Clean up all data structures ----------------------*/
-#ifdef WINDOWS
-void CleanUp()
-/* Clean up all Pflow data structures */
-{
-
-  INDEX k;
-  SparseMatrixElement *Jptr,*Jptrp;
-  AreaData *Aptr,*Aptrp;
-  AClist *LACptr,*LACptrp;
-  DClist *LDCptr,*LDCptrp;
-  ElementList *LEptr,*LEptrp;
-  ACbusData *ACptr,*ACptrp;
-  SVClist *LSVCptr,*LSVCptrp;                 /* FACTS */
-  TCSClist *LTCSCptr,*LTCSCptrp;              /* FACTS */
-  STATCOMlist *LSTATCOMptr,*LSTATCOMptrp;     /* FACTS */
-  DCbusData *DCptr,*DCptrp;
-  ElementData *Eptr,*Eptrp;
-  SVCbusData *SVCptr,*SVCptrp;                /* FACTS */
-  TCSCbusData *TCSCptr,*TCSCptrp;             /* FACTS */
-  STATCOMbusData *STATCOMptr,*STATCOMptrp;    /* FACTS */
-
-  if (Jac!=NULL) {
-    for (k=1;k<=Jac->n1;k++) {
-      Jptr=Jac->RowHead[k];
-      while (Jptr!=NULL) {
-        Jptrp=Jptr->RowNext;
-        delete Jptr;
-        Jptr=Jptrp;
-      }
-    }
-    delete[] Jac->ColHead;
-    delete[] Jac->RowHead;
-    delete Jac;
-    delete[] NewRow->p;
-    delete NewRow;
-    delete[] NewCol->p;
-    delete NewCol;
-    delete[] OldRow->p;
-    delete OldRow;
-    delete[] OldCol->p;
-    delete OldCol;
-    delete[] RowPartition->p;
-    delete RowPartition;
-    delete[] ColPartition->p;
-    delete ColPartition;
-    Jac=NULL;
-  }
-  if (ACvar!=NULL)  { delete[] ACvar;  ACvar=NULL; }
-  if (Dx!=NULL) { delete[] Dx;  Dx=NULL; }
-  if (x0!=NULL) { delete[] x0;  x0=NULL; }
-  if (x0p!=NULL) { delete[] x0p;  x0p=NULL; }
-  if (dx!=NULL) { delete[] dx;  dx=NULL; }
-  if (dF!=NULL) {  delete[] dF;  dF=NULL; }
-  if (DxZero!=NULL) {  delete[] DxZero;  DxZero=NULL; }
-  if (Vlist!=NULL) {
-    if (Vlist!=Vlistp) {
-      for(LACptr=Vlist;LACptr!=NULL;LACptrp=LACptr->Next,delete LACptr,LACptr=LACptrp);
-      for(LACptr=Vlistp;LACptr!=NULL;LACptrp=LACptr->Next,delete LACptr,LACptr=LACptrp);
-    } else
-      for(LACptr=Vlist;LACptr!=NULL;LACptrp=LACptr->Next,delete LACptr,LACptr=LACptrp);
-    Vlist=Vlistp=NULL;
-  }
-  if (dataPtr!=NULL) {
-    for (Aptr=dataPtr->Area;Aptr!=NULL;){
-      Aptrp=Aptr->Next;
-      for(LACptr=Aptr->AC;LACptr!=NULL;LACptrp=LACptr->Next,delete LACptr,LACptr=LACptrp);
-      for(LDCptr=Aptr->DC;LDCptr!=NULL;LDCptrp=LDCptr->Next,delete LDCptr,LDCptr=LDCptrp);
-      for(LEptr=Aptr->Elem;LEptr!=NULL;LEptrp=LEptr->Next,delete LEptr,LEptr=LEptrp);
-      delete Aptr;
-      Aptr=Aptrp;
-    }
-    for(ACptr=dataPtr->ACbus;ACptr!=NULL;) {
-      ACptrp=ACptr->Next;
-      for(LEptr=ACptr->Reg;LEptr!=NULL;LEptrp=LEptr->Next,delete LEptr,LEptr=LEptrp);
-      for(LEptr=ACptr->Elem;LEptr!=NULL;LEptrp=LEptr->Next,delete LEptr,LEptr=LEptrp);
-      for(LDCptr=ACptr->DC;LDCptr!=NULL;LDCptrp=LDCptr->Next,delete LDCptr,LDCptr=LDCptrp);
-      for(LSVCptr=ACptr->SVC;LSVCptr!=NULL;LSVCptrp=LSVCptr->Next,delete LSVCptr,LSVCptr=LSVCptrp);                                  /* FACTS */
-      for(LTCSCptr=ACptr->TCSC;LTCSCptr!=NULL;LTCSCptrp=LTCSCptr->Next,delete LTCSCptr,LTCSCptr=LTCSCptrp);                          /* FACTS */
-      for(LSTATCOMptr=ACptr->STATCOM;LSTATCOMptr!=NULL;LSTATCOMptrp=LSTATCOMptr->Next,delete LSTATCOMptr,LSTATCOMptr=LSTATCOMptrp);  /* FACTS */
-      for(LACptr=ACptr->ContBus;LACptr!=NULL;LACptrp=LACptr->Next,delete LACptr,LACptr=LACptrp);
-      if (ACptr->Gen!=NULL) delete ACptr->Gen;
-      delete ACptr;
-      ACptr=ACptrp;
-    }
-    for(DCptr=dataPtr->DCbus;DCptr!=NULL;) {
-      DCptrp=DCptr->Next;
-      delete DCptr;
-      DCptr=DCptrp;
-    }
-    for(Eptr=dataPtr->Element;Eptr!=NULL;) {
-      Eptrp=Eptr->Next;
-      delete Eptr;
-      Eptr=Eptrp;
-    }
-
-                           /* FACTS */
-    for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;) {
-      SVCptrp=SVCptr->Next;
-      delete SVCptr;
-      SVCptr=SVCptrp;
-    }
-    for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;) {
-      TCSCptrp=TCSCptr->Next;
-      delete TCSCptr;
-      TCSCptr=TCSCptrp;
-    }
-    for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;) {
-      STATCOMptrp=STATCOMptr->Next;
-      delete STATCOMptr;
-      STATCOMptr=STATCOMptrp;
-    }
-                        /* END FACTS */
-
-    for(LACptr=dataPtr->KGbus;LACptr!=NULL;) {
-      LACptrp=LACptr->Next;
-      delete LACptr;
-      LACptr=LACptrp;
-    }
-    delete dataPtr;
-    dataPtr=NULL;
-
-	
-  }
-  //close standard streams
-  fclose(stdout);
-  fclose(stderr);
-  //fclose(stdin);
-
-  
-  //update graph
-  //set range to around the max and min points on the graph
-  GraphDlg->m_GraphCtrl.SetRange(GraphDlg->minX*0.9, GraphDlg->maxX*1.2, GraphDlg->minY*0.9, GraphDlg->maxY*1.1);
-	  
-  for (int i = 1; i<=GraphDlg->m_GraphCtrl.GetAnnoCount(); i++){
-	//set the legend
-	  GraphDlg->m_GraphCtrl.SetAnnotation(i-1);
-	  GraphDlg->m_GraphCtrl.SetAnnoLabelX(GraphDlg->maxX*1.05);
-	  GraphDlg->m_GraphCtrl.SetAnnoLabelY(GraphDlg->maxY * 1.1 *(1-i*0.1) + GraphDlg->minY* 0.9*0.1*i);
-  }
-
-  
-  //set the x axis label
-  GraphDlg->m_GraphCtrl.SetXLabel("L.F.");
-
-
-}
-#endif
 
