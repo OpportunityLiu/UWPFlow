@@ -9,10 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: install xmake
-      run: |
-        bash <(curl -fsSL https://raw.githubusercontent.com/tboox/xmake/master/scripts/get.sh)
-        source ~/.xmake/profile
+    - uses: OpportunityLiu/github-action-setup-xmake
     - name: make
       run: xmake
     - name: test
