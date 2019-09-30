@@ -9,7 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - uses: OpportunityLiu/github-action-setup-xmake
+    - uses: OpportunityLiu/github-action-setup-xmake@master
     - name: make
       run: xmake
     - name: test
