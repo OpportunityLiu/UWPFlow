@@ -15,14 +15,14 @@
 
 /* ==================== Global Variables ============================ */
 int GlobalArgc;
-char **GlobalArgv;
+const char **GlobalArgv;
 #ifdef WINDOWS
 extern CString dir;
 #endif
 
 /* ========================== SetArguments ========================== */
 #ifdef ANSIPROTO
-void SetArguments(int argc,char **argv)
+void SetArguments(int argc, const char **argv)
 #else
 void SetArguments(argc,argv)
 int argc;
@@ -242,7 +242,7 @@ char *buff;
 
 /* ================================ NullName ========================== */
 #ifdef ANSIPROTO
-BOOLEAN NullName(char *Name)
+BOOLEAN NullName(const char *Name)
 #else
 BOOLEAN NullName(Name)
 char *Name;
@@ -258,7 +258,7 @@ char *Name;
 /* =============================== OpenInput ========================== */
 //Opens a file with file name 'Name' for reading. Returns the input stream pointer
 #ifdef ANSIPROTO
-FILE * OpenInput(char * Name)
+FILE *OpenInput(const char *Name)
 #else
 FILE * OpenInput(Name)
 char * Name;
@@ -295,7 +295,7 @@ char * Name;
 
 /* ============================== OpenOutput ========================== */
 #ifdef ANSIPROTO
-FILE * OpenOutput(char * Name)
+FILE *OpenOutput(const char *Name)
 #else
 FILE * OpenOutput(Name)
 char * Name;

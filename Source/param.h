@@ -5,7 +5,7 @@
 #include "constant.h"
 
 #ifdef  ANSIPROTO
-void SetArguments(int argc, char **argv);
+void SetArguments(int argc, const char **argv);
 BOOLEAN ExistParameter(char ch);
 char    *TrueParamStr(int Item);
 BOOLEAN HelpRequested(void);
@@ -16,9 +16,9 @@ int     IntegerPosParam(int Item, int Default);
 void	RealParameter(char ch, double *Default, double MinVal, double MaxVal);
 void	RealPosParam(int Item, double *Default);
 char *DisplayReal(double value, int precision,char *buffer);
-BOOLEAN NullName(char *Name);
-FILE *OpenInput(char *Name);
-FILE *OpenOutput(char *Name);
+BOOLEAN NullName(const char *Name);
+FILE *OpenInput(const char *Name);
+FILE *OpenOutput(const char *Name);
 int SizeParameter(char ch,int i,int imax);
 #else
 void SetArguments();
