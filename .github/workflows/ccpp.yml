@@ -4,12 +4,17 @@ on: [push]
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     
     steps:
     - uses: actions/checkout@v1
     - uses: OpportunityLiu/github-action-setup-xmake@master
+      with:
+        xmake-version: v2.2.8
     - name: make
       run: xmake
     - name: test
