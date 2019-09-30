@@ -36,7 +36,7 @@ char *Line;
       Name2[7]='L';
       Name2[8]='\0';
       GetStr(Line,64,4,4,Name3);
-      strcat_s(Name2,Name3);
+      strcat(Name2,Name3);
       ptrac=ACbusInList(0,Name2,KV2,Nac,1);
       if(ptrac->N==0){Nac++;ptrac->Num=ptrac->N=Nac;}
       ACptr=ACbusInList(0,Name,KV,Nac,1);

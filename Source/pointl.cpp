@@ -135,12 +135,12 @@ FILE *Out;
 
   fprintf(Out,"%d 1\n",N);
   for (i=0,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
-    sprintf_s(str,"dP%-d",ACptr->Num); i++;
+    sprintf(str,"dP%-d",ACptr->Num); i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
-    sprintf_s(str,"dQ%-d",ACptr->Num);  i++;
+    sprintf(str,"dQ%-d",ACptr->Num);  i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     if(Acont && strpbrk(ACptr->Type,"A")){
-      sprintf_s(str,"dPA%-d",ACptr->Area->N); i++;
+      sprintf(str,"dPA%-d",ACptr->Area->N); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     }
     if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
@@ -154,51 +154,51 @@ FILE *Out;
            I=Eptr->To->Num;
          }
          if(!strcmp(Eptr->Type,"RP") || strpbrk(Eptr->Type,"PM")){
-           sprintf_s(str,"dP%-d_%-d",I,J); i++;
+           sprintf(str,"dP%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
          } else {
-           sprintf_s(str,"dQ%-d_%-d",I,J); i++;
+           sprintf(str,"dQ%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
          }
       }
     }
     if (ACptr->Gen!=NULL) {
       i=ACptr->Gen->Nvar;
-      sprintf_s(str,"dPg%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dQg%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dEq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dEd%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dVd%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dVq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dId%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dIq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dVr%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dVi%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
-      sprintf_s(str,"dIa%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dPg%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dQg%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dEq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dEd%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dVd%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dVq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dId%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dIq%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dVr%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dVi%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
+      sprintf(str,"dIa%-d",ACptr->Num); fprintf(Out,"%4d %8s %-11.5g\n",++i,str,x0[i]);
     }
   }
   for(k=0,DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")){
     for (k++,l=1;l<=11;l++){
-      sprintf_s(str,"Fdc%-d_%-d",k,l); i++;
+      sprintf(str,"Fdc%-d_%-d",k,l); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     }
   }
                                        /* FACTS */
   for(k=0,SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
     for (k++,l=1;l<=3;l++){
-      sprintf_s(str,"Fsvc%-d_%-d",k,l); i++;
+      sprintf(str,"Fsvc%-d_%-d",k,l); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     }
   }
   for(k=0,TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
     for (k++,l=1;l<=7;l++){
-      sprintf_s(str,"Ftcsc%-d_%-d",k,l); i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,l); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     }
   }
   for(k=0,STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
     for (k++,l=1;l<=7;l++){
-      sprintf_s(str,"Fstat%-d_%-d",k,l); i++;
+      sprintf(str,"Fstat%-d_%-d",k,l); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,x0[i]);
     }
   }

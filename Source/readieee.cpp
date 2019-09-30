@@ -82,7 +82,7 @@ void ReadIEEE()
         LineNum++;
         for(i=strlen(Line)-1;i<=74;Line[i]=' ',i++);
         Line[75]='\0';
-        strcat_s(Line,Linep);
+        strcat(Line,Linep);
       }
       i=GetInt(Line,25,2);
       if (i!=4) {
@@ -98,7 +98,7 @@ void ReadIEEE()
           strcpy(Name,"BUS_");
           GetStr(Line,1,5,5,str);
           for(j=0;j<=3;j++) if(str[j]!=' ') break;
-          strcat_s(Name,&str[j]);
+          strcat(Name,&str[j]);
           for(j=strlen(Name);j<=11;Name[j]=' ',j++);
           Name[12]='\0';
         }
@@ -171,7 +171,7 @@ void ReadIEEE()
           } 
           if (i==3) {
             Nslack++;
-            strcat_s(ACptr->Type,"S");
+            strcat(ACptr->Type,"S");
             if(ACptr->Area!=NULL) {
               ACptr->Area->i++;
               if (ACptr->Area->i>1) {
@@ -205,7 +205,7 @@ void ReadIEEE()
         LineNum++;
         for(i=strlen(Line)-1;i<=74;Line[i]=' ',i++);
         Line[75]='\0';
-        strcat_s(Line,Linep);
+        strcat(Line,Linep);
       }
       i=GetInt(Line,1,NumBusDigits);
       ACptr=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
@@ -404,7 +404,7 @@ void ReadIEEE()
         strcpy(Name,"AREA_");
         GetStr(Line,1,4,4,str);
         for(j=0;j<=3;j++) if(str[j]!=' ') break;
-        strcat_s(Name,&str[j]);
+        strcat(Name,&str[j]);
         for(j=strlen(Name);j<=29;Name[j]=' ',j++);
         Name[30]='\0';
       }

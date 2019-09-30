@@ -283,7 +283,7 @@ void ReadITALY()
       N=GetInt(Line,1,3);
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->V>0) {
         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -293,7 +293,7 @@ void ReadITALY()
         Nac++;
         ACptr->Num=ACptr->N=Nac;
         KV=Vlevels[KVl];
-        sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+        sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
@@ -362,13 +362,13 @@ void ReadITALY()
       N=GetInt(Line,1,3);
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
         KV=Vlevels[KVl];
-        sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+        sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
@@ -411,13 +411,13 @@ void ReadITALY()
       N=GetInt(Line,1,3);
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
         KV=Vlevels[KVl];
-        sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+        sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
@@ -445,13 +445,13 @@ void ReadITALY()
       N=GetInt(Line,1,3);
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
         KV=Vlevels[KVl];
-        sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+        sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
@@ -474,13 +474,13 @@ void ReadITALY()
       N=GetInt(Line,1,3);
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
         KV=Vlevels[KVl];
-        sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+        sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KV==0){
@@ -497,13 +497,13 @@ void ReadITALY()
       N=GetInt(Line,7,3);
       GetStr(Line,10,1,1,Zone);
       KVl=GetInt(Line,11,1);
-      sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+      sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
       ACptrp=ACbusInList2(0,Code,Nac,1,TRUE);
       if (ACptrp->N==0) {
         Nac++;
         ACptrp->Num=ACptrp->N=Nac;
         KVp=Vlevels[KVl];
-        sprintf_s(ACptrp->Name,"%5s %6.0lf",Code,KVp);
+        sprintf(ACptrp->Name,"%5s %6.0lf",Code,KVp);
         Vlmax=Vmax[KVl];
         Vlmin=Vmin[KVl];
         if (KVp==0){
@@ -680,7 +680,7 @@ BOOLEAN ReadADDfile()
         N=GetInt(Line,1,3);
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
-        sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+        sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
         if (ACptr==NULL) {
           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -693,7 +693,7 @@ BOOLEAN ReadADDfile()
             fprintf(stderr,"***Warning: This bus has a zero base bus voltage.\n");
             fprintf(stderr,"            This line in the ADD file will be ignored.\n");
           } else {
-            sprintf_s(ACptr->Name,"%5s %6.0lf",Code,KV);
+            sprintf(ACptr->Name,"%5s %6.0lf",Code,KV);
             KVp=ACptr->KV;
             val=KVp/KV;
             ACptr->VCont=ACptr->V=ACptr->V*val;
@@ -785,12 +785,12 @@ BOOLEAN ReadADDfile()
         N=GetInt(Line,1,3);
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
-        sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+        sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
         N=GetInt(Line,7,3);
         GetStr(Line,10,1,1,Zone);
         KVl=GetInt(Line,11,1);
-        sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+        sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptrp=ACbusInList2(0,Code,Nac,1,FALSE);
         GetStr(Line,13,1,1,Ckt);
         if(!strcmp(Ckt," ")) strcpy(Ckt,"0");
@@ -875,7 +875,7 @@ BOOLEAN ReadADDfile()
         N=GetInt(Line,1,3);
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
-        sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
+        sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
         if (ACptr==NULL) {
           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -928,7 +928,7 @@ BOOLEAN ReadADDfile()
       /* --------------- Areas  ------------------------------- */
       else if (Line[79]=='J') {
         NJcard++;
-        sprintf_s(Zone,"%2d",NJcard);
+        sprintf(Zone,"%2d",NJcard);
         GetStr(Line,1,16,16,Code);
         val=GetValue(Line,34,4,0)/100.0;
         for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) if (ACptr->Area==NULL) {

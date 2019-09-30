@@ -38,7 +38,7 @@ VALUETYPE val;
     if (width==1) strcpy(str,"0");
     else {
       strcpy(str,"0.");
-      for(i=2;i<=width-1;i++) strcat_s(str,"0");
+      for(i=2;i<=width-1;i++) strcat(str,"0");
     }
     fprintf(File,"%*s",width,str);
     return;
@@ -56,7 +56,7 @@ VALUETYPE val;
     }
     if(decimals) width++;
     else if(i<width-1) j--;
-    sprintf_s(str,"%-*.*lf",width,j,val);
+    sprintf(str,"%-*.*lf",width,j,val);
     if(!strncmp(str,"0.",2)) ptr=strpbrk(str,".");
     else if(strlen(str)==width && strpbrk(str," ")) {
       str[width-1]='.';
@@ -137,7 +137,7 @@ void IEEE()
   fprintf(OutFile," %4d",yearp);
   if (month>3 && month<10) fprintf(OutFile," S ");
   else                     fprintf(OutFile," W ");
-  strncpy_s(str,dataPtr->Title[0],29);
+  strncpy(str,dataPtr->Title[0],29);
   for(i=0;i<=28;i++){
     if (str[i]=='\n') str[i]='\0';
   }
@@ -147,14 +147,14 @@ void IEEE()
  /* --------------------- AC bus results -----------------------------*/
   fprintf(OutFile,"BUS DATA FOLLOWS                  %5d ITEMS\n",Nac);
   for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
-    if (ACptr->Num<=9999) sprintf_s(Num,"%4d",ACptr->Num);
+    if (ACptr->Num<=9999) sprintf(Num,"%4d",ACptr->Num);
     else strcpy(Num,"****");
     if (Narea<2 || ACptr->Area==NULL) strcpy(Area,"0");
-    else if (ACptr->Area->N<=99) sprintf_s(Area,"%2d",ACptr->Area->N);
+    else if (ACptr->Area->N<=99) sprintf(Area,"%2d",ACptr->Area->N);
     else                         strcpy(Area,"99");
     if ((isdigit(ACptr->Zone[0])||ACptr->Zone[0]==' ') && (isdigit(ACptr->Zone[1])||ACptr->Zone[1]==' '))
-         sprintf_s(Zone,"%3d",atoi(ACptr->Zone));
-    else sprintf_s(Zone,"%3d",toascii(ACptr->Zone[0])+toascii(ACptr->Zone[1]));
+         sprintf(Zone,"%3d",atoi(ACptr->Zone));
+    else sprintf(Zone,"%3d",toascii(ACptr->Zone[0])+toascii(ACptr->Zone[1]));
     if(!strcmp(ACptr->Type,"B")||!strcmp(ACptr->Type,"BA")||strpbrk(ACptr->Type,"L,T,C,R")) Type=0;
     else if(strpbrk(ACptr->Type,"V,X")) Type=1;
     else {
@@ -205,7 +205,7 @@ void IEEE()
     Print(OutFile,1,7,4,ACptr->G);
     Print(OutFile,1,7,4,ACptr->B);
     if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=NULL) {
-      if (ACptr->Cont->Num<=9999) sprintf_s(Num,"%4d",ACptr->Cont->Num);
+      if (ACptr->Cont->Num<=9999) sprintf(Num,"%4d",ACptr->Cont->Num);
       else strcpy(Num,"****");
     }
          else strcpy(Num,"   0");
@@ -218,20 +218,20 @@ void IEEE()
   fprintf(OutFile,"BRANCH DATA FOLLOWS               %5d ITEMS\n",NacEl);
   for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
     if(Narea>1 && Eptr->From->Area!=Eptr->To->Area) Nties++;
-    if (Eptr->From->Num<=9999) sprintf_s(Num,"%4d",Eptr->From->Num);
+    if (Eptr->From->Num<=9999) sprintf(Num,"%4d",Eptr->From->Num);
     else strcpy(Num,"****");
-    if (Eptr->To->Num<=9999) sprintf_s(Nump,"%4d",Eptr->To->Num);
+    if (Eptr->To->Num<=9999) sprintf(Nump,"%4d",Eptr->To->Num);
     else strcpy(Nump,"****");
     if (Eptr->Area==NULL) {
       if (Eptr->From->Area==Eptr->To->Area) Eptr->Area=Eptr->From->Area;
       else Eptr->Area=Eptr->Meter->Area;
     }
     if (Narea<2 || Eptr->Area==NULL) strcpy(Area,"0");
-    else if (Eptr->Area->N<=99) sprintf_s(Area,"%2d",Eptr->Area->N);
+    else if (Eptr->Area->N<=99) sprintf(Area,"%2d",Eptr->Area->N);
     else strcpy(Area,"**");
     if ((isdigit(Eptr->Zone[0])||Eptr->Zone[0]==' ') && (isdigit(Eptr->Zone[1])||Eptr->Zone[1]==' '))
-         sprintf_s(Zone,"%3d",atoi(Eptr->Zone));
-    else sprintf_s(Zone,"%3d",toascii(Eptr->Zone[0])+toascii(Eptr->Zone[1]));
+         sprintf(Zone,"%3d",atoi(Eptr->Zone));
+    else sprintf(Zone,"%3d",toascii(Eptr->Zone[0])+toascii(Eptr->Zone[1]));
     if(strpbrk(Eptr->Type,"LE")) Type=0;
     else if(strpbrk(Eptr->Type,"T")) Type=1;
     else if(!strcmp(Eptr->Type,"R")||strpbrk(Eptr->Type,"V")) Type=2;
@@ -250,7 +250,7 @@ void IEEE()
     else fprintf(OutFile," %5.0lf",Imax);
     fprintf(OutFile,"%12s","");
     if(strpbrk(Eptr->Type,"R")) {
-      if (Eptr->Cont->Num<=9999) sprintf_s(Num,"%4d",Eptr->Cont->Num);
+      if (Eptr->Cont->Num<=9999) sprintf(Num,"%4d",Eptr->Cont->Num);
       else strcpy(Num,"****");
       fprintf(OutFile," %4s",Num);
       if (strpbrk(Eptr->Type,"PQNM")) fprintf(OutFile," 0 ");
@@ -316,9 +316,9 @@ void IEEE()
   if(Narea>1) fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",Narea);
   else fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",0);
   if(Narea>1) for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next){
-    if (Aptr->N<=99) sprintf_s(Area,"%2d",Aptr->N);
+    if (Aptr->N<=99) sprintf(Area,"%2d",Aptr->N);
     else strcpy(Area,"**");
-    if (Aptr->BSptr->Num<=9999) sprintf_s(Num,"%4d",Aptr->BSptr->Num);
+    if (Aptr->BSptr->Num<=9999) sprintf(Num,"%4d",Aptr->BSptr->Num);
     else strcpy(Num,"****");
     fprintf(OutFile,"%2s %4s %12s",Area,Num,Aptr->BSptr->Name);
     Print(OutFile,1,7,1,Aptr->P*Sn);
@@ -329,16 +329,16 @@ void IEEE()
   if(Nties) for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
     if(Eptr->From->Area!=Eptr->To->Area) {
       ACptr=Eptr->Meter;
-      if (ACptr->Num<=9999) sprintf_s(Num,"%4d",ACptr->Num);
+      if (ACptr->Num<=9999) sprintf(Num,"%4d",ACptr->Num);
       else strcpy(Num,"****");
-      if (ACptr->Area->N<=99) sprintf_s(Area,"%2d",ACptr->Area->N);
+      if (ACptr->Area->N<=99) sprintf(Area,"%2d",ACptr->Area->N);
       else strcpy(Area,"**");
       fprintf(OutFile,"%4s  %2s",Num,Area);
       if (Eptr->Meter==Eptr->From) ACptr=Eptr->To;
       else ACptr=Eptr->From;
-      if (ACptr->Num<=9999) sprintf_s(Num,"%4d",ACptr->Num);
+      if (ACptr->Num<=9999) sprintf(Num,"%4d",ACptr->Num);
       else strcpy(Num,"****");
-      if (ACptr->Area->N<=99) sprintf_s(Area,"%2d",ACptr->Area->N);
+      if (ACptr->Area->N<=99) sprintf(Area,"%2d",ACptr->Area->N);
       else strcpy(Area,"**");
       fprintf(OutFile,"  %4s  %2s  %1s\n",Num,Area,Eptr->Ckt);
     }

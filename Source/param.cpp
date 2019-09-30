@@ -235,7 +235,7 @@ char *buff;
     decimals--;
     power10 = power10 * 10;
   }
-  sprintf_s(format,"%%-%d.%dg",precision,decimals);
+  sprintf(format,"%%-%d.%dg",precision,decimals);
   sprintf(buff,format,value);
   return buff;
 }
@@ -278,14 +278,14 @@ char * Name;
 #else
       if ((InputFile = fopen(Name,"rt")) == NULL) {
 #endif
-         sprintf_s(s,"No input data file -> %s",Name);
+         sprintf(s,"No input data file -> %s",Name);
          ErrorHalt(s);
          exit(ERROREXIT);
          /* fprintf(stderr,"Input from standard input\n");
          InputFile = stdin;*/
       } 
   } else {
-    sprintf_s(s,"No input data file -> %s",Name);
+    sprintf(s,"No input data file -> %s",Name);
     ErrorHalt(s);
     exit(ERROREXIT);
     /* InputFile = stdin;*/

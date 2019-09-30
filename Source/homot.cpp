@@ -326,14 +326,14 @@ BOOLEAN ChangeParam()
     LoadX0(FALSE,TRUE,TRUE);
     if (BlPtr->N==Bl) {
       strcpy(BlPtr->Type,"B");
-      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
+      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
       Bl=0;
       BlPtr->Cont=BlPtr;
       if(ExistParameter('d')) fprintf(stderr,"Change param. to lambda.\n");
       return(TRUE);
     } else {
       strcpy(BlPtr->Type,"BL");
-      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
+      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
       Bl=BlPtr->N;
       BlPtr->Cont=NULL;
       if(ExistParameter('d')) fprintf(stderr,"Change param. to V at %s %d %s.\n",BlPtr->Type,BlPtr->Num,BlPtr->Name);

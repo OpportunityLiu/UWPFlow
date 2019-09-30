@@ -299,7 +299,7 @@ void ReadWSCC()
          ACptr->Cont=ACptr;
       }
       else if (!strncmp(Line,"BS ",3)) {
-         strcat_s(ACptr->Type,"S");
+         strcat(ACptr->Type,"S");
          strcpy(ACptr->cont,"V");
          Nslack++;
          ACptr->Qg=0;
@@ -594,7 +594,7 @@ void ReadWSCC()
       ACptr=ACbusInList(0,Name,KV,Nac,1);
       if (ACptr->N==0) { Nac++; ACptr->Num=ACptr->N=Nac;}
       if(!strpbrk(ACptr->Type,"S")){
-         strcat_s(ACptr->Type,"S");
+         strcat(ACptr->Type,"S");
          Nslack++;
       }
       MaxIter=GetInt(Line,24,5);

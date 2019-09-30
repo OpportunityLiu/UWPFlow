@@ -148,7 +148,7 @@ void ErrorDetect()
            InputError=TRUE;
         }
         if(ACptr==ACptr->Area->Slack && !strpbrk(ACptr->Type,"S")) {
-          strcat_s(ACptr->Type,"A");
+          strcat(ACptr->Type,"A");
           ACptr->Area->i++;
           if (ACptr->Area->i>1) {
             fprintf(stderr,"ERROR: Area %d %s has 2 slack buses.\n",ACptr->Area->N,ACptr->Area->Name);
@@ -522,7 +522,7 @@ void ErrorDetect()
       InputError=TRUE;
     }
     if (flag && !strpbrk(Aptr->Slack->Type,"S")) {
-      strcat_s(Aptr->Slack->Type,"S");
+      strcat(Aptr->Slack->Type,"S");
       Nslack++;
     }
     ptrp=Aptr->AC;

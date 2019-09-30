@@ -255,8 +255,8 @@ FILE *Out;
 
 		//set annotation
 		strcpy(tmpCaption,Lptr->Type);
-		sprintf_s(tmpN, "%-5d", Lptr->N);
-		strcat_s(tmpCaption, tmpN);
+		sprintf(tmpN, "%-5d", Lptr->N);
+		strcat(tmpCaption, tmpN);
 		GraphDlg->m_GraphCtrl.AddAnnotation();
 		GraphDlg->m_GraphCtrl.SetAnnoLabelCaption(tmpCaption);
 		GraphDlg->m_GraphCtrl.SetAnnoLabelColor(color);
@@ -577,27 +577,27 @@ VALUETYPE *vector,Max;
   fprintf(Out,"%d 1\n",N);
   for (i=0,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
     if (ACptr->Cont!=NULL){
-      if (strpbrk(ACptr->Type,"S")) sprintf_s(str,"kg%-d",ACptr->Num);
-      else                          sprintf_s(str,"d%-d",ACptr->Num);
+      if (strpbrk(ACptr->Type,"S")) sprintf(str,"kg%-d",ACptr->Num);
+      else                          sprintf(str,"d%-d",ACptr->Num);
       i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"V%-d",ACptr->Num); i++;
+      sprintf(str,"V%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"L")){
-      sprintf_s(str,"d%-d",ACptr->Num); i++;
+      sprintf(str,"d%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,"l",vector[i]/Max);
     }
     else if(QRcont && strpbrk(ACptr->Type,"C")){
-      sprintf_s(str,"d%-d",ACptr->Num); i++;
+      sprintf(str,"d%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Q%-d",ACptr->Num); i++;
+      sprintf(str,"Q%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(Rcont && strpbrk(ACptr->Type,"T")){
-      sprintf_s(str,"d%-d",ACptr->Num); i++;
+      sprintf(str,"d%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
          Eptr=ELptr->Eptr;
@@ -605,31 +605,31 @@ VALUETYPE *vector,Max;
          J=Eptr->To->Num;
          if(!strcmp(Eptr->Type,"R")) break;
       }
-      sprintf_s(str,"1/t%-d_%-d",I,J); i++;
+      sprintf(str,"1/t%-d_%-d",I,J); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"Q") || strpbrk(ACptr->Type,"V") || (!QRcont && strpbrk(ACptr->Type,"G"))){
-      if (strpbrk(ACptr->Type,"S")) sprintf_s(str,"kg%-d",ACptr->Num);
-      else                          sprintf_s(str,"d%-d",ACptr->Num);
+      if (strpbrk(ACptr->Type,"S")) sprintf(str,"kg%-d",ACptr->Num);
+      else                          sprintf(str,"d%-d",ACptr->Num);
       i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Qg%-d",ACptr->Num); i++;
+      sprintf(str,"Qg%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"Z")) {
-      sprintf_s(str,"d%-d",ACptr->Num); i++;
+      sprintf(str,"d%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Qz%-d",ACptr->Num); i++;
+      sprintf(str,"Qz%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else if(strpbrk(ACptr->Type,"S")){
-      sprintf_s(str,"kg%-d",ACptr->Num); i++;
+      sprintf(str,"kg%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Qg%-d",ACptr->Num); i++;
+      sprintf(str,"Qg%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     if(Acont && strpbrk(ACptr->Type,"A")){
-      sprintf_s(str,"kg%-d",ACptr->Num); i++;
+      sprintf(str,"kg%-d",ACptr->Num); i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
@@ -643,36 +643,36 @@ VALUETYPE *vector,Max;
            I=Eptr->To->Num;
          }
          if(!strcmp(Eptr->Type,"RP")){
-           sprintf_s(str,"a%-d_%-d",I,J); i++;
+           sprintf(str,"a%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else if(strpbrk(Eptr->Type,"PM")){
-           sprintf_s(str,"P%-d_%-d",I,J); i++;
+           sprintf(str,"P%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else if(!strcmp(Eptr->Type,"RQ")){
-           sprintf_s(str,"1/t%-d_%-d",I,J); i++;
+           sprintf(str,"1/t%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          } else {
-           sprintf_s(str,"Q%-d_%-d",I,J); i++;
+           sprintf(str,"Q%-d_%-d",I,J); i++;
            fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
          }
       }
     }
     if (ACptr->Gen!=NULL) {
       i=ACptr->Gen->Nvar;
-      if (!strpbrk(ACptr->cont,"E")) sprintf_s(str,"Eq%-d",ACptr->Num);
-      else                           sprintf_s(str,"Qg%-d",ACptr->Num);
+      if (!strpbrk(ACptr->cont,"E")) sprintf(str,"Eq%-d",ACptr->Num);
+      else                           sprintf(str,"Qg%-d",ACptr->Num);
       i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"dg%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vr%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vi%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Ir%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Ii%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Vd%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Iq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      sprintf_s(str,"Id%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-      if (!strpbrk(ACptr->cont,"I")) sprintf_s(str,"Ia%-d",ACptr->Num);
-      else                           sprintf_s(str,"Qg%-d",ACptr->Num);
+      sprintf(str,"dg%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Vr%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Vi%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Ir%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Ii%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Vq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Vd%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Iq%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      sprintf(str,"Id%-d",ACptr->Num); i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
+      if (!strpbrk(ACptr->cont,"I")) sprintf(str,"Ia%-d",ACptr->Num);
+      else                           sprintf(str,"Qg%-d",ACptr->Num);
       i++; fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
   }
@@ -684,35 +684,35 @@ VALUETYPE *vector,Max;
         if(j==1) { DCptr=DCptrR; strcpy(type,"r"); }
         else { DCptr=DCptrI; strcpy(type,"i"); }
         if(strcmp(DCptr->Cont1,"VD")&&strcmp(DCptr->Cont2,"VD")) {
-          sprintf_s(str,"Vd%1s%-d",type,k); i++;
+          sprintf(str,"Vd%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"AT")&&strcmp(DCptr->Cont2,"AT")) {
-          sprintf_s(str,"t%1s%-d",type,k); i++;
+          sprintf(str,"t%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"AL")&&strcmp(DCptr->Cont2,"AL")) {
-          sprintf_s(str,"al%1s%-d",type,k); i++;
+          sprintf(str,"al%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"GA")&&strcmp(DCptr->Cont2,"GA")) {
-          sprintf_s(str,"ga%1s%-d",type,k); i++;
+          sprintf(str,"ga%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
-        sprintf_s(str,"S%1s%-d",type,k); i++;
+        sprintf(str,"S%1s%-d",type,k); i++;
         fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         if(strcmp(DCptr->Cont1,"PA")&&strcmp(DCptr->Cont2,"PA")) {
-          sprintf_s(str,"P%1s%-d",type,k); i++;
+          sprintf(str,"P%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
         if(strcmp(DCptr->Cont1,"QA")&&strcmp(DCptr->Cont2,"QA")) {
-          sprintf_s(str,"Q%1s%-d",type,k); i++;
+          sprintf(str,"Q%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
         }
       }
       if(strcmp(DCptrR->Cont1,"ID")&&strcmp(DCptrR->Cont2,"ID")&&
          strcmp(DCptrI->Cont1,"ID")&&strcmp(DCptrI->Cont2,"ID")) {
-        sprintf_s(str,"Id%-d",k); i++;
+        sprintf(str,"Id%-d",k); i++;
         fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
       }
     }
@@ -720,58 +720,58 @@ VALUETYPE *vector,Max;
                              /* FACTS */
   for(k=0,SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
     k++;
-    sprintf_s(str,"Qsvc%-d",k);i++;
+    sprintf(str,"Qsvc%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Bv%-d",k);i++;
+    sprintf(str,"Bv%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     if(!strcmp(SVCptr->Cont,"AL")){
-      sprintf_s(str,"alpha%-d",k);i++;
+      sprintf(str,"alpha%-d",k);i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
     else {
-      sprintf_s(str,"Vrefc%-d",k);i++;
+      sprintf(str,"Vrefc%-d",k);i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
   }
 
   for(k=0,TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
     k++;
-    sprintf_s(str,"Ptcsc%-d",k);i++;
+    sprintf(str,"Ptcsc%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Qtcsck%-d",k);i++;
+    sprintf(str,"Qtcsck%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Qtcscm%-d",k);i++;
+    sprintf(str,"Qtcscm%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Be%-d",k);i++;
+    sprintf(str,"Be%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"alpha%-d",k);i++;
+    sprintf(str,"alpha%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Itcsc%-d",k);i++;
+    sprintf(str,"Itcsc%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"delta%-d",k);i++;
+    sprintf(str,"delta%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
   }
 
   for(k=0,STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
     k++;
     if(!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")){
-      sprintf_s(str,"Istat%-d",k);i++;
+      sprintf(str,"Istat%-d",k);i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     } else {
-      sprintf_s(str,"Vrefc%-d",k);i++;
+      sprintf(str,"Vrefc%-d",k);i++;
       fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
     }
-    sprintf_s(str,"theta%-d",k);i++;
+    sprintf(str,"theta%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Vdc%-d",k);i++;
+    sprintf(str,"Vdc%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"k%-d",k);i++;
+    sprintf(str,"k%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"alpha%-d",k);i++;
+    sprintf(str,"alpha%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Pstat%-d",k);i++;
+    sprintf(str,"Pstat%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
-    sprintf_s(str,"Qstat%-d",k);i++;
+    sprintf(str,"Qstat%-d",k);i++;
     fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
   }
                              /* END FACTS */
@@ -779,7 +779,7 @@ VALUETYPE *vector,Max;
   if (Option!='Y') {
     if (!Bl) fprintf(Out,"%4d %8s %-11.5g\n",++i,"l",Dparam);
     else {
-      sprintf_s(str,"V%-d",BlPtr->Num);
+      sprintf(str,"V%-d",BlPtr->Num);
       fprintf(Out,"%4d %8s %-11.5g\n",++i,str,Dparam);
     }
   }
@@ -804,7 +804,7 @@ INDEX count;
 
   strcpy(Namebase,NameParameter('0'));
   if(NullName(Namebase)) return;
-  sprintf_s(Name,"%s.m",Namebase);
+  sprintf(Name,"%s.m",Namebase);
   OutFile=OpenOutput(Name);
   fprintf(OutFile,"clear lambda evJ svJ evPF svPF evQV svQV detD_ll t_ll\n");
   fprintf(OutFile,"clear crsvJ crevJ crsvPF crevPF crsvQV crevQV\n");
@@ -912,7 +912,7 @@ INDEX count;
   fprintf(OutFile,"if (conv==0 & warn==1)\n");
   fprintf(OutFile,"  disp(' ')\n");
   fprintf(OutFile,"  disp('Warning: Inverse iteration method failed to converge')\n");
-  fprintf(OutFile,"  str=sprintf_s('         for tol=%s6.4e, iter=%sd.',tol,iter);\n","%%","%%");
+  fprintf(OutFile,"  str=sprintf('         for tol=%s6.4e, iter=%sd.',tol,iter);\n","%%","%%");
   fprintf(OutFile,"  disp(str)\n");
   fprintf(OutFile,"  disp(' ')\n");
   fprintf(OutFile,"end\n");

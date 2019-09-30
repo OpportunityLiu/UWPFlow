@@ -65,13 +65,13 @@ BOOLEAN CheckRlimits()
         }
         if (i==1 && j==0) {
           strcpy(ACptr->Type,"B");
-          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
+          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat(ACptr->Type,"A");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
         }
         else if(i==1 && j!=0) {
           strcpy(ACptr->Type,"BR");
-          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
+          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat(ACptr->Type,"A");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
         }
@@ -87,7 +87,7 @@ BOOLEAN CheckRlimits()
         else {ACptr->V=Eptr->Min;  strcpy(str,"min");}
         if(!strpbrk(ACptr->Type,"T")){
           strcpy(ACptr->Type,"BT");
-          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
+          if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat(ACptr->Type,"A");
           ACptr->Cont=NULL;
           if (flagH) x0[ACvar[ACptr->N]+1]=Eptr->Tap;
         }

@@ -38,7 +38,7 @@ void WriteJac()
     for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
       if(ACptr->Num==Bl) {
 	strcpy(ACptr->Type,"B");
-	if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
+	if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat(ACptr->Type,"A");
 	Bl=0;
 	ACptr->Cont=ACptr;
 	break;
@@ -64,7 +64,7 @@ void WriteJac()
   }
   SortRowsColumns(Jac);
   strcpy(Name,Namebase);
-  strcat_s(Name,".jac");
+  strcat(Name,".jac");
   OutFile=OpenOutput(Name);
   fprintf(OutFile,"%d %d\n",Nvar,Nvar);
   for(i=1;i<=Nvar;i++) {
@@ -74,80 +74,80 @@ void WriteJac()
   fprintf(OutFile,"%4d %4d %-11.5g\n",0,0,0.);
   fclose(OutFile);
   strcpy(Name,Namebase);
-  strcat_s(Name,".var");
+  strcat(Name,".var");
   OutFile=OpenOutput(Name);
   strcpy(Name,Namebase);
-  strcat_s(Name,".mis");
+  strcat(Name,".mis");
   OutFilep=OpenOutput(Name);
   fprintf(OutFile,"%d 1\n",Nvar);
   fprintf(OutFilep,"%d 1\n",Nvar);
   for (i=0,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
     if (ACptr->Cont!=NULL) {
       if (strpbrk(ACptr->Type,"S")) {
-        sprintf_s(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
+        sprintf(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
       }
       else {
-        sprintf_s(str,"d%-d",ACptr->Num);  fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+        sprintf(str,"d%-d",ACptr->Num);  fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
       }
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"V%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->V);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"V%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->V);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(QRcont && strpbrk(ACptr->Type,"C")){
-      sprintf_s(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       for(Lptr=ACptr->ContBus;Lptr!=NULL;Lptr=Lptr->Next){
         ACptrp=Lptr->AC;
         if (strpbrk(ACptrp->cont,"V")) break;
       }
-      sprintf_s(str,"Qr%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qr);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qr%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qr);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(Rcont && strpbrk(ACptr->Type,"T")){
-      sprintf_s(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
 	     Eptr=ELptr->Eptr;
 	     I=Eptr->From->Num;
 	     J=Eptr->To->Num;
 	     if(!strcmp(Eptr->Type,"R")) break;
       }
-      sprintf_s(str,"1/t%-d_%-d",I,J);
+      sprintf(str,"1/t%-d_%-d",I,J);
       fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Tap);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(strpbrk(ACptr->Type,"L")) {
-      sprintf_s(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       fprintf(OutFile,"%4d %8s %-11.5g\n",++i,"l",lambda);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(strpbrk(ACptr->Type,"Q") || strpbrk(ACptr->Type,"V") || (!QRcont && strpbrk(ACptr->Type,"G"))) {
       if (strpbrk(ACptr->Type,"S")) {
-        sprintf_s(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
+        sprintf(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
       }
       else {
-        sprintf_s(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+        sprintf(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
       }
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(strpbrk(ACptr->Type,"Z")) {
-      sprintf_s(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qz%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"d%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Ang);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qz%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     else if(strpbrk(ACptr->Type,"S")){
-      sprintf_s(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
-      sprintf_s(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
-      sprintf_s(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
+      sprintf(str,"dP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
+      sprintf(str,"dQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     if(Acont && strpbrk(ACptr->Type,"A")){
-      sprintf_s(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
-      sprintf_s(str,"dPA%-d",ACptr->Area->N); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"kg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Kg);
+      sprintf(str,"dPA%-d",ACptr->Area->N); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
     }
     if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
@@ -160,55 +160,55 @@ void WriteJac()
 	         I=Eptr->To->Num;
 	       }
 	       if(!strcmp(Eptr->Type,"RP")){
-	         sprintf_s(str,"a%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Ang);
-	         sprintf_s(str,"dP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+	         sprintf(str,"a%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Ang);
+	         sprintf(str,"dP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
 	       }
 	       else if(strpbrk(Eptr->Type,"PM")){
-	         sprintf_s(str,"P%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Cvar);
-	         sprintf_s(str,"dP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+	         sprintf(str,"P%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Cvar);
+	         sprintf(str,"dP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       	 }
 	       else if(!strcmp(Eptr->Type,"RQ")){
-	         sprintf_s(str,"1/t%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Tap);
-	         sprintf_s(str,"dQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+	         sprintf(str,"1/t%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Tap);
+	         sprintf(str,"dQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
 	       }
 	       else {
-	         sprintf_s(str,"Q%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Cvar);
-	         sprintf_s(str,"dQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+	         sprintf(str,"Q%-d_%-d",I,J); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,Eptr->Cvar);
+	         sprintf(str,"dQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
 	       }
       }
     }
     if (ACptr->Gen!=NULL) {
       i=ACptr->Gen->Nvar;
-      sprintf_s(str,"dPg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dQg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dEq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dEd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dVd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dVq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dId%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dIq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dVr%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dVi%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
-      sprintf_s(str,"dIa%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dPg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dQg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dEq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dEd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dVd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dVq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dId%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dIq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dVr%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dVi%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
+      sprintf(str,"dIa%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",++i,str,dF[i]);
       i=ACptr->Gen->Nvar;
       if (strpbrk(ACptr->cont,"E")) {
-        sprintf_s(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
+        sprintf(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
       } else {
-        sprintf_s(str,"Eq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Eq);
+        sprintf(str,"Eq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Eq);
       }
-      sprintf_s(str,"dg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->dg);
-      sprintf_s(str,"Vr%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vr);
-      sprintf_s(str,"Vi%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vi);
-      sprintf_s(str,"Ir%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ir);
-      sprintf_s(str,"Ii%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ii);
-      sprintf_s(str,"Vq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vq);
-      sprintf_s(str,"Vd%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vd);
-      sprintf_s(str,"Iq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Iq);
-      sprintf_s(str,"Id%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Id);
+      sprintf(str,"dg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->dg);
+      sprintf(str,"Vr%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vr);
+      sprintf(str,"Vi%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vi);
+      sprintf(str,"Ir%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ir);
+      sprintf(str,"Ii%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ii);
+      sprintf(str,"Vq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vq);
+      sprintf(str,"Vd%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Vd);
+      sprintf(str,"Iq%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Iq);
+      sprintf(str,"Id%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Id);
       if (strpbrk(ACptr->cont,"I")) {
-	       sprintf_s(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
+	       sprintf(str,"Qg%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Qg);
       } else {
-	       sprintf_s(str,"Ia%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ia);
+	       sprintf(str,"Ia%-d",ACptr->Num); fprintf(OutFile,"%4d %8s %-11.5g\n",++i,str,ACptr->Gen->Ia);
       }
     }
   }
@@ -216,42 +216,42 @@ void WriteJac()
     DCptrI=DCptrR->To;
     if(!strcmp(DCptrR->Type,"R")){
       for (k++,l=1;l<=11;l++){
-	       sprintf_s(str,"Fdc%-d_%-d",k,l); i++;
+	       sprintf(str,"Fdc%-d_%-d",k,l); i++;
        	fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
       for(l=i-11,j=1;j<=2;j++){
 	       if(j==1) { DCptr=DCptrR; strcpy(type,"r"); }
 	       else { DCptr=DCptrI; strcpy(type,"i"); }
 	       if(strcmp(DCptr->Cont1,"VD")&&strcmp(DCptr->Cont2,"VD")) {
-	         sprintf_s(str,"Vd%1s%-d",type,k);
+	         sprintf(str,"Vd%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Vd);
        	}
        	if(strcmp(DCptr->Cont1,"AT")&&strcmp(DCptr->Cont2,"AT")) {
-       	  sprintf_s(str,"t%1s%-d",type,k);
+       	  sprintf(str,"t%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Tap);
        	}
        	if(strcmp(DCptr->Cont1,"AL")&&strcmp(DCptr->Cont2,"AL")) {
-       	  sprintf_s(str,"al%1s%-d",type,k);
+       	  sprintf(str,"al%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Alfa);
        	}
        	if(strcmp(DCptr->Cont1,"GA")&&strcmp(DCptr->Cont2,"GA")) {
-       	  sprintf_s(str,"ga%1s%-d",type,k);
+       	  sprintf(str,"ga%1s%-d",type,k);
 	         fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Gamma);
        	}
-       	sprintf_s(str,"s%1s%-d",type,k);
+       	sprintf(str,"s%1s%-d",type,k);
        	fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->MVA);
        	if(strcmp(DCptr->Cont1,"PA")&&strcmp(DCptr->Cont2,"PA")) {
-       	  sprintf_s(str,"P%1s%-d",type,k);
+       	  sprintf(str,"P%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->P);
        	}
        	if(strcmp(DCptr->Cont1,"QA")&&strcmp(DCptr->Cont2,"QA")) {
-       	  sprintf_s(str,"Q%1s%-d",type,k);
+       	  sprintf(str,"Q%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Q);
        	}
       }
       if(strcmp(DCptrR->Cont1,"ID")&&strcmp(DCptrR->Cont2,"ID")&&
        	 strcmp(DCptrI->Cont1,"ID")&&strcmp(DCptrI->Cont2,"ID")) {
-        sprintf_s(str,"Id%-d",k);
+        sprintf(str,"Id%-d",k);
         fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptrR->Id);
       }
     }
@@ -260,73 +260,73 @@ void WriteJac()
                                /*   FACTS   */
   for(k=0,SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
       k++; l=0;
-      sprintf_s(str,"Qsvc%-d",k);i++;
+      sprintf(str,"Qsvc%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,SVCptr->Qsvc);
-      sprintf_s(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Bv%-d",k);i++;       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,SVCptr->Bv);
-      sprintf_s(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Bv%-d",k);i++;       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,SVCptr->Bv);
+      sprintf(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       if(!strcmp(SVCptr->Cont,"AL")){
-        sprintf_s(str,"alpha%-d",k);i++;
+        sprintf(str,"alpha%-d",k);i++;
         fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,SVCptr->alpha_svc);
       } else {
-	       sprintf_s(str,"Vrefc%-d",k);i++;
+	       sprintf(str,"Vrefc%-d",k);i++;
         fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,SVCptr->Vvar);
       }
-      sprintf_s(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Fsvc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
   }
 
   for(k=0,TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
       k++; l=0;
-      sprintf_s(str,"Ptcsc%-d",k);i++;
+      sprintf(str,"Ptcsc%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->Ptcsc);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qtcsck%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qtcsck%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->Qtcsck);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qtcscm%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qtcscm%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->Qtcscm);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Be%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Be%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->Be);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"alpha%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"alpha%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->alpha_tcsc);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Itcsc%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Itcsc%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->Itcsc);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"delta%-d",k);i++;
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"delta%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,TCSCptr->delta_t);
-      sprintf_s(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Ftcsc%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
   }
   for(k=0,STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
       k++; l=0;
       if(!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")){
-        sprintf_s(str,"Istat%-d",k);i++;
+        sprintf(str,"Istat%-d",k);i++;
         fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->I);
       } else {
-	       sprintf_s(str,"Vrefc%-d",k);i++;
+	       sprintf(str,"Vrefc%-d",k);i++;
         fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->Vvar);
       }
-      sprintf_s(str,"Vcont%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"theta%-d",k);i++;
+      sprintf(str,"Vcont%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"theta%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->theta);
-      sprintf_s(str,"Cont%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Vdc%-d",k);i++;
+      sprintf(str,"Cont%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Vdc%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->Vdc);
-      sprintf_s(str,"Loss%-d_%-d",k,++l);  fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"k%-d",k);i++;
+      sprintf(str,"Loss%-d_%-d",k,++l);  fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"k%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->k);
-      sprintf_s(str,"ReS%-d_%-d",k,++l);   fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"alpha%-d",k);i++;
+      sprintf(str,"ReS%-d_%-d",k,++l);   fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"alpha%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->alpha);
-      sprintf_s(str,"ImS%-d_%-d",k,++l);   fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Pstat%-d",k);i++;
+      sprintf(str,"ImS%-d_%-d",k,++l);   fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Pstat%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->P);
-      sprintf_s(str,"Pstat%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      sprintf_s(str,"Qstat%-d",k);i++;
+      sprintf(str,"Pstat%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qstat%-d",k);i++;
       fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,STATCOMptr->Q);
-      sprintf_s(str,"Qstat%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      sprintf(str,"Qstat%-d_%-d",k,++l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
   }
                              /* END FACTS */
 
@@ -337,13 +337,13 @@ void WriteJac()
   else if (flag) {
     N=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;      /* FACTS */
     for (i=N,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
-      i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-      sprintf_s(str,"gP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-      i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-      sprintf_s(str,"gQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+      sprintf(str,"gP%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+      i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+      sprintf(str,"gQ%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       if(Acont && strpbrk(ACptr->Type,"A")){
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gPA%-d",ACptr->Area->N); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gPA%-d",ACptr->Area->N); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
       if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
 	       Eptr=ELptr->Eptr;
@@ -356,44 +356,44 @@ void WriteJac()
             I=Eptr->To->Num;
           }
           if(!strcmp(Eptr->Type,"PM")){
-            i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-            sprintf_s(str,"gP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+            i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+            sprintf(str,"gP%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
           } else {
-            i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-            sprintf_s(str,"gQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+            i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+            sprintf(str,"gQ%-d_%-d",I,J); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
           }
         }
       }
       if (ACptr->Gen!=NULL) {
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gPg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gQg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gEq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gEd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gVd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gVq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gId%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gIq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gVr%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gVi%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
-        i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gIa%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gPg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gQg%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gEq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gEd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gVd%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gVq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gId%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gIq%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gVr%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gVi%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gIa%-d",ACptr->Num); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
     }
     for(k=0,DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
       if(!strcmp(DCptrR->Type,"R")){
         for (k++,l=1;l<=11;l++){
-          i++; sprintf_s(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-          sprintf_s(str,"gdc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+          i++; sprintf(str,"w%-d",i-N); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+          sprintf(str,"gdc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
         }
       }
     }
@@ -401,20 +401,20 @@ void WriteJac()
                                /* FACTS */
     for(k=0,SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
       for (k++,l=1;l<=3;l++){
-        i++; sprintf_s(str,"wsvc%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gsvc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"wsvc%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gsvc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
     }
     for(k=0,TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
       for (k++,l=1;l<=7;l++){
-        i++; sprintf_s(str,"wtcsc%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gtcsc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"wtcsc%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gtcsc%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
     }
     for(k=0,STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
       for (k++,l=1;l<=7;l++){
-        i++; sprintf_s(str,"wstat%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
-        sprintf_s(str,"gstat%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
+        i++; sprintf(str,"wstat%-d_%-d",k,l); fprintf(OutFile,"%4d %8s %-11.5g\n",i,str,x0[i-N]);
+        sprintf(str,"gstat%-d_%-d",k,l); fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
     }
 				                       /* END OF FACTS */
@@ -447,7 +447,7 @@ VALUETYPE *vec;
 
   strcpy(Namebase,NameParameter('0'));
   if(NullName(Namebase)) return;
-  sprintf_s(Name,"%s%d.m",Namebase,count);
+  sprintf(Name,"%s%d.m",Namebase,count);
   OutFile=OpenOutput(Name);
   if (count==1) TFbus=IntegerParameter('1',0,1,9999);
   Nvar=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;     /* FACTS */

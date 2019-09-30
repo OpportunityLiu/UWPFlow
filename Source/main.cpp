@@ -328,7 +328,7 @@ void InitializeLoad()
          } else InitializeLoad();
          RealParameter('L',&lambda,-1e6,1e6);
          strcpy(BlPtr->Type,"BL");
-         if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
+         if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
          Bl=BlPtr->N;
          BlPtr->V=V;
          BlPtr->Cont=NULL;
