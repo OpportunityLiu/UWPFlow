@@ -269,7 +269,7 @@ char * Name;
 
 #ifdef WINDOWS
   char charDir[300];
-  strcpy_s(charDir, dir.GetBuffer(dir.GetLength()));
+  strcpy(charDir, dir.GetBuffer(dir.GetLength()));
 #endif
 
   if (!NullName(Name)) {
@@ -305,7 +305,7 @@ char * Name;
 
 #ifdef WINDOWS
   char charDir[300];
-  strcpy_s(charDir, dir.GetBuffer(dir.GetLength()));
+  strcpy(charDir, dir.GetBuffer(dir.GetLength()));
 #endif
 
   if (!NullName(Name)) {

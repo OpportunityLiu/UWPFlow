@@ -161,13 +161,13 @@ INDEX BusN,N1,N2;
     ptrn=NULL;
   }
   ptr->Num=0;
-  strcpy_s(ptr->Name,BusName);
+  strcpy(ptr->Name,BusName);
   ptr->N=0;
   ptr->KV=V;
-  strcpy_s(ptr->Type,"B");
-  strcpy_s(ptr->Zone,"");
-  strcpy_s(ptr->Owner,"");
-  strcpy_s(ptr->cont,"");
+  strcpy(ptr->Type,"B");
+  strcpy(ptr->Zone,"");
+  strcpy(ptr->Owner,"");
+  strcpy(ptr->cont,"");
   ptr->Area=NULL;
   ptr->Ncont=0;
   ptr->Reg=NULL;
@@ -273,8 +273,8 @@ INDEX i,N;
   }
   ptr->N=0;
   ptr->i=0;
-  strcpy_s(ptr->Name,Name);
-  for(j=1;j<=11;j++) strcpy_s(ptr->Zone[j],"");
+  strcpy(ptr->Name,Name);
+  for(j=1;j<=11;j++) strcpy(ptr->Zone[j],"");
   ptr->P=0;
   ptr->SPg=0;
   ptr->Slack=NULL;
@@ -347,10 +347,10 @@ char *Type,*Ckt;
     ptr->To=To;
     From->Elem=(ElementList *) AddElemToList(From->Elem,ptr);
     To->Elem=(ElementList *) AddElemToList(To->Elem,ptr);
-    strcpy_s(ptr->Ckt,Ckt);
-    strcpy_s(ptr->Type,"");
-    strcpy_s(ptr->Zone,"");
-    strcpy_s(ptr->Owner,"");
+    strcpy(ptr->Ckt,Ckt);
+    strcpy(ptr->Type,"");
+    strcpy(ptr->Zone,"");
+    strcpy(ptr->Owner,"");
     ptr->Area=NULL;
     ptr->Meter=NULL;
     ptr->Sec=0;
@@ -366,7 +366,7 @@ char *Type,*Ckt;
     ptr->Cont=NULL;
     ptr->Ncont=0;
     ptr->Cvar=0;
-    strcpy_s(ptr->Ctype,"");
+    strcpy(ptr->Ctype,"");
     ptr->Tmin=0;
     ptr->Tmax=0;
     ptr->Min=0;
@@ -384,7 +384,7 @@ char *Type,*Ckt;
          (!strcmp(ptr->Ckt,Ckt)||!strcmp(Ckt," ")||!strcmp(ptr->Ckt," ")) &&
          ((ptr->From==From && ptr->To==To)||(ptr->To==From && ptr->From==To))){
         if(strcmp(Type,"R") || !strcmp(ptr->Zone,"")) {
-          if(!strcmp(ptr->Ckt," ")) strcpy_s(ptr->Ckt,Ckt);
+          if(!strcmp(ptr->Ckt," ")) strcpy(ptr->Ckt,Ckt);
           return(ptr);
         }
       }
@@ -437,12 +437,12 @@ INDEX N;
 #endif
     prevptr->Next=ptr;
   }
-  strcpy_s(ptr->Name,BusName);
+  strcpy(ptr->Name,BusName);
   ptr->N=0;
-  strcpy_s(ptr->Type,"");
-  strcpy_s(ptr->Cont1,"");
-  strcpy_s(ptr->Cont2,"");
-  strcpy_s(ptr->Zone,"");
+  strcpy(ptr->Type,"");
+  strcpy(ptr->Cont1,"");
+  strcpy(ptr->Cont2,"");
+  strcpy(ptr->Zone,"");
   ptr->Meter=NULL;
   ptr->Area=NULL;
   ptr->Xc=0;

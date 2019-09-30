@@ -46,17 +46,17 @@ BOOLEAN DCsetup()
     else if (strcmp(DCptrI->Cont1,"VD") && strcmp(DCptrI->Cont2,"VD")) flag=TRUE;
     if (!strcmp(DCptrR->Cont1,"PA") ||!strcmp(DCptrR->Cont2,"PA") ||
         !strcmp(DCptrI->Cont1,"PA") ||!strcmp(DCptrI->Cont2,"PA")) flagP=TRUE;
-    if (!strcmp(DCptrR->Cont1,"AL") ||!strcmp(DCptrR->Cont2,"AL")) strcpy_s(DCptrR->Cont1,"AL");
+    if (!strcmp(DCptrR->Cont1,"AL") ||!strcmp(DCptrR->Cont2,"AL")) strcpy(DCptrR->Cont1,"AL");
     else if(!strcmp(DCptrR->Cont1,"AT") ||!strcmp(DCptrR->Cont2,"AT")) {
-      strcpy_s(DCptrR->Cont1,"AT");
+      strcpy(DCptrR->Cont1,"AT");
       flagT=TRUE;
     }
-    else strcpy_s(DCptrR->Cont1,"AL");
-    if (flagP) strcpy_s(DCptrR->Cont2,"PA");
-    else strcpy_s(DCptrR->Cont2,"ID");
-    strcpy_s(DCptrI->Cont1,"GA");
-    if (flagT) strcpy_s(DCptrI->Cont2,"AT");
-    else strcpy_s(DCptrI->Cont2,"VD");
+    else strcpy(DCptrR->Cont1,"AL");
+    if (flagP) strcpy(DCptrR->Cont2,"PA");
+    else strcpy(DCptrR->Cont2,"ID");
+    strcpy(DCptrI->Cont1,"GA");
+    if (flagT) strcpy(DCptrI->Cont2,"AT");
+    else strcpy(DCptrI->Cont2,"VD");
     if (DCptrR->Tap>DCptrR->TapMax) {
       flag=TRUE;
       DCptrR->TapMax=DCptrR->Tap;
@@ -106,49 +106,49 @@ BOOLEAN ChangeDCmode()
     if(!strcmp(DCptrR->Cont1,"AL") && strpbrk(DCptrR->Cont2,"IP") &&
        (DCptrR->Tap>=DCptrR->TapMax || DCptrR->Tap<=DCptrR->TapMin)) {
       flag=flagp=TRUE;
-      strcpy_s(DCptrR->Cont1,"AT");
+      strcpy(DCptrR->Cont1,"AT");
     }
     else if(!strcmp(DCptrR->Cont1,"AT") && strpbrk(DCptrR->Cont2,"IP") &&
             DCptrR->Alfa<=DCptrR->AlfaMin) {
                 flag=flagp=TRUE;
-      if (!strcmp(DCptrR->Cont2,"ID")) strcpy_s(DCptrI->Cont2,"ID");
-      else strcpy_s(DCptrI->Cont2,"PA");
-      strcpy_s(DCptrR->Cont1,"AL");
-      strcpy_s(DCptrR->Cont2,"AT");
-      strcpy_s(DCptrI->Cont1,"AT");
+      if (!strcmp(DCptrR->Cont2,"ID")) strcpy(DCptrI->Cont2,"ID");
+      else strcpy(DCptrI->Cont2,"PA");
+      strcpy(DCptrR->Cont1,"AL");
+      strcpy(DCptrR->Cont2,"AT");
+      strcpy(DCptrI->Cont1,"AT");
     }
     else if(!strcmp(DCptrR->Cont1,"AT") && strpbrk(DCptrR->Cont2,"IP") &&
             DCptrR->Alfa==DCptrR->AlfaN) {
       flag=flagp=TRUE;
-      strcpy_s(DCptrR->Cont1,"AL");
+      strcpy(DCptrR->Cont1,"AL");
     }
     else if(!strcmp(DCptrI->Cont1,"AT") && strpbrk(DCptrI->Cont2,"IP") &&
             DCptrI->Tap<=DCptrI->TapMin && DCptrI->Gamma<=DCptrI->GammaMin) {
       flag=flagp=TRUE;
-      if (!strcmp(DCptrI->Cont2,"ID")) strcpy_s(DCptrR->Cont2,"ID");
-      else strcpy_s(DCptrR->Cont2,"PA");
-      strcpy_s(DCptrR->Cont1,"AT");
-      strcpy_s(DCptrI->Cont1,"GA");
-      strcpy_s(DCptrI->Cont2,"AT");
+      if (!strcmp(DCptrI->Cont2,"ID")) strcpy(DCptrR->Cont2,"ID");
+      else strcpy(DCptrR->Cont2,"PA");
+      strcpy(DCptrR->Cont1,"AT");
+      strcpy(DCptrI->Cont1,"GA");
+      strcpy(DCptrI->Cont2,"AT");
     }
     else if(!strcmp(DCptrI->Cont1,"AT") && strpbrk(DCptrI->Cont2,"IP") &&
                  DCptrI->Tap>DCptrI->TapMin && DCptrI->Gamma<=DCptrI->GammaMin) {
       flag=flagp=TRUE;
-      if (!strcmp(DCptrI->Cont2,"ID")) strcpy_s(DCptrR->Cont2,"ID");
-      else strcpy_s(DCptrR->Cont2,"PA");
-      strcpy_s(DCptrR->Cont1,"AT");
-      strcpy_s(DCptrI->Cont1,"GA");
-      strcpy_s(DCptrI->Cont2,"VD");
+      if (!strcmp(DCptrI->Cont2,"ID")) strcpy(DCptrR->Cont2,"ID");
+      else strcpy(DCptrR->Cont2,"PA");
+      strcpy(DCptrR->Cont1,"AT");
+      strcpy(DCptrI->Cont1,"GA");
+      strcpy(DCptrI->Cont2,"VD");
     }
     else if(!strcmp(DCptrI->Cont1,"GA") && !strcmp(DCptrI->Cont2,"VD") &&
             (DCptrI->Tap<=DCptrI->TapMin || DCptrI->Tap>=DCptrI->TapMax)) {
       flag=flagp=TRUE;
-      strcpy_s(DCptrI->Cont2,"AT");
+      strcpy(DCptrI->Cont2,"AT");
     }
     else if(!strcmp(DCptrI->Cont1,"GA") && !strcmp(DCptrI->Cont2,"AT") &&
             DCptrI->Vd==DCptrI->VdN) {
       flag=flagp=TRUE;
-      strcpy_s(DCptrI->Cont2,"VD");
+      strcpy(DCptrI->Cont2,"VD");
     }
     if (flagH && flag) {
       if(strcmp(DCptrR->Cont1,"VD")&&strcmp(DCptrR->Cont2,"VD")) {
@@ -325,14 +325,14 @@ BOOLEAN ChangeParam()
     for (i=1;i<Jac->n1;i++) Dx[i]=0;
     LoadX0(FALSE,TRUE,TRUE);
     if (BlPtr->N==Bl) {
-      strcpy_s(BlPtr->Type,"B");
+      strcpy(BlPtr->Type,"B");
       if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
       Bl=0;
       BlPtr->Cont=BlPtr;
       if(ExistParameter('d')) fprintf(stderr,"Change param. to lambda.\n");
       return(TRUE);
     } else {
-      strcpy_s(BlPtr->Type,"BL");
+      strcpy(BlPtr->Type,"BL");
       if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
       Bl=BlPtr->N;
       BlPtr->Cont=NULL;

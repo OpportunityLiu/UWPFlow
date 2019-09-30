@@ -25,7 +25,7 @@ void ReadIEEE()
   INDEX i,j,k,NumBusDigits=4,NumAreaDigits=2,CircData=21;
 
   Line[0]='\0';
-  for(i=0;i<=2;strcpy_s(dataPtr->Title[i],"\n"),i++);
+  for(i=0;i<=2;strcpy(dataPtr->Title[i],"\n"),i++);
   Sn=100.0;
   RealParameter('$',&Sn,1.0,100000000.0);
   if (!strcmp(NameParameter('I'),"p")) {
@@ -34,7 +34,7 @@ void ReadIEEE()
           CircData=23;
   }
   for(;;){ /* Reading Loop */
-    if(LineNum && Line[0]!='%')  strcpy_s(Linep,Line);
+    if(LineNum && Line[0]!='%')  strcpy(Linep,Line);
     if (fgets(Line,BUFLEN,InputDataFile)==NULL) {
       fprintf(stderr,"***Warning: END OF DATA card missing in IEEE input data file.");
       break;
@@ -95,7 +95,7 @@ void ReadIEEE()
         }
         if (empty||(strpbrk(Name,"0")&&strlen(Name)==1)) {
           empty=FALSE;
-          strcpy_s(Name,"BUS_");
+          strcpy(Name,"BUS_");
           GetStr(Line,1,5,5,str);
           for(j=0;j<=3;j++) if(str[j]!=' ') break;
           strcat_s(Name,&str[j]);
@@ -123,8 +123,8 @@ void ReadIEEE()
         ACptr->B=GetValue(Line,115,8,4);
         if (i==0 && strcmp(ACptr->Type,"BC")) ACptr->Cont=ACptr;
         else if (i==1) {
-          strcpy_s(ACptr->Type,"BV");
-          strcpy_s(ACptr->cont,"Q");
+          strcpy(ACptr->Type,"BV");
+          strcpy(ACptr->cont,"Q");
           ACptr->VCont=ACptr->Qg;
           ACptr->Vmax=GetValue(Line,91,8,2);
           if (ACptr->Vmax<=0) ACptr->Vmax=10.;
@@ -158,14 +158,14 @@ void ReadIEEE()
             j=GetInt(Line,124,NumBusDigits);
             if (j>0 && j!=ACptr->Num) {
               ACptr->Nc=j;
-              strcpy_s(ACptr->Type,"BG");
-              strcpy_s(ACptr->cont,"V");
+              strcpy(ACptr->Type,"BG");
+              strcpy(ACptr->cont,"V");
               ACptr->Kbg=1;
               ACptr->VCont=ACptr->val;
             }
             else {
-              strcpy_s(ACptr->Type,"BQ");
-              strcpy_s(ACptr->cont,"V");
+              strcpy(ACptr->Type,"BQ");
+              strcpy(ACptr->cont,"V");
               ACptr->VCont=ACptr->V=ACptr->val;
             }
           } 
@@ -244,7 +244,7 @@ void ReadIEEE()
       }
       GetStr(Line,13,3,3,Eptr->Zone);
       GetStr(Line,17,1,1,Eptr->Ckt);
-      if (k==0) strcpy_s(Eptr->Type,"L");
+      if (k==0) strcpy(Eptr->Type,"L");
       else if (k>=1) {
         Eptr->Tap=1/GetValue(Line,77,6,4);
         Eptr->Ang=GetValue(Line,84,7,2)*K3;
@@ -256,7 +256,7 @@ void ReadIEEE()
             ErrorHalt("The controlled bus has not been defined (check BUS DATA cards).");
           }
         } else ACptrs=ACptr;
-        if(k==1) strcpy_s(Eptr->Type,"T");
+        if(k==1) strcpy(Eptr->Type,"T");
         else if(k==2) {
           Eptr->Tmin=GetValue(Line,91,7,2);
           Eptr->Tmax=GetValue(Line,98,7,2);
@@ -267,7 +267,7 @@ void ReadIEEE()
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin) {
-            strcpy_s(Eptr->Type,"T");
+            strcpy(Eptr->Type,"T");
             Eptr->Tmax=Eptr->Tmin=0;
           }
           else if (strcmp(ACptrs->Type,"BG") && strcmp(ACptrs->Type,"BQ") ) {
@@ -283,15 +283,15 @@ void ReadIEEE()
               ErrorHalt("LTC limits are wrong: Vmin > Vmax.");
             }
             if(Eptr->Max==Eptr->Min) {
-              strcpy_s(Eptr->Type,"R");
-              strcpy_s(ACptrs->Type,"BT");
+              strcpy(Eptr->Type,"R");
+              strcpy(ACptrs->Type,"BT");
               ACptrs->V=Eptr->Max;
               if (ACptrs->V==0) ACptrs->V=1.;
               Eptr->Max=Eptr->Min=0;
             }
             else {
-              strcpy_s(Eptr->Type,"RV");
-              if (strcmp(ACptrs->Type,"BT")) strcpy_s(ACptrs->Type,"BR");
+              strcpy(Eptr->Type,"RV");
+              if (strcmp(ACptrs->Type,"BT")) strcpy(ACptrs->Type,"BR");
               if(ACptrs->Vmax>Eptr->Max||ACptrs->Vmax==0)
                 ACptrs->Vmax=Eptr->Max;
               if(ACptrs->Vmin>Eptr->Min||ACptrs->Vmin==0) {
@@ -301,7 +301,7 @@ void ReadIEEE()
             }
           }
 	  else {
-            strcpy_s(Eptr->Type,"T");
+            strcpy(Eptr->Type,"T");
             Eptr->Tmax=Eptr->Tmin=0;
             fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             fprintf(stderr,"***Warning: The controlled bus of this LTC is not PQ (check BUS DATA cards).\n");
@@ -318,7 +318,7 @@ void ReadIEEE()
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin) {
-            strcpy_s(Eptr->Type,"T");
+            strcpy(Eptr->Type,"T");
             Eptr->Tmin=Eptr->Tmax=0;
           }
           else {
@@ -333,11 +333,11 @@ void ReadIEEE()
               ErrorHalt("LTC limits are wrong: Qmin > Qmax.");
             }
             if(Eptr->Max==Eptr->Min) {
-              strcpy_s(Eptr->Type,"RQ");
+              strcpy(Eptr->Type,"RQ");
               Eptr->Cvar=Eptr->Max;
               Eptr->Max=Eptr->Min=0;
             }
-            else strcpy_s(Eptr->Type,"RN");
+            else strcpy(Eptr->Type,"RN");
             Eptr->Ncont=ACptrs->Ncont;
             ACptrs->Ncont++;
           }
@@ -350,7 +350,7 @@ void ReadIEEE()
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
           }
           if(Eptr->Tmax==Eptr->Tmin){
-            strcpy_s(Eptr->Type,"T");
+            strcpy(Eptr->Type,"T");
             Eptr->Tmin=Eptr->Tmax=0;
           }
           else {
@@ -365,11 +365,11 @@ void ReadIEEE()
               ErrorHalt("LTC limits are wrong: Pmin > Pmax.");
             }
             if(Eptr->Max==Eptr->Min) {
-              strcpy_s(Eptr->Type,"RP");
+              strcpy(Eptr->Type,"RP");
               Eptr->Cvar=Eptr->Max;
               Eptr->Max=Eptr->Min=0;
             }
-            else strcpy_s(Eptr->Type,"RM");
+            else strcpy(Eptr->Type,"RM");
             Eptr->Ncont=ACptrs->Ncont;
             ACptrs->Ncont++;
           }
@@ -401,14 +401,14 @@ void ReadIEEE()
       }
       if (empty||(strpbrk(Name,"0")&&strlen(Name)==1)) {
         empty=FALSE;
-        strcpy_s(Name,"AREA_");
+        strcpy(Name,"AREA_");
         GetStr(Line,1,4,4,str);
         for(j=0;j<=3;j++) if(str[j]!=' ') break;
         strcat_s(Name,&str[j]);
         for(j=strlen(Name);j<=29;Name[j]=' ',j++);
         Name[30]='\0';
       }
-      strcpy_s(Aptr->Name,Name);
+      strcpy(Aptr->Name,Name);
       i=GetInt(Line,4,NumBusDigits);
       ACptr=(ACbusData *) ACbusInList(i,"",0.,Nac,1);
       if (ACptr->N==0) {
@@ -504,7 +504,7 @@ void ReadIEEE()
          exit(ERROREXIT);*/
          InputError=TRUE;
       }
-      if(!strcmp(ACptrp->Type,"B")) strcpy_s(ACptrp->Type,"BC");
+      if(!strcmp(ACptrp->Type,"B")) strcpy(ACptrp->Type,"BC");
       else if(strcmp(ACptrp->Type,"BC")) {
          fprintf(stderr,"Error: The voltage controlled bus %d %s\n",ACptrp->Num,ACptrp->Name);
          fprintf(stderr,"       is not a PQ bus.  Check AC bus data.\n");

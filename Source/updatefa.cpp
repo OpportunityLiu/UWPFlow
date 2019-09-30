@@ -88,7 +88,7 @@ BOOLEAN ChangeSVCmode()
  i=NacVar+11*Ndc/2;
  for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
   if(!strcmp(SVCptr->Cont,"AL") && SVCptr->alpha_svc>=SVCptr->AlphaMax){
-    strcpy_s(SVCptr->Cont,"MX");
+    strcpy(SVCptr->Cont,"MX");
     SVCptr->alpha_svc=SVCptr->AlphaMax;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->Vvar;
@@ -97,7 +97,7 @@ BOOLEAN ChangeSVCmode()
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"AL") && SVCptr->alpha_svc<=SVCptr->AlphaMin){
-    strcpy_s(SVCptr->Cont,"MN");
+    strcpy(SVCptr->Cont,"MN");
     SVCptr->alpha_svc=SVCptr->AlphaMin;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->Vvar;
@@ -106,7 +106,7 @@ BOOLEAN ChangeSVCmode()
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"MX") && SVCptr->Vvar>=SVCptr->Vref){
-    strcpy_s(SVCptr->Cont,"AL");
+    strcpy(SVCptr->Cont,"AL");
     SVCptr->alpha_svc=SVCptr->AlphaMax;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
@@ -115,7 +115,7 @@ BOOLEAN ChangeSVCmode()
     flag=TRUE;
   }
   else if(!strcmp(SVCptr->Cont,"MN") && SVCptr->Vvar<=SVCptr->Vref){
-    strcpy_s(SVCptr->Cont,"AL");
+    strcpy(SVCptr->Cont,"AL");
     SVCptr->alpha_svc=SVCptr->AlphaMin;
     SVCptr->Vvar=SVCptr->Vref;
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
@@ -173,7 +173,7 @@ BOOLEAN ChangeTCSCmode()
     Xc=TCSCptr->Xc;
     Xl=TCSCptr->Xl;
     if(!strpbrk(TCSCptr->Cont,"X")&& TCSCptr->alpha_tcsc>=TCSCptr->AlphaMax){
-      strcpy_s(TCSCptr->Cont,"X");
+      strcpy(TCSCptr->Cont,"X");
       Be=1.0/Xc-(2.0*PI-2.0*alpha+sin(2.0*alpha))/(PI*Xl);
       TCSCptr->Bset=Be;
       fprintf(stderr,"***Warning: %s TCSC firing angle is at its maximum limit.\n",TCSCptr->Name);
@@ -181,7 +181,7 @@ BOOLEAN ChangeTCSCmode()
       flag=TRUE;
     }
     else if(!strpbrk(TCSCptr->Cont,"X")&& TCSCptr->alpha_tcsc<=TCSCptr->AlphaMin){
-      strcpy_s(TCSCptr->Cont,"X");
+      strcpy(TCSCptr->Cont,"X");
       Be=1.0/Xc-(2.0*PI-2.0*alpha+sin(2.0*alpha))/(PI*Xl);
       TCSCptr->Bset=Be;
       fprintf(stderr,"***Warning: %s TCSC firing angle is at its minimum limit.\n",TCSCptr->Name);
@@ -258,7 +258,7 @@ BOOLEAN ChangeSTATCOMmode()
   Q=STATCOMptr->Q;
   if((!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL"))&&
      STATCOMptr->I>=STATCOMptr->Imax && Q>0){
-    strcpy_s(STATCOMptr->Cont,"MX");
+    strcpy(STATCOMptr->Cont,"MX");
     STATCOMptr->I=STATCOMptr->Imax;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
@@ -268,7 +268,7 @@ BOOLEAN ChangeSTATCOMmode()
   }
   else if((!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL"))&&
           STATCOMptr->I>=STATCOMptr->Imin && Q<0){
-    strcpy_s(STATCOMptr->Cont,"MN");
+    strcpy(STATCOMptr->Cont,"MN");
     STATCOMptr->I=STATCOMptr->Imin;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
@@ -277,7 +277,7 @@ BOOLEAN ChangeSTATCOMmode()
     flag=TRUE;
   }
   else if(!strcmp(STATCOMptr->Cont,"MN") && STATCOMptr->Vvar>=STATCOMptr->Vref){
-    strcpy_s(STATCOMptr->Cont,STATCOMptr->Cont1);
+    strcpy(STATCOMptr->Cont,STATCOMptr->Cont1);
     STATCOMptr->I=STATCOMptr->Imax;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->I;
@@ -286,7 +286,7 @@ BOOLEAN ChangeSTATCOMmode()
     flag=TRUE;
   }
   else if(!strcmp(STATCOMptr->Cont,"MX") && STATCOMptr->Vvar<=STATCOMptr->Vref){
-    strcpy_s(STATCOMptr->Cont,STATCOMptr->Cont1);
+    strcpy(STATCOMptr->Cont,STATCOMptr->Cont1);
     STATCOMptr->I=STATCOMptr->Imin;
     STATCOMptr->Vvar=STATCOMptr->Vref;
     if (flagH) x0[i+1]=STATCOMptr->I;

@@ -31,7 +31,7 @@ char *Line;
     ptrac1=ACbusInList(0,Name1,KV1,Nac,1);
     KV2=GetValue(Line,64,4,0);
     Xth_l=GetValue(Line,68,8,7);
-    strcpy_s(Name2,Name);
+    strcpy(Name2,Name);
     if(Xth_l!=0.0){
       Name2[7]='L';
       Name2[8]='\0';
@@ -41,9 +41,9 @@ char *Line;
       if(ptrac->N==0){Nac++;ptrac->Num=ptrac->N=Nac;}
       ACptr=ACbusInList(0,Name,KV,Nac,1);
       if (ACptr->N==0) { Nac++; ACptr->Num=ACptr->N=Nac;}
-      strcpy_s(ptrac->Type,"B");
-      strcpy_s(ptrac->Zone,ACptr->Zone);
-      strcpy_s(ptrac->Owner,ACptr->Owner);
+      strcpy(ptrac->Type,"B");
+      strcpy(ptrac->Zone,ACptr->Zone);
+      strcpy(ptrac->Owner,ACptr->Owner);
       ptrac->V=1.00;
       /*  Create new element between buses Name2 & Name */
       if (KV==0){
@@ -72,7 +72,7 @@ char *Line;
       Sec=0;
       G2=G1;
       B2=B1;
-      strcpy_s(str," ");
+      strcpy(str," ");
       Eptr=ElemInList(ACptr,ptrac,NacEl,0,"",str);
       Eptr->Sec=Sec;
       Eptr->G=G;
@@ -84,10 +84,10 @@ char *Line;
       Eptr->Tap=Tap;
       Eptr->Taps=Taps;
       Eptr->Ang=Ang;
-      strcpy_s(Eptr->Owner,ACptr->Owner);
+      strcpy(Eptr->Owner,ACptr->Owner);
       NacEl++;
-      strcpy_s(Eptr->Zone," ");
-      strcpy_s(Eptr->Type,"L");
+      strcpy(Eptr->Zone," ");
+      strcpy(Eptr->Type,"L");
       ptrac->Area=ACptr->Area;
       ptrac->Cont=ptrac;
     }
@@ -294,13 +294,13 @@ char *Line;
     val=GetValue(Line,75,6,5);
     GetStr(Line,74,1,1,Cont);
     if (!strcmp(Cont,"P")) {
-      strcpy_s(STATCOMptr->Cont,"AL");
-      strcpy_s(STATCOMptr->Cont1,"AL");
+      strcpy(STATCOMptr->Cont,"AL");
+      strcpy(STATCOMptr->Cont1,"AL");
       if (val<=0) STATCOMptr->Contref=0.9;
       else STATCOMptr->Contref=val;
     } else {
-      strcpy_s(STATCOMptr->Cont,"PW");
-      strcpy_s(STATCOMptr->Cont1,"PW");
+      strcpy(STATCOMptr->Cont,"PW");
+      strcpy(STATCOMptr->Cont1,"PW");
       if (val<=0) STATCOMptr->Contref=1;
       else STATCOMptr->Contref=val;
     }

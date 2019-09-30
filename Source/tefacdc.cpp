@@ -165,10 +165,10 @@ FILE *Out;
   INDEX count,countp,i,j,k,l,js,ks;
   VALUETYPE k1,k2,ki,kp,P11,P12,P22,P23,P33,Beta,KV;
 
-  strcpy_s(LineType[0],"'-'");
-  strcpy_s(LineType[1],"'-.'");
-  strcpy_s(LineType[2],"':'");
-  strcpy_s(LineType[3],"'--'");
+  strcpy(LineType[0],"'-'");
+  strcpy(LineType[1],"'-.'");
+  strcpy(LineType[2],"':'");
+  strcpy(LineType[3],"'--'");
   fprintf(Out,"];\n");
   fprintf(Out,"%s Plot profiles:\n","%%");
   fprintf(Out,"%s Change the value of K to scale L.F.\nK=1;\n","%%");

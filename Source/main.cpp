@@ -200,7 +200,7 @@ void InitializeLoad()
          Name=NameParameter('l');
 #ifdef WINDOWS
 		 char charDir[300];
-		 strcpy_s(charDir, dir.GetBuffer(dir.GetLength()));
+		 strcpy(charDir, dir.GetBuffer(dir.GetLength()));
          if (!NullName(Name)) freopen(strcat(charDir, Name),"wt",stderr);
 #else
 		 if (!NullName(Name)) freopen(Name,"wt",stderr);
@@ -327,7 +327,7 @@ void InitializeLoad()
                 fprintf(stderr,"**** Base Case Solved (to calculate OH load parameters) ****\n\n");
          } else InitializeLoad();
          RealParameter('L',&lambda,-1e6,1e6);
-         strcpy_s(BlPtr->Type,"BL");
+         strcpy(BlPtr->Type,"BL");
          if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat_s(BlPtr->Type,"A");
          Bl=BlPtr->N;
          BlPtr->V=V;

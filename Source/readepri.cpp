@@ -57,7 +57,7 @@ INDEX Sec;
     Eptr=ELptr->Eptr;
     if (((From==Eptr->From&&To==Eptr->To)||(From==Eptr->To&&To==Eptr->From))
         &&!strcmp(Ckt,Eptr->Ckt)&&strcmp(Eptr->Zone,"")){
-      if (!strncmp(Line,"T",1)&&!strpbrk(Eptr->Type,"RT")) strcpy_s(Eptr->Type,"T");
+      if (!strncmp(Line,"T",1)&&!strpbrk(Eptr->Type,"RT")) strcpy(Eptr->Type,"T");
       if(Sec<Eptr->Sec) {
         Ge=Eptr->G;   Eptr->G=G/(Eptr->Tap*Eptr->Tap);   G=Ge;
         Be=Eptr->B;   Eptr->B=B/(Eptr->Tap*Eptr->Tap);   B=Be;
@@ -78,7 +78,7 @@ INDEX Sec;
                   Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
          fprintf(stderr,"            has a zero impedance.  Check the section data for this element.\n");
       }
-      if (!strncmp(Line,"T",1)&&!strpbrk(Eptr->Type,"RT")) strcpy_s(Eptr->Type,"T");
+      if (!strncmp(Line,"T",1)&&!strpbrk(Eptr->Type,"RT")) strcpy(Eptr->Type,"T");
       Eptr->Tap*=Tap;
       Eptr->Ang+=Ang;
       Eptr->Sec=Sec;
@@ -122,7 +122,7 @@ void ReadWSCC()
   BOOLEAN flag=FALSE,flagPrint=TRUE;
 
 
-  for(i=0;i<=2;strcpy_s(dataPtr->Title[i],"\n"),i++);
+  for(i=0;i<=2;strcpy(dataPtr->Title[i],"\n"),i++);
   Sn=100.0;
   RealParameter('$',&Sn,1.0,100000000.0);
   ACptr=NULL;
@@ -144,7 +144,7 @@ void ReadWSCC()
         }
         LineNum++;
         if (strncmp(Line,"BAS",3)&&strncmp(Line,"D",1)) {
-          strcpy_s(dataPtr->Title[i],Line);
+          strcpy(dataPtr->Title[i],Line);
           i++;
           if (i>2) break;
         }
@@ -199,13 +199,13 @@ void ReadWSCC()
             fprintf(stderr,"***Warning: BF bus has been transformed to a B bus.\n");
          }
       }
-      else if (!strncmp(Line,"BC ",3)) strcpy_s(ACptr->Type,"BC");
-      else if (!strncmp(Line,"BT ",3)) strcpy_s(ACptr->Type,"BT");
+      else if (!strncmp(Line,"BC ",3)) strcpy(ACptr->Type,"BC");
+      else if (!strncmp(Line,"BT ",3)) strcpy(ACptr->Type,"BT");
       else if (!strncmp(Line,"BE ",3) || !strncmp(Line,"BK ",3)){
          Nvolt++;
          ACptr->Qg=0;
-         strcpy_s(ACptr->Type,"BQ");
-         strcpy_s(ACptr->cont,"V");
+         strcpy(ACptr->Type,"BQ");
+         strcpy(ACptr->cont,"V");
          ACptr->Qmax=99999999.;
          ACptr->Qmin= -99999999.;
          if (!strncmp(Line,"BK ",3)){
@@ -216,8 +216,8 @@ void ReadWSCC()
       if (!strncmp(Line,"BQ ",3) || !strncmp(Line,"BK ",3)){
          Nvolt++;
          ACptr->Qg=0;
-         strcpy_s(ACptr->Type,"BQ");
-         strcpy_s(ACptr->cont,"V");
+         strcpy(ACptr->Type,"BQ");
+         strcpy(ACptr->cont,"V");
          ACptr->Qmax=GetValue(Line,48,5,0)/Sn;
          ACptr->Qmin=GetValue(Line,53,5,0)/Sn;
          if (ACptr->Qmax<=ACptr->Qmin) {
@@ -232,8 +232,8 @@ void ReadWSCC()
       else if (!strncmp(Line,"BG ",3)){
          Nvolt++;
          ACptr->Qg=0;
-         strcpy_s(ACptr->Type,"BG");
-         strcpy_s(ACptr->cont,"V");
+         strcpy(ACptr->Type,"BG");
+         strcpy(ACptr->cont,"V");
          ACptr->Qmax=GetValue(Line,48,5,0)/Sn;
          ACptr->Qmin=GetValue(Line,53,5,0)/Sn;
          if (ACptr->Qmax<=ACptr->Qmin) {
@@ -252,7 +252,7 @@ void ReadWSCC()
             fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("The controlled bus has not been defined.");
          }
-         if(!strcmp(ACptrp->Type,"B")) strcpy_s(ACptrp->Type,"BC");
+         if(!strcmp(ACptrp->Type,"B")) strcpy(ACptrp->Type,"BC");
          else if(strcmp(ACptrp->Type,"BC")) {
             fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("The voltage controlled bus is not a PQ bus.");
@@ -268,8 +268,8 @@ void ReadWSCC()
          if (ACptr->Kbg<=0) ACptr->Kbg=1.;
       }
       else if (!strncmp(Line,"BV ",3)||!strncmp(Line,"BA ",3)) {
-         strcpy_s(ACptr->Type,"BV");
-         strcpy_s(ACptr->cont,"Q");
+         strcpy(ACptr->Type,"BV");
+         strcpy(ACptr->cont,"Q");
          ACptr->VCont=ACptr->Qg;
          ACptr->Vmax=GetValue(Line,58,4,3);
          if (ACptr->Vmax<=0) ACptr->Vmax=10.;
@@ -300,7 +300,7 @@ void ReadWSCC()
       }
       else if (!strncmp(Line,"BS ",3)) {
          strcat_s(ACptr->Type,"S");
-         strcpy_s(ACptr->cont,"V");
+         strcpy(ACptr->cont,"V");
          Nslack++;
          ACptr->Qg=0;
          AngSlack=0;
@@ -343,11 +343,11 @@ void ReadWSCC()
       if (Xcont) ACptrp=ACptr;
       if (!strcmp(ACptrp->Type,"B")) {
         NXvolt++;
-        strcpy_s(ACptrp->Type,"BX");
-        if (ACptrp!=ACptr) strcpy_s(ACptr->Type,"B");
+        strcpy(ACptrp->Type,"BX");
+        if (ACptrp!=ACptr) strcpy(ACptr->Type,"B");
         ACptr->V=1;
         ACptrp->Cont=ACptr;
-        strcpy_s(ACptrp->cont,"X");
+        strcpy(ACptrp->cont,"X");
         for(i=1,j=33; i<=8; i++,j=j+6) {
           k=GetInt(Line,j,1);
           Bx=GetValue(Line,j+1,5,0);
@@ -457,14 +457,14 @@ void ReadWSCC()
           Eptr->Ang=Ang;
           Eptr->Imax=Imax;
           GetStr(Line,4,3,3,Eptr->Owner);
-          strcpy_s(Eptr->Zone,"  ");
+          strcpy(Eptr->Zone,"  ");
           NacEl++;
           GetStr(Line,19,1,1,str);
           if (!strcmp(str,"1")) Eptr->Meter=ACptr;
           else if (!strcmp(str,"2")) Eptr->Meter=ACptrp;
-          if (!strncmp(Line,"L  ",3)) strcpy_s(Eptr->Type,"L");
-          else if (!strncmp(Line,"E  ",3)) strcpy_s(Eptr->Type,"E");
-          else if (!strncmp(Line,"T  ",3)&&strncmp(Eptr->Type,"R",1)) strcpy_s(Eptr->Type,"T");
+          if (!strncmp(Line,"L  ",3)) strcpy(Eptr->Type,"L");
+          else if (!strncmp(Line,"E  ",3)) strcpy(Eptr->Type,"E");
+          else if (!strncmp(Line,"T  ",3)&&strncmp(Eptr->Type,"R",1)) strcpy(Eptr->Type,"T");
       }
     }
 
@@ -494,7 +494,7 @@ void ReadWSCC()
       if (ACptrs->N==0) { Nac++; ACptrs->Num=ACptrs->N=Nac;}
       if (!strncmp(Line,"R  ",3)){
          NregV++;
-         strcpy_s(Eptr->Type,"R");
+         strcpy(Eptr->Type,"R");
          Eptr->Tmax=GetValue(Line,46,5,2)/KV;
          Eptr->Tmin=GetValue(Line,51,5,2)/KV;
          if(Eptr->Tmax<=0) Eptr->Tmax=1.1;
@@ -503,7 +503,7 @@ void ReadWSCC()
             fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
             ErrorHalt("LTC limits are wrong: Tmin > Tmax.");
          }
-         if (!strcmp(ACptrs->Type,"B")) strcpy_s(ACptrs->Type,"BT");
+         if (!strcmp(ACptrs->Type,"B")) strcpy(ACptrs->Type,"BT");
          ACptrs->Reg=AddElemToList(ACptrs->Reg,Eptr);
          Eptr->Cont=ACptrs;
       }
@@ -515,10 +515,10 @@ void ReadWSCC()
             ErrorHalt("Phase shifter limits are wrong: Amin >= Amax.");
          }
          if (!strncmp(Line,"RP ",3)) {
-            strcpy_s(Eptr->Type,"RP");
+            strcpy(Eptr->Type,"RP");
             Eptr->Cvar=GetValue(Line,58,5,0)/Sn;
          } else {
-            strcpy_s(Eptr->Type,"RM");
+            strcpy(Eptr->Type,"RM");
             Eptr->Max=GetValue(Line,58,5,0)/Sn;
             Eptr->Min=GetValue(Line,63,5,0)/Sn;
             if(Eptr->Max<=Eptr->Min) {
@@ -542,10 +542,10 @@ void ReadWSCC()
             ErrorHalt("LTC limits are wrong: Tmin >= Tmax.");
          }
          if (!strncmp(Line,"RQ ",3)){
-            strcpy_s(Eptr->Type,"RQ");
+            strcpy(Eptr->Type,"RQ");
             Eptr->Cvar=GetValue(Line,58,5,0)/Sn;
          } else {
-            strcpy_s(Eptr->Type,"RN");
+            strcpy(Eptr->Type,"RN");
             Eptr->Max=GetValue(Line,58,5,0)/Sn;
             Eptr->Min=GetValue(Line,63,5,0)/Sn;
             if(Eptr->Max<=Eptr->Min) {

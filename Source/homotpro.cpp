@@ -65,7 +65,7 @@ FILE *Out;
 
   if (!NullName(Name) && (Input=OpenInput(Name))!=NULL) {
     for (;;) {
-      strcpy_s(Type,"");
+      strcpy(Type,"");
       if (fgets(Line,BUFLEN,Input)==NULL) break;
       if ((count=sscanf(Line,"%d %s %s",&N,BusName,Type))>3 && strncmp(Line,"C",1)) {
         fprintf(stderr,"***Warning: Line-> %s",Line);
@@ -113,8 +113,8 @@ FILE *Out;
             if (ACptr!=NULL) Vlist->N=ACptr->Num;
             else             Vlist->N=Aptr->N;
             if (!strcmp(Type,"V") || !strcmp(Type,"D") || !strcmp(Type,"PL") || !strcmp(Type,"QL") ||
-                !strcmp(Type,"PG") ||!strcmp(Type,"QG") ||!strcmp(Type,"PA")) strcpy_s(Vlist->Type,Type);
-            else strcpy_s(Vlist->Type,"V");
+                !strcmp(Type,"PG") ||!strcmp(Type,"QG") ||!strcmp(Type,"PA")) strcpy(Vlist->Type,Type);
+            else strcpy(Vlist->Type,"V");
             Vlist->Next=Lptr;
             Vlist->Prev=NULL;
             if(Lptr!=NULL) Lptr->Prev=Vlist;
@@ -165,7 +165,7 @@ FILE *Out;
         }
 #endif
         Vlistp->AC=ACptrM;
-        strcpy_s(Vlistp->Type,"V");
+        strcpy(Vlistp->Type,"V");
         Vlistp->N=ACptrM->Num;
         Vlistp->Area=NULL;
         Vlistp->Next=Lptr;
@@ -196,7 +196,7 @@ FILE *Out;
           Vlist->AC=DCptr->AC;
           Vlist->Area=NULL;
           Vlist->N=DCptr->AC->Num;
-          strcpy_s(Vlist->Type,"V");
+          strcpy(Vlist->Type,"V");
           Vlist->Next=Lptr;
           Vlist->Prev=NULL;
           if(Lptr!=NULL) Lptr->Prev=Vlist;
@@ -217,7 +217,7 @@ FILE *Out;
           Vlist->AC=DCptr->AC;
           Vlist->Area=NULL;
           Vlist->N=DCptr->AC->Num;
-          strcpy_s(Vlist->Type,"D");
+          strcpy(Vlist->Type,"D");
           Vlist->Next=Lptr;
           Vlist->Prev=NULL;
           if(Lptr!=NULL) Lptr->Prev=Vlist;
@@ -254,7 +254,7 @@ FILE *Out;
 		GraphDlg->m_GraphCtrl.SetElementLineColor(color);
 
 		//set annotation
-		strcpy_s(tmpCaption,Lptr->Type);
+		strcpy(tmpCaption,Lptr->Type);
 		sprintf_s(tmpN, "%-5d", Lptr->N);
 		strcat_s(tmpCaption, tmpN);
 		GraphDlg->m_GraphCtrl.AddAnnotation();
@@ -681,8 +681,8 @@ VALUETYPE *vector,Max;
     if(!strcmp(DCptrR->Type,"R")){
       k++;
       for(j=1;j<=2;j++){
-        if(j==1) { DCptr=DCptrR; strcpy_s(type,"r"); }
-        else { DCptr=DCptrI; strcpy_s(type,"i"); }
+        if(j==1) { DCptr=DCptrR; strcpy(type,"r"); }
+        else { DCptr=DCptrI; strcpy(type,"i"); }
         if(strcmp(DCptr->Cont1,"VD")&&strcmp(DCptr->Cont2,"VD")) {
           sprintf_s(str,"Vd%1s%-d",type,k); i++;
           fprintf(Out,"%4d %8s %-11.5g\n",i,str,vector[i]/Max);
@@ -802,7 +802,7 @@ INDEX count;
   INDEX i;
   
 
-  strcpy_s(Namebase,NameParameter('0'));
+  strcpy(Namebase,NameParameter('0'));
   if(NullName(Namebase)) return;
   sprintf_s(Name,"%s.m",Namebase);
   OutFile=OpenOutput(Name);

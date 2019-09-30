@@ -245,7 +245,7 @@ char *Line;
         DCptr->To=DCptrp;
         DCptrp->To=DCptr;
         GetStr(Line,24,2,2,DCptr->Lzone);
-        strcpy_s(DCptrp->Lzone,DCptr->Lzone);
+        strcpy(DCptrp->Lzone,DCptr->Lzone);
         if (strcmp(DCptr->Zone,DCptr->Lzone)) DCptr->Meter=DCptrp->Meter=DCptr;
         else DCptr->Meter=DCptrp->Meter=DCptrp;
       }
@@ -281,12 +281,12 @@ char *Line;
         gamma=GetValue(Line,71,4,1);
         GetStr(Line,56,1,1,Mode);
         if (Mode[0]=='R' && P>0) {
-          strcpy_s(DCptr->Type,"R");
-          strcpy_s(DCptrp->Type,"I");
-          strcpy_s(DCptr->Cont1,"PA");
-          strcpy_s(DCptr->Cont2,"AL");
-          strcpy_s(DCptrp->Cont1,"VD");
-          strcpy_s(DCptrp->Cont2,"GA");
+          strcpy(DCptr->Type,"R");
+          strcpy(DCptrp->Type,"I");
+          strcpy(DCptr->Cont1,"PA");
+          strcpy(DCptr->Cont2,"AL");
+          strcpy(DCptrp->Cont1,"VD");
+          strcpy(DCptrp->Cont2,"GA");
           DCptr->P=P;
           DCptr->Alfa=alpha;
           DCptrp->Vd=V-(P/V)*R;
@@ -296,12 +296,12 @@ char *Line;
           DCptrp->AlfaMax=180.;
         }
         else if (Mode[0]=='I' && P>0) {
-          strcpy_s(DCptr->Type,"R");
-          strcpy_s(DCptrp->Type,"I");
-          strcpy_s(DCptr->Cont1,"VD");
-          strcpy_s(DCptr->Cont2,"AL");
-          strcpy_s(DCptrp->Cont1,"PA");
-          strcpy_s(DCptrp->Cont2,"GA");
+          strcpy(DCptr->Type,"R");
+          strcpy(DCptrp->Type,"I");
+          strcpy(DCptr->Cont1,"VD");
+          strcpy(DCptr->Cont2,"AL");
+          strcpy(DCptrp->Cont1,"PA");
+          strcpy(DCptrp->Cont2,"GA");
           DCptr->Vd=V;
           DCptr->Alfa=alpha;
           DCptrp->P=P;
@@ -311,12 +311,12 @@ char *Line;
           DCptrp->AlfaMax=180.;
         }
         else if (Mode[0]=='R' && P<0) {
-          strcpy_s(DCptr->Type,"I");
-          strcpy_s(DCptrp->Type,"R");
-          strcpy_s(DCptrp->Cont1,"PA");
-          strcpy_s(DCptrp->Cont2,"AL");
-          strcpy_s(DCptr->Cont1,"VD");
-          strcpy_s(DCptr->Cont2,"GA");
+          strcpy(DCptr->Type,"I");
+          strcpy(DCptrp->Type,"R");
+          strcpy(DCptrp->Cont1,"PA");
+          strcpy(DCptrp->Cont2,"AL");
+          strcpy(DCptr->Cont1,"VD");
+          strcpy(DCptr->Cont2,"GA");
           DCptrp->P=-P;
           DCptrp->Alfa=alpha;
           DCptr->Vd=V+(P/V)*R;
@@ -326,12 +326,12 @@ char *Line;
           DCptr->AlfaMax=180.;
         }
         else if (Mode[0]=='I' && P<0) {
-          strcpy_s(DCptr->Type,"I");
-          strcpy_s(DCptrp->Type,"R");
-          strcpy_s(DCptrp->Cont1,"VD");
-          strcpy_s(DCptrp->Cont2,"AL");
-          strcpy_s(DCptr->Cont1,"PA");
-          strcpy_s(DCptr->Cont2,"GA");
+          strcpy(DCptr->Type,"I");
+          strcpy(DCptrp->Type,"R");
+          strcpy(DCptrp->Cont1,"VD");
+          strcpy(DCptrp->Cont2,"AL");
+          strcpy(DCptr->Cont1,"PA");
+          strcpy(DCptr->Cont2,"GA");
           DCptrp->Vd=V;
           DCptrp->Alfa=alpha;
           DCptr->P=-P;
@@ -342,8 +342,8 @@ char *Line;
         }
         DCptr->To=DCptrp;
         DCptrp->To=DCptr;
-        strcpy_s(DCptr->Lzone,"  ");
-        strcpy_s(DCptrp->Lzone,DCptr->Lzone);
+        strcpy(DCptr->Lzone,"  ");
+        strcpy(DCptrp->Lzone,DCptr->Lzone);
       }
     }
 

@@ -31,13 +31,13 @@ void WriteJac()
   TCSCbusData *TCSCptr;                /* FACTS */
   STATCOMbusData *STATCOMptr;          /* FACTS */
 
-  if (ExistParameter('J')) strcpy_s(Namebase,NameParameter('J'));
-  else strcpy_s(Namebase,NameParameter('j'));
+  if (ExistParameter('J')) strcpy(Namebase,NameParameter('J'));
+  else strcpy(Namebase,NameParameter('j'));
   if(NullName(Namebase)) return;
   if (ExistParameter('J') && Bl)
     for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
       if(ACptr->Num==Bl) {
-	strcpy_s(ACptr->Type,"B");
+	strcpy(ACptr->Type,"B");
 	if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
 	Bl=0;
 	ACptr->Cont=ACptr;
@@ -63,7 +63,7 @@ void WriteJac()
     STATCOMFunHes(TRUE,TRUE);               /* FACTS  */
   }
   SortRowsColumns(Jac);
-  strcpy_s(Name,Namebase);
+  strcpy(Name,Namebase);
   strcat_s(Name,".jac");
   OutFile=OpenOutput(Name);
   fprintf(OutFile,"%d %d\n",Nvar,Nvar);
@@ -73,10 +73,10 @@ void WriteJac()
   }
   fprintf(OutFile,"%4d %4d %-11.5g\n",0,0,0.);
   fclose(OutFile);
-  strcpy_s(Name,Namebase);
+  strcpy(Name,Namebase);
   strcat_s(Name,".var");
   OutFile=OpenOutput(Name);
-  strcpy_s(Name,Namebase);
+  strcpy(Name,Namebase);
   strcat_s(Name,".mis");
   OutFilep=OpenOutput(Name);
   fprintf(OutFile,"%d 1\n",Nvar);
@@ -220,8 +220,8 @@ void WriteJac()
        	fprintf(OutFilep,"%4d %8s %-11.5g\n",i,str,dF[i]);
       }
       for(l=i-11,j=1;j<=2;j++){
-	       if(j==1) { DCptr=DCptrR; strcpy_s(type,"r"); }
-	       else { DCptr=DCptrI; strcpy_s(type,"i"); }
+	       if(j==1) { DCptr=DCptrR; strcpy(type,"r"); }
+	       else { DCptr=DCptrI; strcpy(type,"i"); }
 	       if(strcmp(DCptr->Cont1,"VD")&&strcmp(DCptr->Cont2,"VD")) {
 	         sprintf_s(str,"Vd%1s%-d",type,k);
        	  fprintf(OutFile,"%4d %8s %-11.5g\n",++l,str,DCptr->Vd);
@@ -445,7 +445,7 @@ VALUETYPE *vec;
   VALUETYPE val=0,valMax=-0.1;
   BOOLEAN flagTFbus=FALSE;
 
-  strcpy_s(Namebase,NameParameter('0'));
+  strcpy(Namebase,NameParameter('0'));
   if(NullName(Namebase)) return;
   sprintf_s(Name,"%s%d.m",Namebase,count);
   OutFile=OpenOutput(Name);
@@ -491,13 +491,13 @@ VALUETYPE *vec;
        	if (TFbus==ACptr->Num && !flagTFbus) {
           flagTFbus=TRUE;
           TFnum=i;
-          strcpy_s(TFname,ACptr->Name);
+          strcpy(TFname,ACptr->Name);
        	}
        	if (val>valMax) {
        	  valMax=val;
        	  MaxBus=ACptr->Num;
        	  MaxNum=i;
-       	  strcpy_s(MaxName,ACptr->Name);
+       	  strcpy(MaxName,ACptr->Name);
        	}
       }
     }
@@ -505,7 +505,7 @@ VALUETYPE *vec;
   if (count==1 && !flagTFbus) {
     TFnum=MaxNum;
     TFbus=MaxBus;
-    strcpy_s(TFname,MaxName);
+    strcpy(TFname,MaxName);
   }
   fprintf(OutFile,"\n");
   fprintf(OutFile,"%s Bus for test functions and tangent vector:\n","%%");

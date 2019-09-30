@@ -91,10 +91,10 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       ACptr->PG=Pg;
       ACptr->DPG=DPg;
       ACptr->Pmax=PgMax;
-      if (ACptr->Qmax==ACptr->Max) strcpy_s(Qmax,"Qmax");
-      else                         strcpy_s(Qmax,"Smax");
-      if (ACptr->Qmin==ACptr->Min) strcpy_s(Qmin,"Qmin");
-      else                         strcpy_s(Qmin,"Smin");
+      if (ACptr->Qmax==ACptr->Max) strcpy(Qmax,"Qmax");
+      else                         strcpy(Qmax,"Smax");
+      if (ACptr->Qmin==ACptr->Min) strcpy(Qmin,"Qmin");
+      else                         strcpy(Qmin,"Smin");
     }
     if (!strcmp(ACptr->Type,"B")||!strcmp(ACptr->Type,"BA")) {
       i=ACvar[ACptr->N];

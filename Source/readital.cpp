@@ -72,13 +72,13 @@ BOOLEAN flagAddBus;
     ptrn=NULL;
   }
   ptr->Num=0;
-  strcpy_s(ptr->Name,BusCode);
+  strcpy(ptr->Name,BusCode);
   ptr->N=0;
   ptr->KV=0;
-  strcpy_s(ptr->Type,"B");
-  strcpy_s(ptr->Zone,"");
-  strcpy_s(ptr->Owner,"");
-  strcpy_s(ptr->cont,"");
+  strcpy(ptr->Type,"B");
+  strcpy(ptr->Zone,"");
+  strcpy(ptr->Owner,"");
+  strcpy(ptr->cont,"");
   ptr->Area=NULL;
   ptr->Ncont=0;
   ptr->Reg=NULL;
@@ -200,10 +200,10 @@ BOOLEAN flagAddElement;
   ptr->To=To;
   From->Elem=(ElementList *) AddElemToList(From->Elem,ptr);
   To->Elem=(ElementList *) AddElemToList(To->Elem,ptr);
-  strcpy_s(ptr->Ckt,Ckt);
-  strcpy_s(ptr->Type,Type);
-  strcpy_s(ptr->Zone,"");
-  strcpy_s(ptr->Owner,"");
+  strcpy(ptr->Ckt,Ckt);
+  strcpy(ptr->Type,Type);
+  strcpy(ptr->Zone,"");
+  strcpy(ptr->Owner,"");
   ptr->Area=NULL;
   ptr->Meter=NULL;
   ptr->Sec=0;
@@ -219,7 +219,7 @@ BOOLEAN flagAddElement;
   ptr->Cont=NULL;
   ptr->Ncont=0;
   ptr->Cvar=0;
-  strcpy_s(ptr->Ctype,"");
+  strcpy(ptr->Ctype,"");
   ptr->Tmin=0;
   ptr->Tmax=0;
   ptr->Min=0;
@@ -245,7 +245,7 @@ void ReadITALY()
   BOOLEAN EstimatePl=FALSE,EstimateQl=FALSE;
 
 
-  for(i=0;i<=2;strcpy_s(dataPtr->Title[i],"\n"),i++);
+  for(i=0;i<=2;strcpy(dataPtr->Title[i],"\n"),i++);
   for(i=0;i<10;Vlevels[i]=Vmax[i]=Vmin[i]=0,i++);
   Sn=100.0;
   RealParameter('$',&Sn,1.0,100000000.0);
@@ -261,7 +261,7 @@ void ReadITALY()
 
   /* --------------- Title and Comments ----------------------------- */
     if (Line[79]=='C' || Line[79]=='*') {
-      if(i==0) {strcpy_s(dataPtr->Title[i],Line); i++;}
+      if(i==0) {strcpy(dataPtr->Title[i],Line); i++;}
       else continue;
     }
 
@@ -307,8 +307,8 @@ void ReadITALY()
         }
         ACptr->KV=KV;
       } else KV=ACptr->KV;
-      strcpy_s(ACptr->Zone,Zone);
-      strcpy_s(ACptr->Owner,Zone);
+      strcpy(ACptr->Zone,Zone);
+      strcpy(ACptr->Owner,Zone);
       ACptr->V=GetValue(Line,47,5,0)/KV;
       if (ACptr->V<=0) ACptr->V=1;
       ACptr->VCont=ACptr->V;
@@ -343,14 +343,14 @@ void ReadITALY()
       }
       if (Line[22]=='T') {
         Nslack++;
-        strcpy_s(ACptr->Type,"BS");
-        strcpy_s(ACptr->cont,"V");
+        strcpy(ACptr->Type,"BS");
+        strcpy(ACptr->cont,"V");
         AngSlack=0;
       }
       else if (Line[44]=='T' && strcmp(ACptr->Type,"BQ")){
         Nvolt++;
-        strcpy_s(ACptr->Type,"BQ");
-        strcpy_s(ACptr->cont,"V");
+        strcpy(ACptr->Type,"BQ");
+        strcpy(ACptr->cont,"V");
       }
       else {
         ACptr->Cont=ACptr;
@@ -547,18 +547,18 @@ void ReadITALY()
         KVs=KV; KV=KVp; KVp=KVs;
         ACptrs=ACptr; ACptr=ACptrp; ACptrp=ACptrs;
       }
-      if (Line[79]=='L') strcpy_s(Type,"L");
+      if (Line[79]=='L') strcpy(Type,"L");
       else {
         Tmax=GetValue(Line,67,5,2);
         Tmin=GetValue(Line,72,5,2);
         /*
-        if(Tmax>Tmin) strcpy_s(Type,"R");
-        else strcpy_s(Type,"T");
+        if(Tmax>Tmin) strcpy(Type,"R");
+        else strcpy(Type,"T");
         */
-        strcpy_s(Type,"T");
+        strcpy(Type,"T");
       }
       GetStr(Line,13,1,1,Ckt);
-      if(!strcmp(Ckt," ")) strcpy_s(Ckt,"0");
+      if(!strcmp(Ckt," ")) strcpy(Ckt,"0");
       Eptr=ElemInList2(ACptr,ACptrp,NacEl,Type,Ckt,TRUE);
       if (Eptr!=NULL) {
         Zb=KVp*KVp/Sn;
@@ -588,16 +588,16 @@ void ReadITALY()
         Eptr->Taps=Taps;
         Eptr->Ang=Ang;
         GetStr(Line,4,1,1,Eptr->Zone);
-        strcpy_s(Eptr->Owner,Eptr->Zone);
+        strcpy(Eptr->Owner,Eptr->Zone);
         NacEl++;
         Eptr->Meter=ACptr;
-        strcpy_s(Eptr->Type,Type);
+        strcpy(Eptr->Type,Type);
         /*
         if (!strcmp(Type,"R")) {
           Eptr->Tmax=Tmax*Taps;
           Eptr->Tmin=Tmin*Taps;
           NregV++;
-          if (!strcmp(ACptrp->Type,"B")) strcpy_s(ACptrp->Type,"BT");
+          if (!strcmp(ACptrp->Type,"B")) strcpy(ACptrp->Type,"BT");
           ACptrp->Reg=AddElemToList(ACptrp->Reg,Eptr);
           Eptr->Cont=ACptrp;
         }
@@ -638,7 +638,7 @@ void ReadITALY()
     if (Aptr->N==0) {
       Narea++;
       Aptr->N=Narea;
-      strcpy_s(Aptr->Zone[1],ACptr->Zone);
+      strcpy(Aptr->Zone[1],ACptr->Zone);
     }
     ACptr->Area=Aptr;
     if (strpbrk(ACptr->Type,"S")) Aptr->Slack=Aptr->BSptr=ACptr;
@@ -745,22 +745,22 @@ BOOLEAN ReadADDfile()
           if (strcmp(Code,"T")) ACptr->DPG=ACptr->DPg=ACptr->Pg;
           if (strpbrk(ACptr->Type,"Q,S")) {
             GetStr(Line,66,2,2,Zone);
-            strcpy_s(ACptr->Zone,Zone);
-            strcpy_s(ACptr->Owner,Zone);
+            strcpy(ACptr->Zone,Zone);
+            strcpy(ACptr->Owner,Zone);
           } else {
-            strcpy_s(ACptr->Zone," 0");
-            strcpy_s(ACptr->Owner," 0");
+            strcpy(ACptr->Zone," 0");
+            strcpy(ACptr->Owner," 0");
           }
           ACptr->Nc=GetInt(Line,68,2);
           GetStr(Line,70,1,1,Code);
           if (strpbrk(Code,"P") && !strcmp(ACptr->Type,"B")) {
-            strcpy_s(ACptr->Type,"BC");
+            strcpy(ACptr->Type,"BC");
             ACptr->VCont=ACptr->V;
             flag2Vcontrol=TRUE;
           }
           else if (strpbrk(Code,"V,S") && strpbrk(ACptr->Type,"Q,S")) {
-            if (!strcmp(ACptr->Type,"BQ")) strcpy_s(ACptr->Type,"BG");
-            else                           strcpy_s(ACptr->Type,"BGS");
+            if (!strcmp(ACptr->Type,"BQ")) strcpy(ACptr->Type,"BG");
+            else                           strcpy(ACptr->Type,"BGS");
             flag2Vcontrol=TRUE;
           }
           ACptr->Qn=ACptr->Ql;
@@ -793,7 +793,7 @@ BOOLEAN ReadADDfile()
         sprintf_s(Code,"%3d%1s%1d",N,Zone,KVl);
         ACptrp=ACbusInList2(0,Code,Nac,1,FALSE);
         GetStr(Line,13,1,1,Ckt);
-        if(!strcmp(Ckt," ")) strcpy_s(Ckt,"0");
+        if(!strcmp(Ckt," ")) strcpy(Ckt,"0");
         Eptr=ElemInList2(ACptr,ACptrp,NacEl,"R,T",Ckt,FALSE);
         if (Eptr!=NULL) {
           KV=ACptr->KV;
@@ -829,7 +829,7 @@ BOOLEAN ReadADDfile()
             ACptrs=Eptr->Cont;
             if (N==0) {
               NregV--;
-              strcpy_s(Eptr->Type,"T");
+              strcpy(Eptr->Type,"T");
               ACptrs->Reg=TakeElemFromList(ACptrs->Reg,Eptr);
               Eptr->Cont=NULL;
             }
@@ -850,7 +850,7 @@ BOOLEAN ReadADDfile()
           }
           else if (N!=0) {
             NregV++;
-            strcpy_s(Eptr->Type,"R");
+            strcpy(Eptr->Type,"R");
             if (N>0) {
                if (KV>KVp) ACptrs=ACptr;
                else        ACptrs=ACptrp;
@@ -858,7 +858,7 @@ BOOLEAN ReadADDfile()
                if (KV<KVp) ACptrs=ACptr;
                else        ACptrs=ACptrp;
             }
-            if (!strcmp(ACptrs->Type,"B")) strcpy_s(ACptrs->Type,"BT");
+            if (!strcmp(ACptrs->Type,"B")) strcpy(ACptrs->Type,"BT");
             ACptrs->Reg=AddElemToList(ACptrs->Reg,Eptr);
             Eptr->Cont=ACptrs;
           }
@@ -901,14 +901,14 @@ BOOLEAN ReadADDfile()
               ACptr->Qmin=Qmin;
               GetStr(Line,33,1,1,Code);
               if (!strcmp(Code,"T")) {
-                strcpy_s(ACptr->Type,"BZ");
+                strcpy(ACptr->Type,"BZ");
                 NZvolt++;
               } else {
-                strcpy_s(ACptr->Type,"BQ");
+                strcpy(ACptr->Type,"BQ");
                 Nvolt++;
               }
               ACptr->Cont=NULL;
-              strcpy_s(ACptr->cont,"V");
+              strcpy(ACptr->cont,"V");
             } else {
               fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
               fprintf(stderr,"***Warning: This bus cannot be defined as a voltage controlled bus, as it\n");
@@ -920,8 +920,8 @@ BOOLEAN ReadADDfile()
             else                   ACptr->Qg=ACptr->Qg+Q;
           }
           GetStr(Line,35,2,2,Zone);
-          strcpy_s(ACptr->Zone,Zone);
-          strcpy_s(ACptr->Owner,Zone);
+          strcpy(ACptr->Zone,Zone);
+          strcpy(ACptr->Owner,Zone);
         }
       }
 
@@ -937,7 +937,7 @@ BOOLEAN ReadADDfile()
             if (Aptr->N==0) {
               Narea++;
               Aptr->N=Narea;
-              strcpy_s(Aptr->Zone[1],Zone);
+              strcpy(Aptr->Zone[1],Zone);
               flagAreas=TRUE;
             }
             ACptr->Area=Aptr;
@@ -968,7 +968,7 @@ BOOLEAN ReadADDfile()
             else {
               fprintf(stderr,"***Warning: Secondary voltage control area %s has more than 1 pilot node.\n",Code);
               fprintf(stderr,"            The pilot node %d %s will be ignored.\n",ACptr->N,ACptr->Name);
-              strcpy_s(ACptr->Type,"B");
+              strcpy(ACptr->Type,"B");
             }
           }
         }
@@ -1003,9 +1003,9 @@ BOOLEAN ReadADDfile()
 
   if (flag2Vcontrol && !flagScards ) {
     for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
-      if (!strcmp(ACptr->Type,"BC"))       strcpy_s(ACptr->Type,"B");
-      else if (!strcmp(ACptr->Type,"BG"))  strcpy_s(ACptr->Type,"BQ");
-      else if (!strcmp(ACptr->Type,"BGS")) strcpy_s(ACptr->Type,"BS");
+      if (!strcmp(ACptr->Type,"BC"))       strcpy(ACptr->Type,"B");
+      else if (!strcmp(ACptr->Type,"BG"))  strcpy(ACptr->Type,"BQ");
+      else if (!strcmp(ACptr->Type,"BGS")) strcpy(ACptr->Type,"BS");
     }
     flag2Vcontrol=FALSE;
   }
@@ -1041,7 +1041,7 @@ BOOLEAN ReadADDfile()
         if (Aptr->N==0) {
           Narea++;
           Aptr->N=Narea;
-          strcpy_s(Aptr->Zone[1]," 0");
+          strcpy(Aptr->Zone[1]," 0");
         }
         ACptr->Area=Aptr;
         if (strpbrk(ACptr->Type,"S")) Aptr->Slack=Aptr->BSptr=ACptr;

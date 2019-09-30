@@ -57,36 +57,36 @@ BOOLEAN CheckRlimits()
       if(Tlim&&!strcmp(Eptr->Type,"R")&&(Eptr->Tap<=1/Eptr->Tmax+0.00001||
                                          Eptr->Tap>=1/Eptr->Tmin-0.00001)){
         flag=TRUE; i=j=0; NregV--;
-        if(Eptr->Tap<=1/Eptr->Tmax+0.00001) {Eptr->Tap=1/Eptr->Tmax; strcpy_s(str,"max");}
-        else {Eptr->Tap=1/Eptr->Tmin; strcpy_s(str,"min");}
+        if(Eptr->Tap<=1/Eptr->Tmax+0.00001) {Eptr->Tap=1/Eptr->Tmax; strcpy(str,"max");}
+        else {Eptr->Tap=1/Eptr->Tmin; strcpy(str,"min");}
         for(Rptr=ACptr->Reg;Rptr!=NULL;Rptr=Rptr->Next){
           if(!strcmp(Rptr->Eptr->Type,"R")) i++;
           else if(!strcmp(Rptr->Eptr->Type,"RV")) j++;
         }
         if (i==1 && j==0) {
-          strcpy_s(ACptr->Type,"B");
+          strcpy(ACptr->Type,"B");
           if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
         }
         else if(i==1 && j!=0) {
-          strcpy_s(ACptr->Type,"BR");
+          strcpy(ACptr->Type,"BR");
           if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
         }
-        strcpy_s(Eptr->Type,"TR");
+        strcpy(Eptr->Type,"TR");
         fprintf(stderr,"***Warning: %1s Reg. transf. from %d %s to %d %s\n",
                 Eptr->Ctype,Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
         fprintf(stderr,"            has been changed to a fixed tap transf. at t%3s.\n",str);
       }
       else if(Rcont&&!strcmp(Eptr->Type,"RV")&&(ACptr->V>=Eptr->Max||ACptr->V<=Eptr->Min)){
         flag=TRUE;
-        strcpy_s(Eptr->Type,"R");
-        if(ACptr->V>=Eptr->Max) {ACptr->V=Eptr->Max; strcpy_s(str,"max");}
-        else {ACptr->V=Eptr->Min;  strcpy_s(str,"min");}
+        strcpy(Eptr->Type,"R");
+        if(ACptr->V>=Eptr->Max) {ACptr->V=Eptr->Max; strcpy(str,"max");}
+        else {ACptr->V=Eptr->Min;  strcpy(str,"min");}
         if(!strpbrk(ACptr->Type,"T")){
-          strcpy_s(ACptr->Type,"BT");
+          strcpy(ACptr->Type,"BT");
           if(ACptr->Area!=NULL && ACptr->Area->Slack==ACptr) strcat_s(ACptr->Type,"A");
           ACptr->Cont=NULL;
           if (flagH) x0[ACvar[ACptr->N]+1]=Eptr->Tap;
@@ -98,9 +98,9 @@ BOOLEAN CheckRlimits()
       }
       else if(Tlim&&!strcmp(Eptr->Type,"RP")&&(Eptr->Ang>=Eptr->Tmax || Eptr->Ang<=Eptr->Tmin)){
         flag=TRUE; NregPQ--;
-        strcpy_s(Eptr->Type,"TP");
-        if(Eptr->Ang>=Eptr->Tmax) {Eptr->Ang=Eptr->Tmax; strcpy_s(str,"max");}
-        else {Eptr->Ang=Eptr->Tmin; strcpy_s(str,"min");}
+        strcpy(Eptr->Type,"TP");
+        if(Eptr->Ang>=Eptr->Tmax) {Eptr->Ang=Eptr->Tmax; strcpy(str,"max");}
+        else {Eptr->Ang=Eptr->Tmin; strcpy(str,"min");}
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Cvar;
@@ -111,9 +111,9 @@ BOOLEAN CheckRlimits()
       else if(Tlim&&!strcmp(Eptr->Type,"RQ")&&(Eptr->Tap<=1/Eptr->Tmax+0.00001||
                                                  Eptr->Tap>=1/Eptr->Tmin-0.00001)){
         flag=TRUE; NregPQ--;
-        strcpy_s(Eptr->Type,"TQ");
-        if(Eptr->Tap<=1/Eptr->Tmax+0.00001) {Eptr->Tap=1/Eptr->Tmax; strcpy_s(str,"max");}
-        else {Eptr->Tap=1/Eptr->Tmin; strcpy_s(str,"min");}
+        strcpy(Eptr->Type,"TQ");
+        if(Eptr->Tap<=1/Eptr->Tmax+0.00001) {Eptr->Tap=1/Eptr->Tmax; strcpy(str,"max");}
+        else {Eptr->Tap=1/Eptr->Tmin; strcpy(str,"min");}
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Cvar;
@@ -123,9 +123,9 @@ BOOLEAN CheckRlimits()
       }
       else if(PQcont&&PQlim&&strpbrk(Eptr->Type,"M")&&(Eptr->Cvar>=Eptr->Max||Eptr->Cvar<=Eptr->Min)){
         flag=TRUE;
-        strcpy_s(Eptr->Type,"RP");
-        if(Eptr->Cvar>=Eptr->Max) {Eptr->Cvar=Eptr->Max; strcpy_s(str,"max");}
-        else {Eptr->Cvar=Eptr->Min; strcpy_s(str,"min");}
+        strcpy(Eptr->Type,"RP");
+        if(Eptr->Cvar>=Eptr->Max) {Eptr->Cvar=Eptr->Max; strcpy(str,"max");}
+        else {Eptr->Cvar=Eptr->Min; strcpy(str,"min");}
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Ang;
@@ -135,9 +135,9 @@ BOOLEAN CheckRlimits()
       }
       else if(PQcont&&PQlim&&strpbrk(Eptr->Type,"N")&&(Eptr->Cvar>=Eptr->Max||Eptr->Cvar<=Eptr->Min)){
         flag=TRUE;
-        strcpy_s(Eptr->Type,"RQ");
-        if(Eptr->Cvar>=Eptr->Max) {Eptr->Cvar=Eptr->Max; strcpy_s(str,"max");}
-        else {Eptr->Cvar=Eptr->Min; strcpy_s(str,"min");}
+        strcpy(Eptr->Type,"RQ");
+        if(Eptr->Cvar>=Eptr->Max) {Eptr->Cvar=Eptr->Max; strcpy(str,"max");}
+        else {Eptr->Cvar=Eptr->Min; strcpy(str,"min");}
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
         if (Acont && strpbrk(ACptr->Type,"A")) i++;
         if (flagH) x0[i]=Eptr->Tap;
@@ -171,9 +171,9 @@ BOOLEAN CheckVlimits()
     if (strpbrk(ACptr->Type,"V")) {
       if (Vlim && strpbrk(ACptr->cont,"Q") && (ACptr->V>=ACptr->Vmax || ACptr->V<=ACptr->Vmin)) {
         flag=TRUE; Nvolt++;
-        if(ACptr->V>=ACptr->Vmax) {ACptr->V=ACptr->Vmax; strcpy_s(str,"max");}
-        else                      {ACptr->V=ACptr->Vmin; strcpy_s(str,"min");}
-        strcpy_s(ACptr->cont,"V");
+        if(ACptr->V>=ACptr->Vmax) {ACptr->V=ACptr->Vmax; strcpy(str,"max");}
+        else                      {ACptr->V=ACptr->Vmin; strcpy(str,"min");}
+        strcpy(ACptr->cont,"V");
         ACptr->VCont=ACptr->Qg;
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
@@ -184,7 +184,7 @@ BOOLEAN CheckVlimits()
                ((ACptr->V==ACptr->Vmax && ACptr->Qg>=ACptr->VCont)||
                 (ACptr->V==ACptr->Vmin && ACptr->Qg<=ACptr->VCont)) ){
         flag=TRUE; Nvolt--;
-        strcpy_s(ACptr->cont,"Q");
+        strcpy(ACptr->cont,"Q");
         ACptr->Qg=ACptr->VCont;
         ACptr->Cont=ACptr;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
@@ -195,7 +195,7 @@ BOOLEAN CheckVlimits()
         if (Ilim && strpbrk(ACptr->cont,"Q") && ACptr->Gen->Ia>=ACptr->Gen->IaMax) {
           flag=TRUE;  Nvolt++;
           ACptr->Gen->Ia=ACptr->Gen->IaMax;
-          strcpy_s(ACptr->cont,"I");
+          strcpy(ACptr->cont,"I");
           ACptr->VCont=ACptr->Qg;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Qg;
@@ -205,7 +205,7 @@ BOOLEAN CheckVlimits()
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&
                  ACptr->Gen->Ia==ACptr->Gen->IaMax && ACptr->Qg>=ACptr->VCont) {
           flag=TRUE; Nvolt--;
-          strcpy_s(ACptr->cont,"Q");
+          strcpy(ACptr->cont,"Q");
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Gen->Ia;
           fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
@@ -216,12 +216,12 @@ BOOLEAN CheckVlimits()
           flag=TRUE; Nvolt++;
           if (ACptr->Gen->Eq>=ACptr->Gen->EqMax) {
             ACptr->Gen->Eq=ACptr->Gen->EqMax;
-            strcpy_s(str,"max");
+            strcpy(str,"max");
           } else {
             ACptr->Gen->Eq=ACptr->Gen->EqMin;
-            strcpy_s(str,"min");
+            strcpy(str,"min");
           }
-          strcpy_s(ACptr->cont,"E");
+          strcpy(ACptr->cont,"E");
           ACptr->VCont=ACptr->Qg;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Qg;
@@ -232,7 +232,7 @@ BOOLEAN CheckVlimits()
                  ((ACptr->Gen->Eq==ACptr->Gen->EqMax && ACptr->Qg>=ACptr->VCont) ||
                   (ACptr->Gen->Eq==ACptr->Gen->EqMin && ACptr->Qg<=ACptr->VCont)) ){
           flag=TRUE; Nvolt--;
-          strcpy_s(ACptr->cont,"Q");
+          strcpy(ACptr->cont,"Q");
           ACptr->Qg=ACptr->VCont;
           ACptr->Cont=ACptr;
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Gen->Eq;
@@ -287,7 +287,7 @@ BOOLEAN CheckVlimits()
         }
         if (ACptr->Cont->step>ACptr->Cont->steps || ACptr->Cont->step<1) {
           NXvolt--;
-          strcpy_s(ACptr->cont,"m");
+          strcpy(ACptr->cont,"m");
           fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            reactance support due to V_min problems.\n");
         }
@@ -313,20 +313,20 @@ BOOLEAN CheckVlimits()
         }
         if (ACptr->Cont->step>ACptr->Cont->steps || ACptr->Cont->step<1) {
           NXvolt--;
-          strcpy_s(ACptr->cont,"M");
+          strcpy(ACptr->cont,"M");
           fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has run out of \n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            reactance support due to V_max problems.\n");
         }
       }
       else if (Xlim && Recover && strpbrk(ACptr->cont,"M") && ACptr->V<=ACptr->Vmax) {
         flag=TRUE; NXvolt++;
-        strcpy_s(ACptr->cont,"X");
+        strcpy(ACptr->cont,"X");
         fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
         fprintf(stderr,"            reactance support as V < V_max.\n");
       }
       else if (Xlim && Recover && strpbrk(ACptr->cont,"m") && ACptr->V>=ACptr->Vmin) {
         flag=TRUE; NXvolt++;
-        strcpy_s(ACptr->cont,"X");
+        strcpy(ACptr->cont,"X");
         fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered \n",ACptr->Num,ACptr->Name);
         fprintf(stderr,"            reactance support as V > V_min.\n");
       }
@@ -353,16 +353,16 @@ BOOLEAN CheckQlimits()
       fprintf(stderr,"            hence, Pg will be fixed at its max. MW limit -> %lf.\n",ACptr->Pmax*Sn);
       ACptr->flagPgMax++;
     }
-    if (ACptr->Qmax==ACptr->Max) strcpy_s(Qmax,"Qmax");
-    else                         strcpy_s(Qmax,"Smax");
-    if (ACptr->Qmin==ACptr->Min) strcpy_s(Qmin,"Qmin");
-    else                         strcpy_s(Qmin,"Smin");
+    if (ACptr->Qmax==ACptr->Max) strcpy(Qmax,"Qmax");
+    else                         strcpy(Qmax,"Smax");
+    if (ACptr->Qmin==ACptr->Min) strcpy(Qmin,"Qmin");
+    else                         strcpy(Qmin,"Smin");
     if (QRcont && strpbrk(ACptr->Type,"G")) {
       if (Qlim && strpbrk(ACptr->cont,"V") && (ACptr->Qg>=ACptr->Max||ACptr->Qg<=ACptr->Min)) {
         flag=TRUE; Nvolt--;
-        if(ACptr->Qg>=ACptr->Max) {ACptr->Qg=ACptr->Max; strcpy_s(str,Qmax);}
-        else                      {ACptr->Qg=ACptr->Min; strcpy_s(str,Qmin);}
-        strcpy_s(ACptr->cont,"Q");
+        if(ACptr->Qg>=ACptr->Max) {ACptr->Qg=ACptr->Max; strcpy(str,Qmax);}
+        else                      {ACptr->Qg=ACptr->Min; strcpy(str,Qmin);}
+        strcpy(ACptr->cont,"Q");
         fprintf(stderr,"***Warning: Generator %d %s has lost remote voltage control\n",ACptr->Num,ACptr->Name);
         fprintf(stderr,"            due to %4s problems.\n",str);
         ACptr->Cont->Kbg--;
@@ -381,7 +381,7 @@ BOOLEAN CheckQlimits()
                ((ACptr->Qg>=ACptr->Max && ACptr->Cont->V>=ACptr->Cont->VCont)||
                 (ACptr->Qg<=ACptr->Min && ACptr->Cont->V<=ACptr->Cont->VCont)) ) {
         flag=TRUE; Nvolt++;
-        strcpy_s(ACptr->cont,"V");
+        strcpy(ACptr->cont,"V");
         ACptr->Cont->Kbg++;
         fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
         fprintf(stderr,"            remote voltage control as Qg/Sg is again within limits.\n");
@@ -398,7 +398,7 @@ BOOLEAN CheckQlimits()
         if (Ilim && strpbrk(ACptr->cont,"V") && ACptr->Gen->Ia>=ACptr->Gen->IaMax) {
           flag=TRUE; Nvolt--;
           ACptr->Gen->Ia=ACptr->Gen->IaMax;
-          strcpy_s(ACptr->cont,"I");
+          strcpy(ACptr->cont,"I");
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Qg;
           fprintf(stderr,"***Warning: Generator %d %s has lost remote\n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            V control due to Ia_max limit problems.\n");
@@ -414,7 +414,7 @@ BOOLEAN CheckQlimits()
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&   ACptr->Cont->Kbg<1 &&
                  ACptr->Gen->Ia==ACptr->Gen->IaMax && ACptr->Cont->V>=ACptr->Cont->VCont) {
           flag=TRUE;  Nvolt++;
-          strcpy_s(ACptr->cont,"V");
+          strcpy(ACptr->cont,"V");
           if (flagH) x0[ACptr->Gen->Nvar+11]=ACptr->Gen->Ia;
           fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            remote V control as Ia is again within limits.\n");
@@ -432,12 +432,12 @@ BOOLEAN CheckQlimits()
           flag=TRUE;  Nvolt--;
           if (ACptr->Gen->Eq>=ACptr->Gen->EqMax) {
             ACptr->Gen->Eq=ACptr->Gen->EqMax;
-            strcpy_s(str,"max");
+            strcpy(str,"max");
           } else {
             ACptr->Gen->Eq=ACptr->Gen->EqMin;
-            strcpy_s(str,"min");
+            strcpy(str,"min");
           }
-          strcpy_s(ACptr->cont,"E");
+          strcpy(ACptr->cont,"E");
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Qg;
           fprintf(stderr,"***Warning: Generator %d %s has lost\n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            remote V control due to Eq_%3s limit problems.\n",str);
@@ -454,7 +454,7 @@ BOOLEAN CheckQlimits()
                  ((ACptr->Gen->Eq==ACptr->Gen->EqMax && ACptr->Cont->V>=ACptr->Cont->VCont) ||
                   (ACptr->Gen->Eq==ACptr->Gen->EqMin && ACptr->Cont->V<=ACptr->Cont->VCont)) ){
           flag=TRUE;  Nvolt++;
-          strcpy_s(ACptr->cont,"V");
+          strcpy(ACptr->cont,"V");
           if (flagH) x0[ACptr->Gen->Nvar+1]=ACptr->Gen->Eq;
           fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
           fprintf(stderr,"            remote V control as Eq is again within limits.\n");
@@ -498,13 +498,13 @@ BOOLEAN CheckQlimits()
         flag=TRUE; Nvolt--;
         if(ACptr->Qg>=ACptr->Max) {
           ACptr->Qg=ACptr->Max;
-          strcpy_s(str,Qmax);
+          strcpy(str,Qmax);
         }
         else {
           ACptr->Qg=ACptr->Min;
-          strcpy_s(str,Qmin);
+          strcpy(str,Qmin);
         }
-        strcpy_s(ACptr->cont,"Q");
+        strcpy(ACptr->cont,"Q");
         ACptr->VCont=ACptr->V;
         if (strpbrk(ACptr->Type,"G")) ACptr->Cont=ACptr->ContBus->AC;
         else                          ACptr->Cont=ACptr;
@@ -517,7 +517,7 @@ BOOLEAN CheckQlimits()
                 (ACptr->Qg<=ACptr->Min && ACptr->V<=ACptr->VCont)) ){
         flag=TRUE; Nvolt++;
         ACptr->V=ACptr->VCont;
-        strcpy_s(ACptr->cont,"V");
+        strcpy(ACptr->cont,"V");
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
         fprintf(stderr,"***Warning: Generator %d %s has recovered\n",ACptr->Num,ACptr->Name);
@@ -527,7 +527,7 @@ BOOLEAN CheckQlimits()
         if (Ilim && strpbrk(ACptr->cont,"V") && ACptr->Gen->Ia>=ACptr->Gen->IaMax) {
           flag=TRUE;  Nvolt--;
           ACptr->Gen->Ia=ACptr->Gen->IaMax;
-          strcpy_s(ACptr->cont,"I");
+          strcpy(ACptr->cont,"I");
           ACptr->VCont=ACptr->V;
           if (strpbrk(ACptr->Type,"G")) ACptr->Cont=ACptr->ContBus->AC;
           else                          ACptr->Cont=ACptr;
@@ -541,7 +541,7 @@ BOOLEAN CheckQlimits()
         else if (Ilim && Recover && strpbrk(ACptr->cont,"I") &&
                  ACptr->Gen->Ia==ACptr->Gen->IaMax && ACptr->V>=ACptr->VCont) {
           flag=TRUE;  Nvolt++;
-          strcpy_s(ACptr->cont,"V");
+          strcpy(ACptr->cont,"V");
           ACptr->V=ACptr->VCont;
           ACptr->Cont=NULL;
           if (flagH) {
@@ -556,12 +556,12 @@ BOOLEAN CheckQlimits()
           flag=TRUE; Nvolt--;
           if (ACptr->Gen->Eq>=ACptr->Gen->EqMax) {
             ACptr->Gen->Eq=ACptr->Gen->EqMax;
-            strcpy_s(str,"max");
+            strcpy(str,"max");
           } else {
             ACptr->Gen->Eq=ACptr->Gen->EqMin;
-            strcpy_s(str,"min");
+            strcpy(str,"min");
           }
-          strcpy_s(ACptr->cont,"E");
+          strcpy(ACptr->cont,"E");
           ACptr->VCont=ACptr->V;
           if (strpbrk(ACptr->Type,"G")) ACptr->Cont=ACptr->ContBus->AC;
           else                          ACptr->Cont=ACptr;
@@ -576,7 +576,7 @@ BOOLEAN CheckQlimits()
                  ((ACptr->Gen->Eq==ACptr->Gen->EqMax && ACptr->V>=ACptr->VCont) ||
                   (ACptr->Gen->Eq==ACptr->Gen->EqMin && ACptr->V<=ACptr->VCont)) ){
           flag=TRUE;  Nvolt++;
-          strcpy_s(ACptr->cont,"V");
+          strcpy(ACptr->cont,"V");
           ACptr->V=ACptr->VCont;
           ACptr->Cont=NULL;
           if (flagH) {
@@ -617,14 +617,14 @@ BOOLEAN CheckQlimits()
         flag=TRUE; NZvolt--;
         if(ACptr->Qg>=ACptr->Qmax) {
           ACptr->Qg=ACptr->Qmax;
-          strcpy_s(str,Qmax);
+          strcpy(str,Qmax);
         }
         else {
           ACptr->Qg=ACptr->Qmin;
-          strcpy_s(str,Qmin);
+          strcpy(str,Qmin);
         }
         ACptr->Bz=ACptr->Qg/(ACptr->V*ACptr->V);
-        strcpy_s(ACptr->cont,"Q");
+        strcpy(ACptr->cont,"Q");
         ACptr->VCont=ACptr->V;
         ACptr->Cont=ACptr;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->V;
@@ -636,7 +636,7 @@ BOOLEAN CheckQlimits()
                 (ACptr->Qg<=ACptr->Qmin && ACptr->V<=ACptr->VCont)) ){
         flag=TRUE; NZvolt++;
         ACptr->V=ACptr->VCont;
-        strcpy_s(ACptr->cont,"V");
+        strcpy(ACptr->cont,"V");
         ACptr->Cont=NULL;
         if (flagH) x0[ACvar[ACptr->N]+1]=ACptr->Qg;
         fprintf(stderr,"***Warning: Reactance-controlled bus %d %s has recovered\n",ACptr->Num,ACptr->Name);

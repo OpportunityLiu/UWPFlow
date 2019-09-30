@@ -252,12 +252,12 @@ void ErrorDetect()
       fprintf(stderr,"       has not been completely defined.  Check T cards on WSCC format.\n");
       InputError=TRUE;
     }
-    if (!strcmp(Eptr->Type,"R") || !strcmp(Eptr->Type,"RV")) strcpy_s(Eptr->Ctype,"V");
-    else if (strpbrk(Eptr->Type,"PM")) strcpy_s(Eptr->Ctype,"P");
-    else if (strpbrk(Eptr->Type,"QN")) strcpy_s(Eptr->Ctype,"Q");
+    if (!strcmp(Eptr->Type,"R") || !strcmp(Eptr->Type,"RV")) strcpy(Eptr->Ctype,"V");
+    else if (strpbrk(Eptr->Type,"PM")) strcpy(Eptr->Ctype,"P");
+    else if (strpbrk(Eptr->Type,"QN")) strcpy(Eptr->Ctype,"Q");
     if (strcmp(Eptr->Owner,"")){
-      if (!strcmp(Eptr->Owner,Eptr->From->Owner)) strcpy_s(Eptr->Zone,Eptr->From->Zone);
-      else strcpy_s(Eptr->Zone,Eptr->To->Zone);
+      if (!strcmp(Eptr->Owner,Eptr->From->Owner)) strcpy(Eptr->Zone,Eptr->From->Zone);
+      else strcpy(Eptr->Zone,Eptr->To->Zone);
     }
     if (Narea>1) {
       Aptr=Eptr->From->Area;

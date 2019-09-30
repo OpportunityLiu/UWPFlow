@@ -77,13 +77,13 @@ void SVCinit()
    }
    if (alpha <= SVCptr->AlphaMin) {
      alpha=SVCptr->alpha_svc=SVCptr->AlphaMin;
-     strcpy_s(SVCptr->Cont,"MN");
+     strcpy(SVCptr->Cont,"MN");
      fprintf(stderr,"***Warning: SVC %s initial firing angle is at its minimum limit.\n",SVCptr->Name);
      fprintf(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
    }
    else if (alpha >= SVCptr->AlphaMax) {
      alpha=SVCptr->alpha_svc=SVCptr->AlphaMax;
-     strcpy_s(SVCptr->Cont,"MX");
+     strcpy(SVCptr->Cont,"MX");
      fprintf(stderr,"***Warning: SVC %s initial firing angle is at its maximum limit.\n",SVCptr->Name);
      fprintf(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
    }
@@ -215,13 +215,13 @@ void STATCOMinit()
     else        Io=0;
     if (Io<-Imin) {
        Io=-Imin;
-       strcpy_s(STATCOMptr->Cont,"MN");
+       strcpy(STATCOMptr->Cont,"MN");
        fprintf(stderr,"***Warning: STATCOM %s has been initialized at its minimum current limit.\n",STATCOMptr->Name);
        fprintf(stderr,"            It will be treated as a fixed capacitive current source. \n");
     }
     else if (Io>Imax) {
        Io=Imax;
-       strcpy_s(STATCOMptr->Cont,"MX");
+       strcpy(STATCOMptr->Cont,"MX");
        fprintf(stderr,"***Warning: STATCOM %s has been initialized at its maximum current limit.\n",STATCOMptr->Name);
        fprintf(stderr,"            It will be treated as a fixed inductive current source. \n");
     }

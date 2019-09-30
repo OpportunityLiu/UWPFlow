@@ -38,10 +38,10 @@ ACbusData *ptrac,*ptrac1;
       ptr=ptr->Next;
     }
   }
-  strcpy_s(ptr->Name,BusName);
+  strcpy(ptr->Name,BusName);
   ptr->N=0;
-  strcpy_s(ptr->Type,"FS");
-  strcpy_s(ptr->Cont,"AL");
+  strcpy(ptr->Type,"FS");
+  strcpy(ptr->Cont,"AL");
   ptr->Vsvc=0;
   ptr->Xth_l=0;
   ptr->Xc=0;
@@ -99,10 +99,10 @@ ACbusData *ptrac,*ptrac1;
       ptr=ptr->Next;
     }
   }
-  strcpy_s(ptr->Name,BusName);
+  strcpy(ptr->Name,BusName);
   ptr->N=0;
-  strcpy_s(ptr->Type,"FC");
-  strcpy_s(ptr->Cont,"X");
+  strcpy(ptr->Type,"FC");
+  strcpy(ptr->Cont,"X");
   ptr->Xc=0;
   ptr->Xl=0;
   ptr->AlphaMin=0;
@@ -162,11 +162,11 @@ ACbusData *ptrac,*ptrac1;
       ptr=ptr->Next;
     }
   }
-  strcpy_s(ptr->Name,BusName);
+  strcpy(ptr->Name,BusName);
   ptr->N=0;
-  strcpy_s(ptr->Type,"FT");
-  strcpy_s(ptr->Cont,"PW");
-  strcpy_s(ptr->Cont1,"PW");
+  strcpy(ptr->Type,"FT");
+  strcpy(ptr->Cont,"PW");
+  strcpy(ptr->Cont1,"PW");
   ptr->I=0;
   ptr->theta=0;
   ptr->k=0;
