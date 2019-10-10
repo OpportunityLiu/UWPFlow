@@ -9,7 +9,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void JacElement(SparseMatrix *Mptr,INDEX I,INDEX J,VALUETYPE val);
 void DeleteJac(SparseMatrix *Mptr,IntegerVector *P1Row,IntegerVector *P1Col,
 	       IntegerVector *P2Row,IntegerVector *P2Col);
@@ -50,45 +49,6 @@ BOOLEAN InList(ACbusData *ACptr,AClist *Vptr);
 void PrintDirection(char Option,VALUETYPE *vector,VALUETYPE Max);
 void WriteQmatrix(INDEX count,VALUETYPE *vec);
 void IndicesMatlab(INDEX count);
-#else
-void JacElement();
-void DeleteJac();
-AreaData *ACFunJac();
-BOOLEAN DCFunJac();
-void SVCFunJac();     // FACTS 
-void TCSCFunJac();    // FACTS 
-void STATCOMFunJac(); // FACTS 
-int HFunJac();
-VALUETYPE LoadX0();
-int factorns();
-int factor();
-void repsolp();
-void WriteSolution();
-int Pflow();
-void MakeVlist();
-void VoltProf();
-int Direction();
-BOOLEAN ChangeParam();
-int Homot();
-BOOLEAN CheckRlimits();
-BOOLEAN CheckVlimits();
-BOOLEAN CheckQlimits();
-BOOLEAN ChangeDCmode();
-BOOLEAN ChangeSVCmode();       // FACTS 
-BOOLEAN ChangeTCSCmode();      // FACTS 
-BOOLEAN ChangeSTATCOMmode();   // FACTS 
-BOOLEAN DCsetup();
-void Print();
-void VoltageSensFactor();
-void TEFac();
-void TEFdc();
-void MatlabV();
-void TEFMatlabFiles();
-BOOLEAN InList();
-void PrintDirection();
-void WriteQmatrix();
-void IndicesMatlab();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;

@@ -11,14 +11,7 @@ extern BOOLEAN flagReducedContinuation,flagReduceSystem,*DxZero;
 
 
 /* ------------------ HFunJac ----------------------------- */
-#ifdef ANSIPROTO
 int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *vec)
-#else
-int HFunJac(FlagFunction,FlagJacobian,Aptr,vec)
-BOOLEAN FlagFunction,FlagJacobian;
-AreaData *Aptr;
-VALUETYPE *vec;
-#endif
 /* Add a row to the Jacobian. */
 {
   ACbusData *ACptr,*ACptrp;

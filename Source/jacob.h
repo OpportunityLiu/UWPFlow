@@ -9,17 +9,10 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void JacElement(SparseMatrix *Mptr,INDEX I,INDEX J,VALUETYPE val);
 AreaData *ACFunJac(SparseMatrix *Mptr,int *val,BOOLEAN flagF,BOOLEAN flagJ,BOOLEAN flagP);
 BOOLEAN DCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
 void Jacobian(void);
-#else
-void JacElement();
-AreaData *ACFunJac();
-BOOLEAN DCFunJac();
-void Jacobian();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;

@@ -9,19 +9,11 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void TEFac(BOOLEAN flag);
 void TEFdc(FILE *Out);
 void MatlabV(FILE *Out);
 void TEFMatlabFiles(void);
 void Print(FILE *File, int spaces, int width, int decimals, VALUETYPE val);
-#else
-void TEFac();
-void TEFdc();
-void MatlabV();
-void TEFMatlabFiles();
-void Print();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
@@ -36,12 +28,7 @@ extern int field;
 extern BOOLEAN flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
 
 /* ------------------ TEFac ----------------------------- */
-#ifdef ANSIPROTO
 void TEFac(BOOLEAN flag)
-#else
-void TEFac(flag)
-    BOOLEAN flag;
-#endif
 /* Caculate AC TEF. */
 {
   ACbusData *ACptr, *BEptr, *To;

@@ -4,12 +4,7 @@
 
 
 /* ------------------ ACFunHes ----------------------------- */
-#ifdef ANSIPROTO
 void ACFunHes(BOOLEAN flagF,BOOLEAN flagJ)
-#else
-void ACFunHes(flagF,flagJ)
-BOOLEAN flagF,flagJ;
-#endif
 /* Construct the AC part of the PoC Jacobian. */
 {
   SparseMatrixElement *Jptr;
