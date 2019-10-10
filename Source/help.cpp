@@ -5,22 +5,14 @@
 #include <string.h>
 #include "param.h"
 
-#ifdef ANSIPROTO
 void ErrorStop(char *Msg);
-#else
-void ErrorStop();
-#endif
 
 /* ---------------------- ErrorStop ------------------------------------ */
-#ifdef ANSIPROTO
 void ErrorStop(char *Msg)
-#else
-void ErrorStop(Msg)
-char *Msg;
-#endif
 {
   printf("UW Continuation Power Flow (c)1992,1996,1999, 2006 C. Canizares, F. Alvarado and S. Zhang.\n");
-  if (!NullName(Msg)) printf("Error: %s\n",Msg);
+  if (!NullName(Msg))
+    printf("Error: %s\n", Msg);
   printf("\n");
   printf("Usage:\n");
   printf("       Like any other UNIX program, i.e., command-line options (-option)\n");
@@ -368,7 +360,6 @@ char *Msg;
   printf("                  * over-excited  -> q_i=Qmax_i/Sum Qmax of pilot bus gens.\n");
   printf("                  * under-excited -> q_i=Qmin_i/Sum Qmin of pilot bus gens.\n");
   printf("\n");
-  if (!NullName(Msg)) exit(ERROREXIT);
+  if (!NullName(Msg))
+    exit(ERROREXIT);
 }
-
-

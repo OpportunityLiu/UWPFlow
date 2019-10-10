@@ -10,8 +10,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-
-#ifdef ANSIPROTO
 void Output(INDEX Iter,char *File1,char *str);
 void Print(FILE *File,int spaces,int width,int decimals,VALUETYPE val);
 void IEEE(void);
@@ -31,26 +29,6 @@ void STATCOMFunHes(BOOLEAN flagF,BOOLEAN flagJ);    /* FACTS */
 void WriteJac(void);
 void WriteSolution(INDEX Iter,char *File,char *str);
 void WriteQmatrix(INDEX count,VALUETYPE *vec);
-#else
-void Output();
-void Print();
-void IEEE();
-void DeleteJac();
-AreaData *ACFunJac();
-BOOLEAN DCFunJac();
-int HFunJac();
-void ACFunHes();
-BOOLEAN DCFunHes();
-void SVCFunJac();      // FACTS 
-void TCSCFunJac();     // FACTS 
-void STATCOMFunJac();  // FACTS 
-void SVCFunHes();      // FACTS 
-void TCSCFunHes();     //. FACTS 
-void STATCOMFunHes();  // FACTS 
-void WriteJac();
-void WriteSolution();
-void WriteQmatrix();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
