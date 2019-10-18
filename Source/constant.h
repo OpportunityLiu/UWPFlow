@@ -9,11 +9,6 @@ constexpr const int NORMALEXIT = 0;
 constexpr const int WARNINGEXIT = 1;
 constexpr const int ERROREXIT = 2;
 
-// comment/remove comment theses lines based on environment
-#define ANSIPROTO
-//#define WINDOWS
-//#define WINDOWS95
-
 #define maxN 1000
 using ELEMENTVALUETYPE = double;
 using VALUETYPE = double;
