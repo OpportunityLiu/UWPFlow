@@ -14,11 +14,7 @@ INDEX NdcEl,LineNum;
 FILE *InputDataFile;
 
 /* ------------------- ErrorDetect -------------------------- */
-#ifdef ANSIPROTO
 void ErrorDetect(void)
-#else
-void ErrorDetect()
-#endif
 /* Detect inconsistencies in input data. */
 {
   ACbusData *ACptr,*ACptrp,*ACptrs;
@@ -573,13 +569,7 @@ void ErrorDetect()
 }
 
 /* --------- ExpandSlack --------- */
-#ifdef ANSIPROTO
 void ExpandSlack(ACbusData *BSptr,AreaData *Aptr)
-#else
-void ExpandSlack(BSptr,Aptr)
-ACbusData *BSptr;
-AreaData *Aptr;
-#endif
 {
   AreaData *Aptrp;
   ElementList *ELptr;
@@ -595,11 +585,7 @@ AreaData *Aptr;
 }
 
 /* --------- WriteSummary --------- */
-#ifdef ANSIPROTO
 void WriteSummary(void)
-#else
-void WriteSummary()
-#endif
 {
   ACbusData *ACptr;
   int i;
@@ -638,12 +624,7 @@ void WriteSummary()
 
 
 /* ------------------------- ReadData ------------------------------- */
-#ifdef ANSIPROTO
 void ReadData(char *Name)
-#else
-void ReadData(Name)
-char *Name;
-#endif
  /* Main routine. */
 {
 	InputDataFile=(FILE *) OpenInput(Name);  

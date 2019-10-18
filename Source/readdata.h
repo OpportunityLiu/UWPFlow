@@ -10,7 +10,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 char *GetStr(const char *ptr,int Pos,int Leng,int Tot,char *str);
 VALUETYPE GetValue(const char *ptr,int Pos,int Leng,int Dec);
 INDEX GetInt(const char *ptr,int Pos,int Leng);
@@ -38,35 +37,6 @@ void ReadData(char *Name);
 BOOLEAN ReadInit(void);
 BOOLEAN ReadOHload(char *File);
 void ReadITALY(void);
-#else
-char *GetStr();
-VALUETYPE GetValue();
-INDEX GetInt();
-ACbusData *ACbusInList();
-SVCbusData *SVCbusInList();          // FACTS
-TCSCbusData *TCSCbusInList();        // FACTS
-STATCOMbusData *STATCOMbusInList();  // FACTS
-AreaData *AreaInList();
-ElementList *AddElemToList();
-ElementData *ElemInList();
-DCbusData *DCbusInList();
-void ReadWSCC();
-void ReadIEEE();
-void ReadEPRIdc();
-void ReadSVC();       // FACTS
-void ReadTCSC();      // FACTS
-void ReadSTATCOM();   // FACTS
-void Multiply();
-void Divide();
-BOOLEAN AddSection();
-void ErrorDetect();
-void WriteSummary();
-void ExpandSlack();
-void ReadData();
-BOOLEAN ReadInit();
-BOOLEAN ReadOHload();
-void ReadITALY();
-#endif   
 
 
 /* ------- Global Variables (some defined in pflow.c) ------ */

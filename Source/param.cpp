@@ -236,20 +236,10 @@ FILE *OpenInput(const char *Name)
   FILE *InputFile;
   char s[80];
 
-#ifdef WINDOWS
-  char charDir[300];
-  strcpy(charDir, dir.GetBuffer(dir.GetLength()));
-#endif
-
   if (!NullName(Name))
   {
-#ifdef WINDOWS
-    if ((InputFile = fopen(strcat(charDir, Name), "rt")) == NULL)
-    {
-#else
     if ((InputFile = fopen(Name, "rt")) == NULL)
     {
-#endif
       sprintf(s, "No input data file -> %s", Name);
       ErrorHalt(s);
       exit(ERROREXIT);
@@ -272,37 +262,19 @@ FILE *OpenOutput(const char *Name)
 {
   FILE *OutputFile;
 
-#ifdef WINDOWS
-  char charDir[300];
-  strcpy(charDir, dir.GetBuffer(dir.GetLength()));
-#endif
-
   if (!NullName(Name))
   {
-#ifdef WINDOWS
-    if ((OutputFile = fopen(strcat(charDir, Name), "wt")) == NULL)
-    {
-#else
     if ((OutputFile = fopen(Name, "wt")) == NULL)
     {
-#endif
       fprintf(stderr, "Output to standard output\n");
-#ifdef WINDOWS
-      OutputFile = NULL;
-#else
       OutputFile = stdout;
-#endif
       //explanation for above: a really strange bug where stdout gets initialized to something
       //by itself. I(that is, Shu) really couldn't figure it out so I set OutputFile to NULL instead which will
       //print to screen anyways.
     }
   }
   else
-#ifdef WINDOWS
-    OutputFile = NULL;
-#else
     OutputFile = stdout;
-#endif
   return (OutputFile);
 }
 
