@@ -9,21 +9,12 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void UpdateSVCvar(VALUETYPE cons,INDEX j);
 void UpdateTCSCvar(VALUETYPE cons,INDEX j);
 void UpdateSTATCOMvar(VALUETYPE cons,INDEX j);
 BOOLEAN ChangeSVCmode(void);
 BOOLEAN ChangeTCSCmode(void);
 BOOLEAN ChangeSTATCOMmode(void);
-#else
-void UpdateSVCvar();
-void UpdateTCSCvar();
-void UpdateSTATCOMvar();
-BOOLEAN ChangeSVCmode();
-BOOLEAN ChangeTCSCmode();
-BOOLEAN ChangeSTATCOMmode();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
@@ -37,13 +28,7 @@ extern IntegerVector *NewRow,*OldRow,*NewCol,*OldCol,*RowPartition,*ColPartition
 extern IntegerVector *RowPer,*ColPer;
 extern BOOLEAN Acont,PQcont,QRcont,Rcont,PQlim,Tlim,Qlim,Vlim,flagH,flagPoC,flagL,flagR,flagBS;
 
-#ifdef ANSIPROTO
 void UpdateSVCvar(VALUETYPE cons,INDEX j)
-#else
-void UpdateSVCvar(cons,j)
-VALUETYPE cons;
-INDEX j;
-#endif
 {
   SVCbusData *SVCptr;
   INDEX i;
