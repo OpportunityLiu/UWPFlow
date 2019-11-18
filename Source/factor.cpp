@@ -27,14 +27,8 @@ void InitializeWorkingRow()
   INDEX I, J;
   SparseMatrixElement *Ptr1;
   /* BEGIN */
-#ifdef WINDOWS
   Swr2 = new ELEMENTVALUETYPE[Matrix2->n1 + 1];
   DiagPtr2 = new SparseMatrixElement *[Matrix2->n1 + 1];
-#else
-  Swr2 = (ELEMENTVALUETYPE *)calloc((Matrix2->n1 + 1), sizeof(ELEMENTVALUETYPE));
-  DiagPtr2 = (struct SparseMatrixElement **)
-      calloc((Matrix2->n1 + 1), sizeof(struct SparseMatrixElement *));
-#endif
   for (I = 1; I <= Matrix2->n1; I++)
   {
     Ptr1 = Matrix2->RowHead[I];
@@ -164,12 +158,7 @@ int factor(SparseMatrix *Mptr)
   Nstop2 = Matrix2->n1;
   if (DoFactorization() == WARNINGEXIT)
     return (WARNINGEXIT);
-#ifdef WINDOWS
   delete[] Swr2;
   delete[] DiagPtr2;
-#else
-  free(Swr2);
-  free(DiagPtr2);
-#endif
   return (0);
 }

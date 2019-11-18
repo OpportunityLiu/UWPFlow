@@ -66,13 +66,7 @@ extern bool *MarkRowPerm, *MarkColPerm;
 extern int SD0;
 
 /* --------------- Norm ---------------------- */
-#ifdef ANSIPROTO
 VALUETYPE Norm(VALUETYPE *Vptr, INDEX N, INDEX *N1)
-#else
-VALUETYPE Norm(Vptr, N, N1)
-    VALUETYPE *Vptr;
-INDEX N, *N1;
-#endif
 /* Find the norm (max. value) of a vector. */
 {
    VALUETYPE val;
@@ -89,12 +83,7 @@ INDEX N, *N1;
 }
 
 /* ----------------- GetACbus ------------------------ */
-#ifdef ANSIPROTO
 ACbusData *GetACbus(INDEX N)
-#else
-ACbusData *GetACbus(N)
-    INDEX N;
-#endif
 {
    ACbusData *ACptr;
 
@@ -107,13 +96,7 @@ ACbusData *GetACbus(N)
 }
 
 /* ----------------- PrintMismatch ------------------------ */
-#ifdef ANSIPROTO
 void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1)
-#else
-void PrintMismatch(val, j, N1)
-    VALUETYPE val;
-INDEX j, N1;
-#endif
 {
    INDEX k, l, N, N2, N3;
    INDEX m, n, o, N4, N5, N6; /* FACTS */
@@ -217,14 +200,8 @@ INDEX j, N1;
 }
 
 /* ------------------------ DeleteJac --------------------------------- */
-#ifdef ANSIPROTO
 void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
                IntegerVector *P2Row, IntegerVector *P2Col)
-#else
-void DeleteJac(Mptr, P1Row, P1Col, P2Row, P2Col)
-    SparseMatrix *Mptr;
-IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
-#endif
 {
    INDEX k;
    SparseMatrixElement *Jptr, *Jptrp;
@@ -235,11 +212,7 @@ IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
       while (Jptr != nullptr)
       {
          Jptrp = Jptr->RowNext;
-#ifdef WINDOWS
          delete Jptr;
-#else
-         free(Jptr);
-#endif
          Jptr = Jptrp;
       }
       Mptr->ColHead[k] = Mptr->RowHead[k] = nullptr;
@@ -249,12 +222,7 @@ IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
 }
 
 /* --------------------------- Pflow --------------------------------- */
-#ifdef ANSIPROTO
 int Pflow(int iter, bool flagDCLimits, bool flagLimits, bool flagFirst)
-#else
-int Pflow(iter, flagDCLimits, flagLimits, flagFirst) int iter;
-bool flagDCLimits, flagLimits, flagFirst;
-#endif
 /* Power Flow Routine. */
 {
    SparseMatrixElement *Jptr;

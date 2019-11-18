@@ -5,13 +5,7 @@
 
 
 /* ------------------ DCFunJac ----------------------------- */
-#ifdef ANSIPROTO
 bool DCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ)
-#else
-bool DCFunJac(Mptr,flagF,flagJ)
-bool flagF,flagJ;
-SparseMatrix *Mptr;
-#endif
 /* Construct the DC part of the Jacobian. */
 {
   INDEX i,j,k,l,kp,lp,m,n;

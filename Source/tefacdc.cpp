@@ -118,12 +118,7 @@ void TEFac(bool flag)
 }
 
 /* ------------------ TEFdc ----------------------------- */
-#ifdef ANSIPROTO
 void TEFdc(FILE *Out)
-#else
-void TEFdc(Out)
-    FILE *Out;
-#endif
 /* Caculate DC TEF and coupling terms. */
 {
   DCbusData *DCptrR, *DCptrI, *DCptr;
@@ -166,12 +161,7 @@ void TEFdc(Out)
 }
 
 /* --------------------------- MatlabV --------------------------------- */
-#ifdef ANSIPROTO
 void MatlabV(FILE *Out)
-#else
-void MatlabV(Out)
-    FILE *Out;
-#endif
 /* Write Matlab commands in output file for ploting profiles. */
 {
   AClist *Lptr;
@@ -470,11 +460,7 @@ void MatlabV(Out)
 }
 
 /* --------------------------- TEFMatlabFiles --------------------------------- */
-#ifdef ANSIPROTO
 void TEFMatlabFiles(void)
-#else
-void TEFMatlabFiles()
-#endif
 /* Create the Matlab .m files needed to compute the TEF profiles. */
 {
   FILE *Out;

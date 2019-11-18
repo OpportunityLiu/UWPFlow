@@ -9,19 +9,11 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 bool CheckRlimits(void);
 bool CheckVlimits(void);
 bool CheckQlimits(void);
 bool CheckDClimits(void);
 void WriteSolution(INDEX Iter,char *File1,char *str);
-#else
-bool CheckRlimits();
-bool CheckVlimits();
-bool CheckQlimits();
-bool CheckDClimits();
-void WriteSolution();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
@@ -38,11 +30,7 @@ extern bool Acont,PQcont,QRcont,Rcont,
 
 
 /* -------------------- CheckRlimits ----------------------- */
-#ifdef ANSIPROTO
 bool CheckRlimits(void)
-#else
-bool CheckRlimits()
-#endif
 {
   bool flag=false;
   char str[4];
@@ -151,11 +139,7 @@ bool CheckRlimits()
 }
 
 /* -------------------- CheckVlimits ----------------------- */
-#ifdef ANSIPROTO
 bool CheckVlimits(void)
-#else
-bool CheckVlimits()
-#endif
 {
   ACbusData *ACptr,*BEptr;
   char str[4];
@@ -336,11 +320,7 @@ bool CheckVlimits()
 }
 
 /* -------------------- CheckQlimits ----------------------- */
-#ifdef ANSIPROTO
 bool CheckQlimits(void)
-#else
-bool CheckQlimits()
-#endif
 {
   ACbusData *ACptr;
   char str[5],Qmax[5],Qmin[5];
@@ -654,11 +634,7 @@ bool CheckQlimits()
 }
 
 /* -------------------- CheckDClimits ----------------------- */
-#ifdef ANSIPROTO
 bool CheckDClimits(void)
-#else
-bool CheckDClimits()
-#endif
 {
   DCbusData *DCptrR,*DCptrI;
   bool flag=false;

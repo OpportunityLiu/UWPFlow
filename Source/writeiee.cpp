@@ -6,14 +6,7 @@
 
 
 /* --------------- Print ----------------- */
-#ifdef ANSIPROTO
 void Print(FILE *File,int spaces,int width,int decimals,VALUETYPE val)
-#else
-void Print(File,spaces,width,decimals,val)
-FILE *File;
-int spaces,width,decimals;
-VALUETYPE val;
-#endif
 {
   int i,j;
   double cons;
@@ -84,11 +77,7 @@ VALUETYPE val;
 
 
 /* --------------- IEEE ----------------- */
-#ifdef ANSIPROTO
 void IEEE(void)
-#else
-void IEEE()
-#endif
 {
   ACbusData *ACptr;
   DCbusData *DCptrR,*DCptrI,*DCptr;

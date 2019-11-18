@@ -7,9 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#ifdef ANSIPROTO
 #include <float.h>
-#endif
 #include "constant.h"
 #include "param.h"
 #include "sparse.h"
@@ -67,18 +65,8 @@ void InitializeLSWR()
 {
   int i;
 
-#ifdef WINDOWS
   Lswr = new bool[Matrix->n1 + 1];
   Swr = new ELEMENTVALUETYPE[Matrix->n1 + 1];
-#else
-  Lswr = (bool *)calloc((Matrix->n1 + 1), sizeof(bool));
-  Swr = (ELEMENTVALUETYPE *)calloc((Matrix->n1 + 1), sizeof(ELEMENTVALUETYPE));
-  if (Lswr == nullptr || Swr == nullptr)
-  {
-    ErrorHalt("Insufficient memory for arrays");
-    exit(ERROREXIT);
-  }
-#endif
   for (i = 1; i <= Matrix->n1; i++)
     Lswr[i] = false;
 }
@@ -93,22 +81,10 @@ void AllocateOrderArrays()
   else
     n0 = Matrix->n2;
   maxVal = n0; /* This could be larger yet */
-#ifdef WINDOWS
   Valence = new VALENCE[n0 + 1];    /* array 0..maxN */
   FwdLink = new INDEX[n0 + 1];      /* array 0..maxN */
   BckLink = new INDEX[n0 + 1];      /* array 0..maxN */
   ValClass = new INDEX[maxVal + 1]; /* array 0..maxVal */
-#else
-  Valence = (VALENCE *)malloc((n0 + 1) * sizeof(VALENCE)); /* array 0..maxN */
-  FwdLink = (INDEX *)malloc((n0 + 1) * sizeof(INDEX));     /* array 0..maxN */
-  BckLink = (INDEX *)malloc((n0 + 1) * sizeof(INDEX));     /* array 0..maxN */
-  ValClass = (INDEX *)calloc((maxVal + 1), sizeof(INDEX)); /* array 0..maxVal */
-  if (ValClass == nullptr)
-  {
-    ErrorHalt("Insufficient memory to allocate order vectors");
-    exit(ERROREXIT);
-  }
-#endif
   for (i = 0; i < n0 + 1; i++)
   {
     Valence[i] = 0;
@@ -140,11 +116,7 @@ SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol,
 { /* PutMatrix */
   SparseMatrixElement *PutPtr;
   /* BEGIN */
-#ifdef WINDOWS
   PutPtr = new SparseMatrixElement;
-#else
-  PutPtr = (SparseMatrixElement *)malloc(sizeof(*PutPtr));
-#endif
   if (PutPtr != nullptr)
   {
     PutPtr->Row = PutRow;
@@ -576,21 +548,12 @@ int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVe
       Ptr = Ptr->RowNext;
     }
   }
-#ifdef WINDOWS
   delete[] Lswr;
   delete[] Swr;
   delete[] Valence;
   delete[] FwdLink;
   delete[] BckLink;
   delete[] ValClass;
-#else
-  free(Lswr);
-  free(Swr);
-  free(Valence);
-  free(FwdLink);
-  free(BckLink);
-  free(ValClass);
-#endif
   /*
   if (ExistParameter('d')) {
     OutFile=(FILE *) OpenOutput("prow.dat");

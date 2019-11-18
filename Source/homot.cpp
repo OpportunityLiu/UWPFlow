@@ -2,13 +2,8 @@
 
 #include "homot.h"
 
-#ifdef ANSIPROTO
 void AddLoad(void);
 bool CheckVIlimits(bool flagVoltage,bool flagCurrent);
-#else
-void AddLoad();
-bool CheckVIlimits();
-#endif
 
 
 /* ------- Global Variables ------ */
@@ -23,11 +18,7 @@ extern bool flagBS,flagVloads;
 
 
 /* --------------------------- DCsetup --------------------------------- */
-#ifdef ANSIPROTO
 bool DCsetup(void)
-#else
-bool DCsetup()
-#endif
 /* Setup inital DC control mode, i.e., rectifier -> alfa,Id (or P),
                                        inverter  -> gamma,Vd. */
 {
@@ -89,11 +80,7 @@ bool DCsetup()
 }
 
 /* -------------------- ChangeDCmode ----------------------- */
-#ifdef ANSIPROTO
 bool ChangeDCmode(void)
-#else
-bool ChangeDCmode()
-#endif
 /* Change DC control mode when DC variable at a limit. */
 {
   DCbusData *DCptrR,*DCptrI;
@@ -206,14 +193,7 @@ bool ChangeDCmode()
 }
 
 /* ----------------- Direction ---------------------------- */
-#ifdef ANSIPROTO
 int Direction(SparseMatrix *Mptr,VALUETYPE *vec,bool flag)
-#else
-int Direction(Mptr,vec,flag)
-SparseMatrix *Mptr;
-VALUETYPE *vec;
-bool flag;
-#endif
 /* Find derivative -> dx/dlambda. */
 {
   SparseMatrixElement *Jptr;
@@ -311,11 +291,7 @@ bool flag;
 }
 
 /* --------------------------- ChangeParam --------------------------------- */
-#ifdef ANSIPROTO
 bool ChangeParam(void)
-#else
-bool ChangeParam()
-#endif
 /* Change parameter for Homotopy method. */
 {
   INDEX i;
@@ -343,13 +319,7 @@ bool ChangeParam()
 }
 
 /* ------------------------- VoltageSensFactor --------------------------- */
-#ifdef ANSIPROTO
 void VoltageSensFactor(VALUETYPE *vec,bool first)
-#else
-void VoltageSensFactor(vec,first)
-VALUETYPE *vec;
-bool first;
-#endif
 /* Calculate Voltage Sensitivity Factor and
    Tangent Vector Index and rank for a bus */
 {
@@ -366,12 +336,7 @@ bool first;
       i=ACvar[ACptr->N];
       val=fabs(vec[i+1]);
       Ptr=RankList;
-#ifdef WINDOWS
       RankList= new ACranklist;
-#else
-      RankList=(ACranklist *) malloc(sizeof(ACranklist));
-      if (RankList==nullptr) {ErrorHalt("Insufficient memory to allocate rank data (option -fnum)."); exit(ERROREXIT);}
-#endif
       RankList->AC=ACptr;
       RankList->val=val;
       RankList->Next=Ptr;
@@ -406,32 +371,19 @@ bool first;
         fprintf(stderr,"%4d %12s %-11.5g\n",PtrMax->AC->Num,PtrMax->AC->Name,PtrMax->val);
       }
       if (TVIbus==PtrMax->AC->Num) {TVIrank=l; break;}
-#ifdef WINDOWS
       delete PtrMax;
-#else
-      free(PtrMax);
-#endif
     }
   }
   for(Ptr=RankList;Ptr!=nullptr;){
     PrevPtr=Ptr->Next;
-#ifdef WINDOWS
     delete Ptr;
-#else
-    free(Ptr);
-#endif
     Ptr=PrevPtr;
   }
 }
 
 
 /* --------------------------  CheckVIlimits ------------------------ */
-#ifdef ANSIPROTO
 bool CheckVIlimits(bool flagVoltage,bool flagCurrent)
-#else
-bool CheckVIlimits(flagVoltage,flagCurrent)
-bool flagVoltage,flagCurrent;
-#endif
 {
   ACbusData *ACptr;
   ElementData *Eptr;
@@ -502,11 +454,7 @@ bool flagVoltage,flagCurrent;
 
 
 /* ------------------------- AddLoad --------------------------- */
-#ifdef ANSIPROTO
 void AddLoad(void)
-#else
-void AddLoad()
-#endif
 /* Add initial loading to load buses  */
 {
   ACbusData *ACptr;
@@ -521,11 +469,7 @@ void AddLoad()
 }
 
 /* --------------------------- Homot --------------------------------- */
-#ifdef ANSIPROTO
 int Homot(void)
-#else
-int Homot()
-#endif
 /* Build voltage profiles. */
 {
   VALUETYPE NDx,cons,PreviousLambda,StoplambdaVal,FirstVoltageSumUp=Tol;
@@ -578,16 +522,7 @@ int Homot()
   if (ExistParameter('u')) {
     ZeroDx=0.001;
     flagReduceSystem=true;
-#ifdef WINDOWS
     DxZero= new bool[N];
-#else
-    DxZero=(bool *) calloc(N,sizeof(bool));
-    if (DxZero==nullptr) {
-      fclose(OutputHomot);
-      ErrorHalt("Insufficient memory to allocate vector for system reduction in the Cont. Method.");
-      exit(ERROREXIT);
-    }
-#endif
     RealParameter('u',&ZeroDx,0.,0.2);
     if (Kh<1) ZeroDx=Kh*ZeroDx;
   } else { flagReduceSystem=false; ZeroDx=0;  DxZero=nullptr;}

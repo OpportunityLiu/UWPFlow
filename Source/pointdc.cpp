@@ -3,13 +3,7 @@
 #include "pointl.h"
 
 /* ------------------ DCFunHes ----------------------------- */
-#ifdef ANSIPROTO
 bool DCFunHes(bool flagF, bool flagJ)
-#else
-bool DCFunHes(flagF, flagJ)
-    bool flagF,
-    flagJ;
-#endif
 /* Construct the DC part of the PoC Jacobian. */
 {
   INDEX i, j, k, l, kp, lp, m, n, N, DCvar[16];

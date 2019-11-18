@@ -60,11 +60,7 @@ void UpdateSVCvar(VALUETYPE cons,INDEX j)
   }
 }
 
-#ifdef ANSIPROTO
 bool ChangeSVCmode()
-#else
-bool ChangeSVCmode()
-#endif
 {
  SVCbusData *SVCptr;
  bool flag=false;
@@ -114,13 +110,7 @@ bool ChangeSVCmode()
 }
 
 
-#ifdef ANSIPROTO
 void UpdateTCSCvar(VALUETYPE cons,INDEX j)
-#else
-void UpdateTCSCvar(cons,j)
-VALUETYPE cons;
-INDEX j;
-#endif
 {
   TCSCbusData *TCSCptr;
   INDEX i;
@@ -143,11 +133,7 @@ INDEX j;
 }
 
 
-#ifdef ANSIPROTO
 bool ChangeTCSCmode()
-#else
-bool ChangeTCSCmode()
-#endif
 {
   TCSCbusData *TCSCptr;
   VALUETYPE alpha,Xc,Xl,Be;
@@ -177,13 +163,7 @@ bool ChangeTCSCmode()
   return(flag);
 }
 
-#ifdef ANSIPROTO
 void UpdateSTATCOMvar(VALUETYPE cons,INDEX j)
-#else
-void UpdateSTATCOMvar(cons,j)
-VALUETYPE cons;
-INDEX j;
-#endif
 {
   STATCOMbusData *STATCOMptr;
   VALUETYPE Q,theta,vals;
@@ -227,11 +207,7 @@ INDEX j;
   }
 }
 
-#ifdef ANSIPROTO
 bool ChangeSTATCOMmode()
-#else
-bool ChangeSTATCOMmode()
-#endif
 {
  STATCOMbusData *STATCOMptr;
  bool flag=false;

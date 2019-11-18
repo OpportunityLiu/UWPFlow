@@ -9,7 +9,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void JacElement(SparseMatrix *Mptr,INDEX I,INDEX J,VALUETYPE val);
 void WriteSolution(INDEX Iter,char *File1,char *str);
 void DeleteJac(SparseMatrix *Mptr,IntegerVector *P1Row,IntegerVector *P1Col,
@@ -43,38 +42,6 @@ int Direction(SparseMatrix *Mptr,VALUETYPE *vec,bool flag);
 VALUETYPE LoadX0(bool flagX,bool flagV,bool flag);
 int Evector(int M,int iter,VALUETYPE tol,bool RightEvector,VALUETYPE *EigenValue);
 int PoCPoint(void);
-#else
-void JacElement();
-void WriteSolution();
-void DeleteJac();
-int factorns();
-void repsolp();
-int factor();
-bool DCsetup();
-int Pflow();
-AreaData *ACFunJac();
-bool DCFunJac();
-void SVCFunJac();       //FACTS 
-void TCSCFunJac();      //FACTS 
-void STATCOMFunJac();   //FACTS 
-void ACFunHes();
-bool DCFunHes();
-void SVCFunHes();      //FACTS 
-void TCSCFunHes();     //FACTS 
-void STATCOMFunHes();  //FACTS 
-void UpdateEvector();
-bool CheckRlimits();
-bool CheckVlimits();
-bool CheckQlimits();
-bool ChangeDCmode();
-bool ChangeSVCmode();     //FACTS 
-bool ChangeTCSCmode();    //FACTS 
-bool ChangeSTATCOMmode(); //FACTS 
-int Direction();
-VALUETYPE LoadX0();
-int Evector();
-int PoCPoint();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;

@@ -33,15 +33,7 @@ void Divide(VALUETYPE *a, VALUETYPE *b, VALUETYPE c, VALUETYPE d)
 }
 
 /* ---------------- AddSection --------------------------- */
-#ifdef ANSIPROTO
 bool AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt, INDEX Sec)
-#else
-bool AddSection(From, To, Line, Ckt, Sec)
-    ACbusData *From,
-    *To;
-char *Line, *Ckt;
-INDEX Sec;
-#endif
 {
    ElementList *ELptr;
    ElementData *Eptr;
@@ -124,11 +116,7 @@ INDEX Sec;
 }
 
 /* ---------------- ReadWSCC ----------------------------- */
-#ifdef ANSIPROTO
 void ReadWSCC()
-#else
-void ReadWSCC()
-#endif
 /* Read Bus and Element data in WSCC format. */
 {
    ACbusData *ACptr, *ACptrp, *ACptrs;

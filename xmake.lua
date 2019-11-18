@@ -9,8 +9,6 @@ target("uwpflow")
 
     set_languages("cxx17")
 
-    add_defines("WINDOWS", "ANSIPROTO")
-
     -- add files
     add_headerfiles("Source/*.h")
     add_includedirs("Source")

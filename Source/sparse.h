@@ -25,16 +25,8 @@ typedef struct /* SparseMatrix */ {
 } SparseMatrix;
 
 
-#ifdef ANSIPROTO
 void ErrorHalt(char *Msg);
 void	TransposeMatrix(SparseMatrix *Matrix);
 struct IntegerVector *AllocatePermutation(INDEX Size);
 void SortRowsColumns(SparseMatrix *Matrix);
 bool NearZero(ELEMENTVALUETYPE Value);
-#else
-void ErrorHalt();
-void	TransposeMatrix();
-struct IntegerVector *AllocatePermutation();
-void SortRowsColumns();
-bool NearZero();
-#endif

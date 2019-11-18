@@ -51,11 +51,7 @@ char *TrueParamStr(int Item)
       k++;
     if (k >= Item)
     {
-#ifdef WINDOWS
       TempPtr = new char[strlen(GlobalArgv[i]) + 1];
-#else
-      TempPtr = (char *)malloc((strlen(GlobalArgv[i]) + 1) * sizeof(char));
-#endif
       if (GlobalArgv[i][0] != '>')
         strcpy(TempPtr, GlobalArgv[i]);
       else

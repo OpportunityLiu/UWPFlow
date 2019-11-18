@@ -6,12 +6,7 @@
 extern FILE *InputDataFile;
 
 /* ---------------- ReadEPRIdc ----------------------------- */
-#ifdef ANSIPROTO
 void ReadEPRIdc(const char *Line)
-#else
-void ReadEPRIdc(Line)
-char *Line;
-#endif
 /* Read DC Bus and Element data in ETMSP format. */
 {
   ACbusData *ACptr;
@@ -54,16 +49,7 @@ char *Line;
         if (ACptr->N==0) { Nac++; ACptr->Num=ACptr->N=Nac;}
         DCptr->Vn=KV;
         ptr=ACptr->DC;
-#ifdef WINDOWS
         ACptr->DC= new DClist;
-#else
-        ACptr->DC=(DClist *) malloc(sizeof(DClist));
-        if(ACptr->DC==nullptr) {
-          fclose(InputDataFile);
-          ErrorHalt("Insufficient memory to allocate DC elemet data");
-          exit(ERROREXIT);
-        }
-#endif
         ACptr->DC->DC=DCptr;
         ACptr->DC->Next=ptr;
         DCptr->AC=ACptr;
@@ -120,16 +106,7 @@ char *Line;
         if (ACptr->N==0) { Nac++; ACptr->Num=ACptr->N=Nac;}
         DCptr->Vn=KV;
         ptr=ACptr->DC;
-#ifdef WINDOWS
         ACptr->DC= new DClist;
-#else
-        ACptr->DC=(DClist *) malloc(sizeof(DClist));
-        if(ACptr->DC==nullptr) {
-          fclose(InputDataFile);
-          ErrorHalt("Insufficient memory to allocate DC elemet data");
-          exit(ERROREXIT);
-        }
-#endif
         ACptr->DC->DC=DCptr;
         ACptr->DC->Next=ptr;
         DCptr->AC=ACptr;

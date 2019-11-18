@@ -11,12 +11,7 @@ extern bool flagReducedContinuation,flagReduceSystem,*DxZero,flagBS;
 
 
 /* ------------------ LoadX0 ----------------------------- */
-#ifdef ANSIPROTO
 VALUETYPE LoadX0(bool FlagLoadX0,bool FlagUpdateVar,bool FlagMakeDxZero)
-#else
-VALUETYPE LoadX0(FlagLoadX0,FlagUpdateVar,FlagMakeDxZero)
-bool FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
-#endif
 /* Load x0 vector and update AC/DC variables for power flow. */
 {
   ACbusData *ACptr,*ACptrp,*Ptr,*BEptr;

@@ -116,17 +116,7 @@ void ReadSVC(const char *Line)
       SVCptr->N = Nsvc;
     }
     ptr = ptrac->SVC;
-#ifdef WINDOWS
     ptrac->SVC = new SVClist;
-#else
-    ptrac->SVC = (SVClist *)malloc(sizeof(SVClist));
-    if (ptrac->SVC == nullptr)
-    {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate SVC element data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptrac->SVC->SVC = SVCptr;
     ptrac->SVC->Next = ptr;
     SVCptr->Xth_l = Xth_l;
@@ -151,11 +141,7 @@ void ReadSVC(const char *Line)
 }
 
 /* --------------------- Read TCSC ----------------------------- */
-#ifdef ANSIPROTO
 void ReadTCSC(const char *Line)
-#else
-void ReadTCSC(Line) char *Line;
-#endif
 {
   TCSCbusData *TCSCptr;
   TCSClist *ptr;
@@ -209,32 +195,12 @@ void ReadTCSC(Line) char *Line;
       TCSCptr->N = Ntcsc;
     }
     ptr = ptrac->TCSC;
-#ifdef WINDOWS
     ptrac->TCSC = new TCSClist;
-#else
-    ptrac->TCSC = (TCSClist *)malloc(sizeof(TCSClist));
-    if (ptrac->TCSC == nullptr)
-    {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate TCSC element data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptrac->TCSC->TCSC = TCSCptr;
     ptrac->TCSC->Next = ptr;
     TCSCptr->From = ptrac;
     ptr = ptrac1->TCSC;
-#ifdef WINDOWS
     ptrac1->TCSC = new TCSClist;
-#else
-    ptrac1->TCSC = (TCSClist *)malloc(sizeof(TCSClist));
-    if (ptrac1->TCSC == nullptr)
-    {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate TCSC element data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptrac1->TCSC->TCSC = TCSCptr;
     ptrac1->TCSC->Next = ptr;
     TCSCptr->To = ptrac1;
@@ -260,11 +226,7 @@ void ReadTCSC(Line) char *Line;
 }
 
 /* --------------------- Read STATCOM ----------------------------- */
-#ifdef ANSIPROTO
 void ReadSTATCOM(const char *Line)
-#else
-void ReadSTATCOM(Line) char *Line;
-#endif
 {
   STATCOMbusData *STATCOMptr;
   STATCOMlist *ptr;
@@ -293,17 +255,7 @@ void ReadSTATCOM(Line) char *Line;
       STATCOMptr->N = Nstatcom;
     }
     ptr = ptrac->STATCOM;
-#ifdef WINDOWS
     ptrac->STATCOM = new STATCOMlist;
-#else
-    ptrac->STATCOM = (STATCOMlist *)malloc(sizeof(STATCOMlist));
-    if (ptrac->STATCOM == nullptr)
-    {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate STATCOM element data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptrac->STATCOM->STATCOM = STATCOMptr;
     ptrac->STATCOM->Next = ptr;
     R = GetValue(Line, 32, 6, 5);

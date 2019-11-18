@@ -11,20 +11,12 @@
 #include "param.h"
 #include "sparse.h"
 
-#ifdef ANSIPROTO
 void ForwardSubstitution(void);
 void DiagonalScaling(void);
 void BackSubstitution(void);
 void CreateDiagonalPointer(void);
 void repsolp(SparseMatrix *Mptr,VALUETYPE *Vptr,
              IntegerVector *PermR,IntegerVector *PermC);
-#else
-void ForwardSubstitution();
-void DiagonalScaling();
-void BackSubstitution();
-void CreateDiagonalPointer();
-void repsolp();
-#endif
 
 
 /* ==================== Global definitions ============================= */
@@ -99,12 +91,7 @@ int DetSign;
     SparseMatrixElement *Ptr1;
 
     /* BEGIN */
-#ifdef WINDOWS
     DiagPtr = new SparseMatrixElement*[Matrix1->n1+1];
-#else
-    DiagPtr = (SparseMatrixElement **)
-              calloc((Matrix1->n1+1),sizeof(SparseMatrixElement *));
-#endif
     for(i=0;i<Matrix1->n1+1;i++) DiagPtr[i]=nullptr;
     for (i=1; i<=Matrix1->n1; i++) {
       Ptr1 = Matrix1->RowHead[i];
@@ -117,15 +104,8 @@ int DetSign;
 
 
 /* =========================== repsolp ================================== */
-#ifdef ANSIPROTO
 void repsolp(SparseMatrix *Mptr,VALUETYPE *Vptr,
              IntegerVector *PermR,IntegerVector *PermC)
-#else
-void repsolp(Mptr,Vptr,PermR,PermC)
-SparseMatrix *Mptr;
-VALUETYPE *Vptr;
-IntegerVector *PermR,*PermC;
-#endif
 {
   INDEX i;
   /* BEGIN RepeatSolution */
@@ -133,23 +113,13 @@ IntegerVector *PermR,*PermC;
   CreateDiagonalPointer();
   Nstop1 = Matrix1->n1;
   Nmult1 = 0;
-#ifdef WINDOWS
   FullVector= new VALUETYPE[Nstop1+1];
-#else
-  FullVector=(VALUETYPE *) malloc((Nstop1+1)*sizeof(VALUETYPE));
-  if (FullVector==nullptr) {ErrorHalt("Insufficient memory for solution vector"); exit(ERROREXIT);}
-#endif
   for (i=1;i<=Nstop1;i++) FullVector[i]=Vptr[PermR->p[i]];
   ForwardSubstitution();
   DiagonalScaling();
   BackSubstitution();
   for (i=1;i<=Nstop1;i++) Vptr[i]=FullVector[PermC->p[i]];
-#ifdef WINDOWS
   delete[] DiagPtr;
   delete[] FullVector;
-#else
-  free(DiagPtr);
-  free(FullVector);
-#endif
 /*  fprintf(stderr,"  Repeat Solution Multiplications (Tau+N): %ld\n",Nmult1);*/
 }

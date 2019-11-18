@@ -9,13 +9,8 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void UpdateACvar(VALUETYPE cons,INDEX j,bool Limits,bool Recover);
 void UpdateDCvar(VALUETYPE cons,INDEX j,bool Limits);
-#else
-void UpdateACvar();
-void UpdateDCvar();
-#endif
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
@@ -32,14 +27,7 @@ extern bool Acont,PQcont,QRcont,Rcont,Xcont,
 
 
 /* -----------------UpdateACvar ---------------------------- */
-#ifdef ANSIPROTO
 void UpdateACvar(VALUETYPE cons,INDEX j,bool Limits,bool Recover)
-#else
-void UpdateACvar(cons,j,Limits,Recover)
-VALUETYPE cons;
-INDEX j;
-bool Limits,Recover;
-#endif
 {
   ACbusData *ACptr,*ACptrp,*BEptr;
   AClist *ALptr;
@@ -374,14 +362,7 @@ bool Limits,Recover;
 
 
 /* -----------------UpdateDCvar ---------------------------- */
-#ifdef ANSIPROTO
 void UpdateDCvar(VALUETYPE cons,INDEX j,bool Limits)
-#else
-void UpdateDCvar(cons,j,Limits)
-VALUETYPE cons;
-INDEX j;
-bool Limits;
-#endif
 {
   DCbusData *DCptrR,*DCptrI,*DCptr;
   INDEX i,k,m;

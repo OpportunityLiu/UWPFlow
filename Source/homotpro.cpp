@@ -26,12 +26,7 @@ bool InList(ACbusData *ACptr, AClist *Vptr)
 }
 
 /* --------------------------- MakeVlist --------------------------------- */
-#ifdef ANSIPROTO
 void MakeVlist(FILE *Out)
-#else
-void MakeVlist(Out)
-    FILE *Out;
-#endif
 /* Prepare list of buses/areas for voltage profiles. */
 {
   ACbusData *ACptr, *ACptrM;
@@ -101,18 +96,7 @@ void MakeVlist(Out)
           if (ACptr != nullptr || Aptr != nullptr)
           {
             Lptr = Vlist;
-#ifdef WINDOWS
             Vlist = new AClist;
-#else
-            Vlist = (AClist *)malloc(sizeof(AClist));
-            if (Vlist == nullptr)
-            {
-              fclose(Out);
-              fclose(Input);
-              ErrorHalt("Insufficient memory to allocate profile List.");
-              exit(ERROREXIT);
-            }
-#endif
             Vlist->AC = ACptr;
             Vlist->Area = Aptr;
             if (ACptr != nullptr)
@@ -177,17 +161,7 @@ void MakeVlist(Out)
       if (ACptrM != nullptr)
       {
         Lptr = Vlistp;
-#ifdef WINDOWS
         Vlistp = new AClist;
-#else
-        Vlistp = (AClist *)malloc(sizeof(AClist));
-        if (Vlistp == nullptr)
-        {
-          fclose(Out);
-          ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-          exit(ERROREXIT);
-        }
-#endif
         Vlistp->AC = ACptrM;
         strcpy(Vlistp->Type, "V");
         Vlistp->N = ACptrM->Num;
@@ -217,17 +191,7 @@ void MakeVlist(Out)
         if (Lptr == nullptr)
         {
           Lptr = Vlist;
-#ifdef WINDOWS
           Vlist = new AClist;
-#else
-          Vlist = (AClist *)malloc(sizeof(AClist));
-          if (Vlist == nullptr)
-          {
-            fclose(Out);
-            ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-            exit(ERROREXIT);
-          }
-#endif
           Vlist->AC = DCptr->AC;
           Vlist->Area = nullptr;
           Vlist->N = DCptr->AC->Num;
@@ -243,17 +207,7 @@ void MakeVlist(Out)
         if (Lptr == nullptr)
         {
           Lptr = Vlist;
-#ifdef WINDOWS
           Vlist = new AClist;
-#else
-          Vlist = (AClist *)malloc(sizeof(AClist));
-          if (Vlist == nullptr)
-          {
-            fclose(Out);
-            ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
-            exit(ERROREXIT);
-          }
-#endif
           Vlist->AC = DCptr->AC;
           Vlist->Area = nullptr;
           Vlist->N = DCptr->AC->Num;
@@ -379,13 +333,7 @@ void MakeVlist(Out)
 }
 
 /* --------------------------- VoltProf --------------------------------- */
-#ifdef ANSIPROTO
 void VoltProf(bool flag, FILE *Out)
-#else
-void VoltProf(flag, Out)
-    bool flag;
-FILE *Out;
-#endif
 /* Write voltage profiles. */
 {
   ACbusData *ACptr;
@@ -396,10 +344,6 @@ FILE *Out;
   ElementData *Eptr;
   ElementList *ELptr;
   VALUETYPE Vi, Vj, di, dj, Gi, Gj, G, B, Gp, Bp, P;
-
-#ifdef WINDOWS
-  int currElement = 0;
-#endif
 
   Print(Out, 0, 6, 4, lambda_o + lambda);
   fprintf(Out, "    ");
@@ -617,12 +561,7 @@ FILE *Out;
 }
 
 /* --------------------------- PrintDirection --------------------------------- */
-#ifdef ANSIPROTO
 void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
-#else
-void PrintDirection(Option, vector, Max) char Option;
-VALUETYPE *vector, Max;
-#endif
 /* Print direction vector  */
 {
   INDEX i, j, k, N, I, J;
@@ -977,12 +916,7 @@ VALUETYPE *vector, Max;
 }
 
 /* --------------------------- IndicesMatlab --------------------------------- */
-#ifdef ANSIPROTO
 void IndicesMatlab(INDEX count)
-#else
-void IndicesMatlab(count)
-    INDEX count;
-#endif
 /* Print plotting and other Matlab commands needed by the -0 option (VS indices) */
 {
   char Namebase[80], Name[80];

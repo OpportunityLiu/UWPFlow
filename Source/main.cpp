@@ -11,7 +11,6 @@
 #include "sparse.h"
 #include "pflow.h"
 
-#ifdef ANSIPROTO
 void ErrorStop(char *Msg);
 void DCinit(void);
 void SVCinit(void);     /* FACTS */
@@ -32,27 +31,6 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max);
 void CleanUp(void);
 void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
                IntegerVector *P2Row, IntegerVector *P2Col);
-#else
-void ErrorStop();
-void DCinit();
-void SVCinit();     // FACTS
-void TCSCinit();    // FACTS
-void STATCOMinit(); // FACTS
-void Jacobian();
-void ReadData();
-bool ReadInit();
-void WriteSolution();
-int Pflow();
-int Homot();
-int PoCPoint();
-int main();
-void InitializeLoad();
-int Evector();
-void PrintLeftEvector();
-void PrintDirection();
-void CleanUp();
-void DeleteJac();
-#endif
 
 /* ------- Global Variables ------ */
 Data *dataPtr = nullptr;
@@ -74,11 +52,7 @@ extern bool *DxZero;
 extern AClist *Vlist, *Vlistp;
 
 /* ------------------- DCinit -------------------- */
-#ifdef ANSIPROTO
 void DCinit(void)
-#else
-void DCinit()
-#endif
 /*    Intialize the DC system variables. */
 {
   ACbusData *ACptrR, *ACptrI;
@@ -155,11 +129,7 @@ void DCinit()
 }
 
 /* --------------------------- InitializeLoad ------------------------------ */
-#ifdef ANSIPROTO
 void InitializeLoad(void)
-#else
-void InitializeLoad()
-#endif
 /* Initialize load parameters for OH load model. */
 {
   ACbusData *ACptr;
@@ -471,16 +441,7 @@ int main(int argc, const char **argv)
     if (ExistParameter('y') && !NullName(NameParameter('y')))
     {
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
-#ifdef WINDOWS
       x0 = new VALUETYPE[N1];
-#else
-      x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-      if (x0 == nullptr)
-      {
-        ErrorHalt("Insufficient memory to allocate approx. left e-vector.");
-        exit(ERROREXIT);
-      }
-#endif
       if (ExistParameter('d'))
         fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, false, &EigenValue);
@@ -494,16 +455,7 @@ int main(int argc, const char **argv)
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       if (x0 == nullptr)
       {
-#ifdef WINDOWS
         x0 = new VALUETYPE[N1];
-#else
-        x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-        if (x0 == nullptr)
-        {
-          ErrorHalt("Insufficient memory to allocate approx. right e-vector.");
-          exit(ERROREXIT);
-        }
-#endif
       }
       if (ExistParameter('d'))
         fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
@@ -529,16 +481,7 @@ int main(int argc, const char **argv)
     if (ExistParameter('y') && !NullName(NameParameter('y')))
     {
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
-#ifdef WINDOWS
       x0 = new VALUETYPE[N1];
-#else
-      x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-      if (x0 == nullptr)
-      {
-        ErrorHalt("Insufficient memory to allocate approx. left e-vector.");
-        exit(ERROREXIT);
-      }
-#endif
       if (ExistParameter('d'))
         fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, false, &EigenValue);
@@ -552,16 +495,7 @@ int main(int argc, const char **argv)
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       if (x0 == nullptr)
       {
-#ifdef WINDOWS
         x0 = new VALUETYPE[N1];
-#else
-        x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-        if (x0 == nullptr)
-        {
-          ErrorHalt("Insufficient memory to allocate approx. right e-vector.");
-          exit(ERROREXIT);
-        }
-#endif
       }
       if (ExistParameter('d'))
         fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");

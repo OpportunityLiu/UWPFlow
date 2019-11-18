@@ -685,13 +685,7 @@ void WriteJac(void)
 }
 
 /* --------------- WriteQmatrix ---------------------- */
-#ifdef ANSIPROTO
 void WriteQmatrix(INDEX count, VALUETYPE *vec)
-#else
-void WriteQmatrix(count, vec)
-    INDEX count;
-VALUETYPE *vec;
-#endif
 {
   SparseMatrixElement *Jptr;
   ACbusData *ACptr;

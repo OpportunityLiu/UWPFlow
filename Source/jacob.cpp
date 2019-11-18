@@ -6,14 +6,7 @@
 IntegerVector *RowPer,*ColPer;
 
 /* -------------------- JacElement ---------------------- */
-#ifdef ANSIPROTO
 void JacElement(SparseMatrix *Mptr,INDEX I,INDEX J,VALUETYPE val)
-#else
-void JacElement(Mptr,I,J,val)
-SparseMatrix *Mptr; 
-INDEX I,J;
-VALUETYPE val;
-#endif
 /* Jacobian Element */
 {
   SparseMatrixElement *Ptr; 
@@ -32,12 +25,7 @@ VALUETYPE val;
       break;
     }
   if (Ptr==nullptr && (i==j || !(flagReducedContinuation && (DxZero[i] || DxZero[j])))) {
-#ifdef WINDOWS
     Ptr=new SparseMatrixElement;
-#else
-    Ptr=(SparseMatrixElement *) malloc(sizeof(SparseMatrixElement));
-    if(Ptr==nullptr) {ErrorHalt("Insufficient memory to allocate Jacobian."); exit(ERROREXIT);}
-#endif
     Ptr->Row=I;
     Ptr->Col=J;
     Ptr->RowNext=Mptr->RowHead[I];
@@ -51,11 +39,7 @@ VALUETYPE val;
 
 
 /* ------------------- Jacobian --------------------- */
-#ifdef ANSIPROTO
 void Jacobian(void)
-#else
-void Jacobian()
-#endif
 /* Allocate memory for the Jacobian. */
 {
   ACbusData *ACptr;
@@ -64,12 +48,7 @@ void Jacobian()
   Dx=x0=x0p=dx=dF=nullptr;
   DxZero=nullptr;
   Vlist=Vlistp=nullptr;
-#ifdef WINDOWS
   ACvar= new INDEX[Nac+1];
-#else
-  ACvar=(INDEX *) calloc(Nac+1,sizeof(INDEX));
-  if (ACvar==nullptr) {ErrorHalt("Insufficient memory to allocate AC variable vector."); exit(ERROREXIT);}
-#endif
   N=1;
   for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next){
     ACvar[ACptr->N]=N;
@@ -84,100 +63,49 @@ void Jacobian()
   }
   NacVar=N-1;
   N1=NacVar+11*Ndc/2 +3*Nsvc+NtcscVar+7*Nstatcom;    /* FACTS  */
-#ifdef WINDOWS
   RowPartition= new IntegerVector;
   ColPartition= new IntegerVector;
-#else
-  RowPartition=(IntegerVector *) malloc(sizeof(IntegerVector));
-  ColPartition=(IntegerVector *) malloc(sizeof(IntegerVector));
-  if (ColPartition==nullptr) {ErrorHalt("Insufficient memory to allocate partition vectors."); exit(ERROREXIT);}
-#endif
   if (flagH) {
     N1++; N2=N1;
     RowPartition->N=2;
     ColPartition->N=1;
-#ifdef WINDOWS
     RowPartition->p= new INDEX[3];
     ColPartition->p= new INDEX[3];
-#else
-    RowPartition->p=(INDEX *) calloc(3,sizeof(INDEX));
-    ColPartition->p=(INDEX *) calloc(3,sizeof(INDEX));
-    if (ColPartition->p==nullptr) {ErrorHalt("Insufficient memory to allocate partition vectors."); exit(ERROREXIT);}
-#endif
     RowPartition->p[1]=N1-1;
     RowPartition->p[2]=N1;
     ColPartition->p[1]=N1;
     RowPartition->p[0]=ColPartition->p[0]=ColPartition->p[2]=0;
-#ifdef WINDOWS
     Dx= new VALUETYPE[N1+1];
     x0= new VALUETYPE[N1+1];
     x0p= new VALUETYPE[N1+1];
-#else
-    Dx=(VALUETYPE *) calloc(N1+1,sizeof(VALUETYPE));
-    x0=(VALUETYPE *) calloc(N1+1,sizeof(VALUETYPE));
-    x0p=(VALUETYPE *) calloc(N1+1,sizeof(VALUETYPE));
-    if (x0p==nullptr) {ErrorHalt("Insufficient memory to allocate Homotopy vectors."); exit(ERROREXIT);}
-#endif
     for(i=0;i<N1+1;i++) Dx[i]=x0[i]=x0p[i]=0.;
   } else if (flagPoC) {
     N2=N1;
     N1=2*N1+1;
     RowPartition->N=ColPartition->N=1;
-#ifdef WINDOWS
     RowPartition->p= new INDEX[2];
     ColPartition->p= new INDEX[2];
-#else
-    RowPartition->p=(INDEX *) calloc(2,sizeof(INDEX));
-    ColPartition->p=(INDEX *) calloc(2,sizeof(INDEX));
-    if (ColPartition->p==nullptr) {ErrorHalt("Insufficient memory to allocate partition vectors."); exit(ERROREXIT);}
-#endif
     RowPartition->p[1]=ColPartition->p[1]=N2;
     RowPartition->p[0]=ColPartition->p[0]=0;
-#ifdef WINDOWS
     Dx= new VALUETYPE[N2+1];
     x0= new VALUETYPE[N2+1];
-#else
-    Dx=(VALUETYPE *) calloc(N2+1,sizeof(VALUETYPE));
-    x0=(VALUETYPE *) calloc(N2+1,sizeof(VALUETYPE));
-    if (x0==nullptr) {ErrorHalt("Insufficient memory to allocate left Eigenvector."); exit(ERROREXIT);}
-#endif
     for(i=0;i<N2+1;i++) Dx[i]=x0[i]=0.;
   } else {
     N2=N1;
     RowPartition->N=ColPartition->N=1;
-#ifdef WINDOWS
     RowPartition->p= new INDEX[2];
     ColPartition->p= new INDEX[2];
-#else
-    RowPartition->p=(INDEX *) calloc(2,sizeof(INDEX));
-    ColPartition->p=(INDEX *) calloc(2,sizeof(INDEX));
-    if (ColPartition->p==nullptr) {ErrorHalt("Insufficient memory to allocate partition vectors."); exit(ERROREXIT);}
-#endif
     RowPartition->p[1]=ColPartition->p[1]=N2;
     RowPartition->p[0]=ColPartition->p[0]=0;
   }
-#ifdef WINDOWS
   dx= new VALUETYPE[N1+2];
   dF= new VALUETYPE[N1+2];
   Jac= new SparseMatrix;
-#else
-  dx=(VALUETYPE *) calloc(N1+2,sizeof(VALUETYPE));
-  dF=(VALUETYPE *) calloc(N1+2,sizeof(VALUETYPE));
-  if (dF==nullptr) {ErrorHalt("Insufficient memory to allocate AC/DC/FACTS mismatches."); exit(ERROREXIT);}
-  Jac=(SparseMatrix *) malloc(sizeof(SparseMatrix));
-  if (Jac==nullptr) {ErrorHalt("Insufficient memory to allocate P.F. Jacobian."); exit(ERROREXIT);}
-#endif
   for(i=0;i<N1+2;i++) dx[i]=dF[i]=0.;
   Jac->n1=N2;
   Jac->n2=N2;
-#ifdef WINDOWS
   Jac->RowHead= new SparseMatrixElement*[N1+2];
   Jac->ColHead= new SparseMatrixElement*[N1+2];
-#else
-  Jac->RowHead=(SparseMatrixElement **) calloc(N1+2,sizeof(SparseMatrixElement *));
-  Jac->ColHead=(SparseMatrixElement **) calloc(N1+2,sizeof(SparseMatrixElement *));
-  if(Jac->ColHead==nullptr) {ErrorHalt("Insufficient memory to allocate Jacobian."); exit(ERROREXIT);}
-#endif
   for(i=0;i<N1+2;i++) Jac->RowHead[i]=Jac->ColHead[i]=nullptr;
   NewRow=AllocatePermutation(N1);
   OldRow=AllocatePermutation(N1);

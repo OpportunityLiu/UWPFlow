@@ -56,12 +56,7 @@ void ErrorDetect(void)
     }
                        /* END OF FACTS */
     if (strpbrk(ACptr->Type,"G")){
-#ifdef WINDOWS
       ptrp= new AClist;
-#else
-      ptrp= (AClist *) malloc(sizeof(AClist));
-      if (ptrp==nullptr) {ErrorHalt("Insufficient memory to allocate list of AC controlled buses."); exit(ERROREXIT);}
-#endif
       ACptr->ContBus=ptrp;
       ACptr->ContBus->AC=ACptr->Cont;
       ACptr->ContBus->Next=ACptr->ContBus->Prev=nullptr;
@@ -71,12 +66,7 @@ void ErrorDetect(void)
          fprintf(stderr,"       %d %s, is not a PQ bus.  Check the AC bus input data.\n",ACptr->Num,ACptr->Name);
          InputError=true;
         } else {
-#ifdef WINDOWS
          ptrp= new AClist;
-#else
-         ptrp= (AClist *) malloc(sizeof(AClist));
-         if (ptrp==nullptr) {ErrorHalt("Insufficient memory to allocate list of AC controlling buses."); exit(ERROREXIT);}
-#endif
          ptrp->AC=ACptr;
          ptrp->Prev=nullptr;
          if(ACptr->Cont->ContBus==nullptr) {
@@ -154,12 +144,7 @@ void ErrorDetect(void)
         }
         Aptr=ACptr->Area;
         ptrp=Aptr->AC;
-#ifdef WINDOWS
         Aptr->AC= new AClist;
-#else
-        Aptr->AC=(AClist *) malloc(sizeof(AClist));
-        if (Aptr->AC==nullptr) {ErrorHalt("Insufficient memory to allocate area data."); exit(ERROREXIT);}
-#endif
         Aptr->AC->AC=ACptr;
         Aptr->AC->Next=ptrp;
         Aptr->AC->Prev=nullptr;
@@ -217,12 +202,7 @@ void ErrorDetect(void)
     }
     if (strpbrk(ACptr->Type,"S,A")) {
       ptrp=dataPtr->KGbus;
-#ifdef WINDOWS
       ptrs= new AClist;
-#else
-      ptrs=(AClist *) malloc(sizeof(AClist));
-      if (ptrs==nullptr) {ErrorHalt("Insufficient memory to allocate area data."); exit(ERROREXIT);}
-#endif
       ptrs->AC=ACptr;
       ptrs->Next=ptrp;
       ptrs->Prev=nullptr;
@@ -332,22 +312,14 @@ void ErrorDetect(void)
         }
       }
       else ELptrp->Next=ELptr->Next;
-#ifndef WINDOWS
-      free(ELptr);
-#else
       delete ELptr;
-#endif
       Aptr=ACptr->Area;
       if (Aptr!=nullptr) {
         for (ELptrp=ELptr=Aptr->Elem;ELptr!=nullptr;ELptrp=ELptr,ELptr=ELptr->Next) if (Eptr==ELptr->Eptr) break;
         if (ELptr!=nullptr) {
           if (ELptrp==ELptr) Aptr->Elem=ELptr->Next;
           else ELptrp->Next=ELptr->Next;
-#ifndef WINDOWS
-          free(ELptr);
-#else
           delete ELptr;
-#endif
         }
       }
       NacEl--;
@@ -360,11 +332,7 @@ void ErrorDetect(void)
         Eptrp->Next=Eptr->Next;
         if (Eptr->Next!=nullptr) Eptr->Next->Prev=Eptrp;
       }
-#ifndef WINDOWS
-      free(Eptr);
-#else
       delete Eptr;
-#endif
       /* Remove DC bus from AC data base */
       Aptr=ACptr->Area;
       if (Aptr!=nullptr) {
@@ -379,11 +347,7 @@ void ErrorDetect(void)
             ptrs->Next=ptrp->Next;
             if (ptrp->Next!=nullptr) ptrp->Next->Prev=ptrs;
           }
-#ifndef WINDOWS
-          free(ptrp);
-#else
           delete ptrp;
-#endif
         }
       }
       Nac--;
@@ -397,11 +361,7 @@ void ErrorDetect(void)
         ACptrs->Next=ACptrp->Next;
         if (ACptrp->Next!=nullptr) ACptrp->Next->Prev=ACptrs;
       }
-#ifndef WINDOWS
-      free(ACptrp);
-#else
       delete ACptrp;
-#endif
     }
 
 
@@ -483,12 +443,7 @@ void ErrorDetect(void)
          else Aptr=DCptrp->Area;
          if (Aptr!=nullptr) {
            ptr=Aptr->DC;
-#ifdef WINDOWS
            Aptr->DC= new DClist;
-#else
-           Aptr->DC=(DClist *) malloc(sizeof(DClist));
-           if (Aptr->DC==nullptr) {ErrorHalt("Insufficient memory to allocate area data."); exit(ERROREXIT);}
-#endif
            if (i==1) Aptr->DC->DC=DCptr;
            else Aptr->DC->DC=DCptrp;
            Aptr->DC->Next=ptr;
@@ -628,16 +583,7 @@ void ReadData(char *Name)
  /* Main routine. */
 {
 	InputDataFile=(FILE *) OpenInput(Name);  
-#ifdef WINDOWS
 	dataPtr= new Data;
-#else
-  dataPtr=(Data *) malloc(sizeof(Data));
-  if (dataPtr==nullptr) {
-    fclose(InputDataFile);
-    ErrorHalt("Insufficient memory to read input data.");
-    exit(ERROREXIT);
-  }
-#endif
   dataPtr->Title[0][0]='\0';
   dataPtr->ACbus=nullptr;
   dataPtr->DCbus=nullptr;
@@ -664,10 +610,6 @@ void ReadData(char *Name)
       exit(ERROREXIT);
   }
   else fprintf(stderr,"*** The data has been read successfully ***\n");
-#ifdef WINDOWS
   delete[] Name;
-#else
-  free(Name);
-#endif
 
 }

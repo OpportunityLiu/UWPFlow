@@ -4,12 +4,7 @@
 
 
 /* ------------------ SVCFunHes ----------------------------- */
-#ifdef ANSIPROTO
 void SVCFunHes(bool flagF,bool flagJ)
-#else
-void SVCFunHes(flagF,flagJ)
-bool flagF,flagJ;
-#endif
 /* Construct the SVC part of the PoC Jacobian and mismatch. */
 {
  INDEX i,j,k,l,N;
@@ -52,12 +47,7 @@ bool flagF,flagJ;
 }
 
 /* ------------------ TCSCFunHes ----------------------------- */
-#ifdef ANSIPROTO
 void TCSCFunHes(bool flagF,bool flagJ)
-#else
-void TCSCFunHes(flagF,flagJ)
-bool flagF,flagJ;
-#endif
 /* Construct the TCSC part of the PoC Jacobian and mismatch. */
 {
  INDEX i,j,k,m,N;
@@ -294,12 +284,7 @@ bool flagF,flagJ;
 
 
 /* ------------------ STATCOMFunHes ----------------------------- */
-#ifdef ANSIPROTO
 void STATCOMFunHes(bool flagF,bool flagJ)
-#else
-void STATCOMFunHes(flagF,flagJ)
-bool flagF,flagJ;
-#endif
 /* Construct the STATCOM part of the PoC Jacobian and mismatch. */
 {
  INDEX i,j,k,l,N;

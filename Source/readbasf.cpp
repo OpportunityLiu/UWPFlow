@@ -4,30 +4,14 @@
 extern FILE *InputDataFile;
 
 /* --------------- SVCbusInList  ------------------- */
-#ifdef ANSIPROTO
 SVCbusData *SVCbusInList(char *BusName,INDEX N,ACbusData *ptrac,ACbusData *ptrac1)
-#else
-SVCbusData *SVCbusInList(BusName,N,ptrac,ptrac1)
-char *BusName;
-INDEX N;
-ACbusData *ptrac,*ptrac1;
-#endif
 {
   SVCbusData *ptr,*ptrp,*ptrn;
 
   if(N==0) {
     ptrn=dataPtr->SVCbus;
     ptrp=nullptr;
-#ifdef WINDOWS
     dataPtr->SVCbus= new SVCbusData;
-#else
-    dataPtr->SVCbus=(SVCbusData *) malloc(sizeof(SVCbusData));
-    if (dataPtr->SVCbus==nullptr) {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate SVC bus data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptr=dataPtr->SVCbus;
     if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {
@@ -65,30 +49,14 @@ ACbusData *ptrac,*ptrac1;
 
 
 /* --------------- TCSCbusInList  ------------------- */
-#ifdef ANSIPROTO
 TCSCbusData *TCSCbusInList(char *BusName,INDEX N,ACbusData *ptrac,ACbusData *ptrac1)
-#else
-TCSCbusData *TCSCbusInList(BusName,N,ptrac,ptrac1)
-char *BusName;
-INDEX N;
-ACbusData *ptrac,*ptrac1;
-#endif
 {
   TCSCbusData *ptr,*ptrp,*ptrn;
 
   if(N==0) {
     ptrn=dataPtr->TCSCbus;
     ptrp=nullptr;
-#ifdef WINDOWS
     dataPtr->TCSCbus=new TCSCbusData;
-#else
-    dataPtr->TCSCbus=(TCSCbusData *) malloc(sizeof(TCSCbusData));
-    if (dataPtr->TCSCbus==nullptr) {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate TCSC bus data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptr=dataPtr->TCSCbus;
     if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {
@@ -128,30 +96,14 @@ ACbusData *ptrac,*ptrac1;
 
 
 /* --------------- STATCOMbusInList  ------------------- */
-#ifdef ANSIPROTO
 STATCOMbusData *STATCOMbusInList(char *BusName,INDEX N,ACbusData *ptrac,ACbusData *ptrac1)
-#else
-STATCOMbusData *STATCOMbusInList(BusName,N,ptrac,ptrac1)
-char *BusName;
-INDEX N;
-ACbusData *ptrac,*ptrac1;
-#endif
 {
   STATCOMbusData *ptr,*ptrp,*ptrn;
 
   if(N==0) {
     ptrn=dataPtr->STATCOMbus;
     ptrp=nullptr;
-#ifdef WINDOWS
     dataPtr->STATCOMbus= new STATCOMbusData;
-#else
-    dataPtr->STATCOMbus=(STATCOMbusData *) malloc(sizeof(STATCOMbusData));
-    if (dataPtr->STATCOMbus==nullptr) {
-      fclose(InputDataFile);
-      ErrorHalt("Insufficient memory to allocate STATCOM bus data.");
-      exit(ERROREXIT);
-    }
-#endif
     ptr=dataPtr->STATCOMbus;
     if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {

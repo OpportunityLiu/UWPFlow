@@ -771,11 +771,7 @@ void Output(INDEX Iter, char *File1, char *str)
 
   if (OutFile != nullptr)
     fclose(OutFile);
-#ifdef WINDOWS
   delete[] File1;
-#else
-  free(File1);
-#endif
 }
 
 /* --------------- WriteSolution ----------------- */
