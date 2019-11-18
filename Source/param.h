@@ -2,6 +2,7 @@
 
 /* param.h 030390 */
 
+#include <stdio.h>
 #include "constant.h"
 
 void SetArguments(int argc, const char **argv);

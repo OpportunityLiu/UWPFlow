@@ -1,5 +1,7 @@
 #pragma once
 
+#include "constant.h"
+
 typedef struct AreaData {
   INDEX N;
   INDEX i;
