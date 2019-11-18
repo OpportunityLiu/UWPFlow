@@ -1,39 +1,35 @@
 /* sparse.c 030590 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
+#include "sparse.h"
 #include "constant.h"
 #include "param.h"
-#include "sparse.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* ------- Global Variables ------ */
 bool InputError;
 
 /* ===================== ErrorHalt ================================ */
-void ErrorHalt(char *Msg)
-{
+void ErrorHalt(char *Msg) {
   fprintf(stderr, "ERROR: %s\n", Msg);
   InputError = true;
   /* exit(ERROREXIT) */
 }
 
 /* ============================== TransposeMatrix ==================== */
-void TransposeMatrix(SparseMatrix *Matrix)
-{
+void TransposeMatrix(SparseMatrix *Matrix) {
   INDEX I, RowI, ColJ, N0;
   SparseMatrixElement **TempHead; /* array[1..maxN] */
   SparseMatrixElement *Ptr1, *PtrR, *PtrC;
 
   /* BEGIN */
   TempHead = new SparseMatrixElement *[Matrix->n1 + 1];
-  for (I = 1; I <= Matrix->n1; I++)
-  {
+  for (I = 1; I <= Matrix->n1; I++) {
     TempHead[I] = Matrix->RowHead[I];
     Ptr1 = Matrix->RowHead[I];
-    while (Ptr1 != nullptr)
-    {
+    while (Ptr1 != nullptr) {
       /* WITH Ptr1^ DO BEGIN */
       PtrR = Ptr1->RowNext;
       PtrC = Ptr1->ColNext;
@@ -57,8 +53,7 @@ void TransposeMatrix(SparseMatrix *Matrix)
 }
 
 /* ===================== AllocatePermutation ========================= */
-struct IntegerVector *AllocatePermutation(INDEX Size)
-{
+struct IntegerVector *AllocatePermutation(INDEX Size) {
   struct IntegerVector *Vector;
   int i;
 
@@ -72,8 +67,7 @@ struct IntegerVector *AllocatePermutation(INDEX Size)
 }
 
 /* ===================== SortRowsColumns ======================= */
-void SortRowsColumns(SparseMatrix *Matrix)
-{
+void SortRowsColumns(SparseMatrix *Matrix) {
   SparseMatrixElement *TempP1;
   SparseMatrixElement *TempP2;
   int I;
@@ -81,11 +75,9 @@ void SortRowsColumns(SparseMatrix *Matrix)
   for (I = 1; I <= Matrix->n2; I++)
     Matrix->ColHead[I] = nullptr;
   I = Matrix->n1;
-  while (I > 0)
-  {
+  while (I > 0) {
     TempP1 = Matrix->RowHead[I];
-    while (TempP1 != nullptr)
-    {
+    while (TempP1 != nullptr) {
       TempP2 = TempP1->RowNext;
       TempP1->ColNext = Matrix->ColHead[TempP1->Col];
       Matrix->ColHead[TempP1->Col] = TempP1;
@@ -96,11 +88,9 @@ void SortRowsColumns(SparseMatrix *Matrix)
   for (I = 1; I <= Matrix->n1; I++)
     Matrix->RowHead[I] = nullptr;
   I = Matrix->n2;
-  while (I > 0)
-  {
+  while (I > 0) {
     TempP1 = Matrix->ColHead[I];
-    while (TempP1 != nullptr)
-    {
+    while (TempP1 != nullptr) {
       TempP2 = TempP1->ColNext;
       TempP1->RowNext = Matrix->RowHead[TempP1->Row];
       Matrix->RowHead[TempP1->Row] = TempP1;
@@ -111,7 +101,6 @@ void SortRowsColumns(SparseMatrix *Matrix)
 } /* END RowSort */
 
 /* ============================ NearZero ===========================*/
-bool NearZero(ELEMENTVALUETYPE Value)
-{
+bool NearZero(ELEMENTVALUETYPE Value) {
   return (fabs(Value) < SINGULARITYZERO);
 }

@@ -1,11 +1,11 @@
 /* param.c 030390 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 #include <ctype.h>
-#include <string.h>
 #include <float.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "constant.h"
 #include "param.h"
@@ -16,21 +16,17 @@ int GlobalArgc;
 const char **GlobalArgv;
 
 /* ========================== SetArguments ========================== */
-void SetArguments(int argc, const char **argv)
-{
+void SetArguments(int argc, const char **argv) {
   GlobalArgc = argc;
   GlobalArgv = argv;
 }
 
 /* ========================== ExistParameters ======================= */
-bool ExistParameter(char ch)
-{
+bool ExistParameter(char ch) {
   int i;
   /* BEGIN */
-  for (i = 1; i < GlobalArgc; i++)
-  {
-    if (GlobalArgv[i][0] == '-')
-    {
+  for (i = 1; i < GlobalArgc; i++) {
+    if (GlobalArgv[i][0] == '-') {
       if (GlobalArgv[i][1] == ch)
         return (true);
     }
@@ -39,18 +35,15 @@ bool ExistParameter(char ch)
 }
 
 /* ============================ TrueParamStr ========================== */
-char *TrueParamStr(int Item)
-{
+char *TrueParamStr(int Item) {
   int i, k;
   char *TempPtr;
   /* BEGIN */
   k = 0;
-  for (i = 1; i < GlobalArgc; i++)
-  {
+  for (i = 1; i < GlobalArgc; i++) {
     if (GlobalArgv[i][0] != '-')
       k++;
-    if (k >= Item)
-    {
+    if (k >= Item) {
       TempPtr = new char[strlen(GlobalArgv[i]) + 1];
       if (GlobalArgv[i][0] != '>')
         strcpy(TempPtr, GlobalArgv[i]);
@@ -63,23 +56,16 @@ char *TrueParamStr(int Item)
 }
 
 /* =========================== HelpRequested ======================= */
-bool HelpRequested()
-{
-  return (ExistParameter('h'));
-}
+bool HelpRequested() { return (ExistParameter('h')); }
 
 /* =========================== DetermineOutputPrecision ============= */
-int DetermineOutputPrecision()
-{
+int DetermineOutputPrecision() {
   int i;
   int precis;
   /* BEGIN */
-  for (i = 1; i < GlobalArgc; i++)
-  {
-    if (GlobalArgv[i][0] == '-')
-    {
-      if (GlobalArgv[i][1] == 'p')
-      {
+  for (i = 1; i < GlobalArgc; i++) {
+    if (GlobalArgv[i][0] == '-') {
+      if (GlobalArgv[i][1] == 'p') {
         sscanf(&GlobalArgv[i][2], "%d", &precis);
         return (precis);
       }
@@ -89,16 +75,12 @@ int DetermineOutputPrecision()
 }
 
 /* =========================== NameParameter ========================= */
-char *NameParameter(char ch)
-{
+char *NameParameter(char ch) {
   int I;
   /* BEGIN */
-  for (I = 1; I < GlobalArgc; I++)
-  {
-    if (GlobalArgv[I][0] == '-')
-    {
-      if (GlobalArgv[I][1] == ch)
-      {
+  for (I = 1; I < GlobalArgc; I++) {
+    if (GlobalArgv[I][0] == '-') {
+      if (GlobalArgv[I][1] == ch) {
         return ((char *)&GlobalArgv[I][2]);
       }
     }
@@ -107,16 +89,12 @@ char *NameParameter(char ch)
 }
 
 /* =========================== IntegerParameter ======================== */
-int IntegerParameter(char ch, int Default, int MinVal, int MaxVal)
-{
+int IntegerParameter(char ch, int Default, int MinVal, int MaxVal) {
   int I, TempVal, val;
   /* BEGIN */
-  for (I = 1; I < GlobalArgc; I++)
-  {
-    if (GlobalArgv[I][0] == '-')
-    {
-      if (GlobalArgv[I][1] == ch)
-      {
+  for (I = 1; I < GlobalArgc; I++) {
+    if (GlobalArgv[I][0] == '-') {
+      if (GlobalArgv[I][1] == ch) {
         if (!(val = sscanf(&GlobalArgv[I][2], "%d", &TempVal)) || val == EOF)
           return (Default);
         if (TempVal < MinVal)
@@ -131,22 +109,18 @@ int IntegerParameter(char ch, int Default, int MinVal, int MaxVal)
 }
 
 /* ============================ IntegerPosParam ======================== */
-int IntegerPosParam(int Item, int Default)
-{
+int IntegerPosParam(int Item, int Default) {
   int i, k;
   int TempVal;
   /* BEGIN */
   k = 0;
-  for (i = 1; (i < GlobalArgc) && (k != Item); i++)
-  {
+  for (i = 1; (i < GlobalArgc) && (k != Item); i++) {
     if (GlobalArgv[i][0] != '-')
       k++;
   }
   i--;
-  if (k == Item)
-  {
-    if (sscanf(GlobalArgv[i], "%d", &TempVal))
-    {
+  if (k == Item) {
+    if (sscanf(GlobalArgv[i], "%d", &TempVal)) {
       return (TempVal);
     }
   }
@@ -154,16 +128,12 @@ int IntegerPosParam(int Item, int Default)
 }
 
 /* ======================== RealParameter ============================== */
-void RealParameter(char ch, double *deflt, double MinVal, double MaxVal)
-{
+void RealParameter(char ch, double *deflt, double MinVal, double MaxVal) {
   int I;
   /* BEGIN */
-  for (I = 1; I < GlobalArgc; I++)
-  {
-    if (GlobalArgv[I][0] == '-')
-    {
-      if (GlobalArgv[I][1] == ch)
-      {
+  for (I = 1; I < GlobalArgc; I++) {
+    if (GlobalArgv[I][0] == '-') {
+      if (GlobalArgv[I][1] == ch) {
         sscanf(&GlobalArgv[I][2], "%lf", deflt);
         if (*deflt < MinVal)
           *deflt = MinVal;
@@ -177,13 +147,11 @@ void RealParameter(char ch, double *deflt, double MinVal, double MaxVal)
 }
 
 /* =========================== RealPosParam =========================== */
-void RealPosParam(int Item, double *deflt)
-{
+void RealPosParam(int Item, double *deflt) {
   int i, k;
   /* BEGIN */
   k = 0;
-  for (i = 1; (i < GlobalArgc) && (k != Item); i++)
-  {
+  for (i = 1; (i < GlobalArgc) && (k != Item); i++) {
     if ((GlobalArgv[i][0] != '-') ||
         ((GlobalArgv[i][0] == '-') && (isdigit(GlobalArgv[i][1]) != 0)))
       k++;
@@ -194,8 +162,7 @@ void RealPosParam(int Item, double *deflt)
 }
 
 /* ================================ DisplayReal ======================= */
-char *DisplayReal(double value, int precision, char *buff)
-{
+char *DisplayReal(double value, int precision, char *buff) {
   char format[80];
   int decimals;
   ELEMENTVALUETYPE power10;
@@ -204,8 +171,7 @@ char *DisplayReal(double value, int precision, char *buff)
   if (value < 0.0)
     decimals--;
   power10 = (ELEMENTVALUETYPE)10.0;
-  while ((decimals > 0) && (fabs(value) > power10))
-  {
+  while ((decimals > 0) && (fabs(value) > power10)) {
     decimals--;
     power10 = power10 * 10;
   }
@@ -215,8 +181,7 @@ char *DisplayReal(double value, int precision, char *buff)
 }
 
 /* ================================ NullName ========================== */
-bool NullName(const char *Name)
-{
+bool NullName(const char *Name) {
   if (Name == nullptr)
     return (true);
   if (strcmp(Name, "") == 0)
@@ -226,25 +191,21 @@ bool NullName(const char *Name)
 }
 
 /* =============================== OpenInput ========================== */
-//Opens a file with file name 'Name' for reading. Returns the input stream pointer
-FILE *OpenInput(const char *Name)
-{
+// Opens a file with file name 'Name' for reading. Returns the input stream
+// pointer
+FILE *OpenInput(const char *Name) {
   FILE *InputFile;
   char s[80];
 
-  if (!NullName(Name))
-  {
-    if ((InputFile = fopen(Name, "rt")) == nullptr)
-    {
+  if (!NullName(Name)) {
+    if ((InputFile = fopen(Name, "rt")) == nullptr) {
       sprintf(s, "No input data file -> %s", Name);
       ErrorHalt(s);
       exit(ERROREXIT);
       /* fprintf(stderr,"Input from standard input\n");
          InputFile = stdin;*/
     }
-  }
-  else
-  {
+  } else {
     sprintf(s, "No input data file -> %s", Name);
     ErrorHalt(s);
     exit(ERROREXIT);
@@ -254,28 +215,24 @@ FILE *OpenInput(const char *Name)
 }
 
 /* ============================== OpenOutput ========================== */
-FILE *OpenOutput(const char *Name)
-{
+FILE *OpenOutput(const char *Name) {
   FILE *OutputFile;
 
-  if (!NullName(Name))
-  {
-    if ((OutputFile = fopen(Name, "wt")) == nullptr)
-    {
+  if (!NullName(Name)) {
+    if ((OutputFile = fopen(Name, "wt")) == nullptr) {
       fprintf(stderr, "Output to standard output\n");
       OutputFile = stdout;
-      //explanation for above: a really strange bug where stdout gets initialized to something
-      //by itself. I(that is, Shu) really couldn't figure it out so I set OutputFile to nullptr instead which will
-      //print to screen anyways.
+      // explanation for above: a really strange bug where stdout gets
+      // initialized to something by itself. I(that is, Shu) really couldn't
+      // figure it out so I set OutputFile to nullptr instead which will print to
+      // screen anyways.
     }
-  }
-  else
+  } else
     OutputFile = stdout;
   return (OutputFile);
 }
 
-int SizeParameter(char ch, int i, int imax)
-{
+int SizeParameter(char ch, int i, int imax) {
   double TempSize;
   TempSize = 1.0;
   RealParameter(ch, &TempSize, (double)0.02, (double)imax);

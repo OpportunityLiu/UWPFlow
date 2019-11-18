@@ -3,7 +3,8 @@
 #include "jacob.h"
 
 /* ------------------ ACFunJac ----------------------------- */
-AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool flagP)
+AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
+                   bool flagP)
 /* Construct the AC part of the Jacobian. */
 {
   ACbusData *ACptr, *To, *From, *BEptr;
@@ -19,14 +20,14 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
 
   if (val != nullptr)
     *val = 0;
-  for (ALptr = dataPtr->KGbus; ALptr != nullptr; ALptr = ALptr->Next)
-  {
+  for (ALptr = dataPtr->KGbus; ALptr != nullptr; ALptr = ALptr->Next) {
     BEptr = ALptr->AC;
     if (strpbrk(ALptr->AC->Type, "S"))
       break;
   }
   if (Acont)
-    for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr->SPg = 0, Aptr = Aptr->Next)
+    for (Aptr = dataPtr->Area; Aptr != nullptr;
+         Aptr->SPg = 0, Aptr = Aptr->Next)
       ;
   if (Bl)
     l = ACvar[Bl] + 1;
@@ -34,8 +35,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
     l = Mptr->n1;
   else
     l = 0;
-  for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-  {
+  for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
     if (ACptr->Area != nullptr)
       BEptr = ACptr->Area->Slack;
     i = ACvar[ACptr->N];
@@ -43,13 +43,10 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
     /* ------------------- Power Mismatches ------------------- */
     Vi = ACptr->V;
     di = ACptr->Ang;
-    if (flagP)
-    {
+    if (flagP) {
       Pl = ACptr->Pl;
       Ql = ACptr->Ql;
-    }
-    else
-    {
+    } else {
       Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(Vi, ACptr->a) +
            (ACptr->Pz + lambda * ACptr->Pzl) * Vi * Vi;
       Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(Vi, ACptr->b) +
@@ -67,8 +64,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
     dPiid = dQiid = 0;
     dPiiv = dQiiv = 0;
     SPij = SQij = 0;
-    for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-    {
+    for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
       Eptr = ELptr->Eptr;
       if (Eptr->From == ACptr)
         To = Eptr->To;
@@ -77,17 +73,15 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
       j = ACvar[To->N];
       Vj = To->V;
       dj = To->Ang;
-      if (Eptr->From == ACptr)
-      {
+      if (Eptr->From == ACptr) {
         gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
         bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
         bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
-      }
-      else
-      {
+      } else {
         gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bij =
+            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         gsij = Eptr->G + Eptr->G2 - gij;
         bsij = Eptr->B + Eptr->B2 - bij;
       }
@@ -101,152 +95,119 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
       dQiiv = dQiiv + Vj / Vi * dQijv + 2 * Vi * (bij + bsij);
       SPij = SPij + Vi * Vi * (gij + gsij) + dQijd;
       SQij = SQij - Vi * Vi * (bij + bsij) - dPijd;
-      if (flagJ)
-      {
+      if (flagJ) {
         /* df/ddelta_j */
-        if (!strpbrk(To->Type, "S"))
-        {
+        if (!strpbrk(To->Type, "S")) {
           JacElement(Mptr, i, j, dPijd);
           JacElement(Mptr, i + 1, j, dQijd);
         }
         /* df/dV_j */
-        if (To->Cont != nullptr)
-        {
+        if (To->Cont != nullptr) {
           JacElement(Mptr, i, j + 1, dPijv);
           JacElement(Mptr, i + 1, j + 1, dQijv);
-        }
-        else if (flagH && strpbrk(To->Type, "L"))
-        {
+        } else if (flagH && strpbrk(To->Type, "L")) {
           JacElement(Mptr, i, Mptr->n1, dPijv);
           JacElement(Mptr, i + 1, Mptr->n1, dQijv);
-        }
-        else
-        {
+        } else {
           JacElement(Mptr, i, j + 1, 0.);
           JacElement(Mptr, i + 1, j + 1, 0.);
         }
         /* df/dControl_ij */
-        if (PQcont && strpbrk(Eptr->Type, "PQMN"))
-        {
+        if (PQcont && strpbrk(Eptr->Type, "PQMN")) {
           if (Acont && strpbrk(Eptr->Cont->Type, "A"))
             k = 1;
           else
             k = 0;
           j = ACvar[Eptr->Cont->N] + 1 + k + Eptr->Cont->Ncont - Eptr->Ncont;
-          if (!strcmp(Eptr->Type, "RQ"))
-          {
+          if (!strcmp(Eptr->Type, "RQ")) {
             val1 = -dQijd / Eptr->Tap;
             val2 = dPijd / Eptr->Tap;
-            if (Eptr->From == ACptr)
-            {
+            if (Eptr->From == ACptr) {
               val1 = val1 - 2 * Vi * Vi * (Eptr->G1 + Eptr->G) * Eptr->Tap;
               val2 = val2 + 2 * Vi * Vi * (Eptr->B1 + Eptr->B) * Eptr->Tap;
             }
-          }
-          else if (!strcmp(Eptr->Type, "RP"))
-          {
+          } else if (!strcmp(Eptr->Type, "RP")) {
             val1 = dPijd;
             val2 = dQijd;
-            if (Eptr->From != ACptr)
-            {
+            if (Eptr->From != ACptr) {
               val1 = -val1;
               val2 = -val2;
             }
-          }
-          else
+          } else
             val1 = val2 = 0;
           JacElement(Mptr, i, j, val1);
           JacElement(Mptr, i + 1, j, val2);
-        }
-        else if (Rcont && Eptr->Cont != nullptr)
-        {
+        } else if (Rcont && Eptr->Cont != nullptr) {
           j = ACvar[Eptr->Cont->N] + 1;
-          if (!strcmp(Eptr->Type, "R"))
-          {
+          if (!strcmp(Eptr->Type, "R")) {
             val1 = -dQijd / Eptr->Tap;
             val2 = dPijd / Eptr->Tap;
-            if (Eptr->From == ACptr)
-            {
+            if (Eptr->From == ACptr) {
               val1 = val1 - 2 * Vi * Vi * (Eptr->G1 + Eptr->G) * Eptr->Tap;
               val2 = val2 + 2 * Vi * Vi * (Eptr->B1 + Eptr->B) * Eptr->Tap;
             }
-          }
-          else
+          } else
             val1 = val2 = 0;
           JacElement(Mptr, i, j, val1);
           JacElement(Mptr, i + 1, j, val2);
         }
       }
     }
-    if (flagF)
-    {
+    if (flagF) {
       dF[i] = Pi - SPij;
       dF[i + 1] = Qi - SQij;
     }
-    if (flagJ)
-    {
+    if (flagJ) {
       dPiiv = dPiiv - 2 * Vi * ACptr->G;
       dQiiv = dQiiv + 2 * Vi * ACptr->B;
-      if (!flagP)
-      {
+      if (!flagP) {
         dPiiv = dPiiv - 2 * (ACptr->Pz + ACptr->Pzl * lambda) * Vi -
-                ACptr->a * (ACptr->Pn + ACptr->Pnl * lambda) * pow(Vi, ACptr->a - 1.0);
+                ACptr->a * (ACptr->Pn + ACptr->Pnl * lambda) *
+                    pow(Vi, ACptr->a - 1.0);
         dQiiv = dQiiv - 2 * (ACptr->Qz + ACptr->Qzl * lambda) * Vi -
-                ACptr->b * (ACptr->Qn + ACptr->Qnl * lambda) * pow(Vi, ACptr->b - 1.0);
+                ACptr->b * (ACptr->Qn + ACptr->Qnl * lambda) *
+                    pow(Vi, ACptr->b - 1.0);
       }
       /* df/dKg */
       j = ACvar[BEptr->N];
-      if (DPg)
-      {
-        if (strpbrk(BEptr->Type, "S"))
-        {
+      if (DPg) {
+        if (strpbrk(BEptr->Type, "S")) {
           JacElement(Mptr, i, j, DPg);
-        }
-        else if (Acont)
-        {
+        } else if (Acont) {
           JacElement(Mptr, i, j + 2, DPg);
         }
       }
       /* df/dlambda */
-      if (l)
-      {
+      if (l) {
         if (ACptr->Pzl || ACptr->Pnl)
-          JacElement(Mptr, i, l, -ACptr->Pzl * Vi * Vi - ACptr->Pnl * pow(Vi, ACptr->a));
+          JacElement(Mptr, i, l,
+                     -ACptr->Pzl * Vi * Vi - ACptr->Pnl * pow(Vi, ACptr->a));
         if (ACptr->Qzl || ACptr->Qnl)
-          JacElement(Mptr, i + 1, l, -ACptr->Qzl * Vi * Vi - ACptr->Qnl * pow(Vi, ACptr->b));
+          JacElement(Mptr, i + 1, l,
+                     -ACptr->Qzl * Vi * Vi - ACptr->Qnl * pow(Vi, ACptr->b));
       }
       /* df/ddelta_i */
-      if (!strpbrk(ACptr->Type, "S"))
-      {
+      if (!strpbrk(ACptr->Type, "S")) {
         JacElement(Mptr, i, i, dPiid);
         JacElement(Mptr, i + 1, i, dQiid);
       }
       /* df/dV_i */
-      if (ACptr->Cont != nullptr)
-      {
+      if (ACptr->Cont != nullptr) {
         JacElement(Mptr, i, i + 1, dPiiv);
         JacElement(Mptr, i + 1, i + 1, dQiiv);
-      }
-      else if (flagH && strpbrk(ACptr->Type, "L"))
-      {
+      } else if (flagH && strpbrk(ACptr->Type, "L")) {
         JacElement(Mptr, i, Mptr->n1, dPiiv);
         JacElement(Mptr, i + 1, Mptr->n1, dQiiv);
-      }
-      else
-      {
+      } else {
         JacElement(Mptr, i, i + 1, 0.);
         JacElement(Mptr, i + 1, i + 1, 0.);
       }
       /*  df/dQg   */
-      if (strpbrk(ACptr->Type, "V,Q,S,G,Z"))
-      {
-        if (QRcont && strpbrk(ACptr->Type, "G"))
-        {
+      if (strpbrk(ACptr->Type, "V,Q,S,G,Z")) {
+        if (QRcont && strpbrk(ACptr->Type, "G")) {
           j = ACvar[ACptr->Cont->N];
           val1 = ACptr->Kbg;
-        }
-        else
-        {
+        } else {
           j = i;
           val1 = 1.;
         }
@@ -254,8 +215,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
           JacElement(Mptr, i + 1, j + 1, val1);
         else
           JacElement(Mptr, i + 1, j + 1, 0.);
-        if (ACptr->Gen != nullptr)
-        { /*Gen. Model BEGIN */
+        if (ACptr->Gen != nullptr) { /*Gen. Model BEGIN */
           j = ACptr->Gen->Nvar;
           if (strpbrk(ACptr->cont, "I"))
             JacElement(Mptr, i + 1, j + 11, 1.);
@@ -270,17 +230,14 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
     }
 
     /* ---------------------- Area Control --------------------- */
-    if (Acont && strpbrk(ACptr->Type, "A"))
-    {
+    if (Acont && strpbrk(ACptr->Type, "A")) {
       i = i + 2;
       SPij = 0;
-      for (ELptr = BEptr->Area->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-      {
+      for (ELptr = BEptr->Area->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
         From = Eptr->From;
         To = Eptr->To;
-        if (Eptr->From != Eptr->Meter)
-        {
+        if (Eptr->From != Eptr->Meter) {
           From = Eptr->To;
           To = Eptr->From;
         }
@@ -291,28 +248,28 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
         di = From->Ang;
         Vj = To->V;
         dj = To->Ang;
-        if (Eptr->From == Eptr->Meter)
-        {
-          gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-          bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        if (Eptr->From == Eptr->Meter) {
+          gij =
+              (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+          bij =
+              (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
           gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
-        }
-        else
-        {
-          gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-          bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        } else {
+          gij =
+              (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+          bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
+                Eptr->Tap;
           gsij = Eptr->G + Eptr->G2 - gij;
         }
         dPiid = val2 * (-Vi * Vj * (gij * sin(di - dj) - bij * cos(di - dj)));
-        dPiiv = val2 * (-2 * Vi * (gij + gsij) + Vj * (gij * cos(di - dj) + bij * sin(di - dj)));
+        dPiiv = val2 * (-2 * Vi * (gij + gsij) +
+                        Vj * (gij * cos(di - dj) + bij * sin(di - dj)));
         dPijd = -dPiid;
         dPijv = val2 * (Vi * (gij * cos(di - dj) + bij * sin(di - dj)));
         SPij = SPij + val2 * Vi * Vi * (gij + gsij) - Vj * dPijv;
-        if (flagJ)
-        {
+        if (flagJ) {
           j = ACvar[From->N];
-          if (!strpbrk(From->Type, "S"))
-          {
+          if (!strpbrk(From->Type, "S")) {
             JacElement(Mptr, i, j, dPiid);
           }
           if (From->Cont != nullptr)
@@ -322,8 +279,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
           else
             JacElement(Mptr, i, j + 1, 0.);
           j = ACvar[To->N];
-          if (!strpbrk(To->Type, "S"))
-          {
+          if (!strpbrk(To->Type, "S")) {
             JacElement(Mptr, i, j, dPijd);
           }
           if (To->Cont != nullptr)
@@ -332,39 +288,30 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
             JacElement(Mptr, i, Mptr->n1, dPijv);
           else
             JacElement(Mptr, i, j + 1, 0.);
-          if (PQcont && strpbrk(Eptr->Type, "PQMN"))
-          {
+          if (PQcont && strpbrk(Eptr->Type, "PQMN")) {
             if (Acont && strpbrk(Eptr->Cont->Type, "A"))
               k = 1;
             else
               k = 0;
             j = ACvar[Eptr->Cont->N] + 1 + k + Eptr->Cont->Ncont - Eptr->Ncont;
-            if (!strcmp(Eptr->Type, "RQ"))
-            {
+            if (!strcmp(Eptr->Type, "RQ")) {
               val1 = Vj * dPijv / Eptr->Tap;
               if (Eptr->From == Eptr->Meter)
                 val1 = val1 - 2 * Vi * Vi * (Eptr->G1 + Eptr->G) * Eptr->Tap;
-            }
-            else if (!strcmp(Eptr->Type, "RP"))
-            {
+            } else if (!strcmp(Eptr->Type, "RP")) {
               val1 = dPiid;
               if (Eptr->From == Eptr->Meter)
                 val1 = -val1;
-            }
-            else
+            } else
               val1 = 0;
             JacElement(Mptr, i, j, val1);
-          }
-          else if (Rcont && Eptr->Cont != nullptr)
-          {
+          } else if (Rcont && Eptr->Cont != nullptr) {
             j = ACvar[Eptr->Cont->N] + 1;
-            if (!strcmp(Eptr->Type, "R"))
-            {
+            if (!strcmp(Eptr->Type, "R")) {
               val1 = Vj * dPijv / Eptr->Tap;
               if (Eptr->From == Eptr->Meter)
                 val1 = val1 - 2 * Vi * Vi * (Eptr->G1 + Eptr->G) * Eptr->Tap;
-            }
-            else
+            } else
               val1 = 0;
             JacElement(Mptr, i, j, val1);
           }
@@ -376,31 +323,30 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
 
     /* -------------- Regulating Transf. ----------------------- */
     if (PQcont)
-      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
-      {
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
-        if (strpbrk(Eptr->Type, "PQMN"))
-        {
+        if (strpbrk(Eptr->Type, "PQMN")) {
           if (Acont && strpbrk(Eptr->Cont->Type, "A"))
             k = 1;
           else
             k = 0;
           i = ACvar[ACptr->N] + 1 + k + ACptr->Ncont - Eptr->Ncont;
-          if (Eptr->From == ACptr)
-          {
+          if (Eptr->From == ACptr) {
             From = Eptr->From;
             To = Eptr->To;
-            gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-            bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+            gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) *
+                  Eptr->Tap;
+            bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
+                  Eptr->Tap;
             gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
             bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
-          }
-          else
-          {
+          } else {
             From = Eptr->To;
             To = Eptr->From;
-            gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-            bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+            gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) *
+                  Eptr->Tap;
+            bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
+                  Eptr->Tap;
             gsij = Eptr->G + Eptr->G2 - gij;
             bsij = Eptr->B + Eptr->B2 - bij;
           }
@@ -409,7 +355,8 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
           Vj = To->V;
           dj = To->Ang;
           dPiid = -Vi * Vj * (gij * sin(di - dj) - bij * cos(di - dj));
-          dPiiv = -2 * Vi * (gij + gsij) + Vj * (gij * cos(di - dj) + bij * sin(di - dj));
+          dPiiv = -2 * Vi * (gij + gsij) +
+                  Vj * (gij * cos(di - dj) + bij * sin(di - dj));
           dPijd = -dPiid;
           dPijv = Vi * (gij * cos(di - dj) + bij * sin(di - dj));
           SPij = Vi * Vi * (gij + gsij) - Vj * dPijv;
@@ -418,22 +365,17 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
           dQiiv = -dPiid / Vi + 2 * Vi * (bij + bsij);
           dQijv = -dPiid / Vj;
           SQij = -Vi * Vi * (bij + bsij) + dPiid;
-          if (strpbrk(Eptr->Type, "PM"))
-          {
-            if (flagJ)
-            {
-              if (!strcmp(Eptr->Type, "RP"))
-              {
+          if (strpbrk(Eptr->Type, "PM")) {
+            if (flagJ) {
+              if (!strcmp(Eptr->Type, "RP")) {
                 val1 = -dPiid;
                 if (Eptr->From != ACptr)
                   val1 = -val1;
-              }
-              else
+              } else
                 val1 = 1;
               JacElement(Mptr, i, i, val1);
               j = ACvar[From->N];
-              if (!strpbrk(From->Type, "S"))
-              {
+              if (!strpbrk(From->Type, "S")) {
                 JacElement(Mptr, i, j, dPiid);
               }
               if (From->Cont != nullptr)
@@ -443,8 +385,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
               else
                 JacElement(Mptr, i, j + 1, 0.);
               j = ACvar[To->N];
-              if (!strpbrk(To->Type, "S"))
-              {
+              if (!strpbrk(To->Type, "S")) {
                 JacElement(Mptr, i, j, dPijd);
               }
               if (To->Cont != nullptr)
@@ -456,23 +397,17 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
             }
             if (flagF)
               dF[i] = Eptr->Cvar - SPij;
-          }
-          else
-          {
-            if (flagJ)
-            {
-              if (!strcmp(Eptr->Type, "RQ"))
-              {
+          } else {
+            if (flagJ) {
+              if (!strcmp(Eptr->Type, "RQ")) {
                 val1 = -dPiid / Eptr->Tap;
                 if (Eptr->From == ACptr)
                   val1 = val1 + 2 * Vi * Vi * (Eptr->B1 + Eptr->B) * Eptr->Tap;
-              }
-              else
+              } else
                 val1 = 1;
               JacElement(Mptr, i, i, val1);
               j = ACvar[From->N];
-              if (!strpbrk(From->Type, "S"))
-              {
+              if (!strpbrk(From->Type, "S")) {
                 JacElement(Mptr, i, j, dQiid);
               }
               if (From->Cont != nullptr)
@@ -498,8 +433,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
       }
 
     /* -------------- Generator Model ----------------------- */
-    if (ACptr->Gen != nullptr)
-    {
+    if (ACptr->Gen != nullptr) {
       i = ACptr->Gen->Nvar;
       Ra = ACptr->Gen->Ra;
       Xd = ACptr->Gen->Xd;
@@ -515,8 +449,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
       Iq = ACptr->Gen->Iq;
       Id = ACptr->Gen->Id;
       Ia = ACptr->Gen->Ia;
-      if (flagF)
-      {
+      if (flagF) {
         dF[i + 1] = Pg - Vr * Ir - Vim * Iim;
         dF[i + 2] = Qg - Vim * Ir + Vr * Iim;
         dF[i + 3] = Eq - Vq - Ra * Iq + Xd * Id;
@@ -529,12 +462,10 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
         dF[i + 10] = Vim - Vi * sin(di);
         dF[i + 11] = Ia * Ia - Ir * Ir - Iim * Iim;
       }
-      if (flagJ)
-      {
+      if (flagJ) {
         /* df1/dKg */
         j = ACvar[BEptr->N];
-        if (DPg)
-        {
+        if (DPg) {
           if (strpbrk(BEptr->Type, "S"))
             JacElement(Mptr, i + 1, j, DPg);
           else if (Acont)
@@ -546,16 +477,13 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
         JacElement(Mptr, i + 1, i + 5, -Vr);
         JacElement(Mptr, i + 1, i + 6, -Vim);
         /* df2/dQg */
-        if (QRcont && strpbrk(ACptr->Type, "G"))
-        {
+        if (QRcont && strpbrk(ACptr->Type, "G")) {
           j = ACvar[ACptr->Cont->N];
           if (strpbrk(ACptr->cont, "V"))
             JacElement(Mptr, i + 2, j + 1, ACptr->Kbg);
           else
             JacElement(Mptr, i + 2, j + 1, 0.);
-        }
-        else
-        {
+        } else {
           j = ACvar[ACptr->N];
           if (strpbrk(ACptr->cont, "V"))
             JacElement(Mptr, i + 2, j + 1, 1.);
@@ -614,8 +542,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
         else
           JacElement(Mptr, i + 9, j + 1, 0.);
         /* df9/ddelta  */
-        if (!strpbrk(ACptr->Type, "S"))
-        {
+        if (!strpbrk(ACptr->Type, "S")) {
           j = ACvar[ACptr->N];
           JacElement(Mptr, i + 9, j, Vi * sin(di));
         }
@@ -628,8 +555,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
         else
           JacElement(Mptr, i + 10, j + 1, 0.);
         /* df10/ddelta  */
-        if (!strpbrk(ACptr->Type, "S"))
-        {
+        if (!strpbrk(ACptr->Type, "S")) {
           j = ACvar[ACptr->N];
           JacElement(Mptr, i + 10, j, -Vi * cos(di));
         }
@@ -646,14 +572,12 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
     }
   }
 
-  /* -------------- Detect Area/System Generation Errors ----------------------- */
-  if (!flagPgMax && val != nullptr)
-  {
+  /* -------------- Detect Area/System Generation Errors -----------------------
+   */
+  if (!flagPgMax && val != nullptr) {
     if (Acont && Narea > 1)
-      for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr = Aptr->Next)
-      {
-        if (!Aptr->SPg)
-        {
+      for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr = Aptr->Next) {
+        if (!Aptr->SPg) {
           if (!*val)
             *val = -1;
           else
@@ -661,8 +585,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool fl
           return (Aptr);
         }
       }
-    else if (!SPg)
-    {
+    else if (!SPg) {
       if (!*val)
         *val = -1;
       else

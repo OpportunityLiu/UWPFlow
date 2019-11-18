@@ -24,9 +24,8 @@ typedef struct /* SparseMatrix */ {
   SparseMatrixElement **ColHead;
 } SparseMatrix;
 
-
 void ErrorHalt(char *Msg);
-void	TransposeMatrix(SparseMatrix *Matrix);
+void TransposeMatrix(SparseMatrix *Matrix);
 struct IntegerVector *AllocatePermutation(INDEX Size);
 void SortRowsColumns(SparseMatrix *Matrix);
 bool NearZero(ELEMENTVALUETYPE Value);

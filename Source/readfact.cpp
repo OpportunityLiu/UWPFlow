@@ -6,8 +6,7 @@
 extern FILE *InputDataFile;
 
 /* --------------------- Read SVC ----------------------------- */
-void ReadSVC(const char *Line)
-{
+void ReadSVC(const char *Line) {
   SVCbusData *SVCptr;
   SVClist *ptr;
   ACbusData *ACptr, *ptrac, *ptrac1;
@@ -18,8 +17,7 @@ void ReadSVC(const char *Line)
   INDEX Sec;
 
   /* ---------------------- SVC data ------------------------ */
-  if (!strncmp(Line, "FS ", 3))
-  {
+  if (!strncmp(Line, "FS ", 3)) {
     GetStr(Line, 7, 12, 12, Name);
     KV = GetValue(Line, 15, 4, 0);
     GetStr(Line, 20, 12, 12, Name1);
@@ -28,21 +26,18 @@ void ReadSVC(const char *Line)
     KV2 = GetValue(Line, 64, 4, 0);
     Xth_l = GetValue(Line, 68, 8, 7);
     strcpy(Name2, Name);
-    if (Xth_l != 0.0)
-    {
+    if (Xth_l != 0.0) {
       Name2[7] = 'L';
       Name2[8] = '\0';
       GetStr(Line, 64, 4, 4, Name3);
       strcat(Name2, Name3);
       ptrac = ACbusInList(0, Name2, KV2, Nac, 1);
-      if (ptrac->N == 0)
-      {
+      if (ptrac->N == 0) {
         Nac++;
         ptrac->Num = ptrac->N = Nac;
       }
       ACptr = ACbusInList(0, Name, KV, Nac, 1);
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
       }
@@ -51,13 +46,11 @@ void ReadSVC(const char *Line)
       strcpy(ptrac->Owner, ACptr->Owner);
       ptrac->V = 1.00;
       /*  Create new element between buses Name2 & Name */
-      if (KV == 0)
-      {
+      if (KV == 0) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("Base voltage at bus 1 is zero.");
       }
-      if (KV2 == 0)
-      {
+      if (KV2 == 0) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("Base voltage at bus 2 is zero.");
       }
@@ -65,14 +58,11 @@ void ReadSVC(const char *Line)
       if (Ssvc == 0.0)
         Ssvc = Sn;
       X = Xth_l * Sn / Ssvc;
-      if (fabs(X) < 0.0001)
-      {
+      if (fabs(X) < 0.0001) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("AC element is a short circuit. Try eliminating it.");
         B = 0;
-      }
-      else
-      {
+      } else {
         B = -1.0 / X;
       }
       G = 0.0;
@@ -101,17 +91,14 @@ void ReadSVC(const char *Line)
       strcpy(Eptr->Type, "L");
       ptrac->Area = ACptr->Area;
       ptrac->Cont = ptrac;
-    }
-    else
+    } else
       ptrac = ACbusInList(0, Name, KV, Nac, 1);
     SVCptr = SVCbusInList(Name2, 0, ptrac, ptrac1);
-    if (SVCptr->Xc > 0)
-    {
+    if (SVCptr->Xc > 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("The SVC bus was previously defined (check FS cards).");
     }
-    if (SVCptr->N == 0)
-    {
+    if (SVCptr->N == 0) {
       Nsvc++;
       SVCptr->N = Nsvc;
     }
@@ -141,8 +128,7 @@ void ReadSVC(const char *Line)
 }
 
 /* --------------------- Read TCSC ----------------------------- */
-void ReadTCSC(const char *Line)
-{
+void ReadTCSC(const char *Line) {
   TCSCbusData *TCSCptr;
   TCSClist *ptr;
   ACbusData *ptrac, *ptrac1;
@@ -150,47 +136,39 @@ void ReadTCSC(const char *Line)
   VALUETYPE KV, KV1;
 
   /* ---------------------- TCSC data ------------------------ */
-  if (!strncmp(Line, "FC ", 3))
-  {
+  if (!strncmp(Line, "FC ", 3)) {
     GetStr(Line, 7, 12, 12, Name);
     KV = GetValue(Line, 15, 4, 0);
     GetStr(Line, 20, 12, 12, Name1);
     KV1 = GetValue(Line, 28, 4, 0);
     ptrac = ACbusInList(0, Name, KV, Nac, 1);
-    if (ptrac->N == 0)
-    {
+    if (ptrac->N == 0) {
       Nac++;
       ptrac->Num = ptrac->N = Nac;
     }
     ptrac1 = ACbusInList(0, Name1, KV1, Nac, 1);
-    if (ptrac1->N == 0)
-    {
+    if (ptrac1->N == 0) {
       Nac++;
       ptrac1->Num = ptrac1->N = Nac;
     }
-    if (KV == 0)
-    {
+    if (KV == 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("Base voltage at bus From is zero.");
     }
-    if (KV1 == 0)
-    {
+    if (KV1 == 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("Base voltage at bus To is zero.");
     }
-    if (ptrac == ptrac1)
-    {
+    if (ptrac == ptrac1) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("Both TCSC buses are the same.");
     }
     TCSCptr = TCSCbusInList(Name, 0, ptrac, ptrac1);
-    if (TCSCptr->Xc > 0)
-    {
+    if (TCSCptr->Xc > 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("The TCSC bus was previously defined (check FC cards).");
     }
-    if (TCSCptr->N == 0)
-    {
+    if (TCSCptr->N == 0) {
       Ntcsc++;
       TCSCptr->N = Ntcsc;
     }
@@ -226,8 +204,7 @@ void ReadTCSC(const char *Line)
 }
 
 /* --------------------- Read STATCOM ----------------------------- */
-void ReadSTATCOM(const char *Line)
-{
+void ReadSTATCOM(const char *Line) {
   STATCOMbusData *STATCOMptr;
   STATCOMlist *ptr;
   ACbusData *ptrac, *ptrac1;
@@ -235,8 +212,7 @@ void ReadSTATCOM(const char *Line)
   VALUETYPE KV, KV1, R, X, Gc, MVA, val;
 
   /* ---------------------- STATCOM data ------------------------ */
-  if (!strncmp(Line, "FT ", 3))
-  {
+  if (!strncmp(Line, "FT ", 3)) {
     GetStr(Line, 7, 12, 12, Name);
     KV = GetValue(Line, 15, 4, 0);
     ptrac = ACbusInList(0, Name, KV, Nac, 1);
@@ -244,13 +220,11 @@ void ReadSTATCOM(const char *Line)
     KV1 = GetValue(Line, 28, 4, 0);
     ptrac1 = ACbusInList(0, Name1, KV1, Nac, 1);
     STATCOMptr = STATCOMbusInList(Name, 0, ptrac, ptrac1);
-    if (STATCOMptr->B > 0)
-    {
+    if (STATCOMptr->B > 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("The STATCOM bus was previously defined (check FT cards).");
     }
-    if (STATCOMptr->N == 0)
-    {
+    if (STATCOMptr->N == 0) {
       Nstatcom++;
       STATCOMptr->N = Nstatcom;
     }
@@ -259,22 +233,21 @@ void ReadSTATCOM(const char *Line)
     ptrac->STATCOM->STATCOM = STATCOMptr;
     ptrac->STATCOM->Next = ptr;
     R = GetValue(Line, 32, 6, 5);
-    if (R < 0)
-    {
-      fprintf(stderr, "***Warning: The STATCOM ac resistance R is negative. The corresponding \n");
+    if (R < 0) {
+      fprintf(stderr, "***Warning: The STATCOM ac resistance R is negative. "
+                      "The corresponding \n");
       fprintf(stderr, "            positive value will be used.");
       R = -R;
     }
     X = GetValue(Line, 38, 6, 5);
-    if (X <= 0)
-    {
+    if (X <= 0) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("The STATCOM reactance must be greater than zero.");
     }
     Gc = GetValue(Line, 44, 6, 5);
-    if (Gc < 0)
-    {
-      fprintf(stderr, "***Warning: The STATCOM dc conductance Gc is negative. The corresponding \n");
+    if (Gc < 0) {
+      fprintf(stderr, "***Warning: The STATCOM dc conductance Gc is negative. "
+                      "The corresponding \n");
       fprintf(stderr, "            positive value will be used.");
       Gc = -Gc;
     }
@@ -283,8 +256,7 @@ void ReadSTATCOM(const char *Line)
       MVA = Sn;
     STATCOMptr->MVA = MVA;
     STATCOMptr->R = R;
-    if (R > 0 || X > 0)
-    {
+    if (R > 0 || X > 0) {
       STATCOMptr->G = R / (R * R + X * X);
       STATCOMptr->B = -X / (R * R + X * X);
     }
@@ -301,17 +273,14 @@ void ReadSTATCOM(const char *Line)
       STATCOMptr->Vref = 1.0;
     val = GetValue(Line, 75, 6, 5);
     GetStr(Line, 74, 1, 1, Cont);
-    if (!strcmp(Cont, "P"))
-    {
+    if (!strcmp(Cont, "P")) {
       strcpy(STATCOMptr->Cont, "AL");
       strcpy(STATCOMptr->Cont1, "AL");
       if (val <= 0)
         STATCOMptr->Contref = 0.9;
       else
         STATCOMptr->Contref = val;
-    }
-    else
-    {
+    } else {
       strcpy(STATCOMptr->Cont, "PW");
       strcpy(STATCOMptr->Cont1, "PW");
       if (val <= 0)

@@ -16,4 +16,3 @@ constexpr const int ERROREXIT = 2;
 #define SINGULARITYZERO 1.0e-20
 #define BUFLEN 1000
 #define PI 3.14159265358979323846
-

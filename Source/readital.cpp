@@ -3,8 +3,10 @@
 #include "readdata.h"
 
 bool ReadADDfile();
-ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flagAddBus);
-ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type, char *Ckt, bool flagAddElement);
+ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
+                        bool flagAddBus);
+ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type,
+                         char *Ckt, bool flagAddElement);
 VALUETYPE GetVelevels(char *BusName);
 ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr);
 
@@ -12,13 +14,12 @@ ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr);
 extern FILE *InputDataFile;
 
 /* --------------- ACbusInList2  ------------------- */
-ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flagAddBus)
-{
+ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
+                        bool flagAddBus) {
   ACbusData *ptr, *ptrp, *ptrn;
   INDEX i;
 
-  if ((N1 == 0 || N2 == 0) && flagAddBus)
-  {
+  if ((N1 == 0 || N2 == 0) && flagAddBus) {
     if (N1 == 0)
       ptrn = nullptr;
     else
@@ -28,13 +29,11 @@ ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flag
     if (ptrn != nullptr)
       ptrn->Prev = ptr;
     ptrp = nullptr;
-  }
-  else
-  {
+  } else {
     ptr = dataPtr->ACbus;
-    while (ptr != nullptr)
-    {
-      if (BusN == ptr->Num || (BusN == 0 && !strncmp(ptr->Name, BusCode, strlen(BusCode))))
+    while (ptr != nullptr) {
+      if (BusN == ptr->Num ||
+          (BusN == 0 && !strncmp(ptr->Name, BusCode, strlen(BusCode))))
         return (ptr);
       ptrp = ptr;
       ptr = ptr->Next;
@@ -116,23 +115,20 @@ ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flag
 }
 
 /* --------------- ElemInList2  ------------------- */
-ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type, char *Ckt, bool flagAddElement)
-{
+ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type,
+                         char *Ckt, bool flagAddElement) {
   ElementData *ptr, *ptrp;
   ElementList *ELptr;
 
-  if (N == 0)
-  {
+  if (N == 0) {
     dataPtr->Element = new ElementData;
     ptr = dataPtr->Element;
-  }
-  else
-  {
-    for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-    {
+  } else {
+    for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
       ptr = ELptr->Eptr;
-      if (((ptr->From == From && ptr->To == To) || (ptr->From == To && ptr->To == From)) && strpbrk(ptr->Type, Type) && !strcmp(ptr->Ckt, Ckt))
-      {
+      if (((ptr->From == From && ptr->To == To) ||
+           (ptr->From == To && ptr->To == From)) &&
+          strpbrk(ptr->Type, Type) && !strcmp(ptr->Ckt, Ckt)) {
         if (flagAddElement)
           return (nullptr);
         else
@@ -144,13 +140,11 @@ ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type, ch
     ptr = new ElementData;
   }
   ptrp = dataPtr->Element;
-  if (ptrp != ptr)
-  {
+  if (ptrp != ptr) {
     ptrp->Prev = ptr;
     ptr->Next = ptrp;
     dataPtr->Element = ptr;
-  }
-  else
+  } else
     ptr->Next = nullptr;
   ptr->Prev = nullptr;
   ptr->From = From;
@@ -208,41 +202,31 @@ void ReadITALY()
   RealParameter('$', &Sn, 1.0, 100000000.0);
   ACptr = nullptr;
   i = 0;
-  for (;;)
-  { /* Reading Loop */
+  for (;;) { /* Reading Loop */
     Line[79] = ' ';
-    if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
-    {
+    if (fgets(Line, BUFLEN, InputDataFile) == nullptr) {
       ErrorHalt("Missing F card.");
       break;
     }
     LineNum++;
 
     /* --------------- Title and Comments ----------------------------- */
-    if (Line[79] == 'C' || Line[79] == '*')
-    {
-      if (i == 0)
-      {
+    if (Line[79] == 'C' || Line[79] == '*') {
+      if (i == 0) {
         strcpy(dataPtr->Title[i], Line);
         i++;
-      }
-      else
+      } else
         continue;
     }
 
     /* --------------- Voltage Levels and Limits --------------------- */
-    else if (Line[79] == 'Z' && !strncmp(Line, "VNOM", 4))
-    {
+    else if (Line[79] == 'Z' && !strncmp(Line, "VNOM", 4)) {
       for (j = 0; j <= 9; j++)
         Vlevels[j + 1] = GetValue(Line, 7 + j * 5, 5, 0);
-    }
-    else if (Line[79] == 'Z' && !strncmp(Line, "VMIN", 4))
-    {
+    } else if (Line[79] == 'Z' && !strncmp(Line, "VMIN", 4)) {
       for (j = 0; j <= 9; j++)
         Vmin[j + 1] = GetValue(Line, 7 + j * 5, 5, 0);
-    }
-    else if (Line[79] == 'Z' && !strncmp(Line, "VMAX", 4))
-    {
+    } else if (Line[79] == 'Z' && !strncmp(Line, "VMAX", 4)) {
       for (j = 0; j <= 9; j++)
         Vmax[j + 1] = GetValue(Line, 7 + j * 5, 5, 0);
     }
@@ -250,40 +234,33 @@ void ReadITALY()
     /* --------------- AC bus data -------------------------------- */
 
     /* Load */
-    else if (Line[79] == 'N')
-    {
+    else if (Line[79] == 'N') {
       N = GetInt(Line, 1, 3);
       GetStr(Line, 4, 1, 1, Zone);
       KVl = GetInt(Line, 5, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptr = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptr->V > 0)
-      {
+      if (ACptr->V > 0) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("The AC bus was previously defined (check N cards).");
       }
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
         KV = Vlevels[KVl];
         sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KV == 0)
-        {
+        if (KV == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KV = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV) {
           ACptr->Vlmax = Vlmax / KV;
           ACptr->Vlmin = Vlmin / KV;
         }
         ACptr->KV = KV;
-      }
-      else
+      } else
         KV = ACptr->KV;
       strcpy(ACptr->Zone, Zone);
       strcpy(ACptr->Owner, Zone);
@@ -291,27 +268,27 @@ void ReadITALY()
       if (ACptr->V <= 0)
         ACptr->V = 1;
       ACptr->VCont = ACptr->V;
-      if (Line[20] == 'T')
-      {
+      if (Line[20] == 'T') {
         EstimatePl = true;
         ACptrEstimate = ACptr;
-        fprintf(stderr, "***Warning: The P load at bus %d %s will be estimated from the\n", ACptr->N, ACptr->Name);
+        fprintf(
+            stderr,
+            "***Warning: The P load at bus %d %s will be estimated from the\n",
+            ACptr->N, ACptr->Name);
         fprintf(stderr, "            oncoming element data for this bus.\n");
-      }
-      else
-      {
+      } else {
         EstimatePl = false;
         ACptr->Pl = GetValue(Line, 14, 6, 0) / Sn;
       }
-      if (Line[42] == 'T')
-      {
+      if (Line[42] == 'T') {
         EstimateQl = true;
         ACptrEstimate = ACptr;
-        fprintf(stderr, "***Warning: The Q load at bus %d %s will be estimated from the\n", ACptr->N, ACptr->Name);
+        fprintf(
+            stderr,
+            "***Warning: The Q load at bus %d %s will be estimated from the\n",
+            ACptr->N, ACptr->Name);
         fprintf(stderr, "            oncoming element data for this bus.\n");
-      }
-      else
-      {
+      } else {
         EstimateQl = false;
         ACptr->Ql = GetValue(Line, 36, 6, 0) / Sn;
       }
@@ -321,54 +298,43 @@ void ReadITALY()
       ACptr->Vmin = GetValue(Line, 53, 3, 0) / KV;
       if (ACptr->Vmin <= 0)
         ACptr->Vmin = 0.001;
-      if (ACptr->Vmax <= ACptr->Vmin)
-      {
+      if (ACptr->Vmax <= ACptr->Vmin) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("AC bus V limits are wrong: Vmin >= Vmax.");
       }
-      if (Line[22] == 'T')
-      {
+      if (Line[22] == 'T') {
         Nslack++;
         strcpy(ACptr->Type, "BS");
         strcpy(ACptr->cont, "V");
         AngSlack = 0;
-      }
-      else if (Line[44] == 'T' && strcmp(ACptr->Type, "BQ"))
-      {
+      } else if (Line[44] == 'T' && strcmp(ACptr->Type, "BQ")) {
         Nvolt++;
         strcpy(ACptr->Type, "BQ");
         strcpy(ACptr->cont, "V");
-      }
-      else
-      {
+      } else {
         ACptr->Cont = ACptr;
       }
     }
 
     /* Generator */
-    else if (Line[79] == 'I' || Line[79] == 'E')
-    {
+    else if (Line[79] == 'I' || Line[79] == 'E') {
       N = GetInt(Line, 1, 3);
       GetStr(Line, 4, 1, 1, Zone);
       KVl = GetInt(Line, 5, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptr = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
         KV = Vlevels[KVl];
         sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KV == 0)
-        {
+        if (KV == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KV = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV) {
           ACptr->Vlmax = Vlmax / KV;
           ACptr->Vlmin = Vlmin / KV;
         }
@@ -381,52 +347,46 @@ void ReadITALY()
       ACptr->Smax += -GetValue(Line, 30, 5, 0) / Sn;
       if (ACptr->Smax == 0)
         ACptr->Smax = 99999999.;
-      if (ACptr->PgMax > ACptr->Smax)
-      {
+      if (ACptr->PgMax > ACptr->Smax) {
         ACptr->PgMax = ACptr->Smax;
-        fprintf(stderr, "***Warning: Bus %d %s has PgMax > Smax.\n", ACptr->N, ACptr->Name);
+        fprintf(stderr, "***Warning: Bus %d %s has PgMax > Smax.\n", ACptr->N,
+                ACptr->Name);
         fprintf(stderr, "            PgMax will be set to Smax.\n");
       }
-      if (ACptr->Pg > ACptr->PgMax)
-      {
+      if (ACptr->Pg > ACptr->PgMax) {
         ACptr->Pg = ACptr->PgMax;
-        fprintf(stderr, "***Warning: Bus %d %s has Pg > PgMax.\n", ACptr->N, ACptr->Name);
+        fprintf(stderr, "***Warning: Bus %d %s has Pg > PgMax.\n", ACptr->N,
+                ACptr->Name);
         fprintf(stderr, "            Pg will be set to PgMax.\n");
       }
       ACptr->Qg += -GetValue(Line, 36, 6, 0) / Sn;
       ACptr->Qmax += -GetValue(Line, 47, 5, 0) / Sn;
       ACptr->Qmin += -GetValue(Line, 43, 4, 0) / Sn;
-      if (ACptr->Qmax <= ACptr->Qmin)
-      {
+      if (ACptr->Qmax <= ACptr->Qmin) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("AC bus Q limits are wrong: Qmin >= Qmax.");
       }
     }
 
     /* Synchronous Condenser */
-    else if (Line[79] == 'S')
-    {
+    else if (Line[79] == 'S') {
       N = GetInt(Line, 1, 3);
       GetStr(Line, 4, 1, 1, Zone);
       KVl = GetInt(Line, 5, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptr = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
         KV = Vlevels[KVl];
         sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KV == 0)
-        {
+        if (KV == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KV = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV) {
           ACptr->Vlmax = Vlmax / KV;
           ACptr->Vlmin = Vlmin / KV;
         }
@@ -435,43 +395,36 @@ void ReadITALY()
       ACptr->Qg += -GetValue(Line, 36, 6, 0) / Sn;
       ACptr->Qmax += -GetValue(Line, 47, 5, 0) / Sn;
       ACptr->Qmin += -GetValue(Line, 43, 4, 0) / Sn;
-      if (ACptr->Qmax <= ACptr->Qmin)
-      {
+      if (ACptr->Qmax <= ACptr->Qmin) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("AC bus Q limits are wrong: Qmin >= Qmax.");
       }
     }
 
     /* Shunt Capacitor */
-    else if (Line[79] == 'Q')
-    {
+    else if (Line[79] == 'Q') {
       N = GetInt(Line, 1, 3);
       GetStr(Line, 4, 1, 1, Zone);
       KVl = GetInt(Line, 5, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptr = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
         KV = Vlevels[KVl];
         sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KV == 0)
-        {
+        if (KV == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KV = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV) {
           ACptr->Vlmax = Vlmax / KV;
           ACptr->Vlmin = Vlmin / KV;
         }
         ACptr->KV = KV;
-      }
-      else
+      } else
         KV = ACptr->KV;
       KV = GetValue(Line, 43, 4, 0) / KV;
       if (KV != 0)
@@ -479,103 +432,90 @@ void ReadITALY()
     }
 
     /* --------------- AC element data -------------------------------- */
-    else if (Line[79] == 'L' || Line[79] == 'T')
-    {
+    else if (Line[79] == 'L' || Line[79] == 'T') {
       N = GetInt(Line, 1, 3);
       GetStr(Line, 4, 1, 1, Zone);
       KVl = GetInt(Line, 5, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptr = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptr->N == 0)
-      {
+      if (ACptr->N == 0) {
         Nac++;
         ACptr->Num = ACptr->N = Nac;
         KV = Vlevels[KVl];
         sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KV == 0)
-        {
+        if (KV == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KV = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KV && Vlmin <= KV) {
           ACptr->Vlmax = Vlmax / KV;
           ACptr->Vlmin = Vlmin / KV;
         }
         ACptr->KV = KV;
-      }
-      else
+      } else
         KV = ACptr->KV;
       N = GetInt(Line, 7, 3);
       GetStr(Line, 10, 1, 1, Zone);
       KVl = GetInt(Line, 11, 1);
       sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
       ACptrp = ACbusInList2(0, Code, Nac, 1, true);
-      if (ACptrp->N == 0)
-      {
+      if (ACptrp->N == 0) {
         Nac++;
         ACptrp->Num = ACptrp->N = Nac;
         KVp = Vlevels[KVl];
         sprintf(ACptrp->Name, "%5s %6.0lf", Code, KVp);
         Vlmax = Vmax[KVl];
         Vlmin = Vmin[KVl];
-        if (KVp == 0)
-        {
+        if (KVp == 0) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("Base voltage is zero.");
           KVp = 1;
-        }
-        else if (Vlmax > Vlmin && Vlmax >= KVp && Vlmin <= KVp)
-        {
+        } else if (Vlmax > Vlmin && Vlmax >= KVp && Vlmin <= KVp) {
           ACptrp->Vlmax = Vlmax / KVp;
           ACptrp->Vlmin = Vlmin / KVp;
         }
         ACptrp->KV = KVp;
-      }
-      else
+      } else
         KVp = ACptrp->KV;
-      if (ACptr == ACptrp)
-      {
+      if (ACptr == ACptrp) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
         ErrorHalt("Both AC element buses are the same.");
       }
-      if (EstimatePl)
-      {
-        if (Line[20] == 'T')
-        {
-          fprintf(stderr, "***Warning: The P load estimate at bus %d %s may be incorrect\n", ACptrEstimate->N, ACptrEstimate->Name);
-          fprintf(stderr, "            due to lack of P flow information in the corresponding element data:\n");
+      if (EstimatePl) {
+        if (Line[20] == 'T') {
+          fprintf(
+              stderr,
+              "***Warning: The P load estimate at bus %d %s may be incorrect\n",
+              ACptrEstimate->N, ACptrEstimate->Name);
+          fprintf(stderr, "            due to lack of P flow information in "
+                          "the corresponding element data:\n");
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-        }
-        else
-        {
+        } else {
           if (ACptrEstimate == ACptr)
             ACptrEstimate->Pl += -GetValue(Line, 14, 6, 0) / Sn;
           else
             ACptrEstimate->Pl += GetValue(Line, 14, 6, 0) / Sn;
         }
       }
-      if (EstimateQl)
-      {
-        if (Line[42] == 'T')
-        {
-          fprintf(stderr, "***Warning: The Q load estimate at bus %d %s may be incorrect\n", ACptrEstimate->N, ACptrEstimate->Name);
-          fprintf(stderr, "            due to lack of Q flow information in the corresponding element data:\n");
+      if (EstimateQl) {
+        if (Line[42] == 'T') {
+          fprintf(
+              stderr,
+              "***Warning: The Q load estimate at bus %d %s may be incorrect\n",
+              ACptrEstimate->N, ACptrEstimate->Name);
+          fprintf(stderr, "            due to lack of Q flow information in "
+                          "the corresponding element data:\n");
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-        }
-        else
-        {
+        } else {
           if (ACptrEstimate == ACptr)
             ACptrEstimate->Ql += -GetValue(Line, 36, 6, 0) / Sn;
           else
             ACptrEstimate->Ql += GetValue(Line, 36, 6, 0) / Sn;
         }
       }
-      if (KV > KVp)
-      {
+      if (KV > KVp) {
         KVs = KV;
         KV = KVp;
         KVp = KVs;
@@ -585,8 +525,7 @@ void ReadITALY()
       }
       if (Line[79] == 'L')
         strcpy(Type, "L");
-      else
-      {
+      else {
         Tmax = GetValue(Line, 67, 5, 2);
         Tmin = GetValue(Line, 72, 5, 2);
         /*
@@ -599,29 +538,23 @@ void ReadITALY()
       if (!strcmp(Ckt, " "))
         strcpy(Ckt, "0");
       Eptr = ElemInList2(ACptr, ACptrp, NacEl, Type, Ckt, true);
-      if (Eptr != nullptr)
-      {
+      if (Eptr != nullptr) {
         Zb = KVp * KVp / Sn;
         R = GetValue(Line, 45, 7, 5) / Zb;
         X = GetValue(Line, 52, 8, 5) / Zb;
-        if (fabs(R) < 1e-10 && fabs(X) < 1e-10)
-        {
+        if (fabs(R) < 1e-10 && fabs(X) < 1e-10) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           ErrorHalt("AC element is a short circuit. Try eliminating it.");
           G = B = 0;
-        }
-        else
-        {
+        } else {
           G = R / (R * R + X * X);
           B = -X / (R * R + X * X);
         }
         B2 = B1 = GetValue(Line, 60, 7, 3) * Zb / 1000000. / 2;
-        if (Line[79] == 'T')
-        {
+        if (Line[79] == 'T') {
           Taps = KV / KVp;
           Tap = GetValue(Line, 29, 5, 0) * Taps;
-        }
-        else
+        } else
           Tap = Taps = 1;
         Ang = 0;
         Eptr->Imax = GetValue(Line, 23, 5, 0) / (Sn * 1000 / (sqrt(3.0) * KVp));
@@ -673,8 +606,7 @@ void ReadITALY()
 
     else if (Line[79] == 'F')
       break;
-    else
-    {
+    else {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       fprintf(stderr, "***Warning: The program will ignore this line.\n");
     }
@@ -683,11 +615,9 @@ void ReadITALY()
   MaxIter = 50;
 
   if (!ReadADDfile())
-    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-    {
+    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
       Aptr = (AreaData *)AreaInList(0, ACptr->Zone, Narea);
-      if (Aptr->N == 0)
-      {
+      if (Aptr->N == 0) {
         Narea++;
         Aptr->N = Narea;
         strcpy(Aptr->Zone[1], ACptr->Zone);
@@ -711,16 +641,15 @@ bool ReadADDfile()
   AreaData *Aptr;
   ElementList *ELptr;
   ElementData *Eptr;
-  VALUETYPE KV, KVp, KVs, KVmax, KVmin, val, Tap, Taps, Tmax, Tmin, Q, Qmax, Qmin, Pn, Qn, Sum = 0;
+  VALUETYPE KV, KVp, KVs, KVmax, KVmin, val, Tap, Taps, Tmax, Tmin, Q, Qmax,
+      Qmin, Pn, Qn, Sum = 0;
   bool flagAreas = false, flagPrint = true, flagScards = false;
   INDEX N, NJcard = 0, N2SVCarea = 0, KVl;
 
   Name = NameParameter('6');
-  if (!NullName(Name) && (InputFile = OpenInput(Name)) != nullptr)
-  {
+  if (!NullName(Name) && (InputFile = OpenInput(Name)) != nullptr) {
     LineNum = 0;
-    for (;;)
-    {
+    for (;;) {
       if (fgets(Line, BUFLEN, InputFile) == nullptr)
         break;
       LineNum++;
@@ -730,30 +659,27 @@ bool ReadADDfile()
         continue;
 
       /* --------------- AC buses ----------------------------- */
-      else if (Line[79] == 'K')
-      {
+      else if (Line[79] == 'K') {
         N = GetInt(Line, 1, 3);
         GetStr(Line, 4, 1, 1, Zone);
         KVl = GetInt(Line, 5, 1);
         sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
         ACptr = ACbusInList2(0, Code, Nac, 1, false);
-        if (ACptr == nullptr)
-        {
+        if (ACptr == nullptr) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr, "***Warning: This bus has not been defined on the main input data file.\n");
-          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
-        }
-        else
-        {
+          fprintf(stderr, "***Warning: This bus has not been defined on the "
+                          "main input data file.\n");
+          fprintf(stderr,
+                  "            This line in the ADD file will be ignored.\n");
+        } else {
           KV = GetValue(Line, 6, 7, 0);
-          if (KV == 0)
-          {
+          if (KV == 0) {
             fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-            fprintf(stderr, "***Warning: This bus has a zero base bus voltage.\n");
-            fprintf(stderr, "            This line in the ADD file will be ignored.\n");
-          }
-          else
-          {
+            fprintf(stderr,
+                    "***Warning: This bus has a zero base bus voltage.\n");
+            fprintf(stderr,
+                    "            This line in the ADD file will be ignored.\n");
+          } else {
             sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
             KVp = ACptr->KV;
             val = KVp / KV;
@@ -761,18 +687,15 @@ bool ReadADDfile()
             ACptr->KV = KV;
             KVmin = GetValue(Line, 13, 7, 0);
             KVmax = GetValue(Line, 20, 7, 0);
-            if (KVmax > KVmin && KVmax >= KV && KVmin <= KV)
-            {
+            if (KVmax > KVmin && KVmax >= KV && KVmin <= KV) {
               ACptr->Vlmax = KVmax / KV;
               ACptr->Vlmin = KVmin / KV;
             }
             val = KV * KV / (KVp * KVp);
             ACptr->B = ACptr->B * val;
-            for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-            {
+            for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
               Eptr = ELptr->Eptr;
-              if (Eptr->To == ACptr)
-              {
+              if (Eptr->To == ACptr) {
                 val = KV * KV / (KVp * KVp);
                 Eptr->G = Eptr->G * val;
                 Eptr->B = Eptr->B * val;
@@ -784,9 +707,7 @@ bool ReadADDfile()
                 Eptr->Taps = Eptr->Taps * val;
                 Eptr->Tmax = Eptr->Tmax * val;
                 Eptr->Tmin = Eptr->Tmin * val;
-              }
-              else
-              {
+              } else {
                 val = KV / KVp;
                 Eptr->Tap = Eptr->Tap * val;
                 Eptr->Taps = Eptr->Taps * val;
@@ -796,45 +717,39 @@ bool ReadADDfile()
             }
           }
           GetStr(Line, 50, 1, 1, Code);
-          if (!strcmp(Code, "T"))
-          {
-            if (!strcmp(ACptr->Type, "BQ"))
-            {
+          if (!strcmp(Code, "T")) {
+            if (!strcmp(ACptr->Type, "BQ")) {
               ACptr->Qmax = 99999999.;
               ACptr->Qmin = -99999999.;
-            }
-            else
-            {
+            } else {
               fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-              fprintf(stderr, "***Warning: This bus was not defined as a PV bus in the main input data file; \n");
-              fprintf(stderr, "            hence, its Q-limits cannot be released (check field 50).\n");
-              fprintf(stderr, "            This line in the ADD file will be ignored.\n");
+              fprintf(stderr, "***Warning: This bus was not defined as a PV "
+                              "bus in the main input data file; \n");
+              fprintf(stderr, "            hence, its Q-limits cannot be "
+                              "released (check field 50).\n");
+              fprintf(
+                  stderr,
+                  "            This line in the ADD file will be ignored.\n");
             }
           }
           GetStr(Line, 58, 1, 1, Code);
           if (strcmp(Code, "T"))
             ACptr->DPG = ACptr->DPg = ACptr->Pg;
-          if (strpbrk(ACptr->Type, "Q,S"))
-          {
+          if (strpbrk(ACptr->Type, "Q,S")) {
             GetStr(Line, 66, 2, 2, Zone);
             strcpy(ACptr->Zone, Zone);
             strcpy(ACptr->Owner, Zone);
-          }
-          else
-          {
+          } else {
             strcpy(ACptr->Zone, " 0");
             strcpy(ACptr->Owner, " 0");
           }
           ACptr->Nc = GetInt(Line, 68, 2);
           GetStr(Line, 70, 1, 1, Code);
-          if (strpbrk(Code, "P") && !strcmp(ACptr->Type, "B"))
-          {
+          if (strpbrk(Code, "P") && !strcmp(ACptr->Type, "B")) {
             strcpy(ACptr->Type, "BC");
             ACptr->VCont = ACptr->V;
             flag2Vcontrol = true;
-          }
-          else if (strpbrk(Code, "V,S") && strpbrk(ACptr->Type, "Q,S"))
-          {
+          } else if (strpbrk(Code, "V,S") && strpbrk(ACptr->Type, "Q,S")) {
             if (!strcmp(ACptr->Type, "BQ"))
               strcpy(ACptr->Type, "BG");
             else
@@ -850,20 +765,19 @@ bool ReadADDfile()
         }
       }
       /* --------------- Generators --------------------------- */
-      else if (Line[79] == 'G' || Line[79] == 'H')
-      {
-        if (flagPrint)
-        {
-          fprintf(stderr, "***Warning: The program ignores the G and H cards, as capability curves\n");
-          fprintf(stderr, "            are implemented here through direct limits on Sg, Pg, Qg,\n");
+      else if (Line[79] == 'G' || Line[79] == 'H') {
+        if (flagPrint) {
+          fprintf(stderr, "***Warning: The program ignores the G and H cards, "
+                          "as capability curves\n");
+          fprintf(stderr, "            are implemented here through direct "
+                          "limits on Sg, Pg, Qg,\n");
           fprintf(stderr, "            Ef and Ia (see -3 option).\n");
           flagPrint = false;
         }
       }
 
       /* --------------- Transformers  ------------------------ */
-      else if (Line[79] == 'R')
-      {
+      else if (Line[79] == 'R') {
         N = GetInt(Line, 1, 3);
         GetStr(Line, 4, 1, 1, Zone);
         KVl = GetInt(Line, 5, 1);
@@ -878,8 +792,7 @@ bool ReadADDfile()
         if (!strcmp(Ckt, " "))
           strcpy(Ckt, "0");
         Eptr = ElemInList2(ACptr, ACptrp, NacEl, "R,T", Ckt, false);
-        if (Eptr != nullptr)
-        {
+        if (Eptr != nullptr) {
           KV = ACptr->KV;
           KVp = ACptrp->KV;
           if (KV > KVp)
@@ -890,91 +803,72 @@ bool ReadADDfile()
           Tap = GetValue(Line, 14, 8, 0) * Taps;
           if (Tap > 0)
             Eptr->Tap = Tap;
-          else
-          {
+          else {
             fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-            fprintf(stderr, "***Warning: This transformer data has a negative tap setting.\n");
-            fprintf(stderr, "            The tap will be assumed to be equal to the nominal\n");
+            fprintf(stderr, "***Warning: This transformer data has a negative "
+                            "tap setting.\n");
+            fprintf(stderr, "            The tap will be assumed to be equal "
+                            "to the nominal\n");
             fprintf(stderr, "            voltage ratio.\n");
             Eptr->Tap = Tap = 1;
           }
           Tmin = GetValue(Line, 24, 8, 0) * Taps;
           Tmax = GetValue(Line, 34, 8, 0) * Taps;
-          if (Tmax > Tmin && Tmax > Tap && Tap > Tmin)
-          {
+          if (Tmax > Tmin && Tmax > Tap && Tap > Tmin) {
             Eptr->Tmax = Tmax;
             Eptr->Tmin = Tmin;
-          }
-          else
-          {
+          } else {
             fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-            fprintf(stderr, "***Warning: The max. and min. tap settings of this transformer are incorrect.\n");
-            fprintf(stderr, "            These limits will be assumed to be equal to 1.1 and 0.9 p.u.,\n");
+            fprintf(stderr, "***Warning: The max. and min. tap settings of "
+                            "this transformer are incorrect.\n");
+            fprintf(stderr, "            These limits will be assumed to be "
+                            "equal to 1.1 and 0.9 p.u.,\n");
             fprintf(stderr, "            respectively.\n");
             Eptr->Tmax = 1.1;
             Eptr->Tmin = 0.9;
           }
           N = GetInt(Line, 42, 2);
           KVs = GetValue(Line, 45, 8, 0);
-          if (!strcmp(Eptr->Type, "R"))
-          {
+          if (!strcmp(Eptr->Type, "R")) {
             ACptrs = Eptr->Cont;
-            if (N == 0)
-            {
+            if (N == 0) {
               NregV--;
               strcpy(Eptr->Type, "T");
               ACptrs->Reg = TakeElemFromList(ACptrs->Reg, Eptr);
               Eptr->Cont = nullptr;
-            }
-            else
-            {
-              if (N > 0)
-              {
-                if (KV > KVp)
-                {
+            } else {
+              if (N > 0) {
+                if (KV > KVp) {
                   ACptrs = ACptr;
                   ACptrs->V = KVs / KV;
+                } else {
+                  ACptrs = ACptrp;
+                  ACptrs->V = KVs / KVp;
                 }
-                else
-                {
+              } else {
+                if (KV < KVp) {
+                  ACptrs = ACptr;
+                  ACptrs->V = KVs / KV;
+                } else {
                   ACptrs = ACptrp;
                   ACptrs->V = KVs / KVp;
                 }
               }
-              else
-              {
-                if (KV < KVp)
-                {
-                  ACptrs = ACptr;
-                  ACptrs->V = KVs / KV;
-                }
-                else
-                {
-                  ACptrs = ACptrp;
-                  ACptrs->V = KVs / KVp;
-                }
-              }
-              if (ACptrs != Eptr->Cont)
-              {
+              if (ACptrs != Eptr->Cont) {
                 Eptr->Cont->Reg = TakeElemFromList(Eptr->Cont->Reg, Eptr);
                 ACptrs->Reg = AddElemToList(ACptrs->Reg, Eptr);
                 Eptr->Cont = ACptrs;
               }
             }
-          }
-          else if (N != 0)
-          {
+          } else if (N != 0) {
             NregV++;
             strcpy(Eptr->Type, "R");
-            if (N > 0)
-            {
+            if (N > 0) {
               if (KV > KVp)
                 ACptrs = ACptr;
               else
                 ACptrs = ACptrp;
-            }
-            else
-            {
+            } else {
               if (KV < KVp)
                 ACptrs = ACptr;
               else
@@ -985,73 +879,65 @@ bool ReadADDfile()
             ACptrs->Reg = AddElemToList(ACptrs->Reg, Eptr);
             Eptr->Cont = ACptrs;
           }
-        }
-        else
-        {
+        } else {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr, "***Warning: This transformer has not been defined in the main data file.\n");
-          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
+          fprintf(stderr, "***Warning: This transformer has not been defined "
+                          "in the main data file.\n");
+          fprintf(stderr,
+                  "            This line in the ADD file will be ignored.\n");
         }
       }
 
       /* --------------- Shunt Compensation  ------------------ */
-      else if (Line[79] == 'B')
-      {
+      else if (Line[79] == 'B') {
         N = GetInt(Line, 1, 3);
         GetStr(Line, 4, 1, 1, Zone);
         KVl = GetInt(Line, 5, 1);
         sprintf(Code, "%3d%1s%1d", N, Zone, KVl);
         ACptr = ACbusInList2(0, Code, Nac, 1, false);
-        if (ACptr == nullptr)
-        {
+        if (ACptr == nullptr) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr, "***Warning: This bus has not been defined on the main input data file.\n");
-          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
-        }
-        else
-        {
+          fprintf(stderr, "***Warning: This bus has not been defined on the "
+                          "main input data file.\n");
+          fprintf(stderr,
+                  "            This line in the ADD file will be ignored.\n");
+        } else {
           Q = GetValue(Line, 15, 8, 0) / Sn;
           GetStr(Line, 31, 1, 1, Code);
-          if (!strcmp(Code, "T"))
-          {
-            if (!strcmp(ACptr->Type, "B"))
-            {
+          if (!strcmp(Code, "T")) {
+            if (!strcmp(ACptr->Type, "B")) {
               ACptr->Qg = ACptr->Qg + Q;
               Qmin = GetValue(Line, 7, 8, 0) / Sn;
               Qmax = GetValue(Line, 23, 8, 0) / Sn;
-              if (Qmax <= Qmin || Qmax < Q || Q < Qmin)
-              {
+              if (Qmax <= Qmin || Qmax < Q || Q < Qmin) {
                 fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-                fprintf(stderr, "***Warning: The Q limits are inconsistent on this bus and hence will\n");
-                fprintf(stderr, "            be given arbitrarily large values (~+/-10^8 p.u.).\n");
+                fprintf(stderr, "***Warning: The Q limits are inconsistent on "
+                                "this bus and hence will\n");
+                fprintf(stderr, "            be given arbitrarily large values "
+                                "(~+/-10^8 p.u.).\n");
                 Qmax = 99999999.;
                 Qmin = -99999999.;
               }
               ACptr->Qmax = Qmax;
               ACptr->Qmin = Qmin;
               GetStr(Line, 33, 1, 1, Code);
-              if (!strcmp(Code, "T"))
-              {
+              if (!strcmp(Code, "T")) {
                 strcpy(ACptr->Type, "BZ");
                 NZvolt++;
-              }
-              else
-              {
+              } else {
                 strcpy(ACptr->Type, "BQ");
                 Nvolt++;
               }
               ACptr->Cont = nullptr;
               strcpy(ACptr->cont, "V");
-            }
-            else
-            {
+            } else {
               fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-              fprintf(stderr, "***Warning: This bus cannot be defined as a voltage controlled bus, as it\n");
-              fprintf(stderr, "            has already been defined as a controlled bus in the main file.\n");
+              fprintf(stderr, "***Warning: This bus cannot be defined as a "
+                              "voltage controlled bus, as it\n");
+              fprintf(stderr, "            has already been defined as a "
+                              "controlled bus in the main file.\n");
             }
-          }
-          else
-          {
+          } else {
             GetStr(Line, 33, 1, 1, Code);
             if (!strcmp(Code, "T"))
               ACptr->B = Q / (ACptr->V * ACptr->V);
@@ -1065,20 +951,16 @@ bool ReadADDfile()
       }
 
       /* --------------- Areas  ------------------------------- */
-      else if (Line[79] == 'J')
-      {
+      else if (Line[79] == 'J') {
         NJcard++;
         sprintf(Zone, "%2d", NJcard);
         GetStr(Line, 1, 16, 16, Code);
         val = GetValue(Line, 34, 4, 0) / 100.0;
         for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-          if (ACptr->Area == nullptr)
-          {
-            if (!strcmp(ACptr->Zone, Zone))
-            {
+          if (ACptr->Area == nullptr) {
+            if (!strcmp(ACptr->Zone, Zone)) {
               Aptr = (AreaData *)AreaInList(0, Code, Narea);
-              if (Aptr->N == 0)
-              {
+              if (Aptr->N == 0) {
                 Narea++;
                 Aptr->N = Narea;
                 strcpy(Aptr->Zone[1], Zone);
@@ -1099,66 +981,62 @@ bool ReadADDfile()
       }
 
       /* --------------- Secondary Voltage Control   ----------- */
-      else if (Line[79] == 'S')
-      {
+      else if (Line[79] == 'S') {
         flagScards = true;
         N2SVCarea++;
         ACptrp = nullptr;
         GetStr(Line, 1, 16, 16, Code);
-        for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-        {
-          if (ACptr->Nc == N2SVCarea && strpbrk(ACptr->Type, "C"))
-          {
-            if (ACptrp == nullptr)
-            {
+        for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
+          if (ACptr->Nc == N2SVCarea && strpbrk(ACptr->Type, "C")) {
+            if (ACptrp == nullptr) {
               ACptrp = ACptr;
               ACptrp->Cont = nullptr;
               ACptrp->VCont = ACptr->V;
-            }
-            else
-            {
-              fprintf(stderr, "***Warning: Secondary voltage control area %s has more than 1 pilot node.\n", Code);
-              fprintf(stderr, "            The pilot node %d %s will be ignored.\n", ACptr->N, ACptr->Name);
+            } else {
+              fprintf(stderr,
+                      "***Warning: Secondary voltage control area %s has more "
+                      "than 1 pilot node.\n",
+                      Code);
+              fprintf(stderr,
+                      "            The pilot node %d %s will be ignored.\n",
+                      ACptr->N, ACptr->Name);
               strcpy(ACptr->Type, "B");
             }
           }
         }
-        if (ACptrp != nullptr)
-        {
-          for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-          {
-            if (ACptr->Nc == N2SVCarea && strpbrk(ACptr->Type, "G"))
-            {
+        if (ACptrp != nullptr) {
+          for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
+            if (ACptr->Nc == N2SVCarea && strpbrk(ACptr->Type, "G")) {
               ACptr->Cont = ACptrp;
               ACptrp->Kbg++;
               ACptrp->Kbg1 = ACptrp->Kbg1 + ACptr->Qmax;
               ACptrp->Kbg2 = ACptrp->Kbg2 + ACptr->Qmin;
             }
           }
-        }
-        else
-        {
+        } else {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr, "***Warning: The secondary voltage control area does not have a pilot node.\n", Code);
-          fprintf(stderr, "            This area in the ADD file will be ignored.\n");
+          fprintf(stderr,
+                  "***Warning: The secondary voltage control area does not "
+                  "have a pilot node.\n",
+                  Code);
+          fprintf(stderr,
+                  "            This area in the ADD file will be ignored.\n");
         }
       }
 
       /* --------------- Ignore data  ------------------------- */
-      else
-      {
+      else {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-        fprintf(stderr, "***Warning: This line in the ADD file will be ignored.\n");
+        fprintf(stderr,
+                "***Warning: This line in the ADD file will be ignored.\n");
       }
     }
 
     fclose(InputFile);
   }
 
-  if (flag2Vcontrol && !flagScards)
-  {
-    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-    {
+  if (flag2Vcontrol && !flagScards) {
+    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
       if (!strcmp(ACptr->Type, "BC"))
         strcpy(ACptr->Type, "B");
       else if (!strcmp(ACptr->Type, "BG"))
@@ -1171,45 +1049,41 @@ bool ReadADDfile()
 
   if (Sum != 0)
     flagKdirection = true;
-  else
-  {
-    if (ExistParameter('v'))
-    {
-      fprintf(stderr, "ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
-      fprintf(stderr, "       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
+  else {
+    if (ExistParameter('v')) {
+      fprintf(stderr, "ERROR: The -v option will yield a singular Jacobian in "
+                      "voltage collapse\n");
+      fprintf(stderr, "       studies since Pnl, Qnl, Pzl, and Qzl are zero in "
+                      "all load buses.\n");
       InputError = true;
-    }
-    else if (ExistParameter('L'))
-    {
-      fprintf(stderr, "***Warning: The loading factor lambda will not yield different results\n");
-      fprintf(stderr, "            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
+    } else if (ExistParameter('L')) {
+      fprintf(stderr, "***Warning: The loading factor lambda will not yield "
+                      "different results\n");
+      fprintf(stderr, "            from the base case since Pnl, Qnl, Pzl, and "
+                      "Qzl are zero\n");
       fprintf(stderr, "            in all load buses.\n");
-    }
-    else if ((ExistParameter('H') || ExistParameter('c')))
-    {
-      fprintf(stderr, "ERROR: The Homotopy Continuation Method will not yield different results\n");
-      fprintf(stderr, "       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
+    } else if ((ExistParameter('H') || ExistParameter('c'))) {
+      fprintf(stderr, "ERROR: The Homotopy Continuation Method will not yield "
+                      "different results\n");
+      fprintf(stderr, "       from the base case since Pnl, Qnl, Pzl, and Qzl "
+                      "are zero in all\n");
       fprintf(stderr, "       load buses.\n");
       InputError = true;
-    }
-    else if (ExistParameter('C'))
-    {
-      fprintf(stderr, "ERROR: The Point of Collapse Method will not yield different results\n");
-      fprintf(stderr, "       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
+    } else if (ExistParameter('C')) {
+      fprintf(stderr, "ERROR: The Point of Collapse Method will not yield "
+                      "different results\n");
+      fprintf(stderr, "       from the base case since Pnl, Qnl, Pzl, and Qzl "
+                      "are zero in\n");
       fprintf(stderr, "       all load buses.\n");
       InputError = true;
     }
   }
 
-  if (flagAreas)
-  {
-    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-    {
-      if (ACptr->Area == nullptr && !strcmp(ACptr->Zone, " 0"))
-      {
+  if (flagAreas) {
+    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
+      if (ACptr->Area == nullptr && !strcmp(ACptr->Zone, " 0")) {
         Aptr = (AreaData *)AreaInList(0, "REST", Narea);
-        if (Aptr->N == 0)
-        {
+        if (Aptr->N == 0) {
           Narea++;
           Aptr->N = Narea;
           strcpy(Aptr->Zone[1], " 0");
@@ -1219,9 +1093,7 @@ bool ReadADDfile()
           Aptr->Slack = Aptr->BSptr = ACptr;
         else if (strpbrk(ACptr->Type, "Q") && Aptr->Slack == nullptr)
           Aptr->Slack = Aptr->BSptr = ACptr;
-      }
-      else if (ACptr->Area == nullptr && ACptr->SVC != nullptr)
-      {
+      } else if (ACptr->Area == nullptr && ACptr->SVC != nullptr) {
         Eptr = ACptr->Elem->Eptr;
         if (Eptr->From == ACptr)
           ACptrp = Eptr->To;
@@ -1236,17 +1108,14 @@ bool ReadADDfile()
 }
 
 /* --------------- TakeElemFromList  ------------------- */
-ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr)
-{
+ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr) {
   ElementList *ptr, *prevptr, *firstptr, *nextptr;
   bool flag;
 
   firstptr = prevptr = ptr = ELptr;
-  while (ptr != nullptr)
-  {
+  while (ptr != nullptr) {
     nextptr = ptr->Next;
-    if (ptr->Eptr == Eptr)
-    {
+    if (ptr->Eptr == Eptr) {
       if (ptr == firstptr)
         flag = true;
       else
@@ -1254,8 +1123,7 @@ ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr)
       delete ptr;
       if (flag)
         return (nextptr);
-      else
-      {
+      else {
         prevptr->Next = nextptr;
         return (firstptr);
       }

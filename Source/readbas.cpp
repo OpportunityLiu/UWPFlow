@@ -6,15 +6,12 @@
 extern FILE *InputDataFile;
 
 /* --------- GetStr ------------------- */
-char *GetStr(const char *ptr, int Pos, int Leng, int Tot, char *str)
-{
+char *GetStr(const char *ptr, int Pos, int Leng, int Tot, char *str) {
   int i, count;
 
-  for (i = 1; i < Pos; i++)
-  {
+  for (i = 1; i < Pos; i++) {
     ptr++;
-    if (*ptr == '\0' || *ptr == '\n')
-    {
+    if (*ptr == '\0' || *ptr == '\n') {
       for (i = 1; i <= Tot; str[i - 1] = ' ', i++)
         ;
       str[Tot] = '\0';
@@ -22,7 +19,8 @@ char *GetStr(const char *ptr, int Pos, int Leng, int Tot, char *str)
     }
   }
   count = 1;
-  for (i = 1; i <= Leng && *ptr != '\0' && *ptr != '\n'; str[i - 1] = *ptr, ptr++, i++, count++)
+  for (i = 1; i <= Leng && *ptr != '\0' && *ptr != '\n';
+       str[i - 1] = *ptr, ptr++, i++, count++)
     ;
   for (i = count; i <= Tot; str[i - 1] = ' ', i++)
     ;
@@ -31,37 +29,29 @@ char *GetStr(const char *ptr, int Pos, int Leng, int Tot, char *str)
 }
 
 /* ---------------------- GetValue ------------------- */
-VALUETYPE GetValue(const char *ptr, int Pos, int Leng, int Dec)
-{
+VALUETYPE GetValue(const char *ptr, int Pos, int Leng, int Dec) {
   int i, count;
   bool flag = false, flagp = false;
   char str[11];
   VALUETYPE val;
 
-  for (i = 1; i < Pos; i++)
-  {
+  for (i = 1; i < Pos; i++) {
     ptr++;
-    if (*ptr == '\n')
-    {
+    if (*ptr == '\n') {
       return (0);
     }
   }
   count = 1;
-  for (i = 1; i <= Leng && *ptr != '\n'; ptr++, i++, count++)
-  {
-    if (isdigit(*ptr) || *ptr == '.' || *ptr == '-' || *ptr == '+')
-    {
+  for (i = 1; i <= Leng && *ptr != '\n'; ptr++, i++, count++) {
+    if (isdigit(*ptr) || *ptr == '.' || *ptr == '-' || *ptr == '+') {
       str[i - 1] = *ptr;
       flagp = true;
-    }
-    else if (*ptr == ' ')
-    {
+    } else if (*ptr == ' ') {
       if (flagp)
         str[i - 1] = '0';
       else
         str[i - 1] = ' ';
-    }
-    else
+    } else
       return (0);
     if (*ptr == '.')
       flag = true;
@@ -77,37 +67,29 @@ VALUETYPE GetValue(const char *ptr, int Pos, int Leng, int Dec)
 }
 
 /* ---------------------- GetInt ------------------- */
-INDEX GetInt(const char *ptr, int Pos, int Leng)
-{
+INDEX GetInt(const char *ptr, int Pos, int Leng) {
   int i, count;
   bool flagp = false;
   char str[11];
   INDEX val;
 
-  for (i = 1; i < Pos; i++)
-  {
+  for (i = 1; i < Pos; i++) {
     ptr++;
-    if (*ptr == '\n')
-    {
+    if (*ptr == '\n') {
       return (0);
     }
   }
   count = 1;
-  for (i = 1; i <= Leng && *ptr != '\n'; ptr++, i++, count++)
-  {
-    if (isdigit(*ptr) || *ptr == '-' || *ptr == '+')
-    {
+  for (i = 1; i <= Leng && *ptr != '\n'; ptr++, i++, count++) {
+    if (isdigit(*ptr) || *ptr == '-' || *ptr == '+') {
       str[i - 1] = *ptr;
       flagp = true;
-    }
-    else if (*ptr == ' ')
-    {
+    } else if (*ptr == ' ') {
       if (flagp)
         str[i - 1] = '0';
       else
         str[i - 1] = ' ';
-    }
-    else
+    } else
       return (0);
   }
   for (i = count; i <= Leng; str[i - 1] = '0', i++)
@@ -118,13 +100,12 @@ INDEX GetInt(const char *ptr, int Pos, int Leng)
 }
 
 /* --------------- ACbusInList  ------------------- */
-ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1, INDEX N2)
-{
+ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1,
+                       INDEX N2) {
   ACbusData *ptr, *ptrp, *ptrn;
   int i;
 
-  if (N1 == 0 || N2 == 0)
-  {
+  if (N1 == 0 || N2 == 0) {
     if (N1 == 0)
       ptrn = nullptr;
     else
@@ -134,12 +115,9 @@ ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1, INDEX N
     if (ptrn != nullptr)
       ptrn->Prev = ptr;
     ptrp = nullptr;
-  }
-  else
-  {
+  } else {
     ptr = dataPtr->ACbus;
-    while (ptr != nullptr)
-    {
+    while (ptr != nullptr) {
       if (BusN == ptr->Num || (BusN == 0 && !strcmp(ptr->Name, BusName)))
         return (ptr);
       ptrp = ptr;
@@ -218,21 +196,16 @@ ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1, INDEX N
 }
 
 /* --------------- AreaInList  ------------------- */
-AreaData *AreaInList(INDEX i, char *Name, INDEX N)
-{
+AreaData *AreaInList(INDEX i, char *Name, INDEX N) {
   AreaData *ptr, *prevptr;
   int j;
 
-  if (N == 0)
-  {
+  if (N == 0) {
     dataPtr->Area = new AreaData;
     ptr = dataPtr->Area;
-  }
-  else
-  {
+  } else {
     ptr = dataPtr->Area;
-    while (ptr != nullptr)
-    {
+    while (ptr != nullptr) {
       if (i == ptr->N || (i == 0 && !strcmp(ptr->Name, Name)))
         return (ptr);
       prevptr = ptr;
@@ -258,8 +231,7 @@ AreaData *AreaInList(INDEX i, char *Name, INDEX N)
 }
 
 /* --------------- AddElemToList  ------------------- */
-ElementList *AddElemToList(ElementList *ELptr, ElementData *Eptr)
-{
+ElementList *AddElemToList(ElementList *ELptr, ElementData *Eptr) {
   ElementList *ptr, *prevptr;
 
   prevptr = ELptr;
@@ -271,13 +243,12 @@ ElementList *AddElemToList(ElementList *ELptr, ElementData *Eptr)
 }
 
 /* --------------- ElemInList  ------------------- */
-ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2, char *Type, char *Ckt)
-{
+ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2,
+                        char *Type, char *Ckt) {
   ElementData *ptr, *ptrn;
   ElementList *ELptr;
 
-  if (N1 == 0 || N2 == 0)
-  {
+  if (N1 == 0 || N2 == 0) {
     if (N1 != 0)
       ptrn = dataPtr->Element;
     else
@@ -319,18 +290,15 @@ ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2, char
     ptr->Next = ptrn;
     ptr->Prev = nullptr;
     return (ptr);
-  }
-  else
-  {
-    for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-    {
+  } else {
+    for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
       ptr = ELptr->Eptr;
       if (strpbrk(ptr->Type, Type) &&
-          (!strcmp(ptr->Ckt, Ckt) || !strcmp(Ckt, " ") || !strcmp(ptr->Ckt, " ")) &&
-          ((ptr->From == From && ptr->To == To) || (ptr->To == From && ptr->From == To)))
-      {
-        if (strcmp(Type, "R") || !strcmp(ptr->Zone, ""))
-        {
+          (!strcmp(ptr->Ckt, Ckt) || !strcmp(Ckt, " ") ||
+           !strcmp(ptr->Ckt, " ")) &&
+          ((ptr->From == From && ptr->To == To) ||
+           (ptr->To == From && ptr->From == To))) {
+        if (strcmp(Type, "R") || !strcmp(ptr->Zone, "")) {
           if (!strcmp(ptr->Ckt, " "))
             strcpy(ptr->Ckt, Ckt);
           return (ptr);
@@ -342,20 +310,15 @@ ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2, char
 }
 
 /* --------------- DCbusInList  ------------------- */
-DCbusData *DCbusInList(char *BusName, INDEX N)
-{
+DCbusData *DCbusInList(char *BusName, INDEX N) {
   DCbusData *ptr, *prevptr;
 
-  if (N == 0)
-  {
+  if (N == 0) {
     dataPtr->DCbus = new DCbusData;
     ptr = dataPtr->DCbus;
-  }
-  else
-  {
+  } else {
     ptr = dataPtr->DCbus;
-    while (ptr != nullptr)
-    {
+    while (ptr != nullptr) {
       if (!strcmp(ptr->Name, BusName))
         return (ptr);
       prevptr = ptr;

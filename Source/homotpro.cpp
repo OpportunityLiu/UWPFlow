@@ -3,13 +3,13 @@
 #include "homot.h"
 
 /* ------- Global Variables ------ */
-extern VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, SD0, AngTr,
-    DxiMax, VSFone, VSFinf, SF, TVI, lambda_o,
-    TotalPl, TotalQl, TotalPg, TotalQg;
+extern VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, SD0, AngTr, DxiMax,
+    VSFone, VSFinf, SF, TVI, lambda_o, TotalPl, TotalQl, TotalPg, TotalQg;
 extern INDEX TVIbus;
 extern AClist *Vlist, *Vlistp;
 extern int field;
-extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
+extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg,
+    flagPrintTotalQg;
 
 /* --------------------------- InList --------------------------------- */
 bool InList(ACbusData *ACptr, AClist *Vptr)
@@ -17,8 +17,7 @@ bool InList(ACbusData *ACptr, AClist *Vptr)
 {
   AClist *Lptr;
 
-  for (Lptr = Vptr; Lptr != nullptr; Lptr = Lptr->Next)
-  {
+  for (Lptr = Vptr; Lptr != nullptr; Lptr = Lptr->Next) {
     if (ACptr == Lptr->AC)
       return (true);
   }
@@ -41,29 +40,26 @@ void MakeVlist(FILE *Out)
   Vlist = Vlistp = nullptr;
   ACptrM = nullptr;
   Name = NameParameter('i');
-  flagPrintTotalPl = flagPrintTotalQl = flagPrintTotalPg = flagPrintTotalQg = false;
+  flagPrintTotalPl = flagPrintTotalQl = flagPrintTotalPg = flagPrintTotalQg =
+      false;
 
-  if (!NullName(Name) && (Input = OpenInput(Name)) != nullptr)
-  {
-    for (;;)
-    {
+  if (!NullName(Name) && (Input = OpenInput(Name)) != nullptr) {
+    for (;;) {
       strcpy(Type, "");
       if (fgets(Line, BUFLEN, Input) == nullptr)
         break;
-      if ((count = sscanf(Line, "%d %s %s", &N, BusName, Type)) > 3 && strncmp(Line, "C", 1))
-      {
+      if ((count = sscanf(Line, "%d %s %s", &N, BusName, Type)) > 3 &&
+          strncmp(Line, "C", 1)) {
         fprintf(stderr, "***Warning: Line-> %s", Line);
         fprintf(stderr, "            will be ignored in file %s.\n", Name);
-      }
-      else if (count >= 2)
-      {
-        if (BusName[0] == '\"' || BusName[0] == '\'')
-        {
+      } else if (count >= 2) {
+        if (BusName[0] == '\"' || BusName[0] == '\'') {
           count = 2;
           for (ptr = Line; *ptr != '\"' && *ptr != '\''; ptr++)
             ;
           ptr++;
-          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n'; BusName[i] = *ptr, i++, ptr++)
+          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n';
+               BusName[i] = *ptr, i++, ptr++)
             ;
           BusName[i] = '\0';
           ptr++;
@@ -77,24 +73,21 @@ void MakeVlist(FILE *Out)
           flagPrintTotalPg = true;
         else if (N == 0 && !strcmp(BusName, "0") && !strcmp(Type, "QG"))
           flagPrintTotalQg = true;
-        else
-        {
-          if (!strcmp(Type, "PA"))
-          {
+        else {
+          if (!strcmp(Type, "PA")) {
             ACptr = nullptr;
             for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr = Aptr->Next)
-              if (N == Aptr->N || !strncmp(Aptr->Name, BusName, strlen(BusName)))
+              if (N == Aptr->N ||
+                  !strncmp(Aptr->Name, BusName, strlen(BusName)))
                 break;
-          }
-          else
-          {
+          } else {
             Aptr = nullptr;
             for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-              if (N == ACptr->Num || !strncmp(ACptr->Name, BusName, strlen(BusName)))
+              if (N == ACptr->Num ||
+                  !strncmp(ACptr->Name, BusName, strlen(BusName)))
                 break;
           }
-          if (ACptr != nullptr || Aptr != nullptr)
-          {
+          if (ACptr != nullptr || Aptr != nullptr) {
             Lptr = Vlist;
             Vlist = new AClist;
             Vlist->AC = ACptr;
@@ -103,8 +96,10 @@ void MakeVlist(FILE *Out)
               Vlist->N = ACptr->Num;
             else
               Vlist->N = Aptr->N;
-            if (!strcmp(Type, "V") || !strcmp(Type, "D") || !strcmp(Type, "PL") || !strcmp(Type, "QL") ||
-                !strcmp(Type, "PG") || !strcmp(Type, "QG") || !strcmp(Type, "PA"))
+            if (!strcmp(Type, "V") || !strcmp(Type, "D") ||
+                !strcmp(Type, "PL") || !strcmp(Type, "QL") ||
+                !strcmp(Type, "PG") || !strcmp(Type, "QG") ||
+                !strcmp(Type, "PA"))
               strcpy(Vlist->Type, Type);
             else
               strcpy(Vlist->Type, "V");
@@ -112,9 +107,7 @@ void MakeVlist(FILE *Out)
             Vlist->Prev = nullptr;
             if (Lptr != nullptr)
               Lptr->Prev = Vlist;
-          }
-          else if (strncmp(Line, "C", 1))
-          {
+          } else if (strncmp(Line, "C", 1)) {
             fprintf(stderr, "***Warning: Line-> %s", Line);
             fprintf(stderr, "            will be ignored in file %s.\n", Name);
           }
@@ -122,8 +115,7 @@ void MakeVlist(FILE *Out)
       }
     }
     Lptr = Vlist;
-    while (Lptr != nullptr)
-    {
+    while (Lptr != nullptr) {
       Lptrp = Lptr->Next;
       Lptr->Next = Lptr->Prev;
       Lptr->Prev = Lptrp;
@@ -133,33 +125,26 @@ void MakeVlist(FILE *Out)
     }
     fclose(Input);
   }
-  if (Vlistp == nullptr)
-  {
+  if (Vlistp == nullptr) {
     countp = 1;
-    while (countp <= 8 && countp <= Nac)
-    {
+    while (countp <= 8 && countp <= Nac) {
       MaxV = 0;
-      for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-      {
-        if (Nac <= 8 && !InList(ACptr, Vlistp))
-        {
+      for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
+        if (Nac <= 8 && !InList(ACptr, Vlistp)) {
           ACptrM = ACptr;
           break;
-        }
-        else if ((ACptr->Cont != nullptr && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
-                 (!Rcont && strpbrk(ACptr->Type, "T")) ||
-                 (!QRcont && strpbrk(ACptr->Type, "C")))
-        {
+        } else if ((ACptr->Cont != nullptr &&
+                    (QRcont || !strpbrk(ACptr->Type, "G"))) ||
+                   (!Rcont && strpbrk(ACptr->Type, "T")) ||
+                   (!QRcont && strpbrk(ACptr->Type, "C"))) {
           i = ACvar[ACptr->N] + 1;
-          if (fabs(Dx[i]) > MaxV && !InList(ACptr, Vlistp))
-          {
+          if (fabs(Dx[i]) > MaxV && !InList(ACptr, Vlistp)) {
             MaxV = fabs(Dx[i]);
             ACptrM = ACptr;
           }
         }
       }
-      if (ACptrM != nullptr)
-      {
+      if (ACptrM != nullptr) {
         Lptr = Vlistp;
         Vlistp = new AClist;
         Vlistp->AC = ACptrM;
@@ -172,24 +157,19 @@ void MakeVlist(FILE *Out)
           Lptr->Prev = Vlistp;
         ACptrM = nullptr;
         countp++;
-      }
-      else
+      } else
         break;
     }
   }
   if (Vlist == nullptr)
     Vlist = Vlistp;
-  if (ExistParameter('m'))
-  {
-    if (ExistParameter('O'))
-    {
-      for (DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
-      {
+  if (ExistParameter('m')) {
+    if (ExistParameter('O')) {
+      for (DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next) {
         for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
           if (Lptr->AC == DCptr->AC && !strcmp(Lptr->Type, "V"))
             break;
-        if (Lptr == nullptr)
-        {
+        if (Lptr == nullptr) {
           Lptr = Vlist;
           Vlist = new AClist;
           Vlist->AC = DCptr->AC;
@@ -204,8 +184,7 @@ void MakeVlist(FILE *Out)
         for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
           if (Lptr->AC == DCptr->AC && !strcmp(Lptr->Type, "D"))
             break;
-        if (Lptr == nullptr)
-        {
+        if (Lptr == nullptr) {
           Lptr = Vlist;
           Vlist = new AClist;
           Vlist->AC = DCptr->AC;
@@ -219,41 +198,33 @@ void MakeVlist(FILE *Out)
         }
       }
     }
-    //extra % because when it's read by fprintf, one % will be ignored
+    // extra % because when it's read by fprintf, one % will be ignored
     fprintf(Out, "%s ", "%%");
   }
   fprintf(Out, "L.F.    ");
-  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-  {
+  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next) {
     fprintf(Out, "%s%-5d    ", Lptr->Type, Lptr->N);
   }
-  if (ExistParameter('e'))
-  {
+  if (ExistParameter('e')) {
     for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-      if (Lptr->AC != nullptr)
-      {
-        if (Lptr->AC->Gen != nullptr)
-        {
+      if (Lptr->AC != nullptr) {
+        if (Lptr->AC->Gen != nullptr) {
           fprintf(Out, "Ia%-5d    ", Lptr->N);
           fprintf(Out, "Eq%-5d    ", Lptr->N);
           fprintf(Out, "dg%-5d    ", Lptr->N);
         }
       }
   }
-  if (ExistParameter('O'))
-  {
+  if (ExistParameter('O')) {
     fprintf(Out, "Vac    ");
     if (field > 7)
       fprintf(Out, "    ");
   }
-  if (ExistParameter('O') || ExistParameter('e'))
-  {
+  if (ExistParameter('O') || ExistParameter('e')) {
     for (i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
-      if (!strcmp(DCptr->Type, "R"))
-      {
+      if (!strcmp(DCptr->Type, "R")) {
         i += 2;
-        if (ExistParameter('O'))
-        {
+        if (ExistParameter('O')) {
           fprintf(Out, "a%1d    ", i - 1);
           if (field > 7)
             fprintf(Out, "    ");
@@ -272,9 +243,7 @@ void MakeVlist(FILE *Out)
           fprintf(Out, "d%1d    ", i);
           if (field > 7)
             fprintf(Out, "    ");
-        }
-        else if (ExistParameter('e'))
-        {
+        } else if (ExistParameter('e')) {
           fprintf(Out, "alR_%1d    ", i);
           fprintf(Out, "gaI_%1d    ", i);
           fprintf(Out, "Id_%1d    ", i);
@@ -289,8 +258,7 @@ void MakeVlist(FILE *Out)
     fprintf(Out, "PG        ");
   if (flagPrintTotalQg)
     fprintf(Out, "QG        ");
-  if (ExistParameter('f'))
-  {
+  if (ExistParameter('f')) {
     fprintf(Out, "VSFone    ");
     fprintf(Out, "VSFbus    ");
     fprintf(Out, "VSFinf    ");
@@ -302,24 +270,20 @@ void MakeVlist(FILE *Out)
     fprintf(Out, "\nx=[\n");
   else
     fprintf(Out, "\n");
-  if (ExistParameter('d') && (Out != stdout || !NullName(NameParameter('l'))))
-  {
+  if (ExistParameter('d') && (Out != stdout || !NullName(NameParameter('l')))) {
     fprintf(stderr, "L.F.    ");
     for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
       fprintf(stderr, "%s%-5d    ", Lptr->Type, Lptr->N);
     for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-      if (Lptr->AC != nullptr)
-      {
-        if (Lptr->AC->Gen != nullptr)
-        {
+      if (Lptr->AC != nullptr) {
+        if (Lptr->AC->Gen != nullptr) {
           fprintf(stderr, "Ia%-5d    ", Lptr->N);
           fprintf(stderr, "Eq%-5d    ", Lptr->N);
           fprintf(stderr, "dg%-5d    ", Lptr->N);
         }
       }
     for (i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
-      if (!strcmp(DCptr->Type, "R"))
-      {
+      if (!strcmp(DCptr->Type, "R")) {
         i++;
         fprintf(stderr, "alR_%-2d    ", i);
         fprintf(stderr, "muR_%-2d    ", i);
@@ -347,56 +311,39 @@ void VoltProf(bool flag, FILE *Out)
 
   Print(Out, 0, 6, 4, lambda_o + lambda);
   fprintf(Out, "    ");
-  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-  {
+  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next) {
     ACptr = Lptr->AC;
     Aptr = Lptr->Area;
-    if (ACptr != nullptr)
-    {
-      if (!strcmp(Lptr->Type, "V"))
-      {
+    if (ACptr != nullptr) {
+      if (!strcmp(Lptr->Type, "V")) {
         Print(Out, 0, 6, 4, ACptr->V);
         fprintf(Out, "    ");
-      }
-      else if (!strcmp(Lptr->Type, "D"))
-      {
+      } else if (!strcmp(Lptr->Type, "D")) {
         Print(Out, 0, 6, 2, ACptr->Ang * AngTr);
         fprintf(Out, "    ");
-      }
-      else if (!strcmp(Lptr->Type, "PG"))
-      {
+      } else if (!strcmp(Lptr->Type, "PG")) {
         Print(Out, 0, 6, 2, ACptr->PG * Sn);
         fprintf(Out, "    ");
-      }
-      else if (!strcmp(Lptr->Type, "QG"))
-      {
+      } else if (!strcmp(Lptr->Type, "QG")) {
         Print(Out, 0, 6, 2, ACptr->Qg * Sn);
         fprintf(Out, "    ");
-      }
-      else if (!strcmp(Lptr->Type, "PL"))
-      {
+      } else if (!strcmp(Lptr->Type, "PL")) {
         Print(Out, 0, 6, 2, ACptr->PL * Sn);
         fprintf(Out, "    ");
-      }
-      else if (!strcmp(Lptr->Type, "QL"))
-      {
+      } else if (!strcmp(Lptr->Type, "QL")) {
         Print(Out, 0, 6, 2, ACptr->QL * Sn);
         fprintf(Out, "    ");
       }
-    }
-    else if (Aptr != nullptr)
-    {
+    } else if (Aptr != nullptr) {
       Aptr->SPg = 0;
-      for (DCLptr = Aptr->DC; DCLptr != nullptr; DCLptr = DCLptr->Next)
-      {
+      for (DCLptr = Aptr->DC; DCLptr != nullptr; DCLptr = DCLptr->Next) {
         DCptrR = DCLptr->DC->Meter;
         P = -DCptrR->P;
         if (DCptrR->Area != Aptr)
           P = -P;
         Aptr->SPg = Aptr->SPg + P;
       }
-      for (ELptr = Aptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
-      {
+      for (ELptr = Aptr->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
         Vi = Eptr->From->V;
         di = Eptr->From->Ang;
@@ -408,13 +355,12 @@ void VoltProf(bool flag, FILE *Out)
         Gp = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
         Bp = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         Gj = Eptr->G + Eptr->G2 - Gp;
-        if (Eptr->From == Eptr->Meter)
-        {
-          P = Vi * Vi * (Gi + G) - Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
-        }
-        else
-        {
-          P = Vj * Vj * (Gj + Gp) - Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
+        if (Eptr->From == Eptr->Meter) {
+          P = Vi * Vi * (Gi + G) -
+              Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
+        } else {
+          P = Vj * Vj * (Gj + Gp) -
+              Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
         }
         if (Eptr->Meter->Area != Aptr)
           P = -P;
@@ -425,11 +371,9 @@ void VoltProf(bool flag, FILE *Out)
     }
   }
   if (ExistParameter('e'))
-    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-    {
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next) {
       ACptr = Lptr->AC;
-      if (ACptr != nullptr && ACptr->Gen != nullptr)
-      {
+      if (ACptr != nullptr && ACptr->Gen != nullptr) {
         Print(Out, 0, 6, 4, ACptr->Gen->Ia);
         fprintf(Out, "    ");
         Print(Out, 0, 6, 4, ACptr->Gen->Eq);
@@ -438,18 +382,14 @@ void VoltProf(bool flag, FILE *Out)
         fprintf(Out, "    ");
       }
     }
-  if (ExistParameter('O'))
-  {
+  if (ExistParameter('O')) {
     TEFac(flag);
     Print(Out, 0, field, 4, Vac);
     fprintf(Out, "    ");
     TEFdc(Out);
-  }
-  else if (ExistParameter('e'))
-  {
+  } else if (ExistParameter('e')) {
     for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
-      if (!strcmp(DCptrR->Type, "R"))
-      {
+      if (!strcmp(DCptrR->Type, "R")) {
         DCptrI = DCptrR->To;
         Print(Out, 0, 6, 2, DCptrR->Alfa * AngTr);
         fprintf(Out, "    ");
@@ -459,78 +399,56 @@ void VoltProf(bool flag, FILE *Out)
         fprintf(Out, "    ");
       }
   }
-  if (flagPrintTotalPl)
-  {
+  if (flagPrintTotalPl) {
     Print(Out, 0, 8, 2, TotalPl * Sn);
     fprintf(Out, "    ");
   }
-  if (flagPrintTotalQl)
-  {
+  if (flagPrintTotalQl) {
     Print(Out, 0, 8, 2, TotalQl * Sn);
     fprintf(Out, "    ");
   }
-  if (flagPrintTotalPg)
-  {
+  if (flagPrintTotalPg) {
     Print(Out, 0, 8, 2, TotalPg * Sn);
     fprintf(Out, "    ");
   }
-  if (flagPrintTotalQg)
-  {
+  if (flagPrintTotalQg) {
     Print(Out, 0, 8, 2, TotalQg * Sn);
     fprintf(Out, "    ");
   }
-  if (ExistParameter('d') && (Out != stdout || !NullName(NameParameter('l'))))
-  {
+  if (ExistParameter('d') && (Out != stdout || !NullName(NameParameter('l')))) {
     Print(stderr, 0, 6, 4, lambda_o + lambda);
     fprintf(stderr, "    ");
-    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-    {
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next) {
       ACptr = Lptr->AC;
       Aptr = Lptr->Area;
-      if (ACptr != nullptr)
-      {
-        if (!strcmp(Lptr->Type, "V"))
-        {
+      if (ACptr != nullptr) {
+        if (!strcmp(Lptr->Type, "V")) {
           Print(stderr, 0, 6, 4, ACptr->V);
           fprintf(stderr, "    ");
-        }
-        else if (!strcmp(Lptr->Type, "D"))
-        {
+        } else if (!strcmp(Lptr->Type, "D")) {
           Print(stderr, 0, 6, 2, ACptr->Ang * AngTr);
           fprintf(stderr, "    ");
-        }
-        else if (!strcmp(Lptr->Type, "PG"))
-        {
+        } else if (!strcmp(Lptr->Type, "PG")) {
           Print(stderr, 0, 6, 2, ACptr->PG * Sn);
           fprintf(stderr, "    ");
-        }
-        else if (!strcmp(Lptr->Type, "QG"))
-        {
+        } else if (!strcmp(Lptr->Type, "QG")) {
           Print(stderr, 0, 6, 2, ACptr->Qg * Sn);
           fprintf(stderr, "    ");
-        }
-        else if (!strcmp(Lptr->Type, "PL"))
-        {
+        } else if (!strcmp(Lptr->Type, "PL")) {
           Print(stderr, 0, 6, 2, ACptr->PL * Sn);
           fprintf(stderr, "    ");
-        }
-        else if (!strcmp(Lptr->Type, "QL"))
-        {
+        } else if (!strcmp(Lptr->Type, "QL")) {
           Print(stderr, 0, 6, 2, ACptr->QL * Sn);
           fprintf(stderr, "    ");
         }
-      }
-      else if (Aptr != nullptr)
-      {
+      } else if (Aptr != nullptr) {
         Print(stderr, 0, 6, 2, Aptr->SPg * Sn);
         fprintf(stderr, "    ");
       }
     }
-    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
-    {
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next) {
       ACptr = Lptr->AC;
-      if (ACptr != nullptr && ACptr->Gen != nullptr)
-      {
+      if (ACptr != nullptr && ACptr->Gen != nullptr) {
         Print(stderr, 0, 6, 4, ACptr->Gen->Ia);
         fprintf(stderr, "    ");
         Print(stderr, 0, 6, 4, ACptr->Gen->Eq);
@@ -540,8 +458,7 @@ void VoltProf(bool flag, FILE *Out)
       }
     }
     for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
-      if (!strcmp(DCptrR->Type, "R"))
-      {
+      if (!strcmp(DCptrR->Type, "R")) {
         DCptrI = DCptrR->To;
         Print(stderr, 0, 6, 2, DCptrR->Alfa * AngTr);
         fprintf(stderr, "    ");
@@ -560,7 +477,8 @@ void VoltProf(bool flag, FILE *Out)
   }
 }
 
-/* --------------------------- PrintDirection --------------------------------- */
+/* --------------------------- PrintDirection ---------------------------------
+ */
 void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
 /* Print direction vector  */
 {
@@ -578,10 +496,8 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
   Out = OpenOutput(NameParameter(Option));
   N = Jac->n1;
   fprintf(Out, "%d 1\n", N);
-  for (i = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-  {
-    if (ACptr->Cont != nullptr)
-    {
+  for (i = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
+    if (ACptr->Cont != nullptr) {
       if (strpbrk(ACptr->Type, "S"))
         sprintf(str, "kg%-d", ACptr->Num);
       else
@@ -591,31 +507,24 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
       sprintf(str, "V%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else if (strpbrk(ACptr->Type, "L"))
-    {
+    } else if (strpbrk(ACptr->Type, "L")) {
       sprintf(str, "d%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, "l", vector[i] / Max);
-    }
-    else if (QRcont && strpbrk(ACptr->Type, "C"))
-    {
+    } else if (QRcont && strpbrk(ACptr->Type, "C")) {
       sprintf(str, "d%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
       sprintf(str, "Q%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else if (Rcont && strpbrk(ACptr->Type, "T"))
-    {
+    } else if (Rcont && strpbrk(ACptr->Type, "T")) {
       sprintf(str, "d%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
-      {
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
         I = Eptr->From->Num;
         J = Eptr->To->Num;
@@ -625,9 +534,8 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
       sprintf(str, "1/t%-d_%-d", I, J);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else if (strpbrk(ACptr->Type, "Q") || strpbrk(ACptr->Type, "V") || (!QRcont && strpbrk(ACptr->Type, "G")))
-    {
+    } else if (strpbrk(ACptr->Type, "Q") || strpbrk(ACptr->Type, "V") ||
+               (!QRcont && strpbrk(ACptr->Type, "G"))) {
       if (strpbrk(ACptr->Type, "S"))
         sprintf(str, "kg%-d", ACptr->Num);
       else
@@ -637,18 +545,14 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
       sprintf(str, "Qg%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else if (strpbrk(ACptr->Type, "Z"))
-    {
+    } else if (strpbrk(ACptr->Type, "Z")) {
       sprintf(str, "d%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
       sprintf(str, "Qz%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else if (strpbrk(ACptr->Type, "S"))
-    {
+    } else if (strpbrk(ACptr->Type, "S")) {
       sprintf(str, "kg%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
@@ -656,56 +560,42 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
-    if (Acont && strpbrk(ACptr->Type, "A"))
-    {
+    if (Acont && strpbrk(ACptr->Type, "A")) {
       sprintf(str, "kg%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
     if (PQcont)
-      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
-      {
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
-        if (strpbrk(Eptr->Type, "PQNM"))
-        {
-          if (Eptr->From == ACptr)
-          {
+        if (strpbrk(Eptr->Type, "PQNM")) {
+          if (Eptr->From == ACptr) {
             I = Eptr->From->Num;
             J = Eptr->To->Num;
-          }
-          else
-          {
+          } else {
             J = Eptr->From->Num;
             I = Eptr->To->Num;
           }
-          if (!strcmp(Eptr->Type, "RP"))
-          {
+          if (!strcmp(Eptr->Type, "RP")) {
             sprintf(str, "a%-d_%-d", I, J);
             i++;
             fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-          }
-          else if (strpbrk(Eptr->Type, "PM"))
-          {
+          } else if (strpbrk(Eptr->Type, "PM")) {
             sprintf(str, "P%-d_%-d", I, J);
             i++;
             fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-          }
-          else if (!strcmp(Eptr->Type, "RQ"))
-          {
+          } else if (!strcmp(Eptr->Type, "RQ")) {
             sprintf(str, "1/t%-d_%-d", I, J);
             i++;
             fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-          }
-          else
-          {
+          } else {
             sprintf(str, "Q%-d_%-d", I, J);
             i++;
             fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
           }
         }
       }
-    if (ACptr->Gen != nullptr)
-    {
+    if (ACptr->Gen != nullptr) {
       i = ACptr->Gen->Nvar;
       if (!strpbrk(ACptr->cont, "E"))
         sprintf(str, "Eq%-d", ACptr->Num);
@@ -748,44 +638,35 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
   }
-  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
-  {
+  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr;
+       DCptrR = DCptrR->Next) {
     DCptrI = DCptrR->To;
-    if (!strcmp(DCptrR->Type, "R"))
-    {
+    if (!strcmp(DCptrR->Type, "R")) {
       k++;
-      for (j = 1; j <= 2; j++)
-      {
-        if (j == 1)
-        {
+      for (j = 1; j <= 2; j++) {
+        if (j == 1) {
           DCptr = DCptrR;
           strcpy(type, "r");
-        }
-        else
-        {
+        } else {
           DCptr = DCptrI;
           strcpy(type, "i");
         }
-        if (strcmp(DCptr->Cont1, "VD") && strcmp(DCptr->Cont2, "VD"))
-        {
+        if (strcmp(DCptr->Cont1, "VD") && strcmp(DCptr->Cont2, "VD")) {
           sprintf(str, "Vd%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
         }
-        if (strcmp(DCptr->Cont1, "AT") && strcmp(DCptr->Cont2, "AT"))
-        {
+        if (strcmp(DCptr->Cont1, "AT") && strcmp(DCptr->Cont2, "AT")) {
           sprintf(str, "t%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
         }
-        if (strcmp(DCptr->Cont1, "AL") && strcmp(DCptr->Cont2, "AL"))
-        {
+        if (strcmp(DCptr->Cont1, "AL") && strcmp(DCptr->Cont2, "AL")) {
           sprintf(str, "al%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
         }
-        if (strcmp(DCptr->Cont1, "GA") && strcmp(DCptr->Cont2, "GA"))
-        {
+        if (strcmp(DCptr->Cont1, "GA") && strcmp(DCptr->Cont2, "GA")) {
           sprintf(str, "ga%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
@@ -793,22 +674,19 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
         sprintf(str, "S%1s%-d", type, k);
         i++;
         fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-        if (strcmp(DCptr->Cont1, "PA") && strcmp(DCptr->Cont2, "PA"))
-        {
+        if (strcmp(DCptr->Cont1, "PA") && strcmp(DCptr->Cont2, "PA")) {
           sprintf(str, "P%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
         }
-        if (strcmp(DCptr->Cont1, "QA") && strcmp(DCptr->Cont2, "QA"))
-        {
+        if (strcmp(DCptr->Cont1, "QA") && strcmp(DCptr->Cont2, "QA")) {
           sprintf(str, "Q%1s%-d", type, k);
           i++;
           fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
         }
       }
       if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-          strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID"))
-      {
+          strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
         sprintf(str, "Id%-d", k);
         i++;
         fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
@@ -816,8 +694,8 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
     }
   }
   /* FACTS */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next)
-  {
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr;
+       SVCptr = SVCptr->Next) {
     k++;
     sprintf(str, "Qsvc%-d", k);
     i++;
@@ -825,22 +703,19 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
     sprintf(str, "Bv%-d", k);
     i++;
     fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    if (!strcmp(SVCptr->Cont, "AL"))
-    {
+    if (!strcmp(SVCptr->Cont, "AL")) {
       sprintf(str, "alpha%-d", k);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else
-    {
+    } else {
       sprintf(str, "Vrefc%-d", k);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
   }
 
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next)
-  {
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
+       TCSCptr = TCSCptr->Next) {
     k++;
     sprintf(str, "Ptcsc%-d", k);
     i++;
@@ -865,17 +740,14 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
     fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
   }
 
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next)
-  {
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
+       STATCOMptr = STATCOMptr->Next) {
     k++;
-    if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL"))
-    {
+    if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) {
       sprintf(str, "Istat%-d", k);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-    }
-    else
-    {
+    } else {
       sprintf(str, "Vrefc%-d", k);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
@@ -901,12 +773,10 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
   }
   /* END FACTS */
 
-  if (Option != 'Y')
-  {
+  if (Option != 'Y') {
     if (!Bl)
       fprintf(Out, "%4d %8s %-11.5g\n", ++i, "l", Dparam);
-    else
-    {
+    else {
       sprintf(str, "V%-d", BlPtr->Num);
       fprintf(Out, "%4d %8s %-11.5g\n", ++i, str, Dparam);
     }
@@ -915,9 +785,11 @@ void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max)
   fclose(Out);
 }
 
-/* --------------------------- IndicesMatlab --------------------------------- */
+/* --------------------------- IndicesMatlab ---------------------------------
+ */
 void IndicesMatlab(INDEX count)
-/* Print plotting and other Matlab commands needed by the -0 option (VS indices) */
+/* Print plotting and other Matlab commands needed by the -0 option (VS indices)
+ */
 {
   char Namebase[80], Name[80];
   FILE *OutFile;
@@ -939,29 +811,36 @@ void IndicesMatlab(INDEX count)
   fprintf(OutFile, "figure; plot(lambda,svJ); \n");
   fprintf(OutFile, "title('Full matrix sing. val. index');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
-  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank for J indices are stored in crevJ and crsvJ')\n");
+  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank for J "
+                   "indices are stored in crevJ and crsvJ')\n");
   fprintf(OutFile, "figure; plot(lambda,evPF); \n");
   fprintf(OutFile, "title('Power flow matrix |e-val.| index');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
   fprintf(OutFile, "figure; plot(lambda,svPF); \n");
   fprintf(OutFile, "title('Power flow matrix sing. val. index');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
-  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank for J_PV indices are stored in crevPF and crsvPF')\n");
+  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank for "
+                   "J_PV indices are stored in crevPF and crsvPF')\n");
   fprintf(OutFile, "figure; plot(lambda,evQV,lambda,svQV,'-.'); \n");
   fprintf(OutFile, "title('J_{QV} matrix |e-val.| and sing. val. indices');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
   fprintf(OutFile, "legend('e-v','s.v.');\n");
-  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank the J_QV indices are stored in crevQV and crsvQV')\n");
+  fprintf(OutFile, "disp(' '); disp('Critical bus numbers and bus l rank the "
+                   "J_QV indices are stored in crevQV and crsvQV')\n");
   fprintf(OutFile, "figure; plot(lambda,detD_ll); \n");
   fprintf(OutFile, "title('Reduced det. index');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
   fprintf(OutFile, "figure; plot(lambda,-t_ll); \n");
   fprintf(OutFile, "title('Test func. index');\n");
   fprintf(OutFile, "xlabel('lambda [p.u.]');\n");
-  fprintf(OutFile, "disp(' '); disp('Bus l used for the red. det. and test func. indices is: %d %s')\n", TFbus, TFname);
+  fprintf(OutFile,
+          "disp(' '); disp('Bus l used for the red. det. and test func. "
+          "indices is: %d %s')\n",
+          TFbus, TFname);
   fprintf(OutFile, "warning on\n\n");
   fclose(OutFile);
-  /* --------------- Create 'rankbus.m' file needed for Matlab computations --------------- */
+  /* --------------- Create 'rankbus.m' file needed for Matlab computations
+   * --------------- */
   OutFile = OpenOutput("rankbus.m");
   fprintf(OutFile, "function num_rank=rankbus(vec,num)\n");
   fprintf(OutFile, "%s\n", "%%");
@@ -975,27 +854,42 @@ void IndicesMatlab(INDEX count)
   fprintf(OutFile, "  if (I(i)==num), num_rank=i; break; end\n");
   fprintf(OutFile, "end\n");
   fclose(OutFile);
-  /* ----------------  Create 'inviter.m' file needed for Matlab computations --------------- */
+  /* ----------------  Create 'inviter.m' file needed for Matlab computations
+   * --------------- */
   OutFile = OpenOutput("inviter.m");
   fprintf(OutFile, "function [e_val,v]=inviter(A,e_o,tol,iter,warn)\n");
   fprintf(OutFile, "%s\n", "%%");
-  fprintf(OutFile, "%s Inverse iteration method to compute a real e-value.\n", "%%");
-  fprintf(OutFile, "%s Designed for sparse matrices, but works with full matrices.\n", "%%");
+  fprintf(OutFile, "%s Inverse iteration method to compute a real e-value.\n",
+          "%%");
+  fprintf(OutFile,
+          "%s Designed for sparse matrices, but works with full matrices.\n",
+          "%%");
   fprintf(OutFile, "%s\n", "%%");
   fprintf(OutFile, "%s      [v,e_val]=inviter(A,e_o,tol,iter,warn)\n", "%%");
   fprintf(OutFile, "%s \n", "%%");
   fprintf(OutFile, "%s Input:  A    -> NxN matrix\n", "%%");
-  fprintf(OutFile, "%s         e_o  -> Optional eigenvalue guess (default 0)\n", "%%");
-  fprintf(OutFile, "%s          tol  -> Optional convergence tolerance (default 1e-4)\n", "%%");
-  fprintf(OutFile, "%s         iter -> Optional maximum number of iterations (default 30)\n", "%%");
-  fprintf(OutFile, "%s         warn -> Use 0 to cancel display of no convergence warning message\n", "%%");
-  fprintf(OutFile, "%s                 (default 1, i.e., display warning)\n", "%%");
+  fprintf(OutFile, "%s         e_o  -> Optional eigenvalue guess (default 0)\n",
+          "%%");
+  fprintf(OutFile,
+          "%s          tol  -> Optional convergence tolerance (default 1e-4)\n",
+          "%%");
+  fprintf(
+      OutFile,
+      "%s         iter -> Optional maximum number of iterations (default 30)\n",
+      "%%");
+  fprintf(OutFile,
+          "%s         warn -> Use 0 to cancel display of no convergence "
+          "warning message\n",
+          "%%");
+  fprintf(OutFile, "%s                 (default 1, i.e., display warning)\n",
+          "%%");
   fprintf(OutFile, "%s\n", "%%");
   fprintf(OutFile, "%s OutFileput: e_val -> Eigenvalue\n", "%%");
   fprintf(OutFile, "%s         v     -> Eigenvector\n", "%%");
   fprintf(OutFile, "%s\n", "%%");
   fprintf(OutFile, "%s\n", "%%");
-  fprintf(OutFile, "%s Copyright (c) Claudio Canizares, Shu Zhang, 1996, 2006.\n", "%%");
+  fprintf(OutFile,
+          "%s Copyright (c) Claudio Canizares, Shu Zhang, 1996, 2006.\n", "%%");
   fprintf(OutFile, "%s University of Waterloo, Waterloo, Canada\n", "%%");
   fprintf(OutFile, "%s\n", "%%");
   fprintf(OutFile, "if nargin<2, e_o=0; sign=1;\n");
@@ -1034,8 +928,11 @@ void IndicesMatlab(INDEX count)
   fprintf(OutFile, "\n");
   fprintf(OutFile, "if (conv==0 & warn==1)\n");
   fprintf(OutFile, "  disp(' ')\n");
-  fprintf(OutFile, "  disp('Warning: Inverse iteration method failed to converge')\n");
-  fprintf(OutFile, "  str=sprintf('         for tol=%s6.4e, iter=%sd.',tol,iter);\n", "%%", "%%");
+  fprintf(OutFile,
+          "  disp('Warning: Inverse iteration method failed to converge')\n");
+  fprintf(OutFile,
+          "  str=sprintf('         for tol=%s6.4e, iter=%sd.',tol,iter);\n",
+          "%%", "%%");
   fprintf(OutFile, "  disp(str)\n");
   fprintf(OutFile, "  disp(' ')\n");
   fprintf(OutFile, "end\n");

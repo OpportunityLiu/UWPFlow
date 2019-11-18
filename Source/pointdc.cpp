@@ -16,11 +16,9 @@ bool DCFunHes(bool flagF, bool flagJ)
 
   i = NacVar;
   N = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /*  FACTS  */
-  for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
-  {
+  for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next) {
     DCptrI = DCptrR->To;
-    if (!strcmp(DCptrR->Type, "R"))
-    {
+    if (!strcmp(DCptrR->Type, "R")) {
       Id = DCptrR->Id;
       Rd = DCptrR->Rd;
       Vdr = DCptrR->Vd;
@@ -51,15 +49,11 @@ bool DCFunHes(bool flagF, bool flagJ)
       Di = Si * Si - Pi * Pi;
       if (Dr <= 0 || Di <= 0)
         return (true);
-      if (Acont && DCptrR->Meter != nullptr)
-      {
-        if (DCptrR->Meter == DCptrR)
-        {
+      if (Acont && DCptrR->Meter != nullptr) {
+        if (DCptrR->Meter == DCptrR) {
           Sa1 = -1;
           Sa2 = 1;
-        }
-        else
-        {
+        } else {
           Sa1 = 1;
           Sa2 = -1;
         }
@@ -73,25 +67,25 @@ bool DCFunHes(bool flagF, bool flagJ)
           n = ACvar[BEptr->N] + 2;
         else
           n = 0;
-      }
-      else
+      } else
         m = n = 0;
-      if (flagF)
-      {
+      if (flagF) {
         j = i + N;
         if (dVr)
-          dF[kp + N] = dF[kp + N] - K1 * ar * cosar * x0[i + 1] - K1 * ar * Id * x0[i + 2] - ar * (cosar + cosgr) * x0[i + 9];
+          dF[kp + N] = dF[kp + N] - K1 * ar * cosar * x0[i + 1] -
+                       K1 * ar * Id * x0[i + 2] -
+                       ar * (cosar + cosgr) * x0[i + 9];
         if (strcmp(DCptrR->Cont1, "VD") && strcmp(DCptrR->Cont2, "VD"))
           dF[++j] = x0[i + 1] + Id * x0[i + 3] + x0[i + 11];
         if (strcmp(DCptrR->Cont1, "AT") && strcmp(DCptrR->Cont2, "AT"))
-          dF[++j] = -K1 * Vr * cosar * x0[i + 1] - K1 * Vr * Id * x0[i + 2] - Vr * (cosar + cosgr) * x0[i + 9];
+          dF[++j] = -K1 * Vr * cosar * x0[i + 1] - K1 * Vr * Id * x0[i + 2] -
+                    Vr * (cosar + cosgr) * x0[i + 9];
         if (strcmp(DCptrR->Cont1, "AL") && strcmp(DCptrR->Cont2, "AL"))
           dF[++j] = -K1 * ar * Vr * x0[i + 1] - ar * Vr * x0[i + 9];
         if (strcmp(DCptrR->Cont1, "GA") && strcmp(DCptrR->Cont2, "GA"))
           dF[++j] = -ar * Vr * x0[i + 9];
         dF[++j] = x0[i + 2] + Sr / sqrt(Dr) * x0[i + 4];
-        if (strcmp(DCptrR->Cont1, "PA") && strcmp(DCptrR->Cont2, "PA"))
-        {
+        if (strcmp(DCptrR->Cont1, "PA") && strcmp(DCptrR->Cont2, "PA")) {
           dF[++j] = x0[i + 3] - Pr / sqrt(Dr) * x0[i + 4] + x0[k];
           if (m != 0 && DCptrR->Meter == DCptrR)
             dF[j] = dF[j] - Sa1 * x0[m];
@@ -101,18 +95,20 @@ bool DCFunHes(bool flagF, bool flagJ)
         if (strcmp(DCptrR->Cont1, "QA") && strcmp(DCptrR->Cont2, "QA"))
           dF[++j] = x0[i + 4] + x0[kp];
         if (dVi)
-          dF[lp + N] = dF[lp + N] - K1 * ai * cosgi * x0[i + 5] - K1 * ai * Id * x0[i + 6] - ai * (cosai + cosgi) * x0[i + 10];
+          dF[lp + N] = dF[lp + N] - K1 * ai * cosgi * x0[i + 5] -
+                       K1 * ai * Id * x0[i + 6] -
+                       ai * (cosai + cosgi) * x0[i + 10];
         if (strcmp(DCptrI->Cont1, "VD") && strcmp(DCptrI->Cont2, "VD"))
           dF[++j] = x0[i + 5] - Id * x0[i + 7] - x0[i + 11];
         if (strcmp(DCptrI->Cont1, "AT") && strcmp(DCptrI->Cont2, "AT"))
-          dF[++j] = -K1 * Vi * cosgi * x0[i + 5] - K1 * Vi * Id * x0[i + 6] - Vi * (cosai + cosgi) * x0[i + 10];
+          dF[++j] = -K1 * Vi * cosgi * x0[i + 5] - K1 * Vi * Id * x0[i + 6] -
+                    Vi * (cosai + cosgi) * x0[i + 10];
         if (strcmp(DCptrI->Cont1, "AL") && strcmp(DCptrI->Cont2, "AL"))
           dF[++j] = -ai * Vi * x0[i + 10];
         if (strcmp(DCptrI->Cont1, "GA") && strcmp(DCptrI->Cont2, "GA"))
           dF[++j] = -K1 * ai * Vi * x0[i + 5] - ai * Vi * x0[i + 10];
         dF[++j] = x0[i + 6] + Si / sqrt(Di) * x0[i + 8];
-        if (strcmp(DCptrI->Cont1, "PA") && strcmp(DCptrI->Cont2, "PA"))
-        {
+        if (strcmp(DCptrI->Cont1, "PA") && strcmp(DCptrI->Cont2, "PA")) {
           dF[++j] = x0[i + 7] - Pi / sqrt(Di) * x0[i + 8] + x0[l];
           if (m != 0 && DCptrI->Meter == DCptrI)
             dF[j] = dF[j] - Sa1 * x0[m];
@@ -123,10 +119,13 @@ bool DCFunHes(bool flagF, bool flagJ)
           dF[++j] = x0[i + 8] + x0[lp];
         if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
             strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID"))
-          dF[++j] = K2 * Xcr * x0[i + 1] - K1 * ar * Vr * x0[i + 2] + Vdr * x0[i + 3] + K2 * Xci * x0[i + 5] - K1 * ai * Vi * x0[i + 6] - Vdi * x0[i + 7] + sqrt(2.0) * (Xcr * x0[i + 9] + Xci * x0[i + 10]) - Rd * x0[i + 11];
+          dF[++j] = K2 * Xcr * x0[i + 1] - K1 * ar * Vr * x0[i + 2] +
+                    Vdr * x0[i + 3] + K2 * Xci * x0[i + 5] -
+                    K1 * ai * Vi * x0[i + 6] - Vdi * x0[i + 7] +
+                    sqrt(2.0) * (Xcr * x0[i + 9] + Xci * x0[i + 10]) -
+                    Rd * x0[i + 11];
       }
-      if (flagJ)
-      {
+      if (flagJ) {
         j = i;
         if (strcmp(DCptrR->Cont1, "VD") && strcmp(DCptrR->Cont2, "VD"))
           DCvar[1] = ++j;
@@ -183,19 +182,19 @@ bool DCFunHes(bool flagF, bool flagJ)
           DCvar[15] = ++j;
         else
           DCvar[15] = 0;
-        if (dVr)
-        {
+        if (dVr) {
           if (DCvar[2])
-            JacElement(Jac, kp + N, DCvar[2], -K1 * cosar * x0[i + 1] - K1 * Id * x0[i + 2] - (cosar + cosgr) * x0[i + 9]);
+            JacElement(Jac, kp + N, DCvar[2],
+                       -K1 * cosar * x0[i + 1] - K1 * Id * x0[i + 2] -
+                           (cosar + cosgr) * x0[i + 9]);
           if (DCvar[3])
-            JacElement(Jac, kp + N, DCvar[3], -K1 * ar * x0[i + 1] - ar * x0[i + 9]);
+            JacElement(Jac, kp + N, DCvar[3],
+                       -K1 * ar * x0[i + 1] - ar * x0[i + 9]);
           if (DCvar[4])
             JacElement(Jac, kp + N, DCvar[4], -ar * x0[i + 9]);
           if (DCvar[15])
             JacElement(Jac, kp + N, DCvar[15], -K1 * ar * x0[i + 2]);
-        }
-        else
-        {
+        } else {
           if (DCvar[2])
             JacElement(Jac, kp + N, DCvar[2], 0.);
           if (DCvar[3])
@@ -205,35 +204,36 @@ bool DCFunHes(bool flagF, bool flagJ)
           if (DCvar[15])
             JacElement(Jac, kp + N, DCvar[15], 0.);
         }
-        if (strcmp(DCptrR->Cont1, "VD") && strcmp(DCptrR->Cont2, "VD"))
-        {
+        if (strcmp(DCptrR->Cont1, "VD") && strcmp(DCptrR->Cont2, "VD")) {
           if (DCvar[15])
             JacElement(Jac, DCvar[1] + N, DCvar[15], x0[i + 3]);
         }
-        if (strcmp(DCptrR->Cont1, "AT") && strcmp(DCptrR->Cont2, "AT"))
-        {
+        if (strcmp(DCptrR->Cont1, "AT") && strcmp(DCptrR->Cont2, "AT")) {
           if (dVr)
-            JacElement(Jac, DCvar[2] + N, kp, -K1 * cosar * x0[1 + 1] - K1 * Id * x0[i + 2] - (cosar * cosgr) * x0[i + 9]);
+            JacElement(Jac, DCvar[2] + N, kp,
+                       -K1 * cosar * x0[1 + 1] - K1 * Id * x0[i + 2] -
+                           (cosar * cosgr) * x0[i + 9]);
           else
             JacElement(Jac, DCvar[2] + N, kp, 0.);
           if (DCvar[3])
-            JacElement(Jac, DCvar[2] + N, DCvar[3], -K1 * Vr * x0[i + 1] - Vr * x0[i + 9]);
+            JacElement(Jac, DCvar[2] + N, DCvar[3],
+                       -K1 * Vr * x0[i + 1] - Vr * x0[i + 9]);
           if (DCvar[4])
             JacElement(Jac, DCvar[2] + N, DCvar[4], -Vr * x0[i + 9]);
           if (DCvar[15])
             JacElement(Jac, DCvar[2] + N, DCvar[15], -K1 * Vr * x0[i + 2]);
         }
-        if (strcmp(DCptrR->Cont1, "AL") && strcmp(DCptrR->Cont2, "AL"))
-        {
+        if (strcmp(DCptrR->Cont1, "AL") && strcmp(DCptrR->Cont2, "AL")) {
           if (dVr)
-            JacElement(Jac, DCvar[3] + N, kp, -K1 * ar * x0[1 + 1] - ar * x0[i + 9]);
+            JacElement(Jac, DCvar[3] + N, kp,
+                       -K1 * ar * x0[1 + 1] - ar * x0[i + 9]);
           else
             JacElement(Jac, DCvar[3] + N, kp, 0.);
           if (DCvar[2])
-            JacElement(Jac, DCvar[3] + N, DCvar[2], -K1 * Vr * x0[1 + 1] - Vr * x0[i + 9]);
+            JacElement(Jac, DCvar[3] + N, DCvar[2],
+                       -K1 * Vr * x0[1 + 1] - Vr * x0[i + 9]);
         }
-        if (strcmp(DCptrR->Cont1, "GA") && strcmp(DCptrR->Cont2, "GA"))
-        {
+        if (strcmp(DCptrR->Cont1, "GA") && strcmp(DCptrR->Cont2, "GA")) {
           if (dVr)
             JacElement(Jac, DCvar[4] + N, kp, -ar * x0[i + 9]);
           else
@@ -241,27 +241,30 @@ bool DCFunHes(bool flagF, bool flagJ)
           if (DCvar[2])
             JacElement(Jac, DCvar[4] + N, DCvar[2], -Vr * x0[i + 9]);
         }
-        JacElement(Jac, DCvar[5] + N, DCvar[5], -Pr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
+        JacElement(Jac, DCvar[5] + N, DCvar[5],
+                   -Pr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
         if (DCvar[6])
-          JacElement(Jac, DCvar[5] + N, DCvar[6], Sr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
-        if (strcmp(DCptrR->Cont1, "PA") && strcmp(DCptrR->Cont2, "PA"))
-        {
-          JacElement(Jac, DCvar[6] + N, DCvar[5], Sr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
-          JacElement(Jac, DCvar[6] + N, DCvar[6], -Sr * Sr * x0[i + 4] / (Dr * sqrt(Dr)));
+          JacElement(Jac, DCvar[5] + N, DCvar[6],
+                     Sr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
+        if (strcmp(DCptrR->Cont1, "PA") && strcmp(DCptrR->Cont2, "PA")) {
+          JacElement(Jac, DCvar[6] + N, DCvar[5],
+                     Sr * Pr * x0[i + 4] / (Dr * sqrt(Dr)));
+          JacElement(Jac, DCvar[6] + N, DCvar[6],
+                     -Sr * Sr * x0[i + 4] / (Dr * sqrt(Dr)));
         }
-        if (dVi)
-        {
+        if (dVi) {
           if (DCvar[9])
-            JacElement(Jac, lp + N, DCvar[9], -K1 * cosgi * x0[i + 5] - K1 * Id * x0[i + 6] - (cosai + cosgi) * x0[i + 10]);
+            JacElement(Jac, lp + N, DCvar[9],
+                       -K1 * cosgi * x0[i + 5] - K1 * Id * x0[i + 6] -
+                           (cosai + cosgi) * x0[i + 10]);
           if (DCvar[10])
             JacElement(Jac, lp + N, DCvar[10], -ai * x0[i + 10]);
           if (DCvar[11])
-            JacElement(Jac, lp + N, DCvar[11], -K1 * ai * x0[i + 5] - ai * x0[i + 10]);
+            JacElement(Jac, lp + N, DCvar[11],
+                       -K1 * ai * x0[i + 5] - ai * x0[i + 10]);
           if (DCvar[15])
             JacElement(Jac, lp + N, DCvar[15], -K1 * ai * x0[i + 6]);
-        }
-        else
-        {
+        } else {
           if (DCvar[9])
             JacElement(Jac, lp + N, DCvar[9], 0.);
           if (DCvar[10])
@@ -271,26 +274,26 @@ bool DCFunHes(bool flagF, bool flagJ)
           if (DCvar[15])
             JacElement(Jac, lp + N, DCvar[15], 0.);
         }
-        if (strcmp(DCptrI->Cont1, "VD") && strcmp(DCptrI->Cont2, "VD"))
-        {
+        if (strcmp(DCptrI->Cont1, "VD") && strcmp(DCptrI->Cont2, "VD")) {
           if (DCvar[15])
             JacElement(Jac, DCvar[8] + N, DCvar[15], -x0[i + 7]);
         }
-        if (strcmp(DCptrI->Cont1, "AT") && strcmp(DCptrI->Cont2, "AT"))
-        {
+        if (strcmp(DCptrI->Cont1, "AT") && strcmp(DCptrI->Cont2, "AT")) {
           if (dVi)
-            JacElement(Jac, DCvar[9] + N, lp, -K1 * cosgi * x0[i + 5] - K1 * Id * x0[i + 6] - (cosai + cosgi) * x0[i + 10]);
+            JacElement(Jac, DCvar[9] + N, lp,
+                       -K1 * cosgi * x0[i + 5] - K1 * Id * x0[i + 6] -
+                           (cosai + cosgi) * x0[i + 10]);
           else
             JacElement(Jac, DCvar[9] + N, lp, 0.);
           if (DCvar[10])
             JacElement(Jac, DCvar[9] + N, DCvar[10], -Vi * x0[i + 10]);
           if (DCvar[11])
-            JacElement(Jac, DCvar[9] + N, DCvar[11], -K1 * Vi * x0[i + 5] - Vi * x0[i + 10]);
+            JacElement(Jac, DCvar[9] + N, DCvar[11],
+                       -K1 * Vi * x0[i + 5] - Vi * x0[i + 10]);
           if (DCvar[15])
             JacElement(Jac, DCvar[9] + N, DCvar[15], -K1 * Vi * x0[i + 6]);
         }
-        if (strcmp(DCptrI->Cont1, "AL") && strcmp(DCptrI->Cont2, "AL"))
-        {
+        if (strcmp(DCptrI->Cont1, "AL") && strcmp(DCptrI->Cont2, "AL")) {
           if (dVi)
             JacElement(Jac, DCvar[10] + N, lp, -ai * x0[i + 10]);
           else
@@ -298,26 +301,29 @@ bool DCFunHes(bool flagF, bool flagJ)
           if (DCvar[9])
             JacElement(Jac, DCvar[10] + N, DCvar[9], -Vi * x0[i + 10]);
         }
-        if (strcmp(DCptrI->Cont1, "GA") && strcmp(DCptrI->Cont2, "GA"))
-        {
+        if (strcmp(DCptrI->Cont1, "GA") && strcmp(DCptrI->Cont2, "GA")) {
           if (dVi)
-            JacElement(Jac, DCvar[11] + N, lp, -K1 * ai * x0[i + 5] - ai * x0[i + 10]);
+            JacElement(Jac, DCvar[11] + N, lp,
+                       -K1 * ai * x0[i + 5] - ai * x0[i + 10]);
           else
             JacElement(Jac, DCvar[11] + N, lp, 0.);
           if (DCvar[9])
-            JacElement(Jac, DCvar[11] + N, DCvar[9], -K1 * Vi * x0[i + 5] - Vi * x0[i + 10]);
+            JacElement(Jac, DCvar[11] + N, DCvar[9],
+                       -K1 * Vi * x0[i + 5] - Vi * x0[i + 10]);
         }
-        JacElement(Jac, DCvar[12] + N, DCvar[12], -Pi * Pi * x0[i + 8] / (Di * sqrt(Di)));
+        JacElement(Jac, DCvar[12] + N, DCvar[12],
+                   -Pi * Pi * x0[i + 8] / (Di * sqrt(Di)));
         if (DCvar[13])
-          JacElement(Jac, DCvar[12] + N, DCvar[13], Si * Pi * x0[i + 8] / (Di * sqrt(Di)));
-        if (strcmp(DCptrI->Cont1, "PA") && strcmp(DCptrI->Cont2, "PA"))
-        {
-          JacElement(Jac, DCvar[13] + N, DCvar[12], Si * Pi * x0[i + 8] / (Di * sqrt(Di)));
-          JacElement(Jac, DCvar[13] + N, DCvar[13], -Si * Si * x0[i + 8] / (Di * sqrt(Di)));
+          JacElement(Jac, DCvar[12] + N, DCvar[13],
+                     Si * Pi * x0[i + 8] / (Di * sqrt(Di)));
+        if (strcmp(DCptrI->Cont1, "PA") && strcmp(DCptrI->Cont2, "PA")) {
+          JacElement(Jac, DCvar[13] + N, DCvar[12],
+                     Si * Pi * x0[i + 8] / (Di * sqrt(Di)));
+          JacElement(Jac, DCvar[13] + N, DCvar[13],
+                     -Si * Si * x0[i + 8] / (Di * sqrt(Di)));
         }
         if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-            strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID"))
-        {
+            strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
           if (dVr)
             JacElement(Jac, DCvar[15] + N, kp, -K1 * ar * x0[i + 2]);
           else

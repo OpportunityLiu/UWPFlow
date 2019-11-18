@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 #include <float.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "constant.h"
 #include "param.h"
@@ -22,28 +22,23 @@ ELEMENTVALUETYPE *Swr2;
 SparseMatrixElement **DiagPtr2;
 
 /* ============================ InitializeWorkingRow ==================== */
-void InitializeWorkingRow()
-{
+void InitializeWorkingRow() {
   INDEX I, J;
   SparseMatrixElement *Ptr1;
   /* BEGIN */
   Swr2 = new ELEMENTVALUETYPE[Matrix2->n1 + 1];
   DiagPtr2 = new SparseMatrixElement *[Matrix2->n1 + 1];
-  for (I = 1; I <= Matrix2->n1; I++)
-  {
+  for (I = 1; I <= Matrix2->n1; I++) {
     Ptr1 = Matrix2->RowHead[I];
-    while (Ptr1 != nullptr)
-    {
+    while (Ptr1 != nullptr) {
       J = Ptr1->Col;
       if (I == J)
         DiagPtr2[I] = Ptr1;
       Ptr1 = Ptr1->RowNext;
     }
   }
-  for (I = 1; I <= Matrix2->n1; I++)
-  {
-    if (DiagPtr2[I] == nullptr)
-    {
+  for (I = 1; I <= Matrix2->n1; I++) {
+    if (DiagPtr2[I] == nullptr) {
       fprintf(stderr, "\nError: Diagonal element missing in the Jacobian.\n");
       exit(ERROREXIT);
     }
@@ -51,17 +46,12 @@ void InitializeWorkingRow()
 }
 
 /* ========================== LoadUnloadWorkingRow ====================== */
-void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, bool SetReset)
-{
+void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, bool SetReset) {
   /* BEGIN */
-  while (Ptr2 != nullptr)
-  {
-    if (SetReset)
-    {
+  while (Ptr2 != nullptr) {
+    if (SetReset) {
       Swr2[Ptr2->Col] = Ptr2->Value;
-    }
-    else
-    {
+    } else {
       Ptr2->Value = Swr2[Ptr2->Col];
       Swr2[Ptr2->Col] = 0.0;
     }
@@ -70,22 +60,17 @@ void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, bool SetReset)
 }
 
 /* ========================= Normalize ================================ */
-void Normalize(INDEX I)
-{
+void Normalize(INDEX I) {
   struct SparseMatrixElement *Ptr1;
   INDEX J;
   /* BEGIN */
   Ptr1 = Matrix2->RowHead[I];
-  while (Ptr1 != nullptr)
-  {
+  while (Ptr1 != nullptr) {
     J = Ptr1->Col;
-    if (J == I)
-    {
+    if (J == I) {
       Ptr1->Value = DiagVal2;
       /* DiagPtr2[I] = Ptr1; */
-    }
-    else if (Ptr1->Col > I)
-    {
+    } else if (Ptr1->Col > I) {
       Ptr1->Value = DiagVal2 * Ptr1->Value;
       Nmult2++;
     }
@@ -94,27 +79,21 @@ void Normalize(INDEX I)
 }
 
 /* ========================== DoFactorization ========================== */
-int DoFactorization()
-{
+int DoFactorization() {
   INDEX I, J, K;
   struct SparseMatrixElement *Ptr1, *Ptr2;
   /* BEGIN {DoFactorization} */
   InitializeWorkingRow();
-  for (I = 1; I <= Matrix2->n1; I++)
-  {
+  for (I = 1; I <= Matrix2->n1; I++) {
     Ptr1 = Matrix2->RowHead[I];
     LoadUnloadWorkingRow1(Ptr1, true);
-    while (Ptr1 != nullptr)
-    {
+    while (Ptr1 != nullptr) {
       J = Ptr1->Col;
-      if ((J < I) && (J <= Nstop2))
-      {
+      if ((J < I) && (J <= Nstop2)) {
         Ptr2 = Matrix2->RowHead[J];
-        while (Ptr2 != nullptr)
-        {
+        while (Ptr2 != nullptr) {
           K = Ptr2->Col;
-          if (K > J)
-          {
+          if (K > J) {
             Swr2[K] = Swr2[K] - Swr2[J] * Ptr2->Value;
             /*
             MultiplyValues(TempVal,Swr2[J],Ptr2^.Value);
@@ -128,8 +107,7 @@ int DoFactorization()
         /*
         MultiplyValues(Swr2[J],Swr2[J],DiagPtr2[J]^.Value);
           */
-      }
-      else if (J == I)
+      } else if (J == I)
         DiagPtr2[I] = Ptr1;
       Ptr1 = Ptr1->RowNext;
     }
@@ -138,8 +116,7 @@ int DoFactorization()
     /*
       EquateValues(DiagVal2,DiagPtr2[I]^.Value);
       */
-    if (I <= Nstop2)
-    {
+    if (I <= Nstop2) {
       if (NearZero(DiagVal2))
         return (WARNINGEXIT);
       DiagVal2 = 1.0 / DiagVal2;
@@ -150,8 +127,7 @@ int DoFactorization()
 } /* END {DoFactorization} */
 
 /* ============================== factor ================================= */
-int factor(SparseMatrix *Mptr)
-{
+int factor(SparseMatrix *Mptr) {
   /* BEGIN FactorMatrix2 */
   Matrix2 = Mptr;
   Nmult2 = 0;
