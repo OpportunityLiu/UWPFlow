@@ -9,7 +9,7 @@
 #include "sparse.h"
 
 /* ------- Global Variables ------ */
-BOOLEAN InputError;
+bool InputError;
 
 /* ===================== ErrorHalt ================================ */
 #ifdef ANSIPROTO
@@ -20,7 +20,7 @@ char *Msg;
 #endif
 {
   fprintf(stderr,"ERROR: %s\n",Msg);
-  InputError=TRUE;
+  InputError=true;
   /* exit(ERROREXIT) */
 }
 
@@ -47,7 +47,7 @@ char *Msg;
     for (I=1; I<=Matrix->n1; I++) {
       TempHead[I] = Matrix->RowHead[I];
       Ptr1 = Matrix->RowHead[I];
-      while (Ptr1 != NULL) {
+      while (Ptr1 != nullptr) {
         /* WITH Ptr1^ DO BEGIN */
         PtrR = Ptr1->RowNext;
         PtrC = Ptr1->ColNext;
@@ -90,9 +90,9 @@ INDEX Size;
   Vector->p = new INDEX[Size+1];
 #else
   Vector = (IntegerVector *) malloc(sizeof(IntegerVector));
-  if (Vector == NULL) {ErrorHalt("Insufficient memory to allocate integer vector"); exit(ERROREXIT);}
+  if (Vector == nullptr) {ErrorHalt("Insufficient memory to allocate integer vector"); exit(ERROREXIT);}
   Vector->p = (INDEX *) calloc((Size+1),sizeof(INDEX));
-  if (Vector->p == NULL) {ErrorHalt("Insufficient memory to allocate permutation vector"); exit(ERROREXIT);}
+  if (Vector->p == nullptr) {ErrorHalt("Insufficient memory to allocate permutation vector"); exit(ERROREXIT);}
 #endif
   Vector->N = Size;
   for(i=0;i<Size+1;i++) Vector->p[i]=0;
@@ -112,11 +112,11 @@ SparseMatrix *Matrix;
   SparseMatrixElement *TempP2;
   int I;
   /* BEGIN */
-  for (I=1; I<=Matrix->n2; I++) Matrix->ColHead[I] = NULL;
+  for (I=1; I<=Matrix->n2; I++) Matrix->ColHead[I] = nullptr;
   I = Matrix->n1;
   while (I>0) {
     TempP1 = Matrix->RowHead[I];
-    while (TempP1 != NULL) {
+    while (TempP1 != nullptr) {
       TempP2 = TempP1->RowNext;
       TempP1->ColNext = Matrix->ColHead[TempP1->Col];
       Matrix->ColHead[TempP1->Col] = TempP1;
@@ -124,11 +124,11 @@ SparseMatrix *Matrix;
     } /* END WHILE */
     I--;
   } /* END WHILE */
-  for (I=1; I<=Matrix->n1; I++) Matrix->RowHead[I] = NULL;
+  for (I=1; I<=Matrix->n1; I++) Matrix->RowHead[I] = nullptr;
   I = Matrix->n2;
   while (I > 0) {
     TempP1 = Matrix->ColHead[I];
-    while (TempP1 != NULL) {
+    while (TempP1 != nullptr) {
       TempP2 = TempP1->ColNext;
       TempP1->RowNext = Matrix->RowHead[TempP1->Row];
       Matrix->RowHead[TempP1->Row] = TempP1;
@@ -141,9 +141,9 @@ SparseMatrix *Matrix;
 
 /* ============================ NearZero ===========================*/
 #ifdef ANSIPROTO
-BOOLEAN NearZero(ELEMENTVALUETYPE Value)
+bool NearZero(ELEMENTVALUETYPE Value)
 #else
-BOOLEAN NearZero(Value)
+bool NearZero(Value)
 ELEMENTVALUETYPE Value;
 #endif
 {

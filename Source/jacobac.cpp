@@ -4,12 +4,12 @@
 
 /* ------------------ ACFunJac ----------------------------- */
 #ifdef ANSIPROTO
-AreaData *ACFunJac(SparseMatrix *Mptr,int *val,BOOLEAN flagF,BOOLEAN flagJ,BOOLEAN flagP)
+AreaData *ACFunJac(SparseMatrix *Mptr,int *val,bool flagF,bool flagJ,bool flagP)
 #else
 AreaData *ACFunJac(Mptr,val,flagF,flagJ,flagP)
 SparseMatrix *Mptr;
 int *val;
-BOOLEAN flagF,flagJ,flagP;
+bool flagF,flagJ,flagP;
 #endif
 /* Construct the AC part of the Jacobian. */
 {
@@ -24,17 +24,17 @@ BOOLEAN flagF,flagJ,flagP;
   VALUETYPE Pl,Ql,Pg,DPg,SPg=0;
   INDEX i,j,k,l;
 
-  if (val!=NULL) *val=0;
-  for(ALptr=dataPtr->KGbus;ALptr!=NULL;ALptr=ALptr->Next) {
+  if (val!=nullptr) *val=0;
+  for(ALptr=dataPtr->KGbus;ALptr!=nullptr;ALptr=ALptr->Next) {
     BEptr=ALptr->AC;
     if(strpbrk(ALptr->AC->Type,"S"))  break;
   }
-  if (Acont) for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr->SPg=0,Aptr=Aptr->Next);
+  if (Acont) for(Aptr=dataPtr->Area;Aptr!=nullptr;Aptr->SPg=0,Aptr=Aptr->Next);
   if (Bl) l=ACvar[Bl]+1;
   else if (flagH)  l=Mptr->n1;
   else l=0;
-  for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
-    if (ACptr->Area!=NULL) BEptr=ACptr->Area->Slack;
+  for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
+    if (ACptr->Area!=nullptr) BEptr=ACptr->Area->Slack;
     i=ACvar[ACptr->N];
 
   /* ------------------- Power Mismatches ------------------- */
@@ -57,7 +57,7 @@ BOOLEAN flagF,flagJ,flagP;
     dPiid=dQiid=0;
     dPiiv=dQiiv=0;
     SPij=SQij=0;
-    for(ELptr=ACptr->Elem; ELptr!=NULL; ELptr=ELptr->Next) {
+    for(ELptr=ACptr->Elem; ELptr!=nullptr; ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if (Eptr->From==ACptr) To=Eptr->To;
       else To=Eptr->From;
@@ -92,7 +92,7 @@ BOOLEAN flagF,flagJ,flagP;
           JacElement(Mptr,i+1,j,dQijd);
         }
         /* df/dV_j */
-        if (To->Cont!=NULL) {
+        if (To->Cont!=nullptr) {
           JacElement(Mptr,i,j+1,dPijv);
           JacElement(Mptr,i+1,j+1,dQijv);
         } else if (flagH && strpbrk(To->Type,"L")) {
@@ -125,7 +125,7 @@ BOOLEAN flagF,flagJ,flagP;
           JacElement(Mptr,i,j,val1);
           JacElement(Mptr,i+1,j,val2);
         }
-        else if(Rcont && Eptr->Cont!=NULL) {
+        else if(Rcont && Eptr->Cont!=nullptr) {
           j=ACvar[Eptr->Cont->N]+1;
           if(!strcmp(Eptr->Type,"R")) {
             val1= -dQijd/Eptr->Tap;
@@ -170,7 +170,7 @@ BOOLEAN flagF,flagJ,flagP;
         JacElement(Mptr,i+1,i,dQiid);
       }
       /* df/dV_i */
-      if (ACptr->Cont!=NULL) {
+      if (ACptr->Cont!=nullptr) {
         JacElement(Mptr,i,i+1,dPiiv);
         JacElement(Mptr,i+1,i+1,dQiiv);
       } else if (flagH && strpbrk(ACptr->Type,"L")) {
@@ -191,7 +191,7 @@ BOOLEAN flagF,flagJ,flagP;
         }
         if (strpbrk(ACptr->cont,"V")) JacElement(Mptr,i+1,j+1,val1);
         else                          JacElement(Mptr,i+1,j+1,0.);
-        if (ACptr->Gen!=NULL) {  /*Gen. Model BEGIN */
+        if (ACptr->Gen!=nullptr) {  /*Gen. Model BEGIN */
           j=ACptr->Gen->Nvar;
           if (strpbrk(ACptr->cont,"I")) JacElement(Mptr,i+1,j+11,1.);
           else                          JacElement(Mptr,i+1,j+11,0.);
@@ -205,7 +205,7 @@ BOOLEAN flagF,flagJ,flagP;
     if (Acont && strpbrk(ACptr->Type,"A")){
       i=i+2;
       SPij=0;
-      for (ELptr=BEptr->Area->Elem; ELptr!=NULL; ELptr=ELptr->Next){
+      for (ELptr=BEptr->Area->Elem; ELptr!=nullptr; ELptr=ELptr->Next){
         Eptr=ELptr->Eptr;
         From=Eptr->From;
         To=Eptr->To;
@@ -236,12 +236,12 @@ BOOLEAN flagF,flagJ,flagP;
         if(flagJ){
           j=ACvar[From->N];
           if (!strpbrk(From->Type,"S")) {  JacElement(Mptr,i,j,dPiid);}
-          if (From->Cont!=NULL) JacElement(Mptr,i,j+1,dPiiv);
+          if (From->Cont!=nullptr) JacElement(Mptr,i,j+1,dPiiv);
           else if (flagH && strpbrk(From->Type,"L")) JacElement(Mptr,i,Mptr->n1,dPiiv);
           else JacElement(Mptr,i,j+1,0.);
           j=ACvar[To->N];
           if (!strpbrk(To->Type,"S")) { JacElement(Mptr,i,j,dPijd);}
-          if (To->Cont!=NULL) JacElement(Mptr,i,j+1,dPijv);
+          if (To->Cont!=nullptr) JacElement(Mptr,i,j+1,dPijv);
           else if (flagH && strpbrk(To->Type,"L")) JacElement(Mptr,i,Mptr->n1,dPijv);
           else JacElement(Mptr,i,j+1,0.);
           if (PQcont && strpbrk(Eptr->Type,"PQMN")){
@@ -257,7 +257,7 @@ BOOLEAN flagF,flagJ,flagP;
             } else val1=0;
             JacElement(Mptr,i,j,val1);
           }
-          else if(Rcont && Eptr->Cont!=NULL) {
+          else if(Rcont && Eptr->Cont!=nullptr) {
             j=ACvar[Eptr->Cont->N]+1;
             if (!strcmp(Eptr->Type,"R")){
               val1=Vj*dPijv/Eptr->Tap;
@@ -271,7 +271,7 @@ BOOLEAN flagF,flagJ,flagP;
     }
 
   /* -------------- Regulating Transf. ----------------------- */
-    if(PQcont) for (ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
+    if(PQcont) for (ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if(strpbrk(Eptr->Type,"PQMN")){
         if (Acont && strpbrk(Eptr->Cont->Type,"A")) k=1; else k=0;
@@ -315,12 +315,12 @@ BOOLEAN flagF,flagJ,flagP;
             JacElement(Mptr,i,i,val1);
             j=ACvar[From->N];
             if (!strpbrk(From->Type,"S")) { JacElement(Mptr,i,j,dPiid);}
-            if (From->Cont!=NULL) JacElement(Mptr,i,j+1,dPiiv);
+            if (From->Cont!=nullptr) JacElement(Mptr,i,j+1,dPiiv);
             else if (flagH && strpbrk(From->Type,"L")) JacElement(Mptr,i,Mptr->n1,dPiiv);
             else JacElement(Mptr,i,j+1,0.);
             j=ACvar[To->N];
             if (!strpbrk(To->Type,"S")) { JacElement(Mptr,i,j,dPijd);}
-            if (To->Cont!=NULL) JacElement(Mptr,i,j+1,dPijv);
+            if (To->Cont!=nullptr) JacElement(Mptr,i,j+1,dPijv);
             else if (flagH && strpbrk(To->Type,"L")) JacElement(Mptr,i,Mptr->n1,dPijv);
             else JacElement(Mptr,i,j+1,0.);
           }
@@ -335,12 +335,12 @@ BOOLEAN flagF,flagJ,flagP;
             JacElement(Mptr,i,i,val1);
             j=ACvar[From->N];
             if (!strpbrk(From->Type,"S")) { JacElement(Mptr,i,j,dQiid);}
-            if (From->Cont!=NULL) JacElement(Mptr,i,j+1,dQiiv);
+            if (From->Cont!=nullptr) JacElement(Mptr,i,j+1,dQiiv);
             else if (flagH && strpbrk(From->Type,"L")) JacElement(Mptr,i,Mptr->n1,dQiiv);
             else JacElement(Mptr,i,j+1,0.);
             j=ACvar[To->N];
             if (!strpbrk(To->Type,"S"))  JacElement(Mptr,i,j,dQijd);
-            if (To->Cont!=NULL) JacElement(Mptr,i,j+1,dQijv);
+            if (To->Cont!=nullptr) JacElement(Mptr,i,j+1,dQijv);
             else if (flagH && strpbrk(To->Type,"L")) JacElement(Mptr,i,Mptr->n1,dQijv);
             else JacElement(Mptr,i,j+1,0.);
           }
@@ -350,7 +350,7 @@ BOOLEAN flagF,flagJ,flagP;
     }
 
   /* -------------- Generator Model ----------------------- */
-    if (ACptr->Gen!=NULL) {
+    if (ACptr->Gen!=nullptr) {
       i=ACptr->Gen->Nvar;
       Ra=ACptr->Gen->Ra;
       Xd=ACptr->Gen->Xd;
@@ -443,7 +443,7 @@ BOOLEAN flagF,flagJ,flagP;
         JacElement(Mptr,i+8,i+10,-cos(dg));
         /* df9/dV  */
         j=ACvar[ACptr->N];
-        if (ACptr->Cont!=NULL) JacElement(Mptr,i+9,j+1,-cos(di));
+        if (ACptr->Cont!=nullptr) JacElement(Mptr,i+9,j+1,-cos(di));
         else                   JacElement(Mptr,i+9,j+1,0.);
         /* df9/ddelta  */
         if (!strpbrk(ACptr->Type,"S")) {
@@ -454,7 +454,7 @@ BOOLEAN flagF,flagJ,flagP;
         JacElement(Mptr,i+9,i+3,1.);
         /* df10/dV  */
         j=ACvar[ACptr->N];
-        if (ACptr->Cont!=NULL) JacElement(Mptr,i+10,j+1,-sin(di));
+        if (ACptr->Cont!=nullptr) JacElement(Mptr,i+10,j+1,-sin(di));
         else                   JacElement(Mptr,i+10,j+1,0.);
         /* df10/ddelta  */
         if (!strpbrk(ACptr->Type,"S")) {
@@ -473,8 +473,8 @@ BOOLEAN flagF,flagJ,flagP;
   }
 
   /* -------------- Detect Area/System Generation Errors ----------------------- */
-  if (!flagPgMax && val!=NULL) {
-    if (Acont && Narea>1) for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next) {
+  if (!flagPgMax && val!=nullptr) {
+    if (Acont && Narea>1) for(Aptr=dataPtr->Area;Aptr!=nullptr;Aptr=Aptr->Next) {
       if (!Aptr->SPg) {
         if (!*val) *val=-1;
         else *val=-2;
@@ -485,7 +485,7 @@ BOOLEAN flagF,flagJ,flagP;
       else *val=-2;
     }
   }
-  return(NULL);
+  return(nullptr);
 }
 
 

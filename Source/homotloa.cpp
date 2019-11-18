@@ -7,15 +7,15 @@ extern VALUETYPE *Dx,Dparam,param0,*x0,*x0p,Kh,Htol,SD0,AngTr,
                  VoltageSum,VoltageSum0,DxiMax,VSF,SF,ZeroDx,Tol;
 extern INDEX NewNumEq,CountSteps,NumSteps;
 extern AClist *Vlist,*Vlistp;
-extern BOOLEAN flagReducedContinuation,flagReduceSystem,*DxZero,flagBS;
+extern bool flagReducedContinuation,flagReduceSystem,*DxZero,flagBS;
 
 
 /* ------------------ LoadX0 ----------------------------- */
 #ifdef ANSIPROTO
-VALUETYPE LoadX0(BOOLEAN FlagLoadX0,BOOLEAN FlagUpdateVar,BOOLEAN FlagMakeDxZero)
+VALUETYPE LoadX0(bool FlagLoadX0,bool FlagUpdateVar,bool FlagMakeDxZero)
 #else
 VALUETYPE LoadX0(FlagLoadX0,FlagUpdateVar,FlagMakeDxZero)
-BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
+bool FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
 #endif
 /* Load x0 vector and update AC/DC variables for power flow. */
 {
@@ -29,10 +29,10 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
   ElementList *ELptr;
   VALUETYPE DPg,val,valp,vals,count,consp=0,Pg,Pmax,PgMax,Q,Qm;
   INDEX i,j;
-  BOOLEAN Recover=TRUE;
+  bool Recover=true;
   char Qmax[5],Qmin[5];
 
-  if (ExistParameter('G')) Recover=FALSE;
+  if (ExistParameter('G')) Recover=false;
   NewNumEq=Jac->n1 - 1 ;
   if (FlagLoadX0) VoltageSum0=Tol;
   if (FlagUpdateVar) VoltageSum=0;
@@ -49,13 +49,13 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
 		  consp=val;
     }
   }
-  for(ALptr=dataPtr->KGbus;ALptr!=NULL;ALptr=ALptr->Next) {
+  for(ALptr=dataPtr->KGbus;ALptr!=nullptr;ALptr=ALptr->Next) {
     ACptr=ALptr->AC;
     if (strpbrk(ACptr->Type,"S")) {
       i=ACvar[ACptr->N];
       if (FlagLoadX0)  {
         x0[i]=ACptr->Kg;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Kg=x0[i]+Dx[i];
       BEptr=ACptr;
@@ -64,14 +64,14 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N]+2;
       if (FlagLoadX0) {
         x0[i]=ACptr->Kg;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Kg=x0[i]+Dx[i];
     }
   }
-  for (Ptr=NULL,valp=0,count=0,ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
+  for (Ptr=nullptr,valp=0,count=0,ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
     if (FlagUpdateVar) {
-      if (ACptr->Area!=NULL) BEptr=ACptr->Area->Slack;
+      if (ACptr->Area!=nullptr) BEptr=ACptr->Area->Slack;
       DPg=ACptr->DPg;
       if (flagBS) {
         if (ACptr!=BEptr) Pg=ACptr->Pg+lambda*DPg;
@@ -100,13 +100,13 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->V;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         if (InList(ACptr,Vlistp)) VoltageSum0+=ACptr->V;
       }
       if (FlagUpdateVar) {
@@ -129,7 +129,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++; if (FlagLoadX0) x0[i]=lambda;
@@ -173,14 +173,14 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (!QRcont) {
         if (FlagLoadX0) {
           x0[i]=ACptr->V;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
           if (InList(ACptr,Vlistp)) VoltageSum0+=ACptr->V;
         }
         if (FlagUpdateVar) {
@@ -202,7 +202,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         ACptrp=ACptr->ContBus->AC;
         if (FlagLoadX0) {
           x0[i]=ACptr->V;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->V=x0[i]+Dx[i];
@@ -246,7 +246,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       } else {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qr;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) ACptr->Qr=x0[i]+Dx[i];
       }
@@ -255,17 +255,17 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (Rcont) {
-        for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
+        for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next){
           Eptr=ELptr->Eptr;
           if(!strcmp(Eptr->Type,"R")) {
             if (FlagLoadX0) {
               x0[i]=Eptr->Tap;
-              if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+              if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
             }
             if (FlagUpdateVar) {
               Eptr->Tap=x0[i]+Dx[i];
@@ -286,7 +286,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
           } else {
             if (FlagLoadX0) {
               x0[i]=ACptr->V;
-              if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+              if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
             }
             if (FlagUpdateVar) {
               ACptr->V=x0[i]+Dx[i];
@@ -306,13 +306,13 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->V;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) {
         ACptr->V=x0[i]+Dx[i];
@@ -337,14 +337,14 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (!strpbrk(ACptr->cont,"V")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->V;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->V=x0[i]+Dx[i];
@@ -368,7 +368,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       else {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qg;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Qg=x0[i]+Dx[i];
@@ -390,13 +390,13 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->V;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) {
         ACptr->V=x0[i]+Dx[i];
@@ -430,14 +430,14 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       if (!strpbrk(ACptr->Type,"S")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Ang;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       }
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->V;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) {
         ACptr->V=x0[i]+Dx[i];
@@ -455,7 +455,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       if (!strpbrk(ACptr->Type,"S")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Ang;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       }
@@ -463,7 +463,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       if (strpbrk(ACptr->cont,"V")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qg;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Qg=x0[i]+Dx[i];
@@ -482,7 +482,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       } else {
         if (FlagLoadX0) {
           x0[i]=ACptr->V;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->V=x0[i]+Dx[i];
@@ -529,14 +529,14 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i=ACvar[ACptr->N];
       if (FlagLoadX0) {
         x0[i]=ACptr->Ang;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Ang=x0[i]+Dx[i];
       i++;
       if (strpbrk(ACptr->cont,"V")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qg;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Qg=x0[i]+Dx[i];
@@ -555,7 +555,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       } else {
         if (FlagLoadX0) {
           x0[i]=ACptr->V;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->V=x0[i]+Dx[i];
@@ -579,7 +579,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         }
       }
     }
-    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
+    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if(strpbrk(Eptr->Type,"PQNM")) {
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
@@ -587,7 +587,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         if(!strcmp(Eptr->Type,"RP")) {
           if (FlagLoadX0) {
             x0[i]=Eptr->Ang;
-            if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+            if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
           }
           if (FlagUpdateVar) {
             Eptr->Ang=x0[i]+Dx[i];
@@ -609,7 +609,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         else if(!strcmp(Eptr->Type,"RQ")){
           if (FlagLoadX0) {
             x0[i]=Eptr->Tap;
-            if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+            if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
           }
           if (FlagUpdateVar) {
             Eptr->Tap=x0[i]+Dx[i];
@@ -631,7 +631,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         else if(strpbrk(Eptr->Type,"MN")) {
           if (FlagLoadX0) {
             x0[i]=Eptr->Cvar;
-            if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+            if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
           }
           if (FlagUpdateVar) {
             Eptr->Cvar=x0[i]+Dx[i];
@@ -653,18 +653,18 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
         else {
           if (FlagLoadX0) {
             x0[i]=Eptr->Cvar;
-            if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+            if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
           }
           if (FlagUpdateVar) Eptr->Cvar=x0[i]+Dx[i];
         }
       }
     }
-    if (ACptr->Gen!=NULL) {
+    if (ACptr->Gen!=nullptr) {
       i=ACptr->Gen->Nvar+1;
       if (!strpbrk(ACptr->cont,"E")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Gen->Eq;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Gen->Eq=x0[i]+Dx[i];
@@ -688,7 +688,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       else {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qg;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Qg=x0[i]+Dx[i];
@@ -723,62 +723,62 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->dg;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->dg=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Vr;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Vr=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Vi;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Vi=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Ir;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Ir=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Ii;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Ii=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Vq;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Vq=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Vd;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Vd=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Iq;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Iq=x0[i]+Dx[i];
       i++;
       if (FlagLoadX0) {
         x0[i]=ACptr->Gen->Id;
-        if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+        if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
       }
       if (FlagUpdateVar) ACptr->Gen->Id=x0[i]+Dx[i];
       i++;
       if (!strpbrk(ACptr->cont,"I")) {
         if (FlagLoadX0) {
           x0[i]=ACptr->Gen->Ia;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Gen->Ia=x0[i]+Dx[i];
@@ -798,7 +798,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
       else {
         if (FlagLoadX0) {
           x0[i]=ACptr->Qg;
-          if (FlagMakeDxZero && (DxZero!=NULL && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=TRUE; NewNumEq--; }
+          if (FlagMakeDxZero && (DxZero!=nullptr && (DxZero[i] || (flagReduceSystem && x0[i]!=0 && CountSteps>=NumSteps && fabs(Dx[i]/x0[i])<ZeroDx)))) { Dx[i]=0;  DxZero[i]=true; NewNumEq--; }
         }
         if (FlagUpdateVar) {
           ACptr->Qg=x0[i]+Dx[i];
@@ -829,7 +829,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
     }
   }
 
-  if (FlagUpdateVar)  for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
+  if (FlagUpdateVar)  for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
     if(QRcont && strpbrk(ACptr->Type,"G") && strpbrk(ACptr->cont,"V")){
       i=ACvar[ACptr->Cont->N]+1;
       ACptr->Qg=(x0[i]+Dx[i])*ACptr->Kbg;
@@ -848,7 +848,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
   }
 
   i=NacVar;
-  for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
+  for(DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next){
     DCptrI=DCptrR->To;
     if(!strcmp(DCptrR->Type,"R")){
       for (j=1;j<=2;j++) {
@@ -941,7 +941,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
   }
                             /* FACTS */
   i=NacVar+11*Ndc/2;
-  for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+  for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
    i++; if(FlagLoadX0) x0[i]=SVCptr->Qsvc;
    if(FlagUpdateVar) SVCptr->Qsvc=x0[i]+Dx[i];
    i++; if(FlagLoadX0) x0[i]=SVCptr->Bv;
@@ -992,7 +992,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
   }
 
   i=NacVar+11*Ndc/2+3*Nsvc;
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
    i++; if(FlagLoadX0) x0[i]=TCSCptr->Ptcsc;
    if(FlagUpdateVar) TCSCptr->Ptcsc=x0[i]+Dx[i];
    i++; if(FlagLoadX0) x0[i]=TCSCptr->Qtcsck;
@@ -1023,7 +1023,7 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
   }
 
   i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
-  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
    Q=STATCOMptr->Q;
    if(!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")){
      i++; if(FlagLoadX0) x0[i]=STATCOMptr->I;
@@ -1089,11 +1089,11 @@ BOOLEAN FlagLoadX0,FlagUpdateVar,FlagMakeDxZero;
 
   if (consp>1) consp=1;
 
-  if(Ptr!=NULL) {
+  if(Ptr!=nullptr) {
     BlPtr=Ptr; DxiMax=fabs(valp/Dparam);
     if(ExistParameter('d')) fprintf(stderr,"%s %d %s Dx=%lf Max.dx_i=%lf\n",Ptr->Type,Ptr->Num,Ptr->Name,Dx[ACvar[Ptr->N]+1],DxiMax);
   }
-/*  if (FlagLoadX0 && ExistParameter('d') && DxZero!=NULL && NewNumEq<Jac->n1-1) {
+/*  if (FlagLoadX0 && ExistParameter('d') && DxZero!=nullptr && NewNumEq<Jac->n1-1) {
       for(i=1;i<=Jac->n1-1;i++) {if (DxZero[i]) fprintf(stderr,"%d ",i);}
       fprintf(stderr,"\n",i);
     } */

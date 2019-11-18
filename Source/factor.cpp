@@ -8,7 +8,7 @@
 #include "sparse.h"
 
 void InitializeWorkingRow(void);
-void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, BOOLEAN SetReset);
+void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, bool SetReset);
 void Normalize(INDEX I);
 int DoFactorization(void);
 int factor(SparseMatrix *Mptr);
@@ -38,7 +38,7 @@ void InitializeWorkingRow()
   for (I = 1; I <= Matrix2->n1; I++)
   {
     Ptr1 = Matrix2->RowHead[I];
-    while (Ptr1 != NULL)
+    while (Ptr1 != nullptr)
     {
       J = Ptr1->Col;
       if (I == J)
@@ -48,7 +48,7 @@ void InitializeWorkingRow()
   }
   for (I = 1; I <= Matrix2->n1; I++)
   {
-    if (DiagPtr2[I] == NULL)
+    if (DiagPtr2[I] == nullptr)
     {
       fprintf(stderr, "\nError: Diagonal element missing in the Jacobian.\n");
       exit(ERROREXIT);
@@ -57,10 +57,10 @@ void InitializeWorkingRow()
 }
 
 /* ========================== LoadUnloadWorkingRow ====================== */
-void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, BOOLEAN SetReset)
+void LoadUnloadWorkingRow1(SparseMatrixElement *Ptr2, bool SetReset)
 {
   /* BEGIN */
-  while (Ptr2 != NULL)
+  while (Ptr2 != nullptr)
   {
     if (SetReset)
     {
@@ -82,7 +82,7 @@ void Normalize(INDEX I)
   INDEX J;
   /* BEGIN */
   Ptr1 = Matrix2->RowHead[I];
-  while (Ptr1 != NULL)
+  while (Ptr1 != nullptr)
   {
     J = Ptr1->Col;
     if (J == I)
@@ -109,14 +109,14 @@ int DoFactorization()
   for (I = 1; I <= Matrix2->n1; I++)
   {
     Ptr1 = Matrix2->RowHead[I];
-    LoadUnloadWorkingRow1(Ptr1, TRUE);
-    while (Ptr1 != NULL)
+    LoadUnloadWorkingRow1(Ptr1, true);
+    while (Ptr1 != nullptr)
     {
       J = Ptr1->Col;
       if ((J < I) && (J <= Nstop2))
       {
         Ptr2 = Matrix2->RowHead[J];
-        while (Ptr2 != NULL)
+        while (Ptr2 != nullptr)
         {
           K = Ptr2->Col;
           if (K > J)
@@ -139,7 +139,7 @@ int DoFactorization()
         DiagPtr2[I] = Ptr1;
       Ptr1 = Ptr1->RowNext;
     }
-    LoadUnloadWorkingRow1(Matrix2->RowHead[I], FALSE);
+    LoadUnloadWorkingRow1(Matrix2->RowHead[I], false);
     DiagVal2 = DiagPtr2[I]->Value;
     /*
       EquateValues(DiagVal2,DiagPtr2[I]^.Value);

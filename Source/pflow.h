@@ -70,7 +70,7 @@ typedef struct ACbusData
   VALUETYPE Vmin;
   VALUETYPE Vlmax;
   VALUETYPE Vlmin;
-  BOOLEAN CheckVlimits;
+  bool CheckVlimits;
   VALUETYPE DPg;
   VALUETYPE DPG;
   VALUETYPE Qr;
@@ -182,7 +182,7 @@ typedef struct ElementData
   VALUETYPE Min;
   VALUETYPE Max;
   VALUETYPE Imax;
-  BOOLEAN CheckIlimits;
+  bool CheckIlimits;
   VALUETYPE val;
   struct ElementData *Next;
   struct ElementData *Prev;

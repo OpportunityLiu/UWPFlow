@@ -2,10 +2,10 @@
 
 #include "readdata.h"
 
-BOOLEAN ReadADDfile();
+bool ReadADDfile();
 #ifdef ANSIPROTO
-ACbusData *ACbusInList2(INDEX BusN,char *BusCode,INDEX N1,INDEX N2,BOOLEAN flagAddBus);
-ElementData *ElemInList2(ACbusData *From,ACbusData *To,INDEX N,char *Type,char *Ckt,BOOLEAN flagAddElement);
+ACbusData *ACbusInList2(INDEX BusN,char *BusCode,INDEX N1,INDEX N2,bool flagAddBus);
+ElementData *ElemInList2(ACbusData *From,ACbusData *To,INDEX N,char *Type,char *Ckt,bool flagAddElement);
 VALUETYPE GetVelevels(char *BusName);
 ElementList *TakeElemFromList(ElementList *ELptr,ElementData *Eptr);
 #else
@@ -22,37 +22,37 @@ extern FILE *InputDataFile;
 
 /* --------------- ACbusInList2  ------------------- */
 #ifdef ANSIPROTO
-ACbusData *ACbusInList2(INDEX BusN,char *BusCode,INDEX N1,INDEX N2,BOOLEAN flagAddBus)
+ACbusData *ACbusInList2(INDEX BusN,char *BusCode,INDEX N1,INDEX N2,bool flagAddBus)
 #else
 ACbusData *ACbusInList2(BusN,BusCode,N1,N2,flagAddBus)
 char *BusCode;
 INDEX BusN,N1,N2;
-BOOLEAN flagAddBus;
+bool flagAddBus;
 #endif
 {
   ACbusData *ptr,*ptrp,*ptrn;
   INDEX i;
 
   if((N1==0||N2==0) && flagAddBus) {
-    if(N1==0) ptrn=NULL;
+    if(N1==0) ptrn=nullptr;
     else ptrn=dataPtr->ACbus;
 #ifdef WINDOWS
     dataPtr->ACbus= new ACbusData;
 #else
     dataPtr->ACbus=(ACbusData *) malloc(sizeof(ACbusData));
-    if (dataPtr->ACbus==NULL) {
+    if (dataPtr->ACbus==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->ACbus;
-    if(ptrn!=NULL) ptrn->Prev=ptr;
-    ptrp=NULL;
+    if(ptrn!=nullptr) ptrn->Prev=ptr;
+    ptrp=nullptr;
   }
   else {
     ptr=dataPtr->ACbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(BusN==ptr->Num||(BusN==0 && !strncmp(ptr->Name,BusCode,strlen(BusCode)))) return(ptr);
       ptrp=ptr;
       ptr=ptr->Next;
@@ -62,14 +62,14 @@ BOOLEAN flagAddBus;
     ptr= new ACbusData;
 #else
     ptr=(ACbusData *) malloc(sizeof(ACbusData));
-    if (ptr==NULL) {
+    if (ptr==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptrp->Next=ptr;
-    ptrn=NULL;
+    ptrn=nullptr;
   }
   ptr->Num=0;
   strcpy(ptr->Name,BusCode);
@@ -79,11 +79,11 @@ BOOLEAN flagAddBus;
   strcpy(ptr->Zone,"");
   strcpy(ptr->Owner,"");
   strcpy(ptr->cont,"");
-  ptr->Area=NULL;
+  ptr->Area=nullptr;
   ptr->Ncont=0;
-  ptr->Reg=NULL;
-  ptr->Elem=NULL;
-  ptr->Gen=NULL;
+  ptr->Reg=nullptr;
+  ptr->Elem=nullptr;
+  ptr->Gen=nullptr;
   ptr->V=0;
   ptr->VCont=0;
   ptr->Ang=1000.;
@@ -120,7 +120,7 @@ BOOLEAN flagAddBus;
   ptr->Vmin=0;
   ptr->Vlmax=0;
   ptr->Vlmin=0;
-  ptr->CheckVlimits=TRUE;
+  ptr->CheckVlimits=true;
   ptr->Qr=0;
   ptr->Kbg=0;
   ptr->Kbg1=0;
@@ -129,12 +129,12 @@ BOOLEAN flagAddBus;
   ptr->valp=0;
   ptr->vals=0;
   ptr->valt=0;
-  ptr->DC=NULL;
-  ptr->SVC=NULL;      /* FACTS */
-  ptr->TCSC=NULL;     /* FACTS */
-  ptr->STATCOM=NULL;  /* FACTS */
-  ptr->Cont=NULL;
-  ptr->ContBus=NULL;
+  ptr->DC=nullptr;
+  ptr->SVC=nullptr;      /* FACTS */
+  ptr->TCSC=nullptr;     /* FACTS */
+  ptr->STATCOM=nullptr;  /* FACTS */
+  ptr->Cont=nullptr;
+  ptr->ContBus=nullptr;
   ptr->Next=ptrn;
   ptr->Prev=ptrp;
   return(ptr);
@@ -143,13 +143,13 @@ BOOLEAN flagAddBus;
 
 /* --------------- ElemInList2  ------------------- */
 #ifdef ANSIPROTO
-ElementData *ElemInList2(ACbusData *From,ACbusData *To,INDEX N,char *Type,char *Ckt,BOOLEAN flagAddElement)
+ElementData *ElemInList2(ACbusData *From,ACbusData *To,INDEX N,char *Type,char *Ckt,bool flagAddElement)
 #else
 ElementData *ElemInList2(From,To,N,Type,Ckt,flagAddElement)
 ACbusData *From,*To;
 INDEX N;
 char *Type,*Ckt;
-BOOLEAN flagAddElement;
+bool flagAddElement;
 #endif
 {
   ElementData *ptr,*ptrp;
@@ -160,7 +160,7 @@ BOOLEAN flagAddElement;
     dataPtr->Element= new ElementData;
 #else
     dataPtr->Element=(ElementData *) malloc(sizeof(ElementData));
-    if (dataPtr->Element==NULL){
+    if (dataPtr->Element==nullptr){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
       exit(ERROREXIT);
@@ -169,20 +169,20 @@ BOOLEAN flagAddElement;
     ptr=dataPtr->Element;
   }
   else {
-    for(ELptr=From->Elem;ELptr!=NULL;ELptr=ELptr->Next){
+    for(ELptr=From->Elem;ELptr!=nullptr;ELptr=ELptr->Next){
       ptr=ELptr->Eptr;
       if(((ptr->From==From && ptr->To==To) || (ptr->From==To && ptr->To==From))
          && strpbrk(ptr->Type,Type) && !strcmp(ptr->Ckt,Ckt) )  {
-         if (flagAddElement) return(NULL);
+         if (flagAddElement) return(nullptr);
          else                return(ptr);
       }
     }
-    if (!flagAddElement) return(NULL);
+    if (!flagAddElement) return(nullptr);
 #ifdef WINDOWS
     ptr= new ElementData;
 #else
     ptr=(ElementData *) malloc(sizeof(ElementData));
-    if (ptr==NULL) {
+    if (ptr==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
       exit(ERROREXIT);
@@ -194,8 +194,8 @@ BOOLEAN flagAddElement;
     ptrp->Prev=ptr;
     ptr->Next=ptrp;
     dataPtr->Element=ptr;
-  } else ptr->Next=NULL;
-  ptr->Prev=NULL;
+  } else ptr->Next=nullptr;
+  ptr->Prev=nullptr;
   ptr->From=From;
   ptr->To=To;
   From->Elem=(ElementList *) AddElemToList(From->Elem,ptr);
@@ -204,8 +204,8 @@ BOOLEAN flagAddElement;
   strcpy(ptr->Type,Type);
   strcpy(ptr->Zone,"");
   strcpy(ptr->Owner,"");
-  ptr->Area=NULL;
-  ptr->Meter=NULL;
+  ptr->Area=nullptr;
+  ptr->Meter=nullptr;
   ptr->Sec=0;
   ptr->G=0;
   ptr->B=0;
@@ -216,7 +216,7 @@ BOOLEAN flagAddElement;
   ptr->Tap=1;
   ptr->Taps=1;
   ptr->Ang=0;
-  ptr->Cont=NULL;
+  ptr->Cont=nullptr;
   ptr->Ncont=0;
   ptr->Cvar=0;
   strcpy(ptr->Ctype,"");
@@ -225,7 +225,7 @@ BOOLEAN flagAddElement;
   ptr->Min=0;
   ptr->Max=0;
   ptr->Imax=0;
-  ptr->CheckIlimits=TRUE;
+  ptr->CheckIlimits=true;
   return(ptr);
 }
 
@@ -242,18 +242,18 @@ void ReadITALY()
   VALUETYPE Vlevels[10],Vmax[10],Vmin[10],Vlmax,Vlmin;
   INDEX N,KVl;
   int i,j;
-  BOOLEAN EstimatePl=FALSE,EstimateQl=FALSE;
+  bool EstimatePl=false,EstimateQl=false;
 
 
   for(i=0;i<=2;strcpy(dataPtr->Title[i],"\n"),i++);
   for(i=0;i<10;Vlevels[i]=Vmax[i]=Vmin[i]=0,i++);
   Sn=100.0;
   RealParameter('$',&Sn,1.0,100000000.0);
-  ACptr=NULL;
+  ACptr=nullptr;
   i=0;
   for(;;){ /* Reading Loop */
     Line[79]=' ';
-    if (fgets(Line,BUFLEN,InputDataFile)==NULL){
+    if (fgets(Line,BUFLEN,InputDataFile)==nullptr){
       ErrorHalt("Missing F card.");
       break;
     }
@@ -284,7 +284,7 @@ void ReadITALY()
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptr=ACbusInList2(0,Code,Nac,1,true);
       if (ACptr->V>0) {
         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
         ErrorHalt("The AC bus was previously defined (check N cards).");
@@ -313,24 +313,24 @@ void ReadITALY()
       if (ACptr->V<=0) ACptr->V=1;
       ACptr->VCont=ACptr->V;
       if (Line[20]=='T') {
-        EstimatePl=TRUE;
+        EstimatePl=true;
         ACptrEstimate=ACptr;
         fprintf(stderr,"***Warning: The P load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
         fprintf(stderr,"            oncoming element data for this bus.\n");
       }
       else {
-        EstimatePl=FALSE;
+        EstimatePl=false;
         ACptr->Pl=GetValue(Line,14,6,0)/Sn;
 
       }
       if (Line[42]=='T') {
-        EstimateQl=TRUE;
+        EstimateQl=true;
         ACptrEstimate=ACptr;
         fprintf(stderr,"***Warning: The Q load at bus %d %s will be estimated from the\n",ACptr->N,ACptr->Name);
         fprintf(stderr,"            oncoming element data for this bus.\n");
       }
       else {
-        EstimateQl=FALSE;
+        EstimateQl=false;
         ACptr->Ql=GetValue(Line,36,6,0)/Sn;
       }
       ACptr->Vmax=GetValue(Line,57,3,0)/KV;
@@ -363,7 +363,7 @@ void ReadITALY()
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptr=ACbusInList2(0,Code,Nac,1,true);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
@@ -412,7 +412,7 @@ void ReadITALY()
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptr=ACbusInList2(0,Code,Nac,1,true);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
@@ -446,7 +446,7 @@ void ReadITALY()
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptr=ACbusInList2(0,Code,Nac,1,true);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
@@ -475,7 +475,7 @@ void ReadITALY()
       GetStr(Line,4,1,1,Zone);
       KVl=GetInt(Line,5,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptr=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptr=ACbusInList2(0,Code,Nac,1,true);
       if (ACptr->N==0) {
         Nac++;
         ACptr->Num=ACptr->N=Nac;
@@ -498,7 +498,7 @@ void ReadITALY()
       GetStr(Line,10,1,1,Zone);
       KVl=GetInt(Line,11,1);
       sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-      ACptrp=ACbusInList2(0,Code,Nac,1,TRUE);
+      ACptrp=ACbusInList2(0,Code,Nac,1,true);
       if (ACptrp->N==0) {
         Nac++;
         ACptrp->Num=ACptrp->N=Nac;
@@ -559,8 +559,8 @@ void ReadITALY()
       }
       GetStr(Line,13,1,1,Ckt);
       if(!strcmp(Ckt," ")) strcpy(Ckt,"0");
-      Eptr=ElemInList2(ACptr,ACptrp,NacEl,Type,Ckt,TRUE);
-      if (Eptr!=NULL) {
+      Eptr=ElemInList2(ACptr,ACptrp,NacEl,Type,Ckt,true);
+      if (Eptr!=nullptr) {
         Zb=KVp*KVp/Sn;
         R=GetValue(Line,45,7,5)/Zb;
         X=GetValue(Line,52,8,5)/Zb;
@@ -633,7 +633,7 @@ void ReadITALY()
   fclose(InputDataFile);
   MaxIter=50;
 
-  if (!ReadADDfile()) for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
+  if (!ReadADDfile()) for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
     Aptr=(AreaData *) AreaInList(0,ACptr->Zone,Narea);
     if (Aptr->N==0) {
       Narea++;
@@ -642,14 +642,14 @@ void ReadITALY()
     }
     ACptr->Area=Aptr;
     if (strpbrk(ACptr->Type,"S")) Aptr->Slack=Aptr->BSptr=ACptr;
-    else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==NULL) Aptr->Slack=Aptr->BSptr=ACptr;
+    else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==nullptr) Aptr->Slack=Aptr->BSptr=ACptr;
   }
 
 }
 
 
 /* --------------- ReadADDfile ------------------- */
-BOOLEAN ReadADDfile()
+bool ReadADDfile()
 /* Read ADD COLAS file with new voltage information, areas, and
    generator and load data for voltage collapse studies. */
 {
@@ -660,16 +660,16 @@ BOOLEAN ReadADDfile()
   ElementList *ELptr;
   ElementData *Eptr;
   VALUETYPE KV,KVp,KVs,KVmax,KVmin,val,Tap,Taps,Tmax,Tmin,Q,Qmax,Qmin,Pn,Qn,Sum=0;
-  BOOLEAN flagAreas=FALSE,flagPrint=TRUE,flagScards=FALSE;
+  bool flagAreas=false,flagPrint=true,flagScards=false;
   INDEX N,NJcard=0,N2SVCarea=0,KVl;
 
 
 
   Name=NameParameter('6');
-  if (!NullName(Name) && (InputFile=OpenInput(Name))!=NULL) {
+  if (!NullName(Name) && (InputFile=OpenInput(Name))!=nullptr) {
     LineNum=0;
     for (;;) {
-      if (fgets(Line,BUFLEN,InputFile)==NULL) break;
+      if (fgets(Line,BUFLEN,InputFile)==nullptr) break;
       LineNum++;
 
       /* --------------- Comments ----------------------------- */
@@ -681,8 +681,8 @@ BOOLEAN ReadADDfile()
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
         sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-        ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
-        if (ACptr==NULL) {
+        ACptr=ACbusInList2(0,Code,Nac,1,false);
+        if (ACptr==nullptr) {
           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           fprintf(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
           fprintf(stderr,"            This line in the ADD file will be ignored.\n");
@@ -706,7 +706,7 @@ BOOLEAN ReadADDfile()
             }
             val=KV*KV/(KVp*KVp);
             ACptr->B=ACptr->B*val;
-            for(ELptr=ACptr->Elem; ELptr!=NULL; ELptr=ELptr->Next) {
+            for(ELptr=ACptr->Elem; ELptr!=nullptr; ELptr=ELptr->Next) {
               Eptr=ELptr->Eptr;
               if (Eptr->To==ACptr) {
                 val=KV*KV/(KVp*KVp);
@@ -756,18 +756,18 @@ BOOLEAN ReadADDfile()
           if (strpbrk(Code,"P") && !strcmp(ACptr->Type,"B")) {
             strcpy(ACptr->Type,"BC");
             ACptr->VCont=ACptr->V;
-            flag2Vcontrol=TRUE;
+            flag2Vcontrol=true;
           }
           else if (strpbrk(Code,"V,S") && strpbrk(ACptr->Type,"Q,S")) {
             if (!strcmp(ACptr->Type,"BQ")) strcpy(ACptr->Type,"BG");
             else                           strcpy(ACptr->Type,"BGS");
-            flag2Vcontrol=TRUE;
+            flag2Vcontrol=true;
           }
           ACptr->Qn=ACptr->Ql;
           ACptr->b=GetValue(Line,71,7,0);
           ACptr->Pn=ACptr->Pl;
           ACptr->a=GetValue(Line,81,7,0);
-          if (ACptr->a!=0 || ACptr->b!=0) flagVloads=TRUE;
+          if (ACptr->a!=0 || ACptr->b!=0) flagVloads=true;
         }
       }
       /* --------------- Generators --------------------------- */
@@ -776,7 +776,7 @@ BOOLEAN ReadADDfile()
            fprintf(stderr,"***Warning: The program ignores the G and H cards, as capability curves\n");
            fprintf(stderr,"            are implemented here through direct limits on Sg, Pg, Qg,\n");
            fprintf(stderr,"            Ef and Ia (see -3 option).\n");
-           flagPrint=FALSE;
+           flagPrint=false;
         }
       }
 
@@ -786,16 +786,16 @@ BOOLEAN ReadADDfile()
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
         sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-        ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
+        ACptr=ACbusInList2(0,Code,Nac,1,false);
         N=GetInt(Line,7,3);
         GetStr(Line,10,1,1,Zone);
         KVl=GetInt(Line,11,1);
         sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-        ACptrp=ACbusInList2(0,Code,Nac,1,FALSE);
+        ACptrp=ACbusInList2(0,Code,Nac,1,false);
         GetStr(Line,13,1,1,Ckt);
         if(!strcmp(Ckt," ")) strcpy(Ckt,"0");
-        Eptr=ElemInList2(ACptr,ACptrp,NacEl,"R,T",Ckt,FALSE);
-        if (Eptr!=NULL) {
+        Eptr=ElemInList2(ACptr,ACptrp,NacEl,"R,T",Ckt,false);
+        if (Eptr!=nullptr) {
           KV=ACptr->KV;
           KVp=ACptrp->KV;
           if (KV>KVp) Taps=KVp/KV;
@@ -831,7 +831,7 @@ BOOLEAN ReadADDfile()
               NregV--;
               strcpy(Eptr->Type,"T");
               ACptrs->Reg=TakeElemFromList(ACptrs->Reg,Eptr);
-              Eptr->Cont=NULL;
+              Eptr->Cont=nullptr;
             }
             else {
               if (N>0) {
@@ -876,8 +876,8 @@ BOOLEAN ReadADDfile()
         GetStr(Line,4,1,1,Zone);
         KVl=GetInt(Line,5,1);
         sprintf(Code,"%3d%1s%1d",N,Zone,KVl);
-        ACptr=ACbusInList2(0,Code,Nac,1,FALSE);
-        if (ACptr==NULL) {
+        ACptr=ACbusInList2(0,Code,Nac,1,false);
+        if (ACptr==nullptr) {
           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
           fprintf(stderr,"***Warning: This bus has not been defined on the main input data file.\n");
           fprintf(stderr,"            This line in the ADD file will be ignored.\n");
@@ -907,7 +907,7 @@ BOOLEAN ReadADDfile()
                 strcpy(ACptr->Type,"BQ");
                 Nvolt++;
               }
-              ACptr->Cont=NULL;
+              ACptr->Cont=nullptr;
               strcpy(ACptr->cont,"V");
             } else {
               fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -931,18 +931,18 @@ BOOLEAN ReadADDfile()
         sprintf(Zone,"%2d",NJcard);
         GetStr(Line,1,16,16,Code);
         val=GetValue(Line,34,4,0)/100.0;
-        for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) if (ACptr->Area==NULL) {
+        for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) if (ACptr->Area==nullptr) {
           if (!strcmp(ACptr->Zone,Zone)) {
             Aptr=(AreaData *) AreaInList(0,Code,Narea);
             if (Aptr->N==0) {
               Narea++;
               Aptr->N=Narea;
               strcpy(Aptr->Zone[1],Zone);
-              flagAreas=TRUE;
+              flagAreas=true;
             }
             ACptr->Area=Aptr;
             if (strpbrk(ACptr->Type,"S")) Aptr->Slack=Aptr->BSptr=ACptr;
-            else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==NULL) Aptr->Slack=Aptr->BSptr=ACptr;
+            else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==nullptr) Aptr->Slack=Aptr->BSptr=ACptr;
             Pn=val*ACptr->Pl;
             Qn=val*ACptr->Ql;
             ACptr->Pnl=Pn;
@@ -954,15 +954,15 @@ BOOLEAN ReadADDfile()
 
       /* --------------- Secondary Voltage Control   ----------- */
       else if (Line[79]=='S') {
-        flagScards=TRUE;
+        flagScards=true;
         N2SVCarea++;
-        ACptrp=NULL;
+        ACptrp=nullptr;
         GetStr(Line,1,16,16,Code);
-        for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
+        for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) {
           if (ACptr->Nc==N2SVCarea  && strpbrk(ACptr->Type,"C")) {
-            if (ACptrp==NULL) {
+            if (ACptrp==nullptr) {
               ACptrp=ACptr;
-              ACptrp->Cont=NULL;
+              ACptrp->Cont=nullptr;
               ACptrp->VCont=ACptr->V;
             }
             else {
@@ -972,8 +972,8 @@ BOOLEAN ReadADDfile()
             }
           }
         }
-        if (ACptrp!=NULL) {
-          for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
+        if (ACptrp!=nullptr) {
+          for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) {
             if (ACptr->Nc==N2SVCarea && strpbrk(ACptr->Type,"G")) {
               ACptr->Cont=ACptrp;
               ACptrp->Kbg++;
@@ -1002,21 +1002,21 @@ BOOLEAN ReadADDfile()
 
 
   if (flag2Vcontrol && !flagScards ) {
-    for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
+    for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) {
       if (!strcmp(ACptr->Type,"BC"))       strcpy(ACptr->Type,"B");
       else if (!strcmp(ACptr->Type,"BG"))  strcpy(ACptr->Type,"BQ");
       else if (!strcmp(ACptr->Type,"BGS")) strcpy(ACptr->Type,"BS");
     }
-    flag2Vcontrol=FALSE;
+    flag2Vcontrol=false;
   }
 
 
-  if (Sum!=0) flagKdirection=TRUE;
+  if (Sum!=0) flagKdirection=true;
   else {
     if (ExistParameter('v')) {
       fprintf(stderr,"ERROR: The -v option will yield a singular Jacobian in voltage collapse\n");
       fprintf(stderr,"       studies since Pnl, Qnl, Pzl, and Qzl are zero in all load buses.\n");
-      InputError=TRUE;
+      InputError=true;
     } else if (ExistParameter('L')) {
       fprintf(stderr,"***Warning: The loading factor lambda will not yield different results\n");
       fprintf(stderr,"            from the base case since Pnl, Qnl, Pzl, and Qzl are zero\n");
@@ -1025,18 +1025,18 @@ BOOLEAN ReadADDfile()
       fprintf(stderr,"ERROR: The Homotopy Continuation Method will not yield different results\n");
       fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in all\n");
       fprintf(stderr,"       load buses.\n");
-      InputError=TRUE;
+      InputError=true;
     } else if (ExistParameter('C')) {
       fprintf(stderr,"ERROR: The Point of Collapse Method will not yield different results\n");
       fprintf(stderr,"       from the base case since Pnl, Qnl, Pzl, and Qzl are zero in\n");
       fprintf(stderr,"       all load buses.\n");
-      InputError=TRUE;
+      InputError=true;
     }
   }
 
   if (flagAreas) {
-    for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
-      if (ACptr->Area==NULL && !strcmp(ACptr->Zone," 0")) {
+    for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) {
+      if (ACptr->Area==nullptr && !strcmp(ACptr->Zone," 0")) {
         Aptr=(AreaData *) AreaInList(0,"REST",Narea);
         if (Aptr->N==0) {
           Narea++;
@@ -1045,9 +1045,9 @@ BOOLEAN ReadADDfile()
         }
         ACptr->Area=Aptr;
         if (strpbrk(ACptr->Type,"S")) Aptr->Slack=Aptr->BSptr=ACptr;
-        else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==NULL) Aptr->Slack=Aptr->BSptr=ACptr;
+        else if (strpbrk(ACptr->Type,"Q") && Aptr->Slack==nullptr) Aptr->Slack=Aptr->BSptr=ACptr;
       }
-      else if (ACptr->Area==NULL && ACptr->SVC!=NULL) {
+      else if (ACptr->Area==nullptr && ACptr->SVC!=nullptr) {
         Eptr=ACptr->Elem->Eptr;
         if (Eptr->From==ACptr) ACptrp=Eptr->To;
         else                   ACptrp=Eptr->From;
@@ -1071,14 +1071,14 @@ ElementData *Eptr;
 #endif
 {
   ElementList *ptr,*prevptr,*firstptr,*nextptr;
-  BOOLEAN flag;
+  bool flag;
 
   firstptr=prevptr=ptr=ELptr;
-  while (ptr!=NULL) {
+  while (ptr!=nullptr) {
     nextptr=ptr->Next;
     if (ptr->Eptr==Eptr) {
-      if (ptr==firstptr) flag=TRUE;
-      else               flag=FALSE;
+      if (ptr==firstptr) flag=true;
+      else               flag=false;
 #ifdef WINDOWS
       delete ptr;
 #else

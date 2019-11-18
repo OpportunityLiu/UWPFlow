@@ -46,7 +46,7 @@ int DetSign;
     I = 1;
     while (I <= Matrix1->n1) {
       Ptr1 = Matrix1->RowHead[I];
-      while (Ptr1 != NULL) {
+      while (Ptr1 != nullptr) {
         J = Ptr1->Col;
         if ((J < I) && (J <= Nstop1)) {
           FullVector[I] = FullVector[I] - FullVector[J] * Ptr1->Value;
@@ -80,7 +80,7 @@ int DetSign;
     I = Nstop1;
     while (I > 0) {
       Ptr1 = Matrix1->RowHead[I];
-      while (Ptr1 != NULL) {
+      while (Ptr1 != nullptr) {
         J = Ptr1->Col;
         if (J > I) {
           FullVector[I] = FullVector[I] - FullVector[J] * Ptr1->Value;
@@ -105,10 +105,10 @@ int DetSign;
     DiagPtr = (SparseMatrixElement **)
               calloc((Matrix1->n1+1),sizeof(SparseMatrixElement *));
 #endif
-    for(i=0;i<Matrix1->n1+1;i++) DiagPtr[i]=NULL;
+    for(i=0;i<Matrix1->n1+1;i++) DiagPtr[i]=nullptr;
     for (i=1; i<=Matrix1->n1; i++) {
       Ptr1 = Matrix1->RowHead[i];
-      while ((Ptr1 != NULL) && (DiagPtr[i] == NULL)) {
+      while ((Ptr1 != nullptr) && (DiagPtr[i] == nullptr)) {
         if (Ptr1->Col == Ptr1->Row) DiagPtr[i] = Ptr1;
         Ptr1 = Ptr1->RowNext;
       }
@@ -137,7 +137,7 @@ IntegerVector *PermR,*PermC;
   FullVector= new VALUETYPE[Nstop1+1];
 #else
   FullVector=(VALUETYPE *) malloc((Nstop1+1)*sizeof(VALUETYPE));
-  if (FullVector==NULL) {ErrorHalt("Insufficient memory for solution vector"); exit(ERROREXIT);}
+  if (FullVector==nullptr) {ErrorHalt("Insufficient memory for solution vector"); exit(ERROREXIT);}
 #endif
   for (i=1;i<=Nstop1;i++) FullVector[i]=Vptr[PermR->p[i]];
   ForwardSubstitution();

@@ -21,7 +21,7 @@ void WriteJac(void)
   FILE *OutFile, *OutFilep;
   int i, j, k, l;
   INDEX I, J, N, Nvar;
-  BOOLEAN flag = FALSE;
+  bool flag = false;
   SVCbusData *SVCptr;         /* FACTS */
   TCSCbusData *TCSCptr;       /* FACTS */
   STATCOMbusData *STATCOMptr; /* FACTS */
@@ -33,12 +33,12 @@ void WriteJac(void)
   if (NullName(Namebase))
     return;
   if (ExistParameter('J') && Bl)
-    for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
     {
       if (ACptr->Num == Bl)
       {
         strcpy(ACptr->Type, "B");
-        if (ACptr->Area != NULL && ACptr->Area->Slack == ACptr)
+        if (ACptr->Area != nullptr && ACptr->Area->Slack == ACptr)
           strcat(ACptr->Type, "A");
         Bl = 0;
         ACptr->Cont = ACptr;
@@ -50,24 +50,24 @@ void WriteJac(void)
   RowPer = NewRow;
   ColPer = NewCol;
   Nvar = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /*  FACTS  */
-  ACFunJac(Jac, NULL, TRUE, TRUE, FALSE);
-  DCFunJac(Jac, TRUE, TRUE);
-  SVCFunJac(Jac, TRUE, TRUE);     /*  FACTS  */
-  TCSCFunJac(Jac, TRUE, TRUE);    /*  FACTS  */
-  STATCOMFunJac(Jac, TRUE, TRUE); /*  FACTS  */
+  ACFunJac(Jac, nullptr, true, true, false);
+  DCFunJac(Jac, true, true);
+  SVCFunJac(Jac, true, true);     /*  FACTS  */
+  TCSCFunJac(Jac, true, true);    /*  FACTS  */
+  STATCOMFunJac(Jac, true, true); /*  FACTS  */
   if (flagH)
   {
     Nvar++;
-    HFunJac(TRUE, TRUE, NULL, Dx);
+    HFunJac(true, true, nullptr, Dx);
   }
   else if (flag)
   {
     Nvar = 2 * Nvar + 1;
-    ACFunHes(TRUE, TRUE);
-    DCFunHes(TRUE, TRUE);
-    SVCFunHes(TRUE, TRUE);     /* FACTS  */
-    TCSCFunHes(TRUE, TRUE);    /* FACTS  */
-    STATCOMFunHes(TRUE, TRUE); /* FACTS  */
+    ACFunHes(true, true);
+    DCFunHes(true, true);
+    SVCFunHes(true, true);     /* FACTS  */
+    TCSCFunHes(true, true);    /* FACTS  */
+    STATCOMFunHes(true, true); /* FACTS  */
   }
   SortRowsColumns(Jac);
   strcpy(Name, Namebase);
@@ -76,7 +76,7 @@ void WriteJac(void)
   fprintf(OutFile, "%d %d\n", Nvar, Nvar);
   for (i = 1; i <= Nvar; i++)
   {
-    for (Jptr = Jac->RowHead[i]; Jptr != NULL; Jptr = Jptr->RowNext)
+    for (Jptr = Jac->RowHead[i]; Jptr != nullptr; Jptr = Jptr->RowNext)
       fprintf(OutFile, "%4d %4d %-11.5g\n", Jptr->Row, Jptr->Col, Jptr->Value);
   }
   fprintf(OutFile, "%4d %4d %-11.5g\n", 0, 0, 0.);
@@ -89,9 +89,9 @@ void WriteJac(void)
   OutFilep = OpenOutput(Name);
   fprintf(OutFile, "%d 1\n", Nvar);
   fprintf(OutFilep, "%d 1\n", Nvar);
-  for (i = 0, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (i = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
-    if (ACptr->Cont != NULL)
+    if (ACptr->Cont != nullptr)
     {
       if (strpbrk(ACptr->Type, "S"))
       {
@@ -116,7 +116,7 @@ void WriteJac(void)
       fprintf(OutFile, "%4d %8s %-11.5g\n", ++i, str, ACptr->Ang);
       sprintf(str, "dP%-d", ACptr->Num);
       fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
-      for (Lptr = ACptr->ContBus; Lptr != NULL; Lptr = Lptr->Next)
+      for (Lptr = ACptr->ContBus; Lptr != nullptr; Lptr = Lptr->Next)
       {
         ACptrp = Lptr->AC;
         if (strpbrk(ACptrp->cont, "V"))
@@ -133,7 +133,7 @@ void WriteJac(void)
       fprintf(OutFile, "%4d %8s %-11.5g\n", ++i, str, ACptr->Ang);
       sprintf(str, "dP%-d", ACptr->Num);
       fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         I = Eptr->From->Num;
@@ -205,7 +205,7 @@ void WriteJac(void)
       fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
     }
     if (PQcont)
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         if (strpbrk(Eptr->Type, "PQNM"))
@@ -250,7 +250,7 @@ void WriteJac(void)
           }
         }
       }
-    if (ACptr->Gen != NULL)
+    if (ACptr->Gen != nullptr)
     {
       i = ACptr->Gen->Nvar;
       sprintf(str, "dPg%-d", ACptr->Num);
@@ -316,7 +316,7 @@ void WriteJac(void)
       }
     }
   }
-  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
   {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R"))
@@ -382,7 +382,7 @@ void WriteJac(void)
   }
 
   /*   FACTS   */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != NULL; SVCptr = SVCptr->Next)
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next)
   {
     k++;
     l = 0;
@@ -412,7 +412,7 @@ void WriteJac(void)
     fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
   }
 
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != NULL; TCSCptr = TCSCptr->Next)
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next)
   {
     k++;
     l = 0;
@@ -452,7 +452,7 @@ void WriteJac(void)
     sprintf(str, "Ftcsc%-d_%-d", k, ++l);
     fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
   }
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != NULL; STATCOMptr = STATCOMptr->Next)
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next)
   {
     k++;
     l = 0;
@@ -511,7 +511,7 @@ void WriteJac(void)
   else if (flag)
   {
     N = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
-    for (i = N, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+    for (i = N, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
     {
       i++;
       sprintf(str, "w%-d", i - N);
@@ -532,7 +532,7 @@ void WriteJac(void)
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
       if (PQcont)
-        for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+        for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
         {
           Eptr = ELptr->Eptr;
           if (strpbrk(Eptr->Type, "PQNM"))
@@ -565,7 +565,7 @@ void WriteJac(void)
             }
           }
         }
-      if (ACptr->Gen != NULL)
+      if (ACptr->Gen != nullptr)
       {
         i++;
         sprintf(str, "w%-d", i - N);
@@ -624,7 +624,7 @@ void WriteJac(void)
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+    for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
     {
       if (!strcmp(DCptrR->Type, "R"))
       {
@@ -640,7 +640,7 @@ void WriteJac(void)
     }
 
     /* FACTS */
-    for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != NULL; SVCptr = SVCptr->Next)
+    for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next)
     {
       for (k++, l = 1; l <= 3; l++)
       {
@@ -651,7 +651,7 @@ void WriteJac(void)
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != NULL; TCSCptr = TCSCptr->Next)
+    for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next)
     {
       for (k++, l = 1; l <= 7; l++)
       {
@@ -662,7 +662,7 @@ void WriteJac(void)
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != NULL; STATCOMptr = STATCOMptr->Next)
+    for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next)
     {
       for (k++, l = 1; l <= 7; l++)
       {
@@ -699,7 +699,7 @@ VALUETYPE *vec;
   FILE *OutFile;
   INDEX i, j, I, J, m, MaxBus, MaxNum, Nvar;
   VALUETYPE val = 0, valMax = -0.1;
-  BOOLEAN flagTFbus = FALSE;
+  bool flagTFbus = false;
 
   strcpy(Namebase, NameParameter('0'));
   if (NullName(Namebase))
@@ -710,20 +710,20 @@ VALUETYPE *vec;
     TFbus = IntegerParameter('1', 0, 1, 9999);
   Nvar = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
   for (i = 1; i <= Nvar + 1; i++)
-    for (Jptr = Jac->RowHead[i]; Jptr != NULL; Jptr->Value = 0, Jptr = Jptr->RowNext)
+    for (Jptr = Jac->RowHead[i]; Jptr != nullptr; Jptr->Value = 0, Jptr = Jptr->RowNext)
       ;
-  ACFunJac(Jac, NULL, FALSE, TRUE, FALSE);
-  DCFunJac(Jac, FALSE, TRUE);
-  SVCFunJac(Jac, FALSE, TRUE);     /*  FACTS  */
-  TCSCFunJac(Jac, FALSE, TRUE);    /*  FACTS  */
-  STATCOMFunJac(Jac, FALSE, TRUE); /*  FACTS  */
+  ACFunJac(Jac, nullptr, false, true, false);
+  DCFunJac(Jac, false, true);
+  SVCFunJac(Jac, false, true);     /*  FACTS  */
+  TCSCFunJac(Jac, false, true);    /*  FACTS  */
+  STATCOMFunJac(Jac, false, true); /*  FACTS  */
   fprintf(OutFile, "lambda(%d)=%-10.6g;\n", count, lambda + lambda_o);
   fprintf(OutFile, "\n");
   fprintf(OutFile, "%s Full System Jacobian:\n", "%%");
   fprintf(OutFile, "N=%d;\nJ=zeros(N);\n", Nvar);
   for (i = 1; i <= Nvar + 1; i++)
   {
-    for (Jptr = Jac->RowHead[i]; Jptr != NULL; Jptr = Jptr->RowNext)
+    for (Jptr = Jac->RowHead[i]; Jptr != nullptr; Jptr = Jptr->RowNext)
     {
       I = Jptr->Row;
       if (OldRow->p[I] != 0)
@@ -740,14 +740,14 @@ VALUETYPE *vec;
   fprintf(OutFile, "%s Voltage (load) Buses:\n", "%%");
   fprintf(OutFile, "Vars=[(1:N)' zeros(N,1) zeros(N,1) ones(N,1)];\n");
   fprintf(OutFile, "clear Buses Vbuses\n");
-  for (m = 0, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (m = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
     i = ACvar[ACptr->N];
     j = i + 1;
     fprintf(OutFile, "Vars(%d,2)=%d; Vars(%d,2)=%d;\n", i, -ACptr->Num, j, ACptr->Num);
     if (!strpbrk(ACptr->Type, "S"))
       fprintf(OutFile, "Vars(%d,3)=1;\n", i);
-    if ((ACptr->Cont != NULL && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
+    if ((ACptr->Cont != nullptr && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
         (!Rcont && strpbrk(ACptr->Type, "T")) ||
         (!QRcont && strpbrk(ACptr->Type, "C")))
     {
@@ -760,7 +760,7 @@ VALUETYPE *vec;
         val = fabs(vec[i]);
         if (TFbus == ACptr->Num && !flagTFbus)
         {
-          flagTFbus = TRUE;
+          flagTFbus = true;
           TFnum = i;
           strcpy(TFname, ACptr->Name);
         }

@@ -34,7 +34,7 @@ void SVCinit()
  INDEX i,j;
  VALUETYPE Vc,V,Vref,Xsl,Bv,Xl,Xc,Be,Ssvc,I,alpha,x,dx,dxp,k,f,df;
 
- for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next) {
+ for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next) {
    Vc=SVCptr->Ctrl->V;
    V=SVCptr->From->V;
    Vref=SVCptr->Vref;
@@ -110,7 +110,7 @@ void TCSCinit()
  VALUETYPE Stcsc,Vn,Max,Ctrl,Kf;
  VALUETYPE Vk,thk,Vm,thm,Xc,Xl,Ptcsc,Qtcsck,Qtcscm,Be,alpha,Itcsc,delta_t;
 
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next) {
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next) {
   /* --------------- Initialize the TCSC system variables ---------------------- */
     if(TCSCptr->To->Ang==0.0)TCSCptr->To->Ang=0.01;
     Vk=TCSCptr->From->V;
@@ -197,7 +197,7 @@ void STATCOMinit()
  STATCOMbusData *STATCOMptr;
  VALUETYPE Sb,Vco,Vo,deltao,Io,thetao,Imin,Imax,R,G,B,Gc,Xsl,Ko,Vdco,Vref,Cref,Qo;
 
- for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next) {
+ for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next) {
     Sb=STATCOMptr->MVA;
     Vo=STATCOMptr->From->V;
     deltao=STATCOMptr->From->Ang;

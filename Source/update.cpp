@@ -10,8 +10,8 @@
 #include "pflow.h"
 
 #ifdef ANSIPROTO
-void UpdateACvar(VALUETYPE cons,INDEX j,BOOLEAN Limits,BOOLEAN Recover);
-void UpdateDCvar(VALUETYPE cons,INDEX j,BOOLEAN Limits);
+void UpdateACvar(VALUETYPE cons,INDEX j,bool Limits,bool Recover);
+void UpdateDCvar(VALUETYPE cons,INDEX j,bool Limits);
 #else
 void UpdateACvar();
 void UpdateDCvar();
@@ -26,19 +26,19 @@ extern VALUETYPE *dx,*dF,tol,Tol,Sn,lambda,*x0;
 extern VALUETYPE K1,K2,MaxdFi,alpha;
 extern IntegerVector *NewRow,*OldRow,*NewCol,*OldCol,*RowPartition,*ColPartition;
 extern IntegerVector *RowPer,*ColPer;
-extern BOOLEAN Acont,PQcont,QRcont,Rcont,Xcont,
+extern bool Acont,PQcont,QRcont,Rcont,Xcont,
                PQlim,Tlim,Qlim,Vlim,Elim,Ilim,Zlim,Xlim,
                flagH,flagPoC,flagL,flagR,flagBS,flagPgMax,flagSmax;
 
 
 /* -----------------UpdateACvar ---------------------------- */
 #ifdef ANSIPROTO
-void UpdateACvar(VALUETYPE cons,INDEX j,BOOLEAN Limits,BOOLEAN Recover)
+void UpdateACvar(VALUETYPE cons,INDEX j,bool Limits,bool Recover)
 #else
 void UpdateACvar(cons,j,Limits,Recover)
 VALUETYPE cons;
 INDEX j;
-BOOLEAN Limits,Recover;
+bool Limits,Recover;
 #endif
 {
   ACbusData *ACptr,*ACptrp,*BEptr;
@@ -48,7 +48,7 @@ BOOLEAN Limits,Recover;
   VALUETYPE Pg,DPg,Qm,Pmax,PgMax;
   INDEX k;
 
-  for(ALptr=dataPtr->KGbus;ALptr!=NULL;ALptr=ALptr->Next) {
+  for(ALptr=dataPtr->KGbus;ALptr!=nullptr;ALptr=ALptr->Next) {
     ACptr=ALptr->AC;
     k=ACvar[ACptr->N];
     if (strpbrk(ACptr->Type,"S")) {
@@ -57,8 +57,8 @@ BOOLEAN Limits,Recover;
     }
     else if (Acont) ACptr->Kg=ACptr->Kg+cons*dx[k+2];
   }
-  for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
-    if (ACptr->Area!=NULL) BEptr=ACptr->Area->Slack;
+  for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
+    if (ACptr->Area!=nullptr) BEptr=ACptr->Area->Slack;
     DPg=ACptr->DPg;
     if (flagBS) {
       if (ACptr!=BEptr) Pg=ACptr->Pg+lambda*DPg;
@@ -254,7 +254,7 @@ BOOLEAN Limits,Recover;
       k=ACvar[ACptr->N];
       ACptr->Ang=ACptr->Ang+cons*dx[k];
       if (Rcont) {
-        for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
+        for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next){
           Eptr=ELptr->Eptr;
           if (!strcmp(Eptr->Type,"R")) {
             if (j==0) Eptr->val=Eptr->Tap;
@@ -271,7 +271,7 @@ BOOLEAN Limits,Recover;
         else ACptr->V=ACptr->val;
       }
     }
-    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
+    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if(strpbrk(Eptr->Type,"PQMN")) {
         k=ACvar[ACptr->N]+1;
@@ -301,7 +301,7 @@ BOOLEAN Limits,Recover;
         else Eptr->Cvar=Eptr->Cvar+cons*dx[k];
       }
     }
-    if (ACptr->Gen!=NULL) {
+    if (ACptr->Gen!=nullptr) {
       k=ACptr->Gen->Nvar;
       if (!strpbrk(ACptr->cont,"E")) {
         if (j==0) ACptr->vals=ACptr->Gen->Eq;
@@ -357,7 +357,7 @@ BOOLEAN Limits,Recover;
     }
   }
 
-  for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next) {
+  for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next) {
     if (QRcont && strpbrk(ACptr->Type,"G")  && strpbrk(ACptr->cont,"V")){
       k=ACvar[ACptr->Cont->N];
       if (ACptr->Cont->Qr>=0) ACptr->Kbg=ACptr->Kbg1;
@@ -375,19 +375,19 @@ BOOLEAN Limits,Recover;
 
 /* -----------------UpdateDCvar ---------------------------- */
 #ifdef ANSIPROTO
-void UpdateDCvar(VALUETYPE cons,INDEX j,BOOLEAN Limits)
+void UpdateDCvar(VALUETYPE cons,INDEX j,bool Limits)
 #else
 void UpdateDCvar(cons,j,Limits)
 VALUETYPE cons;
 INDEX j;
-BOOLEAN Limits;
+bool Limits;
 #endif
 {
   DCbusData *DCptrR,*DCptrI,*DCptr;
   INDEX i,k,m;
 
   k=NacVar;
-  for (DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
+  for (DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next){
     DCptrI=DCptrR->To;
     if (!strcmp(DCptrR->Type,"R")){
       for (m=1;m<=2;m++) {

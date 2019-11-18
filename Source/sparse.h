@@ -30,11 +30,11 @@ void ErrorHalt(char *Msg);
 void	TransposeMatrix(SparseMatrix *Matrix);
 struct IntegerVector *AllocatePermutation(INDEX Size);
 void SortRowsColumns(SparseMatrix *Matrix);
-BOOLEAN NearZero(ELEMENTVALUETYPE Value);
+bool NearZero(ELEMENTVALUETYPE Value);
 #else
 void ErrorHalt();
 void	TransposeMatrix();
 struct IntegerVector *AllocatePermutation();
 void SortRowsColumns();
-BOOLEAN NearZero();
+bool NearZero();
 #endif

@@ -8,7 +8,7 @@
 void InitializeLoad(void);
 void PrintLeftEvector(INDEX N, FILE *Out);
 
-extern BOOLEAN flagVloads;
+extern bool flagVloads;
 
 /* -----------------UpdateEvector ---------------------------- */
 void UpdateEvector(VALUETYPE cons)
@@ -23,14 +23,7 @@ void UpdateEvector(VALUETYPE cons)
 }
 
 /* ----------------- Evector ---------------------------- */
-#ifdef ANSIPROTO
-int Evector(int M, int iter, VALUETYPE tol, BOOLEAN RightEvector, VALUETYPE *EigenValue)
-#else
-int Evector(M, iter, tol, RightEvector, EigenValue) int M, iter;
-VALUETYPE tol;
-BOOLEAN RightEvector;
-VALUETYPE *EigenValue;
-#endif
+int Evector(int M, int iter, VALUETYPE tol, bool RightEvector, VALUETYPE *EigenValue)
 /* Find an inital guess for the left eigenvector. */
 {
   AreaData *Aptr;
@@ -47,15 +40,15 @@ VALUETYPE *EigenValue;
   OldRow->N = OldCol->N = N;
   RowPartition->N = ColPartition->N = 1;
   RowPartition->p[1] = ColPartition->p[1] = N;
-  Aptr = ACFunJac(Jac, &PgMax, FALSE, TRUE, FALSE);
-  if (DCFunJac(Jac, FALSE, TRUE))
+  Aptr = ACFunJac(Jac, &PgMax, false, true, false);
+  if (DCFunJac(Jac, false, true))
     return (-iter);
-  SVCFunJac(Jac, FALSE, TRUE);     /*  FACTS  */
-  TCSCFunJac(Jac, FALSE, TRUE);    /*  FACTS  */
-  STATCOMFunJac(Jac, FALSE, TRUE); /*  FACTS  */
+  SVCFunJac(Jac, false, true);     /*  FACTS  */
+  TCSCFunJac(Jac, false, true);    /*  FACTS  */
+  STATCOMFunJac(Jac, false, true); /*  FACTS  */
   if (PgMax < 0)
   {
-    if (Aptr != NULL)
+    if (Aptr != nullptr)
     {
       fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
       fprintf(stderr, "       Increase the maximum P generation in this area, otherwise\n");
@@ -119,13 +112,7 @@ VALUETYPE *EigenValue;
 }
 
 /* --------------------------- PrintLeftEvector --------------------------------- */
-#ifdef ANSIPROTO
 void PrintLeftEvector(INDEX N, FILE *Out)
-#else
-void PrintLeftEvector(N, Out)
-    INDEX N;
-FILE *Out;
-#endif
 /* Print "zero" left e-vector */
 {
   INDEX i, l, k, I, J;
@@ -139,7 +126,7 @@ FILE *Out;
   char str[80];
 
   fprintf(Out, "%d 1\n", N);
-  for (i = 0, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (i = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
     sprintf(str, "dP%-d", ACptr->Num);
     i++;
@@ -154,7 +141,7 @@ FILE *Out;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, x0[i]);
     }
     if (PQcont)
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         if (strpbrk(Eptr->Type, "PQNM"))
@@ -183,7 +170,7 @@ FILE *Out;
           }
         }
       }
-    if (ACptr->Gen != NULL)
+    if (ACptr->Gen != nullptr)
     {
       i = ACptr->Gen->Nvar;
       sprintf(str, "dPg%-d", ACptr->Num);
@@ -210,7 +197,7 @@ FILE *Out;
       fprintf(Out, "%4d %8s %-11.5g\n", ++i, str, x0[i]);
     }
   }
-  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
     if (!strcmp(DCptrR->Type, "R"))
     {
       for (k++, l = 1; l <= 11; l++)
@@ -221,7 +208,7 @@ FILE *Out;
       }
     }
   /* FACTS */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != NULL; SVCptr = SVCptr->Next)
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next)
   {
     for (k++, l = 1; l <= 3; l++)
     {
@@ -230,7 +217,7 @@ FILE *Out;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, x0[i]);
     }
   }
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != NULL; TCSCptr = TCSCptr->Next)
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next)
   {
     for (k++, l = 1; l <= 7; l++)
     {
@@ -239,7 +226,7 @@ FILE *Out;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, x0[i]);
     }
   }
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != NULL; STATCOMptr = STATCOMptr->Next)
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next)
   {
     for (k++, l = 1; l <= 7; l++)
     {
@@ -255,36 +242,32 @@ FILE *Out;
 }
 
 /* ------------------- PoCPoint --------------------- */
-#ifdef ANSIPROTO
 int PoCPoint(void)
-#else
-int PoCPoint()
-#endif
 /* Find PoC. */
 {
   int count, iter, M;
   INDEX i, N, J;
   FILE *Out;
-  BOOLEAN flag, flagp, flags, flagD;
+  bool flag, flagp, flags, flagD;
   VALUETYPE NDx, Nlim, Nlimp, EigenValue;
 
   RealParameter('L', &lambda, -1e6, 1e6);
   param0 = lambda;
   if ((ExistParameter('D') && (!NullName(NameParameter('D')))) || flagVloads)
-    flagD = TRUE;
+    flagD = true;
   else
-    flagD = FALSE;
+    flagD = false;
 
   /* Solve base load  */
   if (lambda != 0 && !flagD)
   {
     InitializeLoad();
-    iter = Pflow(1, FALSE, TRUE, FALSE);
+    iter = Pflow(1, false, true, false);
     fprintf(stderr, "Loading factor -> %-10.6lg  ", lambda);
   }
   else
   {
-    iter = Pflow(1, FALSE, TRUE, TRUE);
+    iter = Pflow(1, false, true, true);
     fprintf(stderr, "Loading factor -> %-10.6lg  ", 0.);
   }
   if (iter < 0)
@@ -298,7 +281,7 @@ int PoCPoint()
   for (NDx = 0, i = 1; i <= Jac->n1; i++)
     if (fabs(Dx[i]) > NDx)
       NDx = fabs(Dx[i]);
-  flagR = TRUE;
+  flagR = true;
   if (NDx)
   {
     if (Nvolt != 0)
@@ -307,7 +290,7 @@ int PoCPoint()
       Dparam = 1 / NDx;
     for (i = 1; i <= Jac->n1; i++)
       Dx[i] = Dparam * Dx[i];
-    Nlim = LoadX0(TRUE, TRUE, FALSE);
+    Nlim = LoadX0(true, true, false);
     if (ExistParameter('d'))
       fprintf(stderr, "Dparam=%lf   Nlim=%lf\n", Dparam, Nlim);
     Nlimp = 0;
@@ -324,11 +307,11 @@ int PoCPoint()
       Dparam = 0.8 * Dparam;
       for (i = 1; i <= Jac->n1; i++)
         Dx[i] = 0.8 * Dx[i];
-      Nlim = LoadX0(FALSE, TRUE, FALSE);
+      Nlim = LoadX0(false, true, false);
       if (ExistParameter('d'))
         fprintf(stderr, "Dparam=%lf   Nlim=%lf\n", Dparam, Nlim);
     }
-    iter = Pflow(1, flagp, TRUE, FALSE);
+    iter = Pflow(1, flagp, true, false);
     if (iter < 0)
       iter = -iter;
     else
@@ -340,16 +323,16 @@ int PoCPoint()
     fprintf(stderr, "Loading factor -> %-10.6lg\n\n", lambda);
   }
   J = 4;
-  Evector(J, iter, 0.001, FALSE, &EigenValue);
+  Evector(J, iter, 0.001, false, &EigenValue);
 
   /* Direct method */
-  for (flagL = flags = TRUE, M = 5, count = 0;;)
+  for (flagL = flags = true, M = 5, count = 0;;)
   {
     N = Jac->n2 = Jac->n1 = 2 * (NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom) + 1; /* FACTS */
     NewRow->N = NewCol->N = N;
     OldRow->N = OldCol->N = N;
     RowPartition->p[1] = ColPartition->p[1] = N;
-    iter = Pflow(iter, TRUE, TRUE, FALSE);
+    iter = Pflow(iter, true, true, false);
     if (ExistParameter('d'))
       fprintf(stderr, "Loading factor -> %-10.6lg\n", lambda);
     if (count == M)
@@ -398,14 +381,14 @@ int PoCPoint()
       if (count > 0 && flags)
       {
         J = 0;
-        flags = FALSE;
+        flags = false;
       }
       else
       {
         J = 4;
-        flags = TRUE;
+        flags = true;
       }
-      if ((iter = Evector(J, iter, 0.001, FALSE, &EigenValue)) < 0)
+      if ((iter = Evector(J, iter, 0.001, false, &EigenValue)) < 0)
         return (-iter);
     }
     else

@@ -17,22 +17,22 @@ ACbusData *ptrac,*ptrac1;
 
   if(N==0) {
     ptrn=dataPtr->SVCbus;
-    ptrp=NULL;
+    ptrp=nullptr;
 #ifdef WINDOWS
     dataPtr->SVCbus= new SVCbusData;
 #else
     dataPtr->SVCbus=(SVCbusData *) malloc(sizeof(SVCbusData));
-    if (dataPtr->SVCbus==NULL) {
+    if (dataPtr->SVCbus==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate SVC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->SVCbus;
-    if(ptrn!=NULL)ptrn->Prev=ptr;
+    if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {
     ptr=dataPtr->SVCbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(!strcmp(ptr->Name,BusName)) return(ptr);
       ptrp=ptr;
       ptr=ptr->Next;
@@ -78,22 +78,22 @@ ACbusData *ptrac,*ptrac1;
 
   if(N==0) {
     ptrn=dataPtr->TCSCbus;
-    ptrp=NULL;
+    ptrp=nullptr;
 #ifdef WINDOWS
     dataPtr->TCSCbus=new TCSCbusData;
 #else
     dataPtr->TCSCbus=(TCSCbusData *) malloc(sizeof(TCSCbusData));
-    if (dataPtr->TCSCbus==NULL) {
+    if (dataPtr->TCSCbus==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->TCSCbus;
-    if(ptrn!=NULL)ptrn->Prev=ptr;
+    if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {
     ptr=dataPtr->TCSCbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(!strcmp(ptr->Name,BusName)) return(ptr);
       ptrp=ptr;
       ptr=ptr->Next;
@@ -141,22 +141,22 @@ ACbusData *ptrac,*ptrac1;
 
   if(N==0) {
     ptrn=dataPtr->STATCOMbus;
-    ptrp=NULL;
+    ptrp=nullptr;
 #ifdef WINDOWS
     dataPtr->STATCOMbus= new STATCOMbusData;
 #else
     dataPtr->STATCOMbus=(STATCOMbusData *) malloc(sizeof(STATCOMbusData));
-    if (dataPtr->STATCOMbus==NULL) {
+    if (dataPtr->STATCOMbus==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate STATCOM bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->STATCOMbus;
-    if(ptrn!=NULL)ptrn->Prev=ptr;
+    if(ptrn!=nullptr)ptrn->Prev=ptr;
   } else {
     ptr=dataPtr->STATCOMbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(!strcmp(ptr->Name,BusName)) return(ptr);
       ptrp=ptr;
       ptr=ptr->Next;

@@ -9,20 +9,20 @@ extern VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, SD0, AngTr,
 extern INDEX TVIbus;
 extern AClist *Vlist, *Vlistp;
 extern int field;
-extern BOOLEAN flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
+extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
 
 /* --------------------------- InList --------------------------------- */
-BOOLEAN InList(ACbusData *ACptr, AClist *Vptr)
+bool InList(ACbusData *ACptr, AClist *Vptr)
 /* Check whether bus in list for V profiles */
 {
   AClist *Lptr;
 
-  for (Lptr = Vptr; Lptr != NULL; Lptr = Lptr->Next)
+  for (Lptr = Vptr; Lptr != nullptr; Lptr = Lptr->Next)
   {
     if (ACptr == Lptr->AC)
-      return (TRUE);
+      return (true);
   }
-  return (FALSE);
+  return (false);
 }
 
 /* --------------------------- MakeVlist --------------------------------- */
@@ -43,17 +43,17 @@ void MakeVlist(Out)
   INDEX N, i, count, countp;
   VALUETYPE MaxV = 0;
 
-  Vlist = Vlistp = NULL;
-  ACptrM = NULL;
+  Vlist = Vlistp = nullptr;
+  ACptrM = nullptr;
   Name = NameParameter('i');
-  flagPrintTotalPl = flagPrintTotalQl = flagPrintTotalPg = flagPrintTotalQg = FALSE;
+  flagPrintTotalPl = flagPrintTotalQl = flagPrintTotalPg = flagPrintTotalQg = false;
 
-  if (!NullName(Name) && (Input = OpenInput(Name)) != NULL)
+  if (!NullName(Name) && (Input = OpenInput(Name)) != nullptr)
   {
     for (;;)
     {
       strcpy(Type, "");
-      if (fgets(Line, BUFLEN, Input) == NULL)
+      if (fgets(Line, BUFLEN, Input) == nullptr)
         break;
       if ((count = sscanf(Line, "%d %s %s", &N, BusName, Type)) > 3 && strncmp(Line, "C", 1))
       {
@@ -75,37 +75,37 @@ void MakeVlist(Out)
           count += sscanf(ptr, "%s", Type);
         }
         if (N == 0 && !strcmp(BusName, "0") && !strcmp(Type, "PL"))
-          flagPrintTotalPl = TRUE;
+          flagPrintTotalPl = true;
         else if (N == 0 && !strcmp(BusName, "0") && !strcmp(Type, "QL"))
-          flagPrintTotalQl = TRUE;
+          flagPrintTotalQl = true;
         else if (N == 0 && !strcmp(BusName, "0") && !strcmp(Type, "PG"))
-          flagPrintTotalPg = TRUE;
+          flagPrintTotalPg = true;
         else if (N == 0 && !strcmp(BusName, "0") && !strcmp(Type, "QG"))
-          flagPrintTotalQg = TRUE;
+          flagPrintTotalQg = true;
         else
         {
           if (!strcmp(Type, "PA"))
           {
-            ACptr = NULL;
-            for (Aptr = dataPtr->Area; Aptr != NULL; Aptr = Aptr->Next)
+            ACptr = nullptr;
+            for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr = Aptr->Next)
               if (N == Aptr->N || !strncmp(Aptr->Name, BusName, strlen(BusName)))
                 break;
           }
           else
           {
-            Aptr = NULL;
-            for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+            Aptr = nullptr;
+            for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
               if (N == ACptr->Num || !strncmp(ACptr->Name, BusName, strlen(BusName)))
                 break;
           }
-          if (ACptr != NULL || Aptr != NULL)
+          if (ACptr != nullptr || Aptr != nullptr)
           {
             Lptr = Vlist;
 #ifdef WINDOWS
             Vlist = new AClist;
 #else
             Vlist = (AClist *)malloc(sizeof(AClist));
-            if (Vlist == NULL)
+            if (Vlist == nullptr)
             {
               fclose(Out);
               fclose(Input);
@@ -115,7 +115,7 @@ void MakeVlist(Out)
 #endif
             Vlist->AC = ACptr;
             Vlist->Area = Aptr;
-            if (ACptr != NULL)
+            if (ACptr != nullptr)
               Vlist->N = ACptr->Num;
             else
               Vlist->N = Aptr->N;
@@ -125,8 +125,8 @@ void MakeVlist(Out)
             else
               strcpy(Vlist->Type, "V");
             Vlist->Next = Lptr;
-            Vlist->Prev = NULL;
-            if (Lptr != NULL)
+            Vlist->Prev = nullptr;
+            if (Lptr != nullptr)
               Lptr->Prev = Vlist;
           }
           else if (strncmp(Line, "C", 1))
@@ -138,31 +138,31 @@ void MakeVlist(Out)
       }
     }
     Lptr = Vlist;
-    while (Lptr != NULL)
+    while (Lptr != nullptr)
     {
       Lptrp = Lptr->Next;
       Lptr->Next = Lptr->Prev;
       Lptr->Prev = Lptrp;
-      if (Lptrp == NULL)
+      if (Lptrp == nullptr)
         Vlist = Lptr;
       Lptr = Lptrp;
     }
     fclose(Input);
   }
-  if (Vlistp == NULL)
+  if (Vlistp == nullptr)
   {
     countp = 1;
     while (countp <= 8 && countp <= Nac)
     {
       MaxV = 0;
-      for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+      for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
       {
         if (Nac <= 8 && !InList(ACptr, Vlistp))
         {
           ACptrM = ACptr;
           break;
         }
-        else if ((ACptr->Cont != NULL && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
+        else if ((ACptr->Cont != nullptr && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
                  (!Rcont && strpbrk(ACptr->Type, "T")) ||
                  (!QRcont && strpbrk(ACptr->Type, "C")))
         {
@@ -174,14 +174,14 @@ void MakeVlist(Out)
           }
         }
       }
-      if (ACptrM != NULL)
+      if (ACptrM != nullptr)
       {
         Lptr = Vlistp;
 #ifdef WINDOWS
         Vlistp = new AClist;
 #else
         Vlistp = (AClist *)malloc(sizeof(AClist));
-        if (Vlistp == NULL)
+        if (Vlistp == nullptr)
         {
           fclose(Out);
           ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
@@ -191,37 +191,37 @@ void MakeVlist(Out)
         Vlistp->AC = ACptrM;
         strcpy(Vlistp->Type, "V");
         Vlistp->N = ACptrM->Num;
-        Vlistp->Area = NULL;
+        Vlistp->Area = nullptr;
         Vlistp->Next = Lptr;
-        Vlistp->Prev = NULL;
-        if (Lptr != NULL)
+        Vlistp->Prev = nullptr;
+        if (Lptr != nullptr)
           Lptr->Prev = Vlistp;
-        ACptrM = NULL;
+        ACptrM = nullptr;
         countp++;
       }
       else
         break;
     }
   }
-  if (Vlist == NULL)
+  if (Vlist == nullptr)
     Vlist = Vlistp;
   if (ExistParameter('m'))
   {
     if (ExistParameter('O'))
     {
-      for (DCptr = dataPtr->DCbus; DCptr != NULL; DCptr = DCptr->Next)
+      for (DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
       {
-        for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+        for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
           if (Lptr->AC == DCptr->AC && !strcmp(Lptr->Type, "V"))
             break;
-        if (Lptr == NULL)
+        if (Lptr == nullptr)
         {
           Lptr = Vlist;
 #ifdef WINDOWS
           Vlist = new AClist;
 #else
           Vlist = (AClist *)malloc(sizeof(AClist));
-          if (Vlist == NULL)
+          if (Vlist == nullptr)
           {
             fclose(Out);
             ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
@@ -229,25 +229,25 @@ void MakeVlist(Out)
           }
 #endif
           Vlist->AC = DCptr->AC;
-          Vlist->Area = NULL;
+          Vlist->Area = nullptr;
           Vlist->N = DCptr->AC->Num;
           strcpy(Vlist->Type, "V");
           Vlist->Next = Lptr;
-          Vlist->Prev = NULL;
-          if (Lptr != NULL)
+          Vlist->Prev = nullptr;
+          if (Lptr != nullptr)
             Lptr->Prev = Vlist;
         }
-        for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+        for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
           if (Lptr->AC == DCptr->AC && !strcmp(Lptr->Type, "D"))
             break;
-        if (Lptr == NULL)
+        if (Lptr == nullptr)
         {
           Lptr = Vlist;
 #ifdef WINDOWS
           Vlist = new AClist;
 #else
           Vlist = (AClist *)malloc(sizeof(AClist));
-          if (Vlist == NULL)
+          if (Vlist == nullptr)
           {
             fclose(Out);
             ErrorHalt("Insufficient memory to allocate Voltage Profile Bus List.");
@@ -255,12 +255,12 @@ void MakeVlist(Out)
           }
 #endif
           Vlist->AC = DCptr->AC;
-          Vlist->Area = NULL;
+          Vlist->Area = nullptr;
           Vlist->N = DCptr->AC->Num;
           strcpy(Vlist->Type, "D");
           Vlist->Next = Lptr;
-          Vlist->Prev = NULL;
-          if (Lptr != NULL)
+          Vlist->Prev = nullptr;
+          if (Lptr != nullptr)
             Lptr->Prev = Vlist;
         }
       }
@@ -269,16 +269,16 @@ void MakeVlist(Out)
     fprintf(Out, "%s ", "%%");
   }
   fprintf(Out, "L.F.    ");
-  for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
   {
     fprintf(Out, "%s%-5d    ", Lptr->Type, Lptr->N);
   }
   if (ExistParameter('e'))
   {
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
-      if (Lptr->AC != NULL)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
+      if (Lptr->AC != nullptr)
       {
-        if (Lptr->AC->Gen != NULL)
+        if (Lptr->AC->Gen != nullptr)
         {
           fprintf(Out, "Ia%-5d    ", Lptr->N);
           fprintf(Out, "Eq%-5d    ", Lptr->N);
@@ -294,7 +294,7 @@ void MakeVlist(Out)
   }
   if (ExistParameter('O') || ExistParameter('e'))
   {
-    for (i = 0, DCptr = dataPtr->DCbus; DCptr != NULL; DCptr = DCptr->Next)
+    for (i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
       if (!strcmp(DCptr->Type, "R"))
       {
         i += 2;
@@ -351,19 +351,19 @@ void MakeVlist(Out)
   if (ExistParameter('d') && (Out != stdout || !NullName(NameParameter('l'))))
   {
     fprintf(stderr, "L.F.    ");
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
       fprintf(stderr, "%s%-5d    ", Lptr->Type, Lptr->N);
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
-      if (Lptr->AC != NULL)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
+      if (Lptr->AC != nullptr)
       {
-        if (Lptr->AC->Gen != NULL)
+        if (Lptr->AC->Gen != nullptr)
         {
           fprintf(stderr, "Ia%-5d    ", Lptr->N);
           fprintf(stderr, "Eq%-5d    ", Lptr->N);
           fprintf(stderr, "dg%-5d    ", Lptr->N);
         }
       }
-    for (i = 0, DCptr = dataPtr->DCbus; DCptr != NULL; DCptr = DCptr->Next)
+    for (i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
       if (!strcmp(DCptr->Type, "R"))
       {
         i++;
@@ -380,10 +380,10 @@ void MakeVlist(Out)
 
 /* --------------------------- VoltProf --------------------------------- */
 #ifdef ANSIPROTO
-void VoltProf(BOOLEAN flag, FILE *Out)
+void VoltProf(bool flag, FILE *Out)
 #else
 void VoltProf(flag, Out)
-    BOOLEAN flag;
+    bool flag;
 FILE *Out;
 #endif
 /* Write voltage profiles. */
@@ -403,11 +403,11 @@ FILE *Out;
 
   Print(Out, 0, 6, 4, lambda_o + lambda);
   fprintf(Out, "    ");
-  for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+  for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
   {
     ACptr = Lptr->AC;
     Aptr = Lptr->Area;
-    if (ACptr != NULL)
+    if (ACptr != nullptr)
     {
       if (!strcmp(Lptr->Type, "V"))
       {
@@ -440,10 +440,10 @@ FILE *Out;
         fprintf(Out, "    ");
       }
     }
-    else if (Aptr != NULL)
+    else if (Aptr != nullptr)
     {
       Aptr->SPg = 0;
-      for (DCLptr = Aptr->DC; DCLptr != NULL; DCLptr = DCLptr->Next)
+      for (DCLptr = Aptr->DC; DCLptr != nullptr; DCLptr = DCLptr->Next)
       {
         DCptrR = DCLptr->DC->Meter;
         P = -DCptrR->P;
@@ -451,7 +451,7 @@ FILE *Out;
           P = -P;
         Aptr->SPg = Aptr->SPg + P;
       }
-      for (ELptr = Aptr->Elem; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = Aptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         Vi = Eptr->From->V;
@@ -481,10 +481,10 @@ FILE *Out;
     }
   }
   if (ExistParameter('e'))
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
     {
       ACptr = Lptr->AC;
-      if (ACptr != NULL && ACptr->Gen != NULL)
+      if (ACptr != nullptr && ACptr->Gen != nullptr)
       {
         Print(Out, 0, 6, 4, ACptr->Gen->Ia);
         fprintf(Out, "    ");
@@ -503,7 +503,7 @@ FILE *Out;
   }
   else if (ExistParameter('e'))
   {
-    for (DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+    for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
       if (!strcmp(DCptrR->Type, "R"))
       {
         DCptrI = DCptrR->To;
@@ -539,11 +539,11 @@ FILE *Out;
   {
     Print(stderr, 0, 6, 4, lambda_o + lambda);
     fprintf(stderr, "    ");
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
     {
       ACptr = Lptr->AC;
       Aptr = Lptr->Area;
-      if (ACptr != NULL)
+      if (ACptr != nullptr)
       {
         if (!strcmp(Lptr->Type, "V"))
         {
@@ -576,16 +576,16 @@ FILE *Out;
           fprintf(stderr, "    ");
         }
       }
-      else if (Aptr != NULL)
+      else if (Aptr != nullptr)
       {
         Print(stderr, 0, 6, 2, Aptr->SPg * Sn);
         fprintf(stderr, "    ");
       }
     }
-    for (Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+    for (Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
     {
       ACptr = Lptr->AC;
-      if (ACptr != NULL && ACptr->Gen != NULL)
+      if (ACptr != nullptr && ACptr->Gen != nullptr)
       {
         Print(stderr, 0, 6, 4, ACptr->Gen->Ia);
         fprintf(stderr, "    ");
@@ -595,7 +595,7 @@ FILE *Out;
         fprintf(stderr, "    ");
       }
     }
-    for (DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+    for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
       if (!strcmp(DCptrR->Type, "R"))
       {
         DCptrI = DCptrR->To;
@@ -639,9 +639,9 @@ VALUETYPE *vector, Max;
   Out = OpenOutput(NameParameter(Option));
   N = Jac->n1;
   fprintf(Out, "%d 1\n", N);
-  for (i = 0, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (i = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
-    if (ACptr->Cont != NULL)
+    if (ACptr->Cont != nullptr)
     {
       if (strpbrk(ACptr->Type, "S"))
         sprintf(str, "kg%-d", ACptr->Num);
@@ -675,7 +675,7 @@ VALUETYPE *vector, Max;
       sprintf(str, "d%-d", ACptr->Num);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         I = Eptr->From->Num;
@@ -724,7 +724,7 @@ VALUETYPE *vector, Max;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
     if (PQcont)
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         if (strpbrk(Eptr->Type, "PQNM"))
@@ -765,7 +765,7 @@ VALUETYPE *vector, Max;
           }
         }
       }
-    if (ACptr->Gen != NULL)
+    if (ACptr->Gen != nullptr)
     {
       i = ACptr->Gen->Nvar;
       if (!strpbrk(ACptr->cont, "E"))
@@ -809,7 +809,7 @@ VALUETYPE *vector, Max;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
     }
   }
-  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
   {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R"))
@@ -877,7 +877,7 @@ VALUETYPE *vector, Max;
     }
   }
   /* FACTS */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != NULL; SVCptr = SVCptr->Next)
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next)
   {
     k++;
     sprintf(str, "Qsvc%-d", k);
@@ -900,7 +900,7 @@ VALUETYPE *vector, Max;
     }
   }
 
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != NULL; TCSCptr = TCSCptr->Next)
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next)
   {
     k++;
     sprintf(str, "Ptcsc%-d", k);
@@ -926,7 +926,7 @@ VALUETYPE *vector, Max;
     fprintf(Out, "%4d %8s %-11.5g\n", i, str, vector[i] / Max);
   }
 
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != NULL; STATCOMptr = STATCOMptr->Next)
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next)
   {
     k++;
     if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL"))

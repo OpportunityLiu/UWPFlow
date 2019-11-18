@@ -12,9 +12,9 @@
 void UpdateSVCvar(VALUETYPE cons,INDEX j);
 void UpdateTCSCvar(VALUETYPE cons,INDEX j);
 void UpdateSTATCOMvar(VALUETYPE cons,INDEX j);
-BOOLEAN ChangeSVCmode(void);
-BOOLEAN ChangeTCSCmode(void);
-BOOLEAN ChangeSTATCOMmode(void);
+bool ChangeSVCmode(void);
+bool ChangeTCSCmode(void);
+bool ChangeSTATCOMmode(void);
 
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
@@ -26,7 +26,7 @@ extern VALUETYPE *dx,*dF,tol,Tol,Sn,lambda,*x0;
 extern VALUETYPE K1,K2,MaxdFi,alpha;
 extern IntegerVector *NewRow,*OldRow,*NewCol,*OldCol,*RowPartition,*ColPartition;
 extern IntegerVector *RowPer,*ColPer;
-extern BOOLEAN Acont,PQcont,QRcont,Rcont,PQlim,Tlim,Qlim,Vlim,flagH,flagPoC,flagL,flagR,flagBS;
+extern bool Acont,PQcont,QRcont,Rcont,PQlim,Tlim,Qlim,Vlim,flagH,flagPoC,flagL,flagR,flagBS;
 
 void UpdateSVCvar(VALUETYPE cons,INDEX j)
 {
@@ -34,7 +34,7 @@ void UpdateSVCvar(VALUETYPE cons,INDEX j)
   INDEX i;
 
   i=NacVar+11*Ndc/2;
-  for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+  for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
     SVCptr->Qsvc=SVCptr->Qsvc+cons*dx[i+1];
     SVCptr->Bv=SVCptr->Bv+cons*dx[i+2];
     if(!strcmp(SVCptr->Cont,"AL")){
@@ -61,17 +61,17 @@ void UpdateSVCvar(VALUETYPE cons,INDEX j)
 }
 
 #ifdef ANSIPROTO
-BOOLEAN ChangeSVCmode()
+bool ChangeSVCmode()
 #else
-BOOLEAN ChangeSVCmode()
+bool ChangeSVCmode()
 #endif
 {
  SVCbusData *SVCptr;
- BOOLEAN flag=FALSE;
+ bool flag=false;
  INDEX i;
 
  i=NacVar+11*Ndc/2;
- for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+ for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
   if(!strcmp(SVCptr->Cont,"AL") && SVCptr->alpha_svc>=SVCptr->AlphaMax){
     strcpy(SVCptr->Cont,"MX");
     SVCptr->alpha_svc=SVCptr->AlphaMax;
@@ -79,7 +79,7 @@ BOOLEAN ChangeSVCmode()
     if (flagH) x0[i+3]=SVCptr->Vvar;
     fprintf(stderr,"***Warning: %s SVC firing angle is at its maximum limit.\n",SVCptr->Name);
     fprintf(stderr,"            The SVC will be treated as a fixed capacitive reactance.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if(!strcmp(SVCptr->Cont,"AL") && SVCptr->alpha_svc<=SVCptr->AlphaMin){
     strcpy(SVCptr->Cont,"MN");
@@ -88,7 +88,7 @@ BOOLEAN ChangeSVCmode()
     if (flagH) x0[i+3]=SVCptr->Vvar;
     fprintf(stderr,"***Warning: %s SVC firing angle is at its minimum limit.\n",SVCptr->Name);
     fprintf(stderr,"            The SVC will be treated as a fixed inductive reactance.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if(!strcmp(SVCptr->Cont,"MX") && SVCptr->Vvar>=SVCptr->Vref){
     strcpy(SVCptr->Cont,"AL");
@@ -97,7 +97,7 @@ BOOLEAN ChangeSVCmode()
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
     fprintf(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
     fprintf(stderr,"            The SVC voltage is now within controllable range.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if(!strcmp(SVCptr->Cont,"MN") && SVCptr->Vvar<=SVCptr->Vref){
     strcpy(SVCptr->Cont,"AL");
@@ -106,7 +106,7 @@ BOOLEAN ChangeSVCmode()
     if (flagH) x0[i+3]=SVCptr->alpha_svc;
     fprintf(stderr,"***Warning: %s SVC firing angle is within limits.\n",SVCptr->Name);
     fprintf(stderr,"            The SVC voltage is now within controllable range.\n");
-    flag=TRUE;
+    flag=true;
   }
   i=i+3;
  }
@@ -126,7 +126,7 @@ INDEX j;
   INDEX i;
 
   i=NacVar+11*Ndc/2+3*Nsvc;
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
     TCSCptr->Ptcsc=TCSCptr->Ptcsc+cons*dx[i+1];
     TCSCptr->Qtcsck=TCSCptr->Qtcsck+cons*dx[i+2];
     TCSCptr->Qtcscm=TCSCptr->Qtcscm+cons*dx[i+3];
@@ -144,16 +144,16 @@ INDEX j;
 
 
 #ifdef ANSIPROTO
-BOOLEAN ChangeTCSCmode()
+bool ChangeTCSCmode()
 #else
-BOOLEAN ChangeTCSCmode()
+bool ChangeTCSCmode()
 #endif
 {
   TCSCbusData *TCSCptr;
   VALUETYPE alpha,Xc,Xl,Be;
-  BOOLEAN flag=FALSE;
+  bool flag=false;
 
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
     alpha=TCSCptr->alpha_tcsc;
     Xc=TCSCptr->Xc;
     Xl=TCSCptr->Xl;
@@ -163,7 +163,7 @@ BOOLEAN ChangeTCSCmode()
       TCSCptr->Bset=Be;
       fprintf(stderr,"***Warning: %s TCSC firing angle is at its maximum limit.\n",TCSCptr->Name);
       fprintf(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
-      flag=TRUE;
+      flag=true;
     }
     else if(!strpbrk(TCSCptr->Cont,"X")&& TCSCptr->alpha_tcsc<=TCSCptr->AlphaMin){
       strcpy(TCSCptr->Cont,"X");
@@ -171,7 +171,7 @@ BOOLEAN ChangeTCSCmode()
       TCSCptr->Bset=Be;
       fprintf(stderr,"***Warning: %s TCSC firing angle is at its minimum limit.\n",TCSCptr->Name);
       fprintf(stderr,"            The TCSC will be treated as a fixed series capacitor.\n");
-      flag=TRUE;
+      flag=true;
     }
   }
   return(flag);
@@ -190,7 +190,7 @@ INDEX j;
   INDEX i;
 
   i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
-  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
     Q=STATCOMptr->Q;
     if(!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL") ){
       if (j==0) STATCOMptr->val=STATCOMptr->I;
@@ -228,18 +228,18 @@ INDEX j;
 }
 
 #ifdef ANSIPROTO
-BOOLEAN ChangeSTATCOMmode()
+bool ChangeSTATCOMmode()
 #else
-BOOLEAN ChangeSTATCOMmode()
+bool ChangeSTATCOMmode()
 #endif
 {
  STATCOMbusData *STATCOMptr;
- BOOLEAN flag=FALSE;
+ bool flag=false;
  VALUETYPE Q;
  INDEX i;
 
  i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
- for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+ for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
   Q=STATCOMptr->Q;
   if((!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL"))&&
      STATCOMptr->I>=STATCOMptr->Imax && Q>0){
@@ -249,7 +249,7 @@ BOOLEAN ChangeSTATCOMmode()
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
     fprintf(stderr,"***Warning: %s STATCOM current is at its maximum limit.\n",STATCOMptr->Name);
     fprintf(stderr,"            The STATCOM will be treated as a fixed inductive current source.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if((!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL"))&&
           STATCOMptr->I>=STATCOMptr->Imin && Q<0){
@@ -259,7 +259,7 @@ BOOLEAN ChangeSTATCOMmode()
     if (flagH) x0[i+1]=STATCOMptr->Vvar;
     fprintf(stderr,"***Warning: %s STATCOM current is at its minimum limit.\n",STATCOMptr->Name);
     fprintf(stderr,"            The STATCOM will be treated as a fixed capacitive current source.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if(!strcmp(STATCOMptr->Cont,"MN") && STATCOMptr->Vvar>=STATCOMptr->Vref){
     strcpy(STATCOMptr->Cont,STATCOMptr->Cont1);
@@ -268,7 +268,7 @@ BOOLEAN ChangeSTATCOMmode()
     if (flagH) x0[i+1]=STATCOMptr->I;
     fprintf(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
     fprintf(stderr,"            The STATCOM voltage is now within controllable range.\n");
-    flag=TRUE;
+    flag=true;
   }
   else if(!strcmp(STATCOMptr->Cont,"MX") && STATCOMptr->Vvar<=STATCOMptr->Vref){
     strcpy(STATCOMptr->Cont,STATCOMptr->Cont1);
@@ -277,7 +277,7 @@ BOOLEAN ChangeSTATCOMmode()
     if (flagH) x0[i+1]=STATCOMptr->I;
     fprintf(stderr,"***Warning: %s STATCOM current is within limits.\n",STATCOMptr->Name);
     fprintf(stderr,"            The STATCOM voltage is now within controllable range.\n");
-    flag=TRUE;
+    flag=true;
   }
   i=i+7;
  }

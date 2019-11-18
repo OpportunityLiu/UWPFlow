@@ -4,10 +4,10 @@
 
 #ifdef ANSIPROTO
 void AddLoad(void);
-BOOLEAN CheckVIlimits(BOOLEAN flagVoltage,BOOLEAN flagCurrent);
+bool CheckVIlimits(bool flagVoltage,bool flagCurrent);
 #else
 void AddLoad();
-BOOLEAN CheckVIlimits();
+bool CheckVIlimits();
 #endif
 
 
@@ -15,41 +15,41 @@ BOOLEAN CheckVIlimits();
 VALUETYPE *Dx,Dparam,param0,*x0,*x0p,Kh,Htol,AngTr,VoltageSum,VoltageSum0,
           DxiMax,VSFone,VSFinf,SF,TVI,ZeroDx,lambda_o,TotalPl,TotalQl,TotalPg,TotalQg;
 INDEX RedNumEq,NewNumEq,CountSteps,NumSteps,TVIbus,TVIrank,VSFbus;
-BOOLEAN flagReduceSystem,*DxZero,flagPrintTotalPl,flagPrintTotalQl,flagPrintTotalPg,flagPrintTotalQg;
-AClist *Vlist=NULL,*Vlistp=NULL;
+bool flagReduceSystem,*DxZero,flagPrintTotalPl,flagPrintTotalQl,flagPrintTotalPg,flagPrintTotalQg;
+AClist *Vlist=nullptr,*Vlistp=nullptr;
 FILE *OutputHomot;
 int field,SD0;
-extern BOOLEAN flagBS,flagVloads;
+extern bool flagBS,flagVloads;
 
 
 /* --------------------------- DCsetup --------------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN DCsetup(void)
+bool DCsetup(void)
 #else
-BOOLEAN DCsetup()
+bool DCsetup()
 #endif
 /* Setup inital DC control mode, i.e., rectifier -> alfa,Id (or P),
                                        inverter  -> gamma,Vd. */
 {
   DCbusData *DCptrR,*DCptrI;
-  BOOLEAN flag=FALSE,flagP=FALSE,flagT=FALSE;
+  bool flag=false,flagP=false,flagT=false;
 
-  for (DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
+  for (DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
     DCptrI=DCptrR->To;
     DCptrI->VdN=DCptrI->Vd;
     DCptrR->AlfaN=DCptrR->Alfa;
-    if (strcmp(DCptrR->Cont1,"AL") && strcmp(DCptrR->Cont2,"AL")) flag=TRUE;
-    else if (strcmp(DCptrR->Cont1,"AT") && strcmp(DCptrR->Cont2,"AT")) flag=TRUE;
-    else if (!strpbrk(DCptrR->Cont1,"IP") && !strpbrk(DCptrR->Cont2,"IP")) flag=TRUE;
-    else if (strcmp(DCptrI->Cont1,"GA") && strcmp(DCptrI->Cont2,"GA")) flag=TRUE;
-         else if (strcmp(DCptrI->Cont1,"AT") && strcmp(DCptrI->Cont2,"AT")) flag=TRUE;
-    else if (strcmp(DCptrI->Cont1,"VD") && strcmp(DCptrI->Cont2,"VD")) flag=TRUE;
+    if (strcmp(DCptrR->Cont1,"AL") && strcmp(DCptrR->Cont2,"AL")) flag=true;
+    else if (strcmp(DCptrR->Cont1,"AT") && strcmp(DCptrR->Cont2,"AT")) flag=true;
+    else if (!strpbrk(DCptrR->Cont1,"IP") && !strpbrk(DCptrR->Cont2,"IP")) flag=true;
+    else if (strcmp(DCptrI->Cont1,"GA") && strcmp(DCptrI->Cont2,"GA")) flag=true;
+         else if (strcmp(DCptrI->Cont1,"AT") && strcmp(DCptrI->Cont2,"AT")) flag=true;
+    else if (strcmp(DCptrI->Cont1,"VD") && strcmp(DCptrI->Cont2,"VD")) flag=true;
     if (!strcmp(DCptrR->Cont1,"PA") ||!strcmp(DCptrR->Cont2,"PA") ||
-        !strcmp(DCptrI->Cont1,"PA") ||!strcmp(DCptrI->Cont2,"PA")) flagP=TRUE;
+        !strcmp(DCptrI->Cont1,"PA") ||!strcmp(DCptrI->Cont2,"PA")) flagP=true;
     if (!strcmp(DCptrR->Cont1,"AL") ||!strcmp(DCptrR->Cont2,"AL")) strcpy(DCptrR->Cont1,"AL");
     else if(!strcmp(DCptrR->Cont1,"AT") ||!strcmp(DCptrR->Cont2,"AT")) {
       strcpy(DCptrR->Cont1,"AT");
-      flagT=TRUE;
+      flagT=true;
     }
     else strcpy(DCptrR->Cont1,"AL");
     if (flagP) strcpy(DCptrR->Cont2,"PA");
@@ -58,22 +58,22 @@ BOOLEAN DCsetup()
     if (flagT) strcpy(DCptrI->Cont2,"AT");
     else strcpy(DCptrI->Cont2,"VD");
     if (DCptrR->Tap>DCptrR->TapMax) {
-      flag=TRUE;
+      flag=true;
       DCptrR->TapMax=DCptrR->Tap;
       fprintf(stderr,"***Warning: The program will change the maximum tap limit for rect. %s\n",DCptrR->Name);
     }
     if (DCptrR->Tap<DCptrR->TapMin) {
-      flag=TRUE;
+      flag=true;
       DCptrR->TapMin=DCptrR->Tap;
       fprintf(stderr,"***Warning: The program will change the minimum tap limit for rect. %s\n",DCptrR->Name);
     }
     if (DCptrI->Tap>DCptrI->TapMax) {
-      flag=TRUE;
+      flag=true;
       DCptrI->TapMax=DCptrI->Tap;
       fprintf(stderr,"***Warning: The program will change the maximum tap limit for inv. %s\n",DCptrI->Name);
     }
     if (DCptrI->Tap<DCptrI->TapMin) {
-      flag=TRUE;
+      flag=true;
       DCptrI->TapMin=DCptrI->Tap;
       fprintf(stderr,"***Warning: The program will change the minimum tap limit for inv. %s\n",DCptrI->Name);
     }
@@ -90,27 +90,27 @@ BOOLEAN DCsetup()
 
 /* -------------------- ChangeDCmode ----------------------- */
 #ifdef ANSIPROTO
-BOOLEAN ChangeDCmode(void)
+bool ChangeDCmode(void)
 #else
-BOOLEAN ChangeDCmode()
+bool ChangeDCmode()
 #endif
 /* Change DC control mode when DC variable at a limit. */
 {
   DCbusData *DCptrR,*DCptrI;
-  BOOLEAN flag=FALSE,flagp=FALSE;
+  bool flag=false,flagp=false;
   INDEX i;
 
   i=NacVar;
-  for (DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
+  for (DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next) if(!strcmp(DCptrR->Type,"R")) {
     DCptrI=DCptrR->To;
     if(!strcmp(DCptrR->Cont1,"AL") && strpbrk(DCptrR->Cont2,"IP") &&
        (DCptrR->Tap>=DCptrR->TapMax || DCptrR->Tap<=DCptrR->TapMin)) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       strcpy(DCptrR->Cont1,"AT");
     }
     else if(!strcmp(DCptrR->Cont1,"AT") && strpbrk(DCptrR->Cont2,"IP") &&
             DCptrR->Alfa<=DCptrR->AlfaMin) {
-                flag=flagp=TRUE;
+                flag=flagp=true;
       if (!strcmp(DCptrR->Cont2,"ID")) strcpy(DCptrI->Cont2,"ID");
       else strcpy(DCptrI->Cont2,"PA");
       strcpy(DCptrR->Cont1,"AL");
@@ -119,12 +119,12 @@ BOOLEAN ChangeDCmode()
     }
     else if(!strcmp(DCptrR->Cont1,"AT") && strpbrk(DCptrR->Cont2,"IP") &&
             DCptrR->Alfa==DCptrR->AlfaN) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       strcpy(DCptrR->Cont1,"AL");
     }
     else if(!strcmp(DCptrI->Cont1,"AT") && strpbrk(DCptrI->Cont2,"IP") &&
             DCptrI->Tap<=DCptrI->TapMin && DCptrI->Gamma<=DCptrI->GammaMin) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       if (!strcmp(DCptrI->Cont2,"ID")) strcpy(DCptrR->Cont2,"ID");
       else strcpy(DCptrR->Cont2,"PA");
       strcpy(DCptrR->Cont1,"AT");
@@ -133,7 +133,7 @@ BOOLEAN ChangeDCmode()
     }
     else if(!strcmp(DCptrI->Cont1,"AT") && strpbrk(DCptrI->Cont2,"IP") &&
                  DCptrI->Tap>DCptrI->TapMin && DCptrI->Gamma<=DCptrI->GammaMin) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       if (!strcmp(DCptrI->Cont2,"ID")) strcpy(DCptrR->Cont2,"ID");
       else strcpy(DCptrR->Cont2,"PA");
       strcpy(DCptrR->Cont1,"AT");
@@ -142,12 +142,12 @@ BOOLEAN ChangeDCmode()
     }
     else if(!strcmp(DCptrI->Cont1,"GA") && !strcmp(DCptrI->Cont2,"VD") &&
             (DCptrI->Tap<=DCptrI->TapMin || DCptrI->Tap>=DCptrI->TapMax)) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       strcpy(DCptrI->Cont2,"AT");
     }
     else if(!strcmp(DCptrI->Cont1,"GA") && !strcmp(DCptrI->Cont2,"AT") &&
             DCptrI->Vd==DCptrI->VdN) {
-      flag=flagp=TRUE;
+      flag=flagp=true;
       strcpy(DCptrI->Cont2,"VD");
     }
     if (flagH && flag) {
@@ -196,7 +196,7 @@ BOOLEAN ChangeDCmode()
       }
     }
     if (flagp) {
-      flagp=FALSE;
+      flagp=false;
       fprintf(stderr,"***Warning: HVDC link from %s to %s will switch control mode\n",DCptrR->Name,DCptrI->Name);
       fprintf(stderr,"            to: rectifier -> %s-%s\n",DCptrR->Cont1,DCptrR->Cont2);
       fprintf(stderr,"                inverter  -> %s-%s\n",DCptrI->Cont1,DCptrI->Cont2);
@@ -207,12 +207,12 @@ BOOLEAN ChangeDCmode()
 
 /* ----------------- Direction ---------------------------- */
 #ifdef ANSIPROTO
-int Direction(SparseMatrix *Mptr,VALUETYPE *vec,BOOLEAN flag)
+int Direction(SparseMatrix *Mptr,VALUETYPE *vec,bool flag)
 #else
 int Direction(Mptr,vec,flag)
 SparseMatrix *Mptr;
 VALUETYPE *vec;
-BOOLEAN flag;
+bool flag;
 #endif
 /* Find derivative -> dx/dlambda. */
 {
@@ -225,17 +225,17 @@ BOOLEAN flag;
   N=Mptr->n1;
   if(!flag) {
     if(ExistParameter('d')) fprintf(stderr,"Direction Factor Jacobian.\n");
-    for(i=1;i<=N;i++) for(vec[i]=dx[i]=0,Jptr=Mptr->RowHead[i];Jptr!=NULL;Jptr->Value=0,Jptr=Jptr->RowNext);
-    Aptr=ACFunJac(Mptr,&PgMax,FALSE,TRUE,FALSE);
-    if(DCFunJac(Mptr,FALSE,TRUE)) return(-1);
-    SVCFunJac(Mptr,FALSE,TRUE);                    /* FACTS */
-    TCSCFunJac(Mptr,FALSE,TRUE);                   /* FACTS */
-    STATCOMFunJac(Mptr,FALSE,TRUE);                /* FACTS */
+    for(i=1;i<=N;i++) for(vec[i]=dx[i]=0,Jptr=Mptr->RowHead[i];Jptr!=nullptr;Jptr->Value=0,Jptr=Jptr->RowNext);
+    Aptr=ACFunJac(Mptr,&PgMax,false,true,false);
+    if(DCFunJac(Mptr,false,true)) return(-1);
+    SVCFunJac(Mptr,false,true);                    /* FACTS */
+    TCSCFunJac(Mptr,false,true);                   /* FACTS */
+    STATCOMFunJac(Mptr,false,true);                /* FACTS */
     if (flagH) {
-      PgMaxH=HFunJac(FALSE,TRUE,Aptr,dx);
+      PgMaxH=HFunJac(false,true,Aptr,dx);
       if(NewCol->p[N]==0) Jptr=Mptr->ColHead[N];
       else Jptr=Mptr->ColHead[NewCol->p[N]];
-      while(Jptr!=NULL){
+      while(Jptr!=nullptr){
         i=OldRow->p[Jptr->Row];
         if(i==0) i=Jptr->Row;
         if (i<N) vec[i]= -Jptr->Value;
@@ -243,7 +243,7 @@ BOOLEAN flag;
       }
     }
     if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
-      if (Aptr!=NULL) {
+      if (Aptr!=nullptr) {
         fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
         fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
       } else {
@@ -261,21 +261,21 @@ BOOLEAN flag;
   if (m==WARNINGEXIT || flag) {
     if(ExistParameter('d')) fprintf(stderr,"Direction Order and Factor Jacobian.\n");
     DeleteJac(Mptr,NewRow,NewCol,OldRow,OldCol);
-    Aptr=ACFunJac(Mptr,&PgMax,FALSE,TRUE,FALSE);
-    if(DCFunJac(Mptr,FALSE,TRUE)) return(-1);
-    SVCFunJac(Mptr,FALSE,TRUE);                    /* FACTS */
-    TCSCFunJac(Mptr,FALSE,TRUE);                   /* FACTS */
-    STATCOMFunJac(Mptr,FALSE,TRUE);                /* FACTS */
+    Aptr=ACFunJac(Mptr,&PgMax,false,true,false);
+    if(DCFunJac(Mptr,false,true)) return(-1);
+    SVCFunJac(Mptr,false,true);                    /* FACTS */
+    TCSCFunJac(Mptr,false,true);                   /* FACTS */
+    STATCOMFunJac(Mptr,false,true);                /* FACTS */
     if (flagH) {
       for (i=1; i<=N; vec[i]=dx[i]=0, i++);
-      PgMaxH=HFunJac(FALSE,TRUE,Aptr,dx);
-      for(Jptr=Mptr->ColHead[N];Jptr!=NULL;Jptr=Jptr->ColNext) {
+      PgMaxH=HFunJac(false,true,Aptr,dx);
+      for(Jptr=Mptr->ColHead[N];Jptr!=nullptr;Jptr=Jptr->ColNext) {
         i=Jptr->Row;
         if (i<N) vec[i]= -Jptr->Value;
       }
     }
     if (PgMax<0 && (!flagH || (flagH && PgMaxH<0)) ) {
-      if (Aptr!=NULL) {
+      if (Aptr!=nullptr) {
         fprintf(stderr,"\nError: Area %d %s does not have any spinning reserves.\n",Aptr->N,Aptr->Name);
         fprintf(stderr,"       Increase the maximum P generation in this area, otherwise\n");
       } else {
@@ -299,7 +299,7 @@ BOOLEAN flag;
   }
   if (!flagH) {
     for (i=1; i<=N; vec[i]=0, i++);
-    for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+    for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
       i=ACvar[ACptr->N];
       vec[i]= ACptr->Pnl*pow(ACptr->V,ACptr->a)+ACptr->Pzl*ACptr->V*ACptr->V;
       vec[i+1]=ACptr->Qnl*pow(ACptr->V,ACptr->b)+ACptr->Qzl*ACptr->V*ACptr->V;
@@ -312,9 +312,9 @@ BOOLEAN flag;
 
 /* --------------------------- ChangeParam --------------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN ChangeParam(void)
+bool ChangeParam(void)
 #else
-BOOLEAN ChangeParam()
+bool ChangeParam()
 #endif
 /* Change parameter for Homotopy method. */
 {
@@ -323,32 +323,32 @@ BOOLEAN ChangeParam()
   if (DxiMax>1) {
     Dparam=0;
     for (i=1;i<Jac->n1;i++) Dx[i]=0;
-    LoadX0(FALSE,TRUE,TRUE);
+    LoadX0(false,true,true);
     if (BlPtr->N==Bl) {
       strcpy(BlPtr->Type,"B");
-      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
+      if(BlPtr->Area!=nullptr && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
       Bl=0;
       BlPtr->Cont=BlPtr;
       if(ExistParameter('d')) fprintf(stderr,"Change param. to lambda.\n");
-      return(TRUE);
+      return(true);
     } else {
       strcpy(BlPtr->Type,"BL");
-      if(BlPtr->Area!=NULL && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
+      if(BlPtr->Area!=nullptr && BlPtr->Area->Slack==BlPtr) strcat(BlPtr->Type,"A");
       Bl=BlPtr->N;
-      BlPtr->Cont=NULL;
+      BlPtr->Cont=nullptr;
       if(ExistParameter('d')) fprintf(stderr,"Change param. to V at %s %d %s.\n",BlPtr->Type,BlPtr->Num,BlPtr->Name);
-      return(TRUE);
+      return(true);
     }
-  } else return(FALSE);
+  } else return(false);
 }
 
 /* ------------------------- VoltageSensFactor --------------------------- */
 #ifdef ANSIPROTO
-void VoltageSensFactor(VALUETYPE *vec,BOOLEAN first)
+void VoltageSensFactor(VALUETYPE *vec,bool first)
 #else
 void VoltageSensFactor(vec,first)
 VALUETYPE *vec;
-BOOLEAN first;
+bool first;
 #endif
 /* Calculate Voltage Sensitivity Factor and
    Tangent Vector Index and rank for a bus */
@@ -360,9 +360,9 @@ BOOLEAN first;
 
 
   if (first) TVIbus=IntegerParameter('f',0,1,9999);
-  RankList=NULL;
-  for(VSFinf=VSFone=TVI=0,ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next){
-    if (ACptr->Cont!=NULL){
+  RankList=nullptr;
+  for(VSFinf=VSFone=TVI=0,ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next){
+    if (ACptr->Cont!=nullptr){
       i=ACvar[ACptr->N];
       val=fabs(vec[i+1]);
       Ptr=RankList;
@@ -370,7 +370,7 @@ BOOLEAN first;
       RankList= new ACranklist;
 #else
       RankList=(ACranklist *) malloc(sizeof(ACranklist));
-      if (RankList==NULL) {ErrorHalt("Insufficient memory to allocate rank data (option -fnum)."); exit(ERROREXIT);}
+      if (RankList==nullptr) {ErrorHalt("Insufficient memory to allocate rank data (option -fnum)."); exit(ERROREXIT);}
 #endif
       RankList->AC=ACptr;
       RankList->val=val;
@@ -390,15 +390,15 @@ BOOLEAN first;
   }
   /*    Rank buses based on Tangent Vector   */
   if (TVI!=0) for(l=1;l<=N;l++) {
-    if (RankList==NULL || RankList->Next==NULL) break;
-    for(val=-0.1,PrevPtr=Ptr=RankList;Ptr!=NULL;PrevPtr=Ptr,Ptr=Ptr->Next) {
+    if (RankList==nullptr || RankList->Next==nullptr) break;
+    for(val=-0.1,PrevPtr=Ptr=RankList;Ptr!=nullptr;PrevPtr=Ptr,Ptr=Ptr->Next) {
       if (Ptr->val>val) {
         val=Ptr->val;
         PtrMax=Ptr;
         PrevPtrMax=PrevPtr;
       }
     }
-    if(PtrMax!=NULL) {
+    if(PtrMax!=nullptr) {
       if (PrevPtrMax!=PtrMax) PrevPtrMax->Next=PtrMax->Next;
       else RankList=PtrMax->Next;
       if (ExistParameter('d')) {
@@ -413,7 +413,7 @@ BOOLEAN first;
 #endif
     }
   }
-  for(Ptr=RankList;Ptr!=NULL;){
+  for(Ptr=RankList;Ptr!=nullptr;){
     PrevPtr=Ptr->Next;
 #ifdef WINDOWS
     delete Ptr;
@@ -427,20 +427,20 @@ BOOLEAN first;
 
 /* --------------------------  CheckVIlimits ------------------------ */
 #ifdef ANSIPROTO
-BOOLEAN CheckVIlimits(BOOLEAN flagVoltage,BOOLEAN flagCurrent)
+bool CheckVIlimits(bool flagVoltage,bool flagCurrent)
 #else
-BOOLEAN CheckVIlimits(flagVoltage,flagCurrent)
-BOOLEAN flagVoltage,flagCurrent;
+bool CheckVIlimits(flagVoltage,flagCurrent)
+bool flagVoltage,flagCurrent;
 #endif
 {
   ACbusData *ACptr;
   ElementData *Eptr;
   ElementList *ELptr;
   VALUETYPE Pij,Qij,Vi,di,Vj,dj,Iij,G,B,Gi,Bi,Pl,Ql,Gp,Bp,Gj,Bj,Pji,Qji,Iji;
-  BOOLEAN FlagStopContinuation=FALSE;
+  bool FlagStopContinuation=false;
 
   TotalPl=TotalQl=TotalPg=TotalQg=0;
-  for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+  for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
     TotalPg=TotalPg+ACptr->PG;
     Pl=(ACptr->Pn+lambda*ACptr->Pnl)*pow(ACptr->V,ACptr->a)+
        (ACptr->Pz+lambda*ACptr->Pzl)*ACptr->V*ACptr->V;
@@ -454,16 +454,16 @@ BOOLEAN flagVoltage,flagCurrent;
     if(ACptr->CheckVlimits && ACptr->Vlmax>ACptr->Vlmin && flagVoltage) {
       if(ACptr->V<=ACptr->Vlmin) {
         fprintf(stderr,"***Warning: Bus %d %s has reached or exceeded its minimum V limit.\n",ACptr->Num,ACptr->Name);
-        ACptr->CheckVlimits=FALSE;
-        FlagStopContinuation=TRUE;
+        ACptr->CheckVlimits=false;
+        FlagStopContinuation=true;
       }
       else if(ACptr->V>=ACptr->Vlmax) {
         fprintf(stderr,"***Warning: Bus %d %s has reached or exceeded its maximum V limit.\n",ACptr->Num,ACptr->Name);
-        ACptr->CheckVlimits=FALSE;
-        FlagStopContinuation=TRUE;
+        ACptr->CheckVlimits=false;
+        FlagStopContinuation=true;
       }
     }
-    if (flagCurrent) for (ELptr=ACptr->Elem;ELptr!=NULL;ELptr=ELptr->Next) {
+    if (flagCurrent) for (ELptr=ACptr->Elem;ELptr!=nullptr;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if (Eptr->CheckIlimits && Eptr->Imax>0)  {
         Vi=Eptr->From->V;  di=Eptr->From->Ang;
@@ -485,14 +485,14 @@ BOOLEAN flagVoltage,flagCurrent;
         if(Iij>=Eptr->Imax) {
           fprintf(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
           fprintf(stderr,"            or exceeded its maximum I limit at its first bus.\n");
-          Eptr->CheckIlimits=FALSE;
-          FlagStopContinuation=TRUE;
+          Eptr->CheckIlimits=false;
+          FlagStopContinuation=true;
         }
         else if(Iji>=Eptr->Imax) {
           fprintf(stderr,"***Warning: Element %d %s to %d %s has reached\n",Eptr->From->Num,Eptr->From->Name,Eptr->To->Num,Eptr->To->Name);
           fprintf(stderr,"            or exceeded its maximum I limit at its second bus.\n");
-          Eptr->CheckIlimits=FALSE;
-          FlagStopContinuation=TRUE;
+          Eptr->CheckIlimits=false;
+          FlagStopContinuation=true;
         }
       }
     }
@@ -511,7 +511,7 @@ void AddLoad()
 {
   ACbusData *ACptr;
 
-  for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next){
+  for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next){
      ACptr->Pn=ACptr->Pn+lambda*ACptr->Pnl;
      ACptr->Pz=ACptr->Pz+lambda*ACptr->Pzl;
      ACptr->Qn=ACptr->Qn+lambda*ACptr->Qnl;
@@ -531,15 +531,15 @@ int Homot()
   VALUETYPE NDx,cons,PreviousLambda,StoplambdaVal,FirstVoltageSumUp=Tol;
   int iter,iterp,CountCyclingSteps,CountVupSteps,NumHVsolutions,
       Steps,IndicesSteps,MaxSteps,i,N,n,CountStepsAfterVup=0;
-  BOOLEAN flagLimits=FALSE,flagSTOP=FALSE,flagFACTSlimits=FALSE,flagt=FALSE,stopValueSet=FALSE,
-          flagMakeVlist=TRUE,flagCountVupAfterFirstLimit=FALSE,flagD=FALSE,
-          ForceflagCountVupAfterFirstLimit=TRUE,flagFirstStep=TRUE,
-          flagCycling=FALSE,flagRlimits=FALSE,flagQlimits=FALSE,
-          flagVlimits=FALSE,flagVIlimits=FALSE,flagDClimits=FALSE,
-          flagVoltage=FALSE,flagCurrent=FALSE,
-          flagSVClimits=FALSE,flagTCSClimits=FALSE,flagSTATCOMlimits=FALSE;  /* FACTS */
+  bool flagLimits=false,flagSTOP=false,flagFACTSlimits=false,flagt=false,stopValueSet=false,
+          flagMakeVlist=true,flagCountVupAfterFirstLimit=false,flagD=false,
+          ForceflagCountVupAfterFirstLimit=true,flagFirstStep=true,
+          flagCycling=false,flagRlimits=false,flagQlimits=false,
+          flagVlimits=false,flagVIlimits=false,flagDClimits=false,
+          flagVoltage=false,flagCurrent=false,
+          flagSVClimits=false,flagTCSClimits=false,flagSTATCOMlimits=false;  /* FACTS */
 
-  BlPtr=NULL;
+  BlPtr=nullptr;
   Dparam=param0=0;
   AngTr=180/PI;
   Kh=1;
@@ -552,7 +552,7 @@ int Homot()
   RedNumEq=N-1;
   CountSteps=0;
   NumSteps=IntegerParameter('U',10,2,100);
-  iter=Pflow(1,FALSE,TRUE,TRUE);
+  iter=Pflow(1,false,true,true);
   if(iter<0) { fclose(OutputHomot); return(iter);}
   else fprintf(stderr,"**** Initial Power Flow Solved ****    \n\n");
   lambda=SD0=0;
@@ -562,8 +562,8 @@ int Homot()
   flagVoltage=ExistParameter('7');
   flagCurrent=ExistParameter('8');
   if (lambda!=0) {
-    if ((ExistParameter('D') && (!NullName(NameParameter('D')))) || flagVloads) flagD=TRUE;
-    iter=Pflow(iter,flagD,TRUE,FALSE);
+    if ((ExistParameter('D') && (!NullName(NameParameter('D')))) || flagVloads) flagD=true;
+    iter=Pflow(iter,flagD,true,false);
     if (iter>0) {
       fprintf(stderr,"**** Initial Lambda Case Solved ****    ");
       fprintf(stderr,"Starting loading factor -> %-10.6lg\n\n",lambda);
@@ -577,12 +577,12 @@ int Homot()
   StoplambdaVal=lambda;
   if (ExistParameter('u')) {
     ZeroDx=0.001;
-    flagReduceSystem=TRUE;
+    flagReduceSystem=true;
 #ifdef WINDOWS
-    DxZero= new BOOLEAN[N];
+    DxZero= new bool[N];
 #else
-    DxZero=(BOOLEAN *) calloc(N,sizeof(BOOLEAN));
-    if (DxZero==NULL) {
+    DxZero=(bool *) calloc(N,sizeof(bool));
+    if (DxZero==nullptr) {
       fclose(OutputHomot);
       ErrorHalt("Insufficient memory to allocate vector for system reduction in the Cont. Method.");
       exit(ERROREXIT);
@@ -590,9 +590,9 @@ int Homot()
 #endif
     RealParameter('u',&ZeroDx,0.,0.2);
     if (Kh<1) ZeroDx=Kh*ZeroDx;
-  } else { flagReduceSystem=FALSE; ZeroDx=0;  DxZero=NULL;}
-  for (i=1; i<=N; i++) { if (DxZero!=NULL) DxZero[i]=FALSE;}
-  for (flagL=flagR=TRUE,CountCyclingSteps=CountVupSteps=Steps=1;;) {
+  } else { flagReduceSystem=false; ZeroDx=0;  DxZero=nullptr;}
+  for (i=1; i<=N; i++) { if (DxZero!=nullptr) DxZero[i]=false;}
+  for (flagL=flagR=true,CountCyclingSteps=CountVupSteps=Steps=1;;) {
     Homotopy:
     if(ExistParameter('d')) fprintf(stderr,"\nContinuation Step=%d\n",Steps);
     Dparam=0;
@@ -605,16 +605,16 @@ int Homot()
       SF=SF+fabs(Dx[i]);
     }
     if (flagFirstStep) {
-      if (ExistParameter('u') && ZeroDx>0) flagReducedContinuation=TRUE;
-      flagFirstStep=FALSE;
+      if (ExistParameter('u') && ZeroDx>0) flagReducedContinuation=true;
+      flagFirstStep=false;
     }
     if (ExistParameter('f')) VoltageSensFactor(Dx,flagMakeVlist);
     if (flagMakeVlist) {
       MakeVlist(OutputHomot);
       CheckVIlimits(flagVoltage,flagCurrent);
-      VoltProf(TRUE,OutputHomot);
+      VoltProf(true,OutputHomot);
       if (ExistParameter('0')) {IndicesSteps=Steps; WriteQmatrix(IndicesSteps,Dx);}
-      flagMakeVlist=FALSE;             
+      flagMakeVlist=false;             
     }
     Steps++;
     if (ExistParameter('f')) {
@@ -646,15 +646,15 @@ int Homot()
         /* Stop system reduction when V goes up, and start again
            after V goes down for 5 steps. */
         CountSteps++;
-        if (VoltageSum>FirstVoltageSumUp  && Kh<0) flagReduceSystem=FALSE;
+        if (VoltageSum>FirstVoltageSumUp  && Kh<0) flagReduceSystem=false;
         if (!flagReduceSystem) {
           if (VoltageSum<=FirstVoltageSumUp && Kh<0) CountStepsAfterVup++;
-          if (CountStepsAfterVup>=5) flagReduceSystem=TRUE;
+          if (CountStepsAfterVup>=5) flagReduceSystem=true;
         }
       }
 
       /* Update variables from predictor */
-      cons=LoadX0(TRUE,TRUE,TRUE);
+      cons=LoadX0(true,true,true);
       if (!CountVupSteps) FirstVoltageSumUp=VoltageSum0;
       if (flagReducedContinuation && flagReduceSystem && CountSteps>=NumSteps) {
         CountSteps=0;
@@ -663,7 +663,7 @@ int Homot()
       if(ExistParameter('d')) fprintf(stderr,"cons=%lf Dparam=%lf\n",cons,Dparam);
       if(ExistParameter('d')) fprintf(stderr,"Num.Steps=%d  Num.Eqs.System=%d   Num.Eqs.Reduced=%d\n",CountSteps,N-1,RedNumEq);
       if(!flagt) { if (ExistParameter('H')) flagt=ChangeParam();}
-      else flagt=FALSE;
+      else flagt=false;
       if (flagt) goto Homotopy;
 
       /*  Enforce Limits */
@@ -671,7 +671,7 @@ int Homot()
         Dparam=fabs(1-cons+Htol*0.1)*Dparam;
         if(ExistParameter('d')) fprintf(stderr,"(1-%lf)Dparam->%lf\n",cons,Dparam);
         for (i=1;i<=N-1;i++) Dx[i]=fabs(1-cons+Htol*0.1)*Dx[i];
-        LoadX0(FALSE,TRUE,TRUE);
+        LoadX0(false,true,true);
         if ((!ExistParameter('G') || !flagCountVupAfterFirstLimit || !CountVupSteps) && fabs(Dparam)<=Htol) {
           flagRlimits=CheckRlimits();
           flagVlimits=CheckVlimits();
@@ -681,24 +681,24 @@ int Homot()
           flagTCSClimits=ChangeTCSCmode();        /* FACTS */
           flagSTATCOMlimits=ChangeSTATCOMmode();  /* FACTS */
           if (flagRlimits || flagVlimits || flagQlimits || flagDClimits ||
-              flagSVClimits || flagTCSClimits || flagSTATCOMlimits)  flagLimits=TRUE;  /* FACTS */
-          else                                                       flagLimits=FALSE;
-          if (flagDClimits || flagSVClimits || flagTCSClimits || flagSTATCOMlimits) flagFACTSlimits=TRUE;   /* FACTS */
-          else                                                                      flagFACTSlimits=FALSE;  /* FACTS */
-          if (flagLimits) {SD0=0; if(ForceflagCountVupAfterFirstLimit) flagCountVupAfterFirstLimit=TRUE;}
-        } else flagLimits=flagFACTSlimits=FALSE;   /* FACTS */
-      } else flagLimits=flagFACTSlimits=FALSE;     /* FACTS */
+              flagSVClimits || flagTCSClimits || flagSTATCOMlimits)  flagLimits=true;  /* FACTS */
+          else                                                       flagLimits=false;
+          if (flagDClimits || flagSVClimits || flagTCSClimits || flagSTATCOMlimits) flagFACTSlimits=true;   /* FACTS */
+          else                                                                      flagFACTSlimits=false;  /* FACTS */
+          if (flagLimits) {SD0=0; if(ForceflagCountVupAfterFirstLimit) flagCountVupAfterFirstLimit=true;}
+        } else flagLimits=flagFACTSlimits=false;   /* FACTS */
+      } else flagLimits=flagFACTSlimits=false;     /* FACTS */
 
       /* Corrector step */
       for (n=1;n<=10;n++) {
-        if (n==10) flagL=flagR=FALSE;
-        iterp=Pflow(iter,flagFACTSlimits,flagLimits,FALSE);
-        if (flagL == FALSE) flagL=flagR=TRUE;
+        if (n==10) flagL=flagR=false;
+        iterp=Pflow(iter,flagFACTSlimits,flagLimits,false);
+        if (flagL == false) flagL=flagR=true;
         /* if ((iterp>0 && lambda>-1e-4) || fabs(Dparam)<=1e-6)  break;*/
         if (iterp>0 && lambda>-1e-4)  break;
         Dparam=Dparam/2;
         for (i=1;i<=N-1;i++) Dx[i]=Dx[i]/2;
-        LoadX0(FALSE,TRUE,TRUE);
+        LoadX0(false,true,true);
         if(ExistParameter('d')) fprintf(stderr,"Dparam/2^%d->%lf\n",n,Dparam);
       }
 
@@ -709,14 +709,14 @@ int Homot()
       if (ExistParameter('G') && flagCountVupAfterFirstLimit &&
           (CountVupSteps>=NumHVsolutions || (CountCyclingSteps>0 && iterp<0))) {
         Kh= -Kh;
-        ForceflagCountVupAfterFirstLimit=flagCountVupAfterFirstLimit=FALSE;
+        ForceflagCountVupAfterFirstLimit=flagCountVupAfterFirstLimit=false;
         if (iterp<0) iterp= -iterp;
       }
 
       /* Stop and output commands */
 	  // when lamda hits its max, set the stop value
       if(lambda<PreviousLambda && !stopValueSet) {
-        stopValueSet=TRUE;
+        stopValueSet=true;
         RealParameter('S',&StoplambdaVal,0.,1.);
         StoplambdaVal = PreviousLambda*StoplambdaVal;
         if (ExistParameter('E') && !NullName(NameParameter('E'))) {
@@ -727,10 +727,10 @@ int Homot()
 	  // Sometimes there is a small decrease in lamda before it actually hits its max
 	  // the following will reset the stopValueSet flag incase that happened
 	  if(stopValueSet && lambda>PreviousLambda){
-		  stopValueSet = FALSE;
+		  stopValueSet = false;
 	  }
 
-      if ((MaxSteps>0 && Steps>=MaxSteps) || (lambda-StoplambdaVal)<=1e-5 ) flagSTOP=TRUE;
+      if ((MaxSteps>0 && Steps>=MaxSteps) || (lambda-StoplambdaVal)<=1e-5 ) flagSTOP=true;
       if (iterp<0)  {
         iter= -iterp;
         fprintf(stderr,"\n *** The case diverges (possible AC/DC control problems).\n");
@@ -740,7 +740,7 @@ int Homot()
         exit(1);
       } else iter=iterp;
       flagVIlimits=CheckVIlimits(flagVoltage,flagCurrent);
-      VoltProf(FALSE,OutputHomot);
+      VoltProf(false,OutputHomot);
       if (flagVIlimits) break;
       if (ExistParameter('0') && Kh>0) {IndicesSteps=Steps; WriteQmatrix(IndicesSteps,Dx);}
       if (fabs(lambda-param0)<=Htol) CountCyclingSteps++;
@@ -754,12 +754,12 @@ int Homot()
           exit(1);
         } 
 		else Kh=-Kh;
-        flagCycling=TRUE;
+        flagCycling=true;
       }
     } else break;
   }
   if (ExistParameter('m')) MatlabV(OutputHomot);
-  if(OutputHomot!=NULL)
+  if(OutputHomot!=nullptr)
 	fclose(OutputHomot);
   if (ExistParameter('O')) TEFMatlabFiles();
   if (ExistParameter('0')) IndicesMatlab(IndicesSteps);

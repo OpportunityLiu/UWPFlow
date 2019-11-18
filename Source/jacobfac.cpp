@@ -3,9 +3,9 @@
 #include "jacob.h"
 
 #ifdef ANSIPROTO
-void SVCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
-void TCSCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
-void STATCOMFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
+void SVCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);
+void TCSCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);
+void STATCOMFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);
 #else
 void SVCFunJac();
 void TCSCFunJac();
@@ -15,26 +15,26 @@ void STATCOMFunJac();
 
 /*  Construct the SVC part of the mismatch vector and Jacobian  */
 #ifdef ANSIPROTO
-void SVCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ)
+void SVCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ)
 #else
 void SVCFunJac(Mptr,flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 SparseMatrix *Mptr;
 #endif
 {
  INDEX i,k,l;
  SVCbusData *SVCptr;
  VALUETYPE Vref,Vk,Vl,Xl,Xc,Bv,Xsl,Qsvc,alpha;
- BOOLEAN flag1;
+ bool flag1;
 
  i=NacVar+11*Ndc/2;
- for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+ for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
    k=ACvar[SVCptr->From->N];
    Vk=SVCptr->From->V;
    l=ACvar[SVCptr->Ctrl->N];
    Vl=SVCptr->Ctrl->V;
-   if (!strcmp(SVCptr->Cont,"AL")) flag1=FALSE;
-   else flag1=TRUE;
+   if (!strcmp(SVCptr->Cont,"AL")) flag1=false;
+   else flag1=true;
    if(!flag1)Vref=SVCptr->Vref;
    else Vref=SVCptr->Vvar;
    Xl=SVCptr->Xl;
@@ -80,10 +80,10 @@ SparseMatrix *Mptr;
 
 /*  Construct the TCSC part of the mismatch vector and Jacobian  */
 #ifdef ANSIPROTO
-void TCSCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ)
+void TCSCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ)
 #else
 void TCSCFunJac(Mptr,flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 SparseMatrix *Mptr;
 #endif
 {
@@ -92,10 +92,10 @@ SparseMatrix *Mptr;
  VALUETYPE Vk,Vm,thk,thm,Xl,Xc,Ptcsc,Qtcsck,Qtcscm,Be,alpha,Itcsc,delta_t;
  VALUETYPE Bset,Pset,Iset,delta_set,Ctrl,Kf;
  VALUETYPE s1,s2,s3,s4,s5,s6,s7,s8;
- BOOLEAN dVk=FALSE,dVm=FALSE;
+ bool dVk=false,dVm=false;
 
  i=NacVar+11*Ndc/2+3*Nsvc;
- for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+ for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
    k=ACvar[TCSCptr->From->N];
    kp=k+1;
    Vk=TCSCptr->From->V;
@@ -119,10 +119,10 @@ SparseMatrix *Mptr;
    alpha=TCSCptr->alpha_tcsc;
    Itcsc=TCSCptr->Itcsc;
    delta_t=TCSCptr->delta_t;
-   if (TCSCptr->From->Cont!=NULL) dVk=TRUE;
-   else dVk=FALSE;
-   if (TCSCptr->To->Cont!=NULL) dVm=TRUE;
-   else dVm=FALSE;
+   if (TCSCptr->From->Cont!=nullptr) dVk=true;
+   else dVk=false;
+   if (TCSCptr->To->Cont!=nullptr) dVm=true;
+   else dVm=false;
    if(flagF){
      dF[i+1]=-Vk*Vm*Be*sin(thk-thm)-Ptcsc;
      dF[i+2]=-Vk*Vk*Be+Vk*Vm*Be*cos(thk-thm)-Qtcsck;
@@ -261,31 +261,31 @@ SparseMatrix *Mptr;
 
 /*  Construct the STATCOM part of the mismatch vector and Jacobian  */
 #ifdef ANSIPROTO
-void STATCOMFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ)
+void STATCOMFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ)
 #else
 void STATCOMFunJac(Mptr,flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 SparseMatrix *Mptr;
 #endif
 {
  INDEX i,k,l;
  STATCOMbusData *STATCOMptr;
  VALUETYPE Vk,delta,Vl,R,G,B,Gc,Xsl,Vref,P,Q,I,theta,Vdc,alpha,K,Cref;
- BOOLEAN flagLimits,flagPWM;
+ bool flagLimits,flagPWM;
 
  i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
- for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+ for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
    k=ACvar[STATCOMptr->From->N];
    Vk=STATCOMptr->From->V;
    delta=STATCOMptr->From->Ang;
    l=ACvar[STATCOMptr->Ctrl->N];
    Vl=STATCOMptr->Ctrl->V;
-   if (!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")) flagLimits=FALSE;
-   else flagLimits=TRUE;
+   if (!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")) flagLimits=false;
+   else flagLimits=true;
    if(!flagLimits) Vref=STATCOMptr->Vref;
    else Vref=STATCOMptr->Vvar;
-   if (!strcmp(STATCOMptr->Cont1,"PW")) flagPWM=TRUE;
-   else flagPWM=FALSE;
+   if (!strcmp(STATCOMptr->Cont1,"PW")) flagPWM=true;
+   else flagPWM=false;
    R=STATCOMptr->R;
    G=STATCOMptr->G;
    B=STATCOMptr->B;

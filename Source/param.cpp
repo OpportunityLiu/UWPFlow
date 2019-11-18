@@ -23,7 +23,7 @@ void SetArguments(int argc, const char **argv)
 }
 
 /* ========================== ExistParameters ======================= */
-BOOLEAN ExistParameter(char ch)
+bool ExistParameter(char ch)
 {
   int i;
   /* BEGIN */
@@ -32,10 +32,10 @@ BOOLEAN ExistParameter(char ch)
     if (GlobalArgv[i][0] == '-')
     {
       if (GlobalArgv[i][1] == ch)
-        return (TRUE);
+        return (true);
     }
   }
-  return (FALSE);
+  return (false);
 }
 
 /* ============================ TrueParamStr ========================== */
@@ -63,11 +63,11 @@ char *TrueParamStr(int Item)
       return (TempPtr);
     }
   }
-  return (NULL);
+  return (nullptr);
 }
 
 /* =========================== HelpRequested ======================= */
-BOOLEAN HelpRequested()
+bool HelpRequested()
 {
   return (ExistParameter('h'));
 }
@@ -107,7 +107,7 @@ char *NameParameter(char ch)
       }
     }
   }
-  return (NULL);
+  return (nullptr);
 }
 
 /* =========================== IntegerParameter ======================== */
@@ -219,14 +219,14 @@ char *DisplayReal(double value, int precision, char *buff)
 }
 
 /* ================================ NullName ========================== */
-BOOLEAN NullName(const char *Name)
+bool NullName(const char *Name)
 {
-  if (Name == NULL)
-    return (TRUE);
+  if (Name == nullptr)
+    return (true);
   if (strcmp(Name, "") == 0)
-    return (TRUE);
+    return (true);
   else
-    return (FALSE);
+    return (false);
 }
 
 /* =============================== OpenInput ========================== */
@@ -238,7 +238,7 @@ FILE *OpenInput(const char *Name)
 
   if (!NullName(Name))
   {
-    if ((InputFile = fopen(Name, "rt")) == NULL)
+    if ((InputFile = fopen(Name, "rt")) == nullptr)
     {
       sprintf(s, "No input data file -> %s", Name);
       ErrorHalt(s);
@@ -264,12 +264,12 @@ FILE *OpenOutput(const char *Name)
 
   if (!NullName(Name))
   {
-    if ((OutputFile = fopen(Name, "wt")) == NULL)
+    if ((OutputFile = fopen(Name, "wt")) == nullptr)
     {
       fprintf(stderr, "Output to standard output\n");
       OutputFile = stdout;
       //explanation for above: a really strange bug where stdout gets initialized to something
-      //by itself. I(that is, Shu) really couldn't figure it out so I set OutputFile to NULL instead which will
+      //by itself. I(that is, Shu) really couldn't figure it out so I set OutputFile to nullptr instead which will
       //print to screen anyways.
     }
   }

@@ -10,20 +10,20 @@
 #include "pflow.h"
 
 void ErrorStop(char *Msg);
-AreaData *ACFunJac(SparseMatrix *Mptr, int *val, BOOLEAN flagF, BOOLEAN flagJ, BOOLEAN flagFirst);
-BOOLEAN DCFunJac(SparseMatrix *Mptr, BOOLEAN flagF, BOOLEAN flagJ);
+AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool flagFirst);
+bool DCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ);
 void UpdateSVCvar(VALUETYPE cons, INDEX j);                           /* FACTS */
-void SVCFunJac(SparseMatrix *Mptr, BOOLEAN flagF, BOOLEAN flagJ);     /* FACTS */
+void SVCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ);     /* FACTS */
 void UpdateTCSCvar(VALUETYPE cons, INDEX j);                          /* FACTS */
-void TCSCFunJac(SparseMatrix *Mptr, BOOLEAN flagF, BOOLEAN flagJ);    /* FACTS */
+void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ);    /* FACTS */
 void UpdateSTATCOMvar(VALUETYPE cons, INDEX j);                       /* FACTS */
-void STATCOMFunJac(SparseMatrix *Mptr, BOOLEAN flagF, BOOLEAN flagJ); /* FACTS */
-int HFunJac(BOOLEAN flagF, BOOLEAN flagJ, AreaData *Aptr, VALUETYPE *vec);
-void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ);
-BOOLEAN DCFunHes(BOOLEAN flagF, BOOLEAN flagJ);
-void SVCFunHes(BOOLEAN flagF, BOOLEAN flagJ);     /* FACTS */
-void TCSCFunHes(BOOLEAN flagF, BOOLEAN flagJ);    /* FACTS */
-void STATCOMFunHes(BOOLEAN flagF, BOOLEAN flagJ); /* FACTS */
+void STATCOMFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ); /* FACTS */
+int HFunJac(bool flagF, bool flagJ, AreaData *Aptr, VALUETYPE *vec);
+void ACFunHes(bool flagF, bool flagJ);
+bool DCFunHes(bool flagF, bool flagJ);
+void SVCFunHes(bool flagF, bool flagJ);     /* FACTS */
+void TCSCFunHes(bool flagF, bool flagJ);    /* FACTS */
+void STATCOMFunHes(bool flagF, bool flagJ); /* FACTS */
 int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVector *PartCol,
              IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row, IntegerVector *P2Col);
 void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr,
@@ -31,23 +31,23 @@ void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr,
 VALUETYPE Norm(VALUETYPE *Vptr, INDEX N, INDEX *N1);
 void WriteSolution(INDEX Iter, char *File1, char *str);
 int factor(SparseMatrix *Mptr);
-void UpdateACvar(VALUETYPE cons, INDEX j, BOOLEAN Limits, BOOLEAN Recover);
-void UpdateDCvar(VALUETYPE cons, INDEX j, BOOLEAN Limits);
+void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover);
+void UpdateDCvar(VALUETYPE cons, INDEX j, bool Limits);
 void UpdateEvector(VALUETYPE cons);
-BOOLEAN CheckRlimits(void);
-BOOLEAN CheckVlimits(void);
-BOOLEAN CheckQlimits(void);
-BOOLEAN CheckDClimits(void);
-BOOLEAN ChangeSVCmode(void);     /* FACTS */
-BOOLEAN ChangeTCSCmode(void);    /* FACTS */
-BOOLEAN ChangeSTATCOMmode(void); /* FACTS */
-BOOLEAN ChangeDCmode(void);
+bool CheckRlimits(void);
+bool CheckVlimits(void);
+bool CheckQlimits(void);
+bool CheckDClimits(void);
+bool ChangeSVCmode(void);     /* FACTS */
+bool ChangeTCSCmode(void);    /* FACTS */
+bool ChangeSTATCOMmode(void); /* FACTS */
+bool ChangeDCmode(void);
 ACbusData *GetACbus(INDEX N);
 void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1);
 void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
                IntegerVector *P2Row, IntegerVector *P2Col);
 void WriteJac(void);
-int Pflow(int iter, BOOLEAN flagF, BOOLEAN flagD, BOOLEAN flagFirst);
+int Pflow(int iter, bool flagF, bool flagD, bool flagFirst);
 void InitializeLoad(void);
 
 /* ------- Global Variables ------ */
@@ -60,9 +60,9 @@ extern VALUETYPE *dx, *dF, tol, Tol, Sn, lambda, *x0, *Dx;
 extern VALUETYPE K1, K2, MaxdFi, alpha;
 extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition, *ColPartition;
 extern IntegerVector *RowPer, *ColPer;
-extern BOOLEAN Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH, flagPoC, flagL, flagR;
+extern bool Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH, flagPoC, flagL, flagR;
 extern INDEX *InvRowPerm, *InvColPerm;
-extern BOOLEAN *MarkRowPerm, *MarkColPerm;
+extern bool *MarkRowPerm, *MarkColPerm;
 extern int SD0;
 
 /* --------------- Norm ---------------------- */
@@ -98,12 +98,12 @@ ACbusData *GetACbus(N)
 {
    ACbusData *ACptr;
 
-   for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+   for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
    {
       if (ACptr->N == N)
          return (ACptr);
    }
-   return (NULL);
+   return (nullptr);
 }
 
 /* ----------------- PrintMismatch ------------------------ */
@@ -199,7 +199,7 @@ INDEX j, N1;
    if (N2)
    {
       ACptr = (ACbusData *)GetACbus(N2);
-      if (ACptr != NULL)
+      if (ACptr != nullptr)
          fprintf(stderr, "AC bus: %d\n", ACptr->Num);
    }
    else if (N3)
@@ -232,7 +232,7 @@ IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
    for (k = 1; k <= Mptr->n1; k++)
    {
       Jptr = Mptr->RowHead[k];
-      while (Jptr != NULL)
+      while (Jptr != nullptr)
       {
          Jptrp = Jptr->RowNext;
 #ifdef WINDOWS
@@ -242,7 +242,7 @@ IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
 #endif
          Jptr = Jptrp;
       }
-      Mptr->ColHead[k] = Mptr->RowHead[k] = NULL;
+      Mptr->ColHead[k] = Mptr->RowHead[k] = nullptr;
       P1Row->p[k] = P1Col->p[k] = 0;
       P2Row->p[k] = P2Col->p[k] = 0;
    }
@@ -250,10 +250,10 @@ IntegerVector *P1Row, *P1Col, *P2Row, *P2Col;
 
 /* --------------------------- Pflow --------------------------------- */
 #ifdef ANSIPROTO
-int Pflow(int iter, BOOLEAN flagDCLimits, BOOLEAN flagLimits, BOOLEAN flagFirst)
+int Pflow(int iter, bool flagDCLimits, bool flagLimits, bool flagFirst)
 #else
 int Pflow(iter, flagDCLimits, flagLimits, flagFirst) int iter;
-BOOLEAN flagDCLimits, flagLimits, flagFirst;
+bool flagDCLimits, flagLimits, flagFirst;
 #endif
 /* Power Flow Routine. */
 {
@@ -262,7 +262,7 @@ BOOLEAN flagDCLimits, flagLimits, flagFirst;
    int i, m = 0, PgMax, PgMaxH;
    INDEX j, k, N, N1, N2, N3, MaxIterRun;
    VALUETYPE MaxdFi1, cons, val;
-   BOOLEAN flag = FALSE, flagp = FALSE, flags = FALSE;
+   bool flag = false, flagp = false, flags = false;
 
    N3 = iter;
    if (flagH)
@@ -272,22 +272,22 @@ BOOLEAN flagDCLimits, flagLimits, flagFirst;
    RowPer = NewRow;
    ColPer = NewCol;
 NewtonRapson:
-   ACFunJac(Jac, &PgMax, TRUE, FALSE, flagFirst);
-   if (DCFunJac(Jac, TRUE, FALSE))
+   ACFunJac(Jac, &PgMax, true, false, flagFirst);
+   if (DCFunJac(Jac, true, false))
       return (-iter);
-   SVCFunJac(Jac, TRUE, FALSE);     /*  FACTS  */
-   TCSCFunJac(Jac, TRUE, FALSE);    /*  FACTS  */
-   STATCOMFunJac(Jac, TRUE, FALSE); /*  FACTS  */
+   SVCFunJac(Jac, true, false);     /*  FACTS  */
+   TCSCFunJac(Jac, true, false);    /*  FACTS  */
+   STATCOMFunJac(Jac, true, false); /*  FACTS  */
    if (flagH)
-      HFunJac(TRUE, FALSE, NULL, Dx);
+      HFunJac(true, false, nullptr, Dx);
    else if (iter != 1 && flagPoC)
    {
-      ACFunHes(TRUE, FALSE);
-      if (DCFunHes(TRUE, FALSE))
+      ACFunHes(true, false);
+      if (DCFunHes(true, false))
          return (-iter);
-      SVCFunHes(TRUE, FALSE);     /* FACTS  */
-      TCSCFunHes(TRUE, FALSE);    /* FACTS  */
-      STATCOMFunHes(TRUE, FALSE); /* FACTS  */
+      SVCFunHes(true, false);     /* FACTS  */
+      TCSCFunHes(true, false);    /* FACTS  */
+      STATCOMFunHes(true, false); /* FACTS  */
    }
    MaxdFi = Norm(dF, Jac->n1, &N1);
    fprintf(stderr, "\nIteration: %2d  ", N3);
@@ -303,28 +303,28 @@ NewtonRapson:
             if (ExistParameter('d'))
                fprintf(stderr, "Factor Jacobian.\n");
             for (k = 1; k <= N; k++)
-               for (Jptr = Jac->RowHead[k]; Jptr != NULL; Jptr->Value = 0, Jptr = Jptr->RowNext)
+               for (Jptr = Jac->RowHead[k]; Jptr != nullptr; Jptr->Value = 0, Jptr = Jptr->RowNext)
                   ;
-            Aptr = ACFunJac(Jac, &PgMax, TRUE, TRUE, flagFirst);
-            if (DCFunJac(Jac, TRUE, TRUE))
+            Aptr = ACFunJac(Jac, &PgMax, true, true, flagFirst);
+            if (DCFunJac(Jac, true, true))
                return (-iter);
-            SVCFunJac(Jac, TRUE, TRUE);     /* FACTS */
-            TCSCFunJac(Jac, TRUE, TRUE);    /* FACTS */
-            STATCOMFunJac(Jac, TRUE, TRUE); /* FACTS */
+            SVCFunJac(Jac, true, true);     /* FACTS */
+            TCSCFunJac(Jac, true, true);    /* FACTS */
+            STATCOMFunJac(Jac, true, true); /* FACTS */
             if (flagH)
-               PgMaxH = HFunJac(TRUE, TRUE, Aptr, Dx);
+               PgMaxH = HFunJac(true, true, Aptr, Dx);
             else if (iter != 1 && flagPoC)
             {
-               ACFunHes(TRUE, TRUE);
-               if (DCFunHes(TRUE, TRUE))
+               ACFunHes(true, true);
+               if (DCFunHes(true, true))
                   return (-iter);
-               SVCFunHes(TRUE, FALSE);     /* FACTS  */
-               TCSCFunHes(TRUE, FALSE);    /* FACTS  */
-               STATCOMFunHes(TRUE, FALSE); /* FACTS  */
+               SVCFunHes(true, false);     /* FACTS  */
+               TCSCFunHes(true, false);    /* FACTS  */
+               STATCOMFunHes(true, false); /* FACTS  */
             }
             if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0)))
             {
-               if (Aptr != NULL)
+               if (Aptr != nullptr)
                {
                   fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
                   fprintf(stderr, "       Increase the maximum P generation in this area, otherwise\n");
@@ -346,29 +346,29 @@ NewtonRapson:
          {
             if (ExistParameter('d'))
                fprintf(stderr, "Order and factor Jacobian.\n");
-            flagDCLimits = FALSE;
+            flagDCLimits = false;
             if (i > 1 || flagR || flagL)
                DeleteJac(Jac, NewRow, NewCol, OldRow, OldCol);
-            Aptr = ACFunJac(Jac, &PgMax, TRUE, TRUE, flagFirst);
-            if (DCFunJac(Jac, TRUE, TRUE))
+            Aptr = ACFunJac(Jac, &PgMax, true, true, flagFirst);
+            if (DCFunJac(Jac, true, true))
                return (-iter);
-            SVCFunJac(Jac, TRUE, TRUE);     /* FACTS */
-            TCSCFunJac(Jac, TRUE, TRUE);    /* FACTS */
-            STATCOMFunJac(Jac, TRUE, TRUE); /* FACTS */
+            SVCFunJac(Jac, true, true);     /* FACTS */
+            TCSCFunJac(Jac, true, true);    /* FACTS */
+            STATCOMFunJac(Jac, true, true); /* FACTS */
             if (flagH)
-               PgMaxH = HFunJac(TRUE, TRUE, Aptr, Dx);
+               PgMaxH = HFunJac(true, true, Aptr, Dx);
             else if (iter != 1 && flagPoC)
             {
-               ACFunHes(TRUE, TRUE);
-               if (DCFunHes(TRUE, TRUE))
+               ACFunHes(true, true);
+               if (DCFunHes(true, true))
                   return (-iter);
-               SVCFunHes(TRUE, FALSE);     /* FACTS  */
-               TCSCFunHes(TRUE, FALSE);    /* FACTS  */
-               STATCOMFunHes(TRUE, FALSE); /* FACTS  */
+               SVCFunHes(true, false);     /* FACTS  */
+               TCSCFunHes(true, false);    /* FACTS  */
+               STATCOMFunHes(true, false); /* FACTS  */
             }
             if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0)))
             {
-               if (Aptr != NULL)
+               if (Aptr != nullptr)
                {
                   fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
                   fprintf(stderr, "       Increase the maximum P generation in this area, otherwise\n");
@@ -411,29 +411,29 @@ NewtonRapson:
                cons = -1;
             else
                cons = 1.0 / pow(2.0, cons);
-            UpdateACvar(cons, j, TRUE, !ExistParameter('G'));
+            UpdateACvar(cons, j, true, !ExistParameter('G'));
             UpdateDCvar(cons, j, !flag);
             UpdateSVCvar(cons, j);     /* FACTS */
             UpdateTCSCvar(cons, j);    /* FACTS */
             UpdateSTATCOMvar(cons, j); /* FACTS */
             if (iter != 1 && flagPoC)
                UpdateEvector(cons);
-            ACFunJac(Jac, &PgMax, TRUE, FALSE, flagFirst);
-            flags = DCFunJac(Jac, TRUE, FALSE);
-            SVCFunJac(Jac, TRUE, FALSE);     /* FACTS */
-            TCSCFunJac(Jac, TRUE, FALSE);    /* FACTS */
-            STATCOMFunJac(Jac, TRUE, FALSE); /* FACTS */
+            ACFunJac(Jac, &PgMax, true, false, flagFirst);
+            flags = DCFunJac(Jac, true, false);
+            SVCFunJac(Jac, true, false);     /* FACTS */
+            TCSCFunJac(Jac, true, false);    /* FACTS */
+            STATCOMFunJac(Jac, true, false); /* FACTS */
             if (!flags)
             {
                if (flagH)
-                  HFunJac(TRUE, FALSE, NULL, Dx);
+                  HFunJac(true, false, nullptr, Dx);
                else if (iter != 1 && flagPoC)
                {
-                  ACFunHes(TRUE, FALSE);
-                  flags = DCFunHes(TRUE, FALSE);
-                  SVCFunHes(TRUE, FALSE);     /* FACTS  */
-                  TCSCFunHes(TRUE, FALSE);    /* FACTS  */
-                  STATCOMFunHes(TRUE, FALSE); /* FACTS  */
+                  ACFunHes(true, false);
+                  flags = DCFunHes(true, false);
+                  SVCFunHes(true, false);     /* FACTS  */
+                  TCSCFunHes(true, false);    /* FACTS  */
+                  STATCOMFunHes(true, false); /* FACTS  */
                }
             }
             if (!flags)
@@ -502,7 +502,7 @@ NewtonRapson:
                   flagp = flagDCLimits = ChangeSTATCOMmode();
                else
                   flagDCLimits = ChangeSTATCOMmode(); /* FACTS */
-               flagL = TRUE;
+               flagL = true;
             }
             if (!flagp)
             {

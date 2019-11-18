@@ -17,7 +17,7 @@ VALUETYPE val;
 {
   int i,j;
   double cons;
-  BOOLEAN flagNegative=FALSE;
+  bool flagNegative=false;
   char str[50],*ptr;
 
   if (spaces>0) fprintf(File,"%*s",spaces,"");
@@ -25,7 +25,7 @@ VALUETYPE val;
   if(val<0) {
     width--;
     val=fabs(val);
-    flagNegative=TRUE;
+    flagNegative=true;
   }
   if(width<=decimals) decimals=width-1;
   if(decimals) width--;
@@ -102,7 +102,7 @@ void IEEE()
   int Type,Nties,i,j;
   VALUETYPE R,X,Vn,In,Pl,Ql,Imax,delta,vals;
   VALUETYPE Ssvc,Stcsc,Sstatcom,G,B,Max,Xc; /* FACTS */
-  BOOLEAN card=FALSE,flag=FALSE;
+  bool card=false,flag=false;
   FILE *OutFile;
   time_t t;
   struct tm *localt;
@@ -116,11 +116,11 @@ void IEEE()
   } else {
     if (NullName(NameParameter('w'))) return;
     OutFile=OpenOutput(NameParameter('w'));
-    card=TRUE;
+    card=true;
   }
   if(card) fprintf(OutFile,"CARD\n");
   else fprintf(OutFile,"TAPE\n");
-  t = time(NULL);
+  t = time(nullptr);
   localt=localtime(&t);
   if (localt->tm_mday<10) fprintf(OutFile," 0%1d/",localt->tm_mday);
   else                    fprintf(OutFile," %2d/",localt->tm_mday);
@@ -146,10 +146,10 @@ void IEEE()
 
  /* --------------------- AC bus results -----------------------------*/
   fprintf(OutFile,"BUS DATA FOLLOWS                  %5d ITEMS\n",Nac);
-  for (ACptr=dataPtr->ACbus; ACptr!=NULL; ACptr=ACptr->Next){
+  for (ACptr=dataPtr->ACbus; ACptr!=nullptr; ACptr=ACptr->Next){
     if (ACptr->Num<=9999) sprintf(Num,"%4d",ACptr->Num);
     else strcpy(Num,"****");
-    if (Narea<2 || ACptr->Area==NULL) strcpy(Area,"0");
+    if (Narea<2 || ACptr->Area==nullptr) strcpy(Area,"0");
     else if (ACptr->Area->N<=99) sprintf(Area,"%2d",ACptr->Area->N);
     else                         strcpy(Area,"99");
     if ((isdigit(ACptr->Zone[0])||ACptr->Zone[0]==' ') && (isdigit(ACptr->Zone[1])||ACptr->Zone[1]==' '))
@@ -180,7 +180,7 @@ void IEEE()
     Print(OutFile,1,7,2,ACptr->Qg*Sn);
     if(card) fprintf(OutFile,"\n");
     Print(OutFile,1,7,2,ACptr->KV);
-    if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=NULL) Print(OutFile,1,6,4,ACptr->Cont->VCont);
+    if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=nullptr) Print(OutFile,1,6,4,ACptr->Cont->VCont);
     else if(strpbrk(ACptr->Type,"Q,S")) Print(OutFile,1,6,4,ACptr->VCont);
     else Print(OutFile,1,6,4,ACptr->V);
     if(strpbrk(ACptr->Type,"V,X")) {
@@ -191,7 +191,7 @@ void IEEE()
       Print(OutFile,1,7,2,ACptr->Qmax*Sn);
       Print(OutFile,1,7,2,ACptr->Qmin*Sn);
     }
-    for(ELptr=ACptr->Elem;ELptr!=NULL;ELptr=ELptr->Next){
+    for(ELptr=ACptr->Elem;ELptr!=nullptr;ELptr=ELptr->Next){
       Eptr=ELptr->Eptr;
       if(Eptr->From==ACptr){
         ACptr->G=ACptr->G+Eptr->G1*Eptr->Tap*Eptr->Tap;
@@ -204,7 +204,7 @@ void IEEE()
     }
     Print(OutFile,1,7,4,ACptr->G);
     Print(OutFile,1,7,4,ACptr->B);
-    if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=NULL) {
+    if(strpbrk(ACptr->Type,"G") && ACptr->Cont!=nullptr) {
       if (ACptr->Cont->Num<=9999) sprintf(Num,"%4d",ACptr->Cont->Num);
       else strcpy(Num,"****");
     }
@@ -216,17 +216,17 @@ void IEEE()
  /* --------------------- AC element results ---------------------------*/
   Nties=0;
   fprintf(OutFile,"BRANCH DATA FOLLOWS               %5d ITEMS\n",NacEl);
-  for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
+  for(Eptr=dataPtr->Element;Eptr!=nullptr;Eptr=Eptr->Next){
     if(Narea>1 && Eptr->From->Area!=Eptr->To->Area) Nties++;
     if (Eptr->From->Num<=9999) sprintf(Num,"%4d",Eptr->From->Num);
     else strcpy(Num,"****");
     if (Eptr->To->Num<=9999) sprintf(Nump,"%4d",Eptr->To->Num);
     else strcpy(Nump,"****");
-    if (Eptr->Area==NULL) {
+    if (Eptr->Area==nullptr) {
       if (Eptr->From->Area==Eptr->To->Area) Eptr->Area=Eptr->From->Area;
       else Eptr->Area=Eptr->Meter->Area;
     }
-    if (Narea<2 || Eptr->Area==NULL) strcpy(Area,"0");
+    if (Narea<2 || Eptr->Area==nullptr) strcpy(Area,"0");
     else if (Eptr->Area->N<=99) sprintf(Area,"%2d",Eptr->Area->N);
     else strcpy(Area,"**");
     if ((isdigit(Eptr->Zone[0])||Eptr->Zone[0]==' ') && (isdigit(Eptr->Zone[1])||Eptr->Zone[1]==' '))
@@ -315,7 +315,7 @@ void IEEE()
   fprintf(OutFile,"-99\n");
   if(Narea>1) fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",Narea);
   else fprintf(OutFile,"INTERCHANGE DATA FOLLOWS          %5d ITEMS\n",0);
-  if(Narea>1) for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next){
+  if(Narea>1) for(Aptr=dataPtr->Area;Aptr!=nullptr;Aptr=Aptr->Next){
     if (Aptr->N<=99) sprintf(Area,"%2d",Aptr->N);
     else strcpy(Area,"**");
     if (Aptr->BSptr->Num<=9999) sprintf(Num,"%4d",Aptr->BSptr->Num);
@@ -326,7 +326,7 @@ void IEEE()
   }
   fprintf(OutFile,"-9\n");
   fprintf(OutFile,"TIE LINES FOLLOW                  %5d ITEMS\n",Nties);
-  if(Nties) for(Eptr=dataPtr->Element;Eptr!=NULL;Eptr=Eptr->Next){
+  if(Nties) for(Eptr=dataPtr->Element;Eptr!=nullptr;Eptr=Eptr->Next){
     if(Eptr->From->Area!=Eptr->To->Area) {
       ACptr=Eptr->Meter;
       if (ACptr->Num<=9999) sprintf(Num,"%4d",ACptr->Num);
@@ -346,7 +346,7 @@ void IEEE()
   fprintf(OutFile,"-999\n");
 
  /* --------------------- DC bus results -----------------------------*/
-  for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
+  for(DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next){
     DCptrI=DCptrR->To;
     if(!strcmp(DCptrR->Type,"R")){
       Vn=DCptrR->Vn; In=Sn/Vn;
@@ -366,15 +366,15 @@ void IEEE()
         if(DCptr->Tap>=DCptr->TapMin) Print(OutFile,0,5,3,DCptr->TapMin);
         else {
           Print(OutFile,0,5,3,(floor(DCptr->Tap*1000.)*.001));
-          flag=TRUE;
+          flag=true;
         }
         if(DCptr->Tap<=DCptr->TapMax) Print(OutFile,0,5,3,DCptr->TapMax);
         else {
           Print(OutFile,0,5,3,(ceil(DCptr->Tap*1000.)*.001));
-                         flag=TRUE;
+                         flag=true;
         }
         if(flag){ 
-          flag=FALSE;
+          flag=false;
           if (!strcmp(DCptr->Cont1,"AL")||!strcmp(DCptr->Cont1,"GA")) strcpy(DCptr->Cont1,"AT");
           else if (!strcmp(DCptr->Cont2,"AL")||!strcmp(DCptr->Cont2,"GA")) strcpy(DCptr->Cont2,"AT");
           else strcpy(DCptr->Cont1,"AT");
@@ -407,9 +407,9 @@ void IEEE()
 
                         /* FACTS */
 /* --------------------- SVC results ----------------------------- */
-  for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+  for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
      fprintf(OutFile,"%2s",SVCptr->Type);
-     if(SVCptr->From->Area!=NULL) fprintf(OutFile," %2d ",SVCptr->From->Area->N);
+     if(SVCptr->From->Area!=nullptr) fprintf(OutFile," %2d ",SVCptr->From->Area->N);
      else fprintf(OutFile," %2d ",0);
      fprintf(OutFile,"%12s ",SVCptr->From->Name);
      fprintf(OutFile,"%12s",SVCptr->Ctrl->Name);
@@ -427,9 +427,9 @@ void IEEE()
      fprintf(OutFile,"\n");
   }
 /* --------------------- TCSC results ----------------------------- */
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
      fprintf(OutFile,"%2s",TCSCptr->Type);
-     if(TCSCptr->From->Area!=NULL) fprintf(OutFile," %2d ",TCSCptr->From->Area->N);
+     if(TCSCptr->From->Area!=nullptr) fprintf(OutFile," %2d ",TCSCptr->From->Area->N);
      else fprintf(OutFile," %2d ",0);
      fprintf(OutFile,"%12s ",TCSCptr->From->Name);
      fprintf(OutFile,"%12s",TCSCptr->To->Name);
@@ -452,9 +452,9 @@ void IEEE()
      fprintf(OutFile,"\n");
   }
 /* --------------------- STATCOM results ----------------------------- */
-  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
      fprintf(OutFile,"%2s",STATCOMptr->Type);
-     if(STATCOMptr->From->Area!=NULL) fprintf(OutFile," %2d ",STATCOMptr->From->Area->N);
+     if(STATCOMptr->From->Area!=nullptr) fprintf(OutFile," %2d ",STATCOMptr->From->Area->N);
      else fprintf(OutFile," %2d ",0);
      fprintf(OutFile,"%12s ",STATCOMptr->From->Name);
      fprintf(OutFile,"%12s",STATCOMptr->Ctrl->Name);

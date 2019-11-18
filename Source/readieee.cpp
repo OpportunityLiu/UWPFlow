@@ -16,7 +16,7 @@ void ReadIEEE()
   char Line[75 + BUFLEN], Linep[BUFLEN];
   char Name[31], str[6];
   VALUETYPE KV, R, X, Sb;
-  BOOLEAN flag = FALSE, card = FALSE, empty = FALSE, flagp = FALSE;
+  bool flag = false, card = false, empty = false, flagp = false;
   INDEX i, j, k, NumBusDigits = 4, NumAreaDigits = 2, CircData = 21;
 
   Line[0] = '\0';
@@ -34,14 +34,14 @@ void ReadIEEE()
   { /* Reading Loop */
     if (LineNum && Line[0] != '%')
       strcpy(Linep, Line);
-    if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+    if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
     {
       fprintf(stderr, "***Warning: END OF DATA card missing in IEEE input data file.");
       break;
     }
     LineNum++;
     if (!strncmp(Line, "CARD", 4))
-      card = TRUE;
+      card = true;
 
     /* --------- Comment cards (Electrocon), Sn and Title ----------------- */
     else if (!strncmp(Line, "COMMENT DATA", 7))
@@ -49,13 +49,13 @@ void ReadIEEE()
       {
         if (!flagp)
         {
-          flagp = TRUE;
+          flagp = true;
           GetStr(Linep, 39, 35, 35, dataPtr->Title[0]);
           Sb = GetValue(Linep, 32, 6, 0);
           if (Sb > 0)
             Sn = Sb;
         }
-        if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+        if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
         {
           ErrorHalt("Missing $$$ card in COMMENT DATA.");
           break;
@@ -71,14 +71,14 @@ void ReadIEEE()
       {
         if (!flagp)
         {
-          flagp = TRUE;
+          flagp = true;
           GetStr(Linep, 46, 28, 28, dataPtr->Title[0]);
           Sb = GetValue(Linep, 32, 6, 0);
           if (Sb > 0)
             Sn = Sb;
         }
       BusData:
-        if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+        if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
         {
           ErrorHalt("Missing -999 card in BUS DATA.");
           break;
@@ -90,7 +90,7 @@ void ReadIEEE()
           break;
         if (card)
         {
-          if (fgets(Linep, BUFLEN, InputDataFile) == NULL)
+          if (fgets(Linep, BUFLEN, InputDataFile) == nullptr)
           {
             ErrorHalt("Missing -999 card in BUS DATA.");
             break;
@@ -112,11 +112,11 @@ void ReadIEEE()
             if (Name[j] != ' ')
               break;
             if (j == 11)
-              empty = TRUE;
+              empty = true;
           }
           if (empty || (strpbrk(Name, "0") && strlen(Name) == 1))
           {
-            empty = FALSE;
+            empty = false;
             strcpy(Name, "BUS_");
             GetStr(Line, 1, 5, 5, str);
             for (j = 0; j <= 3; j++)
@@ -222,7 +222,7 @@ void ReadIEEE()
             {
               Nslack++;
               strcat(ACptr->Type, "S");
-              if (ACptr->Area != NULL)
+              if (ACptr->Area != nullptr)
               {
                 ACptr->Area->i++;
                 if (ACptr->Area->i > 1)
@@ -243,7 +243,7 @@ void ReadIEEE()
       for (;;)
       {
       BranchData:
-        if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+        if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
         {
           ErrorHalt("Missing -999 card in BRANCH DATA.");
           break;
@@ -258,7 +258,7 @@ void ReadIEEE()
         k = GetInt(Line, 19, 1);
         if (card && k)
         {
-          if (fgets(Linep, BUFLEN, InputDataFile) == NULL)
+          if (fgets(Linep, BUFLEN, InputDataFile) == nullptr)
           {
             ErrorHalt("Missing -999 card in BRANCH DATA.");
             break;
@@ -495,7 +495,7 @@ void ReadIEEE()
       for (;;)
       {
       AreaIntData:
-        if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+        if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
         {
           ErrorHalt("Missing -9 card in INTERCHANGE DATA.");
           break;
@@ -505,7 +505,7 @@ void ReadIEEE()
           goto AreaIntData;
         if (!strncmp(Line, "-9", 2))
           break;
-        flag = TRUE;
+        flag = true;
         i = GetInt(Line, 1, NumAreaDigits);
         Aptr = (AreaData *)AreaInList(i, "", Narea);
         if (Aptr->N == 0)
@@ -519,11 +519,11 @@ void ReadIEEE()
           if (Name[j] != ' ')
             break;
           if (j == 29)
-            empty = TRUE;
+            empty = true;
         }
         if (empty || (strpbrk(Name, "0") && strlen(Name) == 1))
         {
-          empty = FALSE;
+          empty = false;
           strcpy(Name, "AREA_");
           GetStr(Line, 1, 4, 4, str);
           for (j = 0; j <= 3; j++)
@@ -556,7 +556,7 @@ void ReadIEEE()
       for (;;)
       {
       TieLineData:
-        if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+        if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
         {
           ErrorHalt("Missing -999 card in TIE LINE DATA.");
           break;
@@ -581,7 +581,7 @@ void ReadIEEE()
           ErrorHalt("The nonmetered bus has not been defined (check BUS DATA cards).");
         }
         GetStr(Line, CircData, 1, 1, str);
-        for (ELptr = ACptr->Elem; ELptr != NULL; ELptr = ELptr->Next)
+        for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
         {
           Eptr = ELptr->Eptr;
           if (((Eptr->From == ACptr && Eptr->To == ACptrp) ||
@@ -589,9 +589,9 @@ void ReadIEEE()
               !strcmp(Eptr->Ckt, str))
             break;
         }
-        if (ELptr != NULL)
+        if (ELptr != nullptr)
         {
-          if (Eptr->Meter == NULL)
+          if (Eptr->Meter == nullptr)
             Eptr->Meter = ACptr;
           else
           {
@@ -640,11 +640,11 @@ void ReadIEEE()
   if (!flag)
   {
     Narea = 0;
-    for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr->Area = NULL, ACptr = ACptr->Next)
+    for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr->Area = nullptr, ACptr = ACptr->Next)
       ;
   }
   MaxIter = 50;
-  for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
     if (strpbrk(ACptr->Type, "G"))
     {
       ACptrp = (ACbusData *)ACbusInList(ACptr->Nc, "", 0., Nac, 1);
@@ -654,7 +654,7 @@ void ReadIEEE()
         fprintf(stderr, "       has not been defined.  Check AC bus data.\n");
         /*WriteSummary();
          exit(ERROREXIT);*/
-        InputError = TRUE;
+        InputError = true;
       }
       if (!strcmp(ACptrp->Type, "B"))
         strcpy(ACptrp->Type, "BC");
@@ -664,11 +664,11 @@ void ReadIEEE()
         fprintf(stderr, "       is not a PQ bus.  Check AC bus data.\n");
         /*WriteSummary();
          exit(ERROREXIT);*/
-        InputError = TRUE;
+        InputError = true;
       }
       ACptr->Cont = ACptrp;
       ACptrp->VCont = ACptrp->V = ACptr->VCont;
-      ACptrp->Cont = NULL;
+      ACptrp->Cont = nullptr;
       ACptrp->Kbg++;
       if (flag2Vcontrol)
       {

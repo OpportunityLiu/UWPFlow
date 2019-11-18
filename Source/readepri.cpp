@@ -34,9 +34,9 @@ void Divide(VALUETYPE *a, VALUETYPE *b, VALUETYPE c, VALUETYPE d)
 
 /* ---------------- AddSection --------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt, INDEX Sec)
+bool AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt, INDEX Sec)
 #else
-BOOLEAN AddSection(From, To, Line, Ckt, Sec)
+bool AddSection(From, To, Line, Ckt, Sec)
     ACbusData *From,
     *To;
 char *Line, *Ckt;
@@ -47,7 +47,7 @@ INDEX Sec;
    ElementData *Eptr;
    VALUETYPE Ge, Be, Ge1, Be1, Ge2, Be2, Gs, Bs;
 
-   for (ELptr = From->Elem; ELptr != NULL; ELptr = ELptr->Next)
+   for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next)
    {
       Eptr = ELptr->Eptr;
       if (((From == Eptr->From && To == Eptr->To) || (From == Eptr->To && To == Eptr->From)) && !strcmp(Ckt, Eptr->Ckt) && strcmp(Eptr->Zone, ""))
@@ -117,10 +117,10 @@ INDEX Sec;
          Eptr->B1 = Be1;
          Eptr->G2 = Ge2;
          Eptr->B2 = Be2;
-         return (TRUE);
+         return (true);
       }
    }
-   return (FALSE);
+   return (false);
 }
 
 /* ---------------- ReadWSCC ----------------------------- */
@@ -138,16 +138,16 @@ void ReadWSCC()
    VALUETYPE KV, KVp, KVs, R, X, Bx, Taps, Tap1, Tap2, Imax;
    int i, j, k, s;
    INDEX Sec;
-   BOOLEAN flag = FALSE, flagPrint = TRUE;
+   bool flag = false, flagPrint = true;
 
    for (i = 0; i <= 2; strcpy(dataPtr->Title[i], "\n"), i++)
       ;
    Sn = 100.0;
    RealParameter('$', &Sn, 1.0, 100000000.0);
-   ACptr = NULL;
+   ACptr = nullptr;
    for (;;)
    { /* Reading Loop */
-      if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+      if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
       {
          ErrorHalt("Missing END or Anarede's FIM card.");
          break;
@@ -162,7 +162,7 @@ void ReadWSCC()
          i = 0;
          for (;;)
          { /* Title Reading Loop */
-            if (fgets(Line, BUFLEN, InputDataFile) == NULL)
+            if (fgets(Line, BUFLEN, InputDataFile) == nullptr)
             {
                ErrorHalt("Missing BAS or Anarede's D title cards.");
                break;
@@ -314,7 +314,7 @@ void ReadWSCC()
                ErrorHalt("The voltage controlled bus is not a PQ bus.");
             }
             ACptr->Cont = ACptrp;
-            ACptrp->Cont = NULL;
+            ACptrp->Cont = nullptr;
             ACptrp->Kbg++;
             ACptr->Kbg = GetValue(Line, 78, 3, 0) / 100;
             if (flag2Vcontrol)
@@ -386,7 +386,7 @@ void ReadWSCC()
       /* These cards are assumed to come right after a bus card.
      The program associates the card to the last bus defined in
      the data set.  */
-      else if (!strncmp(Line, "+", 1) && ACptr != NULL)
+      else if (!strncmp(Line, "+", 1) && ACptr != nullptr)
       {
          ACptr->Pl += GetValue(Line, 21, 5, 0) / Sn;
          ACptr->Ql += GetValue(Line, 26, 5, 0) / Sn;
@@ -399,7 +399,7 @@ void ReadWSCC()
       /* --------------- X data cards -------------------------------- */
       else if (!strncmp(Line, "X  ", 3))
       {
-         flagPrint = TRUE;
+         flagPrint = true;
          GetStr(Line, 7, 12, 12, Name);
          KV = GetValue(Line, 15, 4, 0);
          ACptr = ACbusInList(0, Name, KV, Nac, 1);
@@ -455,7 +455,7 @@ void ReadWSCC()
                            fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
                            fprintf(stderr, "***Warning: All MVAr compensation steps are assumed to be either positive or negative,\n");
                            fprintf(stderr, "            as defined by the first nonzero step on this card. \n");
-                           flagPrint = FALSE;
+                           flagPrint = false;
                         }
                      }
                   }
@@ -558,13 +558,13 @@ void ReadWSCC()
          if (Sec)
             flag = AddSection(ACptr, ACptrp, Line, str, Sec);
          else
-            flag = FALSE;
+            flag = false;
          if (!flag)
          {
             if (!strncmp(Line, "T  ", 3))
             {
                Eptr = ElemInList(ACptr, ACptrp, NacEl, 1, "R", str);
-               if (Eptr == NULL)
+               if (Eptr == nullptr)
                   Eptr = ElemInList(ACptr, ACptrp, NacEl, 0, "", str);
             }
             else
@@ -625,7 +625,7 @@ void ReadWSCC()
          }
          GetStr(Line, 32, 1, 1, str);
          Eptr = ElemInList(ACptr, ACptrp, NacEl, 1, "T", str);
-         if (Eptr == NULL)
+         if (Eptr == nullptr)
             Eptr = ElemInList(ACptr, ACptrp, NacEl, 0, "", str);
          NacEl++;
          NregPQ++;

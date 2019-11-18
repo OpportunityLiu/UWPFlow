@@ -22,7 +22,7 @@
 
 void InitializeLSWR(void);
 void AllocateOrderArrays(void);
-void LoadUnloadWorkingRow(INDEX i, BOOLEAN SetReset);
+void LoadUnloadWorkingRow(INDEX i, bool SetReset);
 SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol, ELEMENTVALUETYPE PutVal,
                                SparseMatrixElement *PutRNext, SparseMatrixElement *PutCNext);
 void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal);
@@ -45,7 +45,7 @@ SparseMatrix *Matrix;
 LONGINT Tau, Nfills, Nmult;
 VALENCE maxVal = maxN;
 
-BOOLEAN *Lswr;         /* array 0..maxN */
+bool *Lswr;         /* array 0..maxN */
 ELEMENTVALUETYPE *Swr; /* array 0..maxN */
 IntegerVector *RowNew, *RowOld, *ColNew, *ColOld;
 INDEX *PartitionAt, *PartitionCol; /* array 0..maxPart */
@@ -68,19 +68,19 @@ void InitializeLSWR()
   int i;
 
 #ifdef WINDOWS
-  Lswr = new BOOLEAN[Matrix->n1 + 1];
+  Lswr = new bool[Matrix->n1 + 1];
   Swr = new ELEMENTVALUETYPE[Matrix->n1 + 1];
 #else
-  Lswr = (BOOLEAN *)calloc((Matrix->n1 + 1), sizeof(BOOLEAN));
+  Lswr = (bool *)calloc((Matrix->n1 + 1), sizeof(bool));
   Swr = (ELEMENTVALUETYPE *)calloc((Matrix->n1 + 1), sizeof(ELEMENTVALUETYPE));
-  if (Lswr == NULL || Swr == NULL)
+  if (Lswr == nullptr || Swr == nullptr)
   {
     ErrorHalt("Insufficient memory for arrays");
     exit(ERROREXIT);
   }
 #endif
   for (i = 1; i <= Matrix->n1; i++)
-    Lswr[i] = FALSE;
+    Lswr[i] = false;
 }
 
 /* =================== AllocateOrderArrays ========================== */
@@ -103,7 +103,7 @@ void AllocateOrderArrays()
   FwdLink = (INDEX *)malloc((n0 + 1) * sizeof(INDEX));     /* array 0..maxN */
   BckLink = (INDEX *)malloc((n0 + 1) * sizeof(INDEX));     /* array 0..maxN */
   ValClass = (INDEX *)calloc((maxVal + 1), sizeof(INDEX)); /* array 0..maxVal */
-  if (ValClass == NULL)
+  if (ValClass == nullptr)
   {
     ErrorHalt("Insufficient memory to allocate order vectors");
     exit(ERROREXIT);
@@ -119,12 +119,12 @@ void AllocateOrderArrays()
 }
 
 /* ====================== LoadUnloadWorkingRow ======================== */
-void LoadUnloadWorkingRow(INDEX i, BOOLEAN SetReset)
+void LoadUnloadWorkingRow(INDEX i, bool SetReset)
 {
   SparseMatrixElement *Ptr2;
   /* BEGIN */
   Ptr2 = Matrix->RowHead[i];
-  while (Ptr2 != NULL)
+  while (Ptr2 != nullptr)
   {
     if (SetReset)
       Tau++;
@@ -145,7 +145,7 @@ SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol,
 #else
   PutPtr = (SparseMatrixElement *)malloc(sizeof(*PutPtr));
 #endif
-  if (PutPtr != NULL)
+  if (PutPtr != nullptr)
   {
     PutPtr->Row = PutRow;
     PutPtr->Col = PutCol;
@@ -169,15 +169,15 @@ void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal)
   SparseMatrixElement *OrdP2;
   /* BEGIN SimElim */
   OrdP1 = Matrix->ColHead[Jpivot];
-  while (OrdP1 != NULL)
+  while (OrdP1 != nullptr)
   {
     Jsim = OrdP1->Row;
     if (RowNew->p[Jsim] == 0)
     {
       OrdP2 = Matrix->RowHead[Jsim];
-      while (OrdP2 != NULL)
+      while (OrdP2 != nullptr)
       {
-        Lswr[OrdP2->Col] = TRUE;
+        Lswr[OrdP2->Col] = true;
         Swr[OrdP2->Col] = OrdP2->Value;
         OrdP2 = OrdP2->RowNext;
       }
@@ -186,18 +186,18 @@ void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal)
       Swr[Jpivot] = Swr[Jpivot] / *DiagVal;
 
       OrdP2 = Matrix->RowHead[Ipivot];
-      while (OrdP2 != NULL)
+      while (OrdP2 != nullptr)
       {
         Ksim = OrdP2->Col;
         if (ColNew->p[Ksim] == 0)
         {
-          if (Lswr[Ksim] != TRUE)
+          if (Lswr[Ksim] != true)
           {
             Nfills++;
             Matrix->RowHead[Jsim] = PutMatrix(Jsim, Ksim, 0.0,
                                               Matrix->RowHead[Jsim], Matrix->ColHead[Ksim]);
             Matrix->ColHead[Ksim] = Matrix->RowHead[Jsim];
-            Lswr[Ksim] = TRUE;
+            Lswr[Ksim] = true;
             Swr[Ksim] = 0.0;
           } /* END IF */
           /*
@@ -210,9 +210,9 @@ void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal)
         OrdP2 = OrdP2->RowNext;
       } /* END WHILE */;
       OrdP2 = Matrix->RowHead[Jsim];
-      while (OrdP2 != NULL)
+      while (OrdP2 != nullptr)
       {
-        Lswr[OrdP2->Col] = FALSE;
+        Lswr[OrdP2->Col] = false;
         OrdP2->Value = Swr[OrdP2->Col];
         Swr[OrdP2->Col] = 0.0;
         OrdP2 = OrdP2->RowNext;
@@ -251,7 +251,7 @@ void FindVal(INDEX Ifnd)
   /* BEGIN */
   Valence[Ifnd] = 0;
   OrdP1 = Matrix->RowHead[Ifnd];
-  while (OrdP1 != NULL)
+  while (OrdP1 != nullptr)
   {
     if ((Valence[Ifnd] < maxVal) && (ColNew->p[OrdP1->Col] == 0))
     {
@@ -300,7 +300,7 @@ VALENCE ColumnValence(INDEX Col)
   /* BEGIN */
   TempCount = 0;
   ColValPtr = Matrix->ColHead[Col];
-  while (ColValPtr != NULL)
+  while (ColValPtr != nullptr)
   {
     TempCount++;
     ColValPtr = ColValPtr->ColNext;
@@ -320,7 +320,7 @@ INDEX GetHighest(INDEX Ipivot)
   LargestI = 0;
   /* Get the largest pivot on row: */
   GetPtr = Matrix->RowHead[Ipivot];
-  while ((GetPtr != NULL) && (GetPtr->Col <= PartitionCol[CurrentColPart]))
+  while ((GetPtr != nullptr) && (GetPtr->Col <= PartitionCol[CurrentColPart]))
   {
     if (ColNew->p[GetPtr->Col] == 0)
     {
@@ -339,7 +339,7 @@ INDEX GetHighest(INDEX Ipivot)
   SmallestJ = maxN + 1;
   AlphaV = LargestV * Alpha;
   GetPtr = Matrix->RowHead[Ipivot];
-  while ((GetPtr != NULL) && (GetPtr->Col <= PartitionCol[CurrentColPart]))
+  while ((GetPtr != nullptr) && (GetPtr->Col <= PartitionCol[CurrentColPart]))
   {
     if (ColNew->p[GetPtr->Col] == 0)
     {
@@ -363,7 +363,7 @@ void UpdateVals(INDEX Jpivot)
   INDEX Jord;
   /* BEGIN */
   UpdP1 = Matrix->ColHead[Jpivot];
-  while (UpdP1 != NULL)
+  while (UpdP1 != nullptr)
   {
     Jord = UpdP1->Row;
     if ((RowNew->p[Jord] == 0) && (Jord >= Ibeg) && (Jord <= Iend))
@@ -458,7 +458,7 @@ void InvertNormalize()
   {
     I = RowOld->p[Inew];
     Ptr1 = Matrix->RowHead[I];
-    while (Ptr1 != NULL)
+    while (Ptr1 != nullptr)
     {
       if (RowNew->p[I] == ColNew->p[Ptr1->Col])
       {
@@ -470,7 +470,7 @@ void InvertNormalize()
       Ptr1 = Ptr1->RowNext;
     }
     Ptr1 = Matrix->RowHead[I];
-    while (Ptr1 != NULL)
+    while (Ptr1 != nullptr)
     {
       if (ColNew->p[Ptr1->Col] > RowNew->p[I])
       {
@@ -569,7 +569,7 @@ int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVe
   for (i = 1; i <= Matrix->n1; i++)
   {
     Ptr = Matrix->RowHead[i];
-    while (Ptr != NULL)
+    while (Ptr != nullptr)
     {
       Ptr->Row = RowNew->p[Ptr->Row];
       Ptr->Col = ColNew->p[Ptr->Col];

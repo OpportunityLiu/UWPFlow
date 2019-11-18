@@ -19,29 +19,29 @@ int factorns(SparseMatrix *Mptr,double Param,IntegerVector *PartRow,IntegerVecto
 void repsolp(SparseMatrix *Mptr,VALUETYPE *Vptr,
 	     IntegerVector *PermR,IntegerVector *PermC);
 int factor(SparseMatrix *Mptr);
-BOOLEAN DCsetup(void);
-int Pflow(int iter,BOOLEAN flagF,BOOLEAN flagD,BOOLEAN flagP);
-AreaData *ACFunJac(SparseMatrix *Mptr,int *val,BOOLEAN flagF,BOOLEAN flagJ,BOOLEAN flagP);
-BOOLEAN DCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
-void SVCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);         /* FACTS */
-void TCSCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);        /* FACTS */
-void STATCOMFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);     /* FACTS */
-void ACFunHes(BOOLEAN flagF,BOOLEAN flagJ);
-BOOLEAN DCFunHes(BOOLEAN flagF,BOOLEAN flagJ);
-void SVCFunHes(BOOLEAN flagF,BOOLEAN flagJ);      /* FACTS */
-void TCSCFunHes(BOOLEAN flagF,BOOLEAN flagJ);     /* FACTS */
-void STATCOMFunHes(BOOLEAN flagF,BOOLEAN flagJ);  /* FACTS */
+bool DCsetup(void);
+int Pflow(int iter,bool flagF,bool flagD,bool flagP);
+AreaData *ACFunJac(SparseMatrix *Mptr,int *val,bool flagF,bool flagJ,bool flagP);
+bool DCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);
+void SVCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);         /* FACTS */
+void TCSCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);        /* FACTS */
+void STATCOMFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);     /* FACTS */
+void ACFunHes(bool flagF,bool flagJ);
+bool DCFunHes(bool flagF,bool flagJ);
+void SVCFunHes(bool flagF,bool flagJ);      /* FACTS */
+void TCSCFunHes(bool flagF,bool flagJ);     /* FACTS */
+void STATCOMFunHes(bool flagF,bool flagJ);  /* FACTS */
 void UpdateEvector(VALUETYPE cons);
-BOOLEAN CheckRlimits(void);
-BOOLEAN CheckVlimits(void);
-BOOLEAN CheckQlimits(void);
-BOOLEAN ChangeDCmode(void);
-BOOLEAN ChangeSVCmode(void);       /* FACTS */
-BOOLEAN ChangeTCSCmode(void);      /* FACTS */
-BOOLEAN ChangeSTATCOMmode(void);   /* FACTS */
-int Direction(SparseMatrix *Mptr,VALUETYPE *vec,BOOLEAN flag);
-VALUETYPE LoadX0(BOOLEAN flagX,BOOLEAN flagV,BOOLEAN flag);
-int Evector(int M,int iter,VALUETYPE tol,BOOLEAN RightEvector,VALUETYPE *EigenValue);
+bool CheckRlimits(void);
+bool CheckVlimits(void);
+bool CheckQlimits(void);
+bool ChangeDCmode(void);
+bool ChangeSVCmode(void);       /* FACTS */
+bool ChangeTCSCmode(void);      /* FACTS */
+bool ChangeSTATCOMmode(void);   /* FACTS */
+int Direction(SparseMatrix *Mptr,VALUETYPE *vec,bool flag);
+VALUETYPE LoadX0(bool flagX,bool flagV,bool flag);
+int Evector(int M,int iter,VALUETYPE tol,bool RightEvector,VALUETYPE *EigenValue);
 int PoCPoint(void);
 #else
 void JacElement();
@@ -50,26 +50,26 @@ void DeleteJac();
 int factorns();
 void repsolp();
 int factor();
-BOOLEAN DCsetup();
+bool DCsetup();
 int Pflow();
 AreaData *ACFunJac();
-BOOLEAN DCFunJac();
+bool DCFunJac();
 void SVCFunJac();       //FACTS 
 void TCSCFunJac();      //FACTS 
 void STATCOMFunJac();   //FACTS 
 void ACFunHes();
-BOOLEAN DCFunHes();
+bool DCFunHes();
 void SVCFunHes();      //FACTS 
 void TCSCFunHes();     //FACTS 
 void STATCOMFunHes();  //FACTS 
 void UpdateEvector();
-BOOLEAN CheckRlimits();
-BOOLEAN CheckVlimits();
-BOOLEAN CheckQlimits();
-BOOLEAN ChangeDCmode();
-BOOLEAN ChangeSVCmode();     //FACTS 
-BOOLEAN ChangeTCSCmode();    //FACTS 
-BOOLEAN ChangeSTATCOMmode(); //FACTS 
+bool CheckRlimits();
+bool CheckVlimits();
+bool CheckQlimits();
+bool ChangeDCmode();
+bool ChangeSVCmode();     //FACTS 
+bool ChangeTCSCmode();    //FACTS 
+bool ChangeSTATCOMmode(); //FACTS 
 int Direction();
 VALUETYPE LoadX0();
 int Evector();
@@ -84,7 +84,7 @@ extern INDEX Nac,NacEl,NregPQ,NregV,Ndc,Nslack,Nvolt,NZvolt,NXvolt,Narea,NacVar,
 extern INDEX *ACvar;
 extern VALUETYPE *dx,*dF,Sn,lambda,param0,Dparam,*x0,*Dx;
 extern VALUETYPE K1,K2,Tol,alpha;
-extern BOOLEAN Acont,PQcont,QRcont,Rcont,PQlim,Tlim,Qlim,Vlim,Zlim,Xlim,
+extern bool Acont,PQcont,QRcont,Rcont,PQlim,Tlim,Qlim,Vlim,Zlim,Xlim,
                flagH,flagPoC,flagL,flagR,flagPgMax,flagSmax;
 extern IntegerVector *NewRow,*OldRow,*NewCol,*OldCol,*RowPartition,*ColPartition;
 extern IntegerVector *RowPer,*ColPer;

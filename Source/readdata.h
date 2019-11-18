@@ -29,13 +29,13 @@ void ReadTCSC(const char *Line);              /* FACTS */
 void ReadSTATCOM(const char *Line);           /* FACTS */
 void Multiply(VALUETYPE *a,VALUETYPE *b,VALUETYPE c,VALUETYPE d);
 void Divide(VALUETYPE *a,VALUETYPE *b,VALUETYPE c,VALUETYPE d);
-BOOLEAN AddSection(ACbusData *From,ACbusData *To,char *Line,char *Ckt,INDEX Sec);
+bool AddSection(ACbusData *From,ACbusData *To,char *Line,char *Ckt,INDEX Sec);
 void ErrorDetect(void);
 void WriteSummary(void);
 void ExpandSlack(ACbusData *BSptr,AreaData *Aptr);
 void ReadData(char *Name);
-BOOLEAN ReadInit(void);
-BOOLEAN ReadOHload(char *File);
+bool ReadInit(void);
+bool ReadOHload(char *File);
 void ReadITALY(void);
 
 
@@ -49,4 +49,4 @@ extern INDEX NdcEl,LineNum,Bl;
 extern ACbusData *BlPtr;
 extern int GlobalArgc;
 extern char **GlobalArgv;
-extern BOOLEAN InputError,Acont,PQcont,QRcont,Rcont,Xcont,flagVloads,flagKdirection,flag2Vcontrol;
+extern bool InputError,Acont,PQcont,QRcont,Rcont,Xcont,flagVloads,flagKdirection,flag2Vcontrol;

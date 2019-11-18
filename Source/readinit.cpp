@@ -8,9 +8,9 @@
 
 /* --------------------- ReadInit ---------------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN ReadInit(void)
+bool ReadInit(void)
 #else
-BOOLEAN ReadInit()
+bool ReadInit()
 #endif
  /* Main routine. */
 {
@@ -29,10 +29,10 @@ BOOLEAN ReadInit()
  /* -------------------- Generation and Load Factors --------------- */
   Name=NameParameter('K');
   Sum=0;
-  if (!NullName(Name) && (InputFile=OpenInput(Name))!=NULL) {
+  if (!NullName(Name) && (InputFile=OpenInput(Name))!=nullptr) {
     for (;;) {
       DPg=Pn=Qn=Pz=Qz=PgMax=Vmax=Vmin=0;
-      if (fgets(Line,BUFLEN,InputFile)==NULL) break;
+      if (fgets(Line,BUFLEN,InputFile)==nullptr) break;
       if (Line[0]!='C') {
         if (sscanf(Line,"%d %s",&N,BusName)!=2) count=0;
         else if (BusName[0]=='\"'||BusName[0]=='\'') {
@@ -47,10 +47,10 @@ BOOLEAN ReadInit()
         }
         if (!strcmp(BusName,"0")) BusName[0]='\n';
         if (count>=num){
-           for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+           for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
               if(N==ACptr->Num||!strncmp(ACptr->Name,BusName,strlen(BusName))) break;
            }
-           if(ACptr!=NULL){
+           if(ACptr!=nullptr){
               if (PgMax>ACptr->Pg && PgMax>0) ACptr->PgMax=PgMax;
               if (Smax>=ACptr->PgMax && Smax>0) ACptr->Smax=Smax;
               if (Vmax>0 && Vmin>0 && Vmax>Vmin) { ACptr->Vlmax=Vmax; ACptr->Vlmin=Vmin; }
@@ -61,23 +61,23 @@ BOOLEAN ReadInit()
               ACptr->Pzl=Pz; ACptr->Qzl=Qz;
               Sum+=Pn+Qn+Pz+Qz;
            }
-        } else ACptr=NULL;
-        if (ACptr==NULL) {
+        } else ACptr=nullptr;
+        if (ACptr==nullptr) {
            fprintf(stderr,"***Warning: Line-> %s",Line);
            fprintf(stderr,"            will be ignored in file %s.\n",Name);
         }
       }
     }
     if (Narea>1 && Acont)
-      for(Aptr=dataPtr->Area;Aptr!=NULL;Aptr=Aptr->Next) {
+      for(Aptr=dataPtr->Area;Aptr!=nullptr;Aptr=Aptr->Next) {
          if(!Aptr->SPg) Aptr->Slack->DPg=Aptr->SPg=1;
       }
     else if (!ExistParameter('6') || NullName(NameParameter('6'))) {
       if (!SPg) {
-         for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) if(strpbrk(ACptr->Type,"S")) break;
+         for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) if(strpbrk(ACptr->Type,"S")) break;
          ACptr->DPg=SPg=1;
       }
-      for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next){
+      for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next){
         if(Narea>1 && Acont) ACptr->DPg=ACptr->DPg/sqrt(ACptr->Area->Slack->Area->SPg);
         else ACptr->DPg=ACptr->DPg/sqrt(SPg);
       }
@@ -109,9 +109,9 @@ BOOLEAN ReadInit()
  /* -------------------- Initialize AC/DC Variables -------------------------- */
   if (ExistParameter('V')){
     Name=NameParameter('V');
-    if (!NullName(Name) && (InputFile=OpenInput(Name))!=NULL) {
+    if (!NullName(Name) && (InputFile=OpenInput(Name))!=nullptr) {
       for (;;) {
-        if (fgets(Line,BUFLEN,InputFile)==NULL) break;
+        if (fgets(Line,BUFLEN,InputFile)==nullptr) break;
         if (Line[0]!='C') {
           if ((count=sscanf(Line,"%d %s",&N,BusName))!=2) count=0;
           else if (BusName[0]=='\"'||BusName[0]=='\'') {
@@ -122,33 +122,33 @@ BOOLEAN ReadInit()
              ptr++;
           } else {
              for (i=1,ptr=Line;i<=2;i++) {
-                if (ptr!=NULL && *ptr!='\0') for(;*ptr==' '&&*ptr!='\n';ptr++);
-                if (ptr!=NULL && *ptr!='\0') for(;*ptr!=' '&&*ptr!='\n';ptr++);
+                if (ptr!=nullptr && *ptr!='\0') for(;*ptr==' '&&*ptr!='\n';ptr++);
+                if (ptr!=nullptr && *ptr!='\0') for(;*ptr!=' '&&*ptr!='\n';ptr++);
             }
           }
           if (count){
-             for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next)
+             for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next)
                 if(N==ACptr->Num||!strncmp(ACptr->Name,BusName,strlen(BusName))) break;
-             if(ACptr!=NULL){
-                if (ptr!=NULL) count=sscanf(ptr,"%lf %lf",&V,&d);
+             if(ACptr!=nullptr){
+                if (ptr!=nullptr) count=sscanf(ptr,"%lf %lf",&V,&d);
                 else count=0;
                 if (count==2) {
-                   if (V>0 && ACptr->Cont!=NULL) ACptr->V=V;
+                   if (V>0 && ACptr->Cont!=nullptr) ACptr->V=V;
                    ACptr->Ang=d*K3;
                 }
              }
-             for (DCptr=dataPtr->DCbus;DCptr!=NULL;DCptr=DCptr->Next)
+             for (DCptr=dataPtr->DCbus;DCptr!=nullptr;DCptr=DCptr->Next)
              if(!strncmp(DCptr->Name,BusName,strlen(BusName))) break;
-             if(DCptr!=NULL){
-                if (ptr!=NULL) count=sscanf(ptr,"%s",Vars);
+             if(DCptr!=nullptr){
+                if (ptr!=nullptr) count=sscanf(ptr,"%s",Vars);
                 else count=0;
                 val=0;
                 if(ExistParameter('d')) printf("Read initial values for DC bus %s -> %s\n",DCptr->Name,Vars);
                 if (count) for(i=1;i<=strlen(Vars) && count;i=i+2) {
                    GetStr(Vars,i,2,2,variable);
-                   if (ptr!=NULL && *ptr!='\0') for(;*ptr==' '&&*ptr!='\n';ptr++);
-                   if (ptr!=NULL && *ptr!='\0') for(;*ptr!=' '&&*ptr!='\n';ptr++);
-                   if (ptr!=NULL) {
+                   if (ptr!=nullptr && *ptr!='\0') for(;*ptr==' '&&*ptr!='\n';ptr++);
+                   if (ptr!=nullptr && *ptr!='\0') for(;*ptr!=' '&&*ptr!='\n';ptr++);
+                   if (ptr!=nullptr) {
                       count=sscanf(ptr,"%lf",&val);
                       if(ExistParameter('d')) printf("                                           %lf\n",val);
                    } else count=0;
@@ -161,8 +161,8 @@ BOOLEAN ReadInit()
                    if(!strcmp(variable,"AT") && strcmp(DCptr->Cont1,"AT") && strcmp(DCptr->Cont2,"AT")) DCptr->Tap=val;
                 }
              }
-          } else { ACptr=NULL; DCptr=NULL;}
-          if (ACptr==NULL && DCptr==NULL) {
+          } else { ACptr=nullptr; DCptr=nullptr;}
+          if (ACptr==nullptr && DCptr==nullptr) {
              fprintf(stderr,"***Warning: Line-> %s",Line);
              fprintf(stderr,"            will be ignored in file %s.\n",Name);
           }
@@ -171,8 +171,8 @@ BOOLEAN ReadInit()
       fclose(InputFile);
     }
     else if (NullName(Name)) {
-      for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
-        if (ACptr->Cont!=NULL) ACptr->V=1;
+      for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
+        if (ACptr->Cont!=nullptr) ACptr->V=1;
         ACptr->Ang=0;
       }
     }
@@ -181,10 +181,10 @@ BOOLEAN ReadInit()
  /* -------------------- Read Generator Steady-State Data -------------------- */
   Name=NameParameter('3');
   Ngen=0;
-  if (!NullName(Name) && (InputFile=OpenInput(Name))!=NULL) {
+  if (!NullName(Name) && (InputFile=OpenInput(Name))!=nullptr) {
    for (;;) {
       Ra=Xd=Xq=IaMax=EqMax=EqMin=0;
-      if (fgets(Line,BUFLEN,InputFile)==NULL) break;
+      if (fgets(Line,BUFLEN,InputFile)==nullptr) break;
       if (Line[0]!='C') {
         if (sscanf(Line,"%d %s",&N,BusName)!=2) count=0;
         else if (BusName[0]=='\"'||BusName[0]=='\'') {
@@ -199,11 +199,11 @@ BOOLEAN ReadInit()
         }
         if (!strcmp(BusName,"0")) BusName[0]='\n';
         if (count==8){
-           for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+           for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
               if(N==ACptr->Num||!strncmp(ACptr->Name,BusName,strlen(BusName))) break;
            }
-           if(ACptr!=NULL){
-              if (strpbrk(ACptr->Type,"G,Q,E,S,V")==NULL || Xd<=0) {
+           if(ACptr!=nullptr){
+              if (strpbrk(ACptr->Type,"G,Q,E,S,V")==nullptr || Xd<=0) {
                  fprintf(stderr,"***Warning: Line-> %s",Line);
                  fprintf(stderr,"            will be ignored in file %s.\n",Name);
                  if (Xd<=0) fprintf(stderr,"            The value of Xd is less than or equal to zero.\n");
@@ -214,7 +214,7 @@ BOOLEAN ReadInit()
                  ACptr->Gen=new GenModel;
 #else
                  ACptr->Gen=(GenModel *) malloc (sizeof(GenModel));
-                 if (ACptr->Gen==NULL) {
+                 if (ACptr->Gen==nullptr) {
                     fclose(InputFile);
                     ErrorHalt("Insufficient memory to allocate steady-state Generator data.");
                     exit(ERROREXIT);
@@ -293,8 +293,8 @@ BOOLEAN ReadInit()
                  Ngen++;
               }
            }
-        } else ACptr=NULL;
-        if (ACptr==NULL) {
+        } else ACptr=nullptr;
+        if (ACptr==nullptr) {
             fprintf(stderr,"***Warning: Line-> %s",Line);
             fprintf(stderr,"            will be ignored in file %s.\n",Name);
         }
@@ -309,7 +309,7 @@ BOOLEAN ReadInit()
       fprintf(stderr,"Error in file %s.  The program will assume constant\n",NameParameter('D'));
       fprintf(stderr,"P-Q load models.\n");
     }
-    if (!flagVloads) for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+    if (!flagVloads) for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
       ACptr->Pn=ACptr->Pl;
       ACptr->a=ACptr->Pz=0;
       ACptr->Qn=ACptr->Ql;
@@ -323,23 +323,23 @@ BOOLEAN ReadInit()
   if (ExistParameter('v')) {
     RealParameter('v',&V,0.0,10.0);
     if (V>0.001) {
-      ACptr=NULL;
+      ACptr=nullptr;
       N=IntegerParameter('B',0,0,9999);
       if (N) {
-         for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next)
+         for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next)
          if((!strcmp(ACptr->Type,"B")||!strcmp(ACptr->Type,"BA")) && ACptr->Num==N) break;
-         if (ACptr==NULL) {
+         if (ACptr==nullptr) {
             fprintf(stderr,"***Warning: The program will ignore the number in -B option (not a PQ bus).\n");
          }
       }
-      if (ACptr==NULL) {
-         for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next)
+      if (ACptr==nullptr) {
+         for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next)
          if(!strcmp(ACptr->Type,"B")||!strcmp(ACptr->Type,"BA")) break;
       }
-      if (ACptr!=NULL) {
+      if (ACptr!=nullptr) {
          BlPtr=ACptr;
          BlPtr->V=V;
-         return(TRUE);
+         return(true);
       }
       else {
          fprintf(stderr,"***Warning: The program will ignore the -v option (there is no PQ bus).\n");
@@ -348,16 +348,16 @@ BOOLEAN ReadInit()
       fprintf(stderr,"***Warning: The program will ignore the -v option (mag=0).\n");
     }
   }
-  return(FALSE);
+  return(false);
 }
 
 
 
 /* --------------------- ReadOHload ---------------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN ReadOHload(char *File)
+bool ReadOHload(char *File)
 #else
-BOOLEAN ReadOHload(File)
+bool ReadOHload(File)
 char *File;
 #endif
  /* Read Ontatio Hydro load model using SSSP (OH) format. */
@@ -366,13 +366,13 @@ char *File;
   FILE *Input;
   char Line[BUFLEN],Name[13];
   int LineNum=0;
-  BOOLEAN flag=FALSE,flagp=FALSE;
+  bool flag=false,flagp=false;
   INDEX Num,NA,Nlow,Nhigh;
   VALUETYPE Pn,Pz,Qn,Qz,a,b,MinMW,MinMVAR;
 
 
-  if (!NullName(File) && (Input=OpenInput(File))!=NULL) {
-    for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+  if (!NullName(File) && (Input=OpenInput(File))!=nullptr) {
+    for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
       ACptr->Pn=0;
       ACptr->Pz=1;
       ACptr->a=0;
@@ -381,10 +381,10 @@ char *File;
       ACptr->b=0;
     }
     for(;;){ /* Reading Loop */
-      if (fgets(Line,BUFLEN,Input)==NULL) {
+      if (fgets(Line,BUFLEN,Input)==nullptr) {
          ErrorHalt("Missing NLBS, EDATA, or END cards on OH load data file.");
          fclose(Input);
-         return(FALSE);
+         return(false);
       }
       LineNum++;
 
@@ -392,7 +392,7 @@ char *File;
       if (!strncmp(Line,"!",1) || !strncmp(Line,"C",1) ) continue;
 
       /* ------------ OH load Model ---------- */
-      else if (!strncmp(Line," NLBS",5)) flag=TRUE;
+      else if (!strncmp(Line," NLBS",5)) flag=true;
       else if (flag && (!strncmp(Line,"EDATA",5) || !strncmp(Line,"  END",5))) break;
       else if (flag) {
          GetStr(Line,1,12,12,Name);
@@ -400,9 +400,9 @@ char *File;
          if (strncmp(Name,"50000",5) && strncmp(Name,"60000",5)) {
 
          /* -------------- Definition of each bus ------------- */
-            for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+            for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
                if(!strncmp(ACptr->Name,Name,strlen(Name))){
-                  flagp=TRUE;
+                  flagp=true;
                   ACptr->Pn=(VALUETYPE) GetInt(Line,13,5)/100.0;
                   ACptr->Pz=1-ACptr->Pn;
                   ACptr->a=GetValue(Line,23,10,5);
@@ -411,7 +411,7 @@ char *File;
                   ACptr->b=GetValue(Line,33,10,5);
                   break;
                } else if(Num==ACptr->Num) {
-                  flagp=TRUE;
+                  flagp=true;
                   ACptr->Pn=(VALUETYPE) GetInt(Line,6,5)/100.0;
                   ACptr->Pz=1-ACptr->Pn;
                   ACptr->a=GetValue(Line,16,10,5);
@@ -421,7 +421,7 @@ char *File;
                   break;
                }
             }
-            if (ACptr==NULL) {
+            if (ACptr==nullptr) {
                fprintf(stderr,"***Warning: Line #%d-> %s",LineNum,Line);
                fprintf(stderr,"            will be ignored in file %s.\n",File);
             }
@@ -436,10 +436,10 @@ char *File;
             Qz=1-Qn;
             b=GetValue(Line,26,10,5);
             LineNum++;
-            if (fgets(Line,BUFLEN,Input)==NULL || !strncmp(Line,"EDATA",5) || !strncmp(Line,"  END",5)) {
+            if (fgets(Line,BUFLEN,Input)==nullptr || !strncmp(Line,"EDATA",5) || !strncmp(Line,"  END",5)) {
                fprintf(stderr,"Range card is missing in line #%d of file %s.\n",LineNum,File);
                fclose(Input);
-               return(FALSE);
+               return(false);
             }
             NA=GetInt(Line,1,5);
             if (!strncmp(Name,"50000",5) && Narea<=1 ) {
@@ -454,9 +454,9 @@ char *File;
             MinMW=MinMW/Sn;
             MinMVAR=GetValue(Line,26,10,5);
             MinMVAR=MinMVAR/Sn;
-            for (ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next) {
+            for (ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next) {
                if (!strncmp(Name,"60000",5) || Narea<=1 || ACptr->Area->N==NA) {
-                  flagp=TRUE;
+                  flagp=true;
                   if (ACptr->Num<=Nhigh && ACptr->Num>=Nlow) {
                      if (ACptr->Pl>MinMW) {
                         ACptr->Pn=Pn;

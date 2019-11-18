@@ -120,7 +120,7 @@ void ReadSVC(const char *Line)
     ptrac->SVC = new SVClist;
 #else
     ptrac->SVC = (SVClist *)malloc(sizeof(SVClist));
-    if (ptrac->SVC == NULL)
+    if (ptrac->SVC == nullptr)
     {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate SVC element data.");
@@ -213,7 +213,7 @@ void ReadTCSC(Line) char *Line;
     ptrac->TCSC = new TCSClist;
 #else
     ptrac->TCSC = (TCSClist *)malloc(sizeof(TCSClist));
-    if (ptrac->TCSC == NULL)
+    if (ptrac->TCSC == nullptr)
     {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC element data.");
@@ -228,7 +228,7 @@ void ReadTCSC(Line) char *Line;
     ptrac1->TCSC = new TCSClist;
 #else
     ptrac1->TCSC = (TCSClist *)malloc(sizeof(TCSClist));
-    if (ptrac1->TCSC == NULL)
+    if (ptrac1->TCSC == nullptr)
     {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate TCSC element data.");
@@ -297,7 +297,7 @@ void ReadSTATCOM(Line) char *Line;
     ptrac->STATCOM = new STATCOMlist;
 #else
     ptrac->STATCOM = (STATCOMlist *)malloc(sizeof(STATCOMlist));
-    if (ptrac->STATCOM == NULL)
+    if (ptrac->STATCOM == nullptr)
     {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate STATCOM element data.");

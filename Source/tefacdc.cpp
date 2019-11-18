@@ -9,7 +9,7 @@
 #include "sparse.h"
 #include "pflow.h"
 
-void TEFac(BOOLEAN flag);
+void TEFac(bool flag);
 void TEFdc(FILE *Out);
 void MatlabV(FILE *Out);
 void TEFMatlabFiles(void);
@@ -22,13 +22,13 @@ extern INDEX Nac, Ngen, Ndc, NacVar, Narea;
 extern INDEX *ACvar;
 extern VALUETYPE *x0p, lambda, Sn;
 extern AClist *Vlist;
-extern BOOLEAN flagBS, flagPgMax;
+extern bool flagBS, flagPgMax;
 VALUETYPE Vac;
 extern int field;
-extern BOOLEAN flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
+extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
 
 /* ------------------ TEFac ----------------------------- */
-void TEFac(BOOLEAN flag)
+void TEFac(bool flag)
 /* Caculate AC TEF. */
 {
   ACbusData *ACptr, *BEptr, *To;
@@ -40,13 +40,13 @@ void TEFac(BOOLEAN flag)
 
   if (Narea < 2)
   {
-    for (BEptr = dataPtr->ACbus; BEptr != NULL; BEptr = BEptr->Next)
+    for (BEptr = dataPtr->ACbus; BEptr != nullptr; BEptr = BEptr->Next)
       if (strpbrk(BEptr->Type, "S"))
         break;
   }
-  for (Vac = 0, ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (Vac = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
-    if (ACptr->Area != NULL)
+    if (ACptr->Area != nullptr)
       BEptr = ACptr->Area->Slack;
     if (flagBS)
     {
@@ -75,7 +75,7 @@ void TEFac(BOOLEAN flag)
     Qi = Qi + ACptr->Qg;
     gii = ACptr->G + ACptr->Pz + lambda * ACptr->Pzl;
     bii = ACptr->B + ACptr->Qz + lambda * ACptr->Qzl;
-    for (val = 0, ELptr = ACptr->Elem; ELptr != NULL; ELptr = ELptr->Next)
+    for (val = 0, ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
     {
       Eptr = ELptr->Eptr;
       if (Eptr->From == ACptr)
@@ -130,7 +130,7 @@ void TEFdc(Out)
   VALUETYPE a, b, d, t, cosag, Id, Xc;
   INDEX j;
 
-  for (DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
   {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R"))
@@ -188,7 +188,7 @@ void MatlabV(Out)
   fprintf(Out, "%s Plot profiles:\n", "%%");
   fprintf(Out, "%s Change the value of K to scale L.F.\nK=1;\n", "%%");
   fprintf(Out, "figure;\nplot(");
-  for (count = countp = 0, Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+  for (count = countp = 0, Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
   {
     count++;
     if (countp < 4)
@@ -253,53 +253,53 @@ void MatlabV(Out)
   }
   fprintf(Out, ");\n");
   fprintf(Out, "legend(");
-  for (countp = 0, Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+  for (countp = 0, Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
   {
     if (countp < 4)
     {
-      if (Lptr->AC != NULL && !strcmp(Lptr->Type, "V"))
+      if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "V"))
       {
         if (countp == 0)
           fprintf(Out, "'kV_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'kV_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->AC != NULL && !strcmp(Lptr->Type, "D"))
+      else if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "D"))
       {
         if (countp == 0)
           fprintf(Out, "'deg_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'deg_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->AC != NULL && !strcmp(Lptr->Type, "PL"))
+      else if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "PL"))
       {
         if (countp == 0)
           fprintf(Out, "'L MW_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'L MW_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->AC != NULL && !strcmp(Lptr->Type, "QL"))
+      else if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "QL"))
       {
         if (countp == 0)
           fprintf(Out, "'L MVar_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'L MVar_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->AC != NULL && !strcmp(Lptr->Type, "PG"))
+      else if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "PG"))
       {
         if (countp == 0)
           fprintf(Out, "'G MW_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'G MW_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->AC != NULL && !strcmp(Lptr->Type, "QG"))
+      else if (Lptr->AC != nullptr && !strcmp(Lptr->Type, "QG"))
       {
         if (countp == 0)
           fprintf(Out, "'G MVar_{%s}'", Lptr->AC->Name);
         else
           fprintf(Out, ",'G MVar_{%s}'", Lptr->AC->Name);
       }
-      else if (Lptr->Area != NULL)
+      else if (Lptr->Area != nullptr)
       {
         if (countp == 0)
           fprintf(Out, "'A MW_{%s}'", Lptr->Type, Lptr->Area->Name);
@@ -342,10 +342,10 @@ void MatlabV(Out)
     countp++;
   }
   fprintf(Out, ");\n");
-  for (count = i = 0, Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
+  for (count = i = 0, Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
   {
     count++;
-    if (Lptr->AC != NULL)
+    if (Lptr->AC != nullptr)
     {
       if (!strcmp(Lptr->Type, "V") && Lptr->AC->Vlmax > Lptr->AC->Vlmin)
       {
@@ -360,7 +360,7 @@ void MatlabV(Out)
         fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');  ", KV * Lptr->AC->Vlmax, KV * Lptr->AC->Vlmax);
         fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');\n", KV * Lptr->AC->Vlmin, KV * Lptr->AC->Vlmin);
       }
-      if (ExistParameter('e') && Lptr->AC->Gen != NULL)
+      if (ExistParameter('e') && Lptr->AC->Gen != nullptr)
         count = count + 3;
     }
   }
@@ -369,15 +369,15 @@ void MatlabV(Out)
   {
     fprintf(Out, "%s Define variables for AC/DC TEF profiles:\n", "%%");
     fprintf(Out, "L=x(:,1); Vac=x(:,%1d);\n", count + 2);
-    for (count += 2, i = 0, DCptr = dataPtr->DCbus; DCptr != NULL; DCptr = DCptr->Next)
+    for (count += 2, i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
       if (!strcmp(DCptr->Type, "R"))
       {
         i++;
         DCptrp = DCptr->To;
         if (i == 1)
           fprintf(Out, "k=input('V=Vac+k*Vdc -> k=');\n");
-        for (l = 1, Lptr = Vlist; Lptr != NULL; Lptr = Lptr->Next)
-          if (Lptr->AC != NULL)
+        for (l = 1, Lptr = Vlist; Lptr != nullptr; Lptr = Lptr->Next)
+          if (Lptr->AC != nullptr)
           {
             if (Lptr->AC == DCptr->AC && !strcmp(Lptr->Type, "V"))
               j = l;
@@ -465,7 +465,7 @@ void MatlabV(Out)
     else
       fprintf(Out, "[lambda,TEF]=tefprof(L,Vac);\n");
   }
-  if (Out != NULL)
+  if (Out != nullptr)
     fclose(Out);
 }
 
@@ -514,7 +514,7 @@ void TEFMatlabFiles()
     fprintf(Out, "%s", "title('TEF profile'); xlabel('L.F. [p.u.]'); ylabel('TEF [p.u.]');\n");
     fclose(Out);
     /* ----------------  Create 'addtotef.m' file needed for Matlab computations --------------- */
-    if (dataPtr->DCbus != NULL)
+    if (dataPtr->DCbus != nullptr)
     {
       Out = OpenOutput("addtotef.m");
       fprintf(Out, "%s", "function [Vac,Vdc]=addtotef(L,di,a,b,d,V,Vac,P,Xc)\n");

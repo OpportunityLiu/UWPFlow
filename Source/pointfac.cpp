@@ -5,27 +5,27 @@
 
 /* ------------------ SVCFunHes ----------------------------- */
 #ifdef ANSIPROTO
-void SVCFunHes(BOOLEAN flagF,BOOLEAN flagJ)
+void SVCFunHes(bool flagF,bool flagJ)
 #else
 void SVCFunHes(flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 #endif
 /* Construct the SVC part of the PoC Jacobian and mismatch. */
 {
  INDEX i,j,k,l,N;
  SVCbusData *SVCptr;
  VALUETYPE Vk,Xl,Xc,Bv,Xsl,alpha;
- BOOLEAN flag1;
+ bool flag1;
 
  i=NacVar+11*Ndc/2;
  N=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;
  j=N+i;
- for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+ for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
    k=ACvar[SVCptr->From->N];
    Vk=SVCptr->From->V;
    l=ACvar[SVCptr->Ctrl->N];
-   if (!strcmp(SVCptr->Cont,"AL")) flag1=FALSE;
-   else flag1=TRUE;
+   if (!strcmp(SVCptr->Cont,"AL")) flag1=false;
+   else flag1=true;
    Xl=SVCptr->Xl;
    Xc=SVCptr->Xc;
    Xsl=SVCptr->slope;
@@ -53,10 +53,10 @@ BOOLEAN flagF,flagJ;
 
 /* ------------------ TCSCFunHes ----------------------------- */
 #ifdef ANSIPROTO
-void TCSCFunHes(BOOLEAN flagF,BOOLEAN flagJ)
+void TCSCFunHes(bool flagF,bool flagJ)
 #else
 void TCSCFunHes(flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 #endif
 /* Construct the TCSC part of the PoC Jacobian and mismatch. */
 {
@@ -65,12 +65,12 @@ BOOLEAN flagF,flagJ;
  VALUETYPE Vk,Vm,thk,thm,Xc,Xl,Ptcsc,Qtcsck,Be,alpha;
  VALUETYPE Itcsc,Stcsc,D,sign,Kf;
  VALUETYPE s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11;
- BOOLEAN dVk=FALSE,dVm=FALSE;
+ bool dVk=false,dVm=false;
 
  i=NacVar+11*Ndc/2+3*Nsvc;
  N=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;
  j=N+i;
- for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+ for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
    k=ACvar[TCSCptr->From->N];
    Vk=TCSCptr->From->V;
    thk=TCSCptr->From->Ang;
@@ -88,8 +88,8 @@ BOOLEAN flagF,flagJ;
    alpha=TCSCptr->alpha_tcsc;
    Itcsc=TCSCptr->Itcsc;
    if (Itcsc>=0) sign=1.0; else sign=-1.0;
-   if (TCSCptr->From->Cont!=NULL) dVk=TRUE;
-   if (TCSCptr->To->Cont!=NULL) dVm=TRUE;
+   if (TCSCptr->From->Cont!=nullptr) dVk=true;
+   if (TCSCptr->To->Cont!=nullptr) dVm=true;
    if(flagF){
      dF[j+1]=-x0[i+1]+ sign*Ptcsc/Stcsc*x0[i+5]-x0[k]+x0[m];
      dF[j+2]=-x0[i+2]+ sign*Qtcsck/Stcsc*x0[i+5]-x0[k+1];
@@ -295,30 +295,30 @@ BOOLEAN flagF,flagJ;
 
 /* ------------------ STATCOMFunHes ----------------------------- */
 #ifdef ANSIPROTO
-void STATCOMFunHes(BOOLEAN flagF,BOOLEAN flagJ)
+void STATCOMFunHes(bool flagF,bool flagJ)
 #else
 void STATCOMFunHes(flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool flagF,flagJ;
 #endif
 /* Construct the STATCOM part of the PoC Jacobian and mismatch. */
 {
  INDEX i,j,k,l,N;
  STATCOMbusData *STATCOMptr;
  VALUETYPE Vk,Xsl,delta,R,G,B,Gc,I,theta,Vdc,K,alpha,Q;
- BOOLEAN flagLimits,flagPWM;
+ bool flagLimits,flagPWM;
 
  i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
  N=NacVar+11*Ndc/2+3*Nsvc+NtcscVar+7*Nstatcom;
  j=N+i;
- for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+ for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
    k=ACvar[STATCOMptr->From->N];
    Vk=STATCOMptr->From->V;
    delta=STATCOMptr->From->Ang;
    l=ACvar[STATCOMptr->Ctrl->N];
-   if (!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")) flagLimits=FALSE;
-   else                                                                  flagLimits=TRUE;
-   if (!strcmp(STATCOMptr->Cont1,"PW")) flagPWM=TRUE;
-   else                                 flagPWM=FALSE;
+   if (!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")) flagLimits=false;
+   else                                                                  flagLimits=true;
+   if (!strcmp(STATCOMptr->Cont1,"PW")) flagPWM=true;
+   else                                 flagPWM=false;
    R=STATCOMptr->R;
    G=STATCOMptr->G;
    B=STATCOMptr->B;

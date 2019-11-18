@@ -42,7 +42,7 @@ int Pos,Leng,Dec;
 #endif
 {
   int i,count;
-  BOOLEAN flag=FALSE,flagp=FALSE;
+  bool flag=false,flagp=false;
   char str[11];
   VALUETYPE val;
 
@@ -56,19 +56,19 @@ int Pos,Leng,Dec;
   for(i=1;i<=Leng && *ptr!='\n';ptr++,i++,count++) {
     if (isdigit(*ptr) || *ptr=='.' || *ptr=='-' || *ptr=='+') {
       str[i-1]= *ptr;
-      flagp=TRUE;
+      flagp=true;
     }
     else if(*ptr==' ') {
       if (flagp) str[i-1]='0';
       else str[i-1]=' ';
     }
     else return(0);
-    if (*ptr=='.') flag=TRUE;
+    if (*ptr=='.') flag=true;
   }
   for(i=count;i<=Leng;str[i-1]='0',i++);
   str[Leng]='\0';
   val=atof(str);
-  if (Dec!=0 && flag==FALSE) for(i=1;i<=Dec; i++, val=val/10);
+  if (Dec!=0 && flag==false) for(i=1;i<=Dec; i++, val=val/10);
   return(val);
 }
 
@@ -82,7 +82,7 @@ int Pos,Leng;
 #endif
 {
   int i,count;
-  BOOLEAN flagp=FALSE;
+  bool flagp=false;
   char str[11];
   INDEX val;
 
@@ -96,7 +96,7 @@ int Pos,Leng;
   for(i=1;i<=Leng && *ptr!='\n';ptr++,i++,count++) {
     if (isdigit(*ptr) || *ptr=='-' || *ptr=='+') {
       str[i-1]= *ptr;
-      flagp=TRUE;
+      flagp=true;
     }
     else if (*ptr==' ') {
       if (flagp) str[i-1]='0';
@@ -124,25 +124,25 @@ INDEX BusN,N1,N2;
   int i;
 
   if(N1==0||N2==0) {
-    if(N1==0) ptrn=NULL;
+    if(N1==0) ptrn=nullptr;
     else ptrn=dataPtr->ACbus;
 #ifdef WINDOWS
     dataPtr->ACbus= new ACbusData;
 #else
     dataPtr->ACbus=(ACbusData *) malloc(sizeof(ACbusData));
-    if (dataPtr->ACbus==NULL) {
+    if (dataPtr->ACbus==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->ACbus;
-    if(ptrn!=NULL) ptrn->Prev=ptr;
-    ptrp=NULL;
+    if(ptrn!=nullptr) ptrn->Prev=ptr;
+    ptrp=nullptr;
   }
   else {
     ptr=dataPtr->ACbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(BusN==ptr->Num||(BusN==0 && !strcmp(ptr->Name,BusName))) return(ptr);
       ptrp=ptr;
       ptr=ptr->Next;
@@ -151,14 +151,14 @@ INDEX BusN,N1,N2;
     ptr= new ACbusData;
 #else
     ptr=(ACbusData *) malloc(sizeof(ACbusData));
-    if (ptr==NULL) {
+    if (ptr==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC bus data.");
       exit(ERROREXIT);
     }
 #endif
     ptrp->Next=ptr;
-    ptrn=NULL;
+    ptrn=nullptr;
   }
   ptr->Num=0;
   strcpy(ptr->Name,BusName);
@@ -168,11 +168,11 @@ INDEX BusN,N1,N2;
   strcpy(ptr->Zone,"");
   strcpy(ptr->Owner,"");
   strcpy(ptr->cont,"");
-  ptr->Area=NULL;
+  ptr->Area=nullptr;
   ptr->Ncont=0;
-  ptr->Reg=NULL;
-  ptr->Elem=NULL;
-  ptr->Gen=NULL;
+  ptr->Reg=nullptr;
+  ptr->Elem=nullptr;
+  ptr->Gen=nullptr;
   ptr->V=0;
   ptr->VCont=0;
   ptr->Ang=1000.;
@@ -207,7 +207,7 @@ INDEX BusN,N1,N2;
   ptr->Vmin=0;
   ptr->Vlmax=0;
   ptr->Vlmin=0;
-  ptr->CheckVlimits=TRUE;
+  ptr->CheckVlimits=true;
   ptr->Qr=0;
   ptr->Kbg=0;
   ptr->Kbg1=0;
@@ -216,12 +216,12 @@ INDEX BusN,N1,N2;
   ptr->valp=0;
   ptr->vals=0;
   ptr->valt=0;
-  ptr->DC=NULL;
-  ptr->SVC=NULL;      /* FACTS */
-  ptr->TCSC=NULL;     /* FACTS */
-  ptr->STATCOM=NULL;  /* FACTS */
-  ptr->Cont=NULL;
-  ptr->ContBus=NULL;
+  ptr->DC=nullptr;
+  ptr->SVC=nullptr;      /* FACTS */
+  ptr->TCSC=nullptr;     /* FACTS */
+  ptr->STATCOM=nullptr;  /* FACTS */
+  ptr->Cont=nullptr;
+  ptr->ContBus=nullptr;
   ptr->Next=ptrn;
   ptr->Prev=ptrp;
   return(ptr);
@@ -244,7 +244,7 @@ INDEX i,N;
     dataPtr->Area= new AreaData;
 #else
     dataPtr->Area=(AreaData *) malloc(sizeof(AreaData));
-    if (dataPtr->Area==NULL) {
+    if (dataPtr->Area==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate Area data.");
       exit(ERROREXIT);
@@ -254,7 +254,7 @@ INDEX i,N;
   }
   else {
     ptr=dataPtr->Area;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(i==ptr->N||(i==0&&!strcmp(ptr->Name,Name))) return(ptr);
       prevptr=ptr;
       ptr=ptr->Next;
@@ -263,7 +263,7 @@ INDEX i,N;
     ptr= new AreaData;
 #else
     ptr=(AreaData *) malloc(sizeof(AreaData));
-    if (ptr==NULL) {
+    if (ptr==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate Area data.");
       exit(ERROREXIT);
@@ -277,12 +277,12 @@ INDEX i,N;
   for(j=1;j<=11;j++) strcpy(ptr->Zone[j],"");
   ptr->P=0;
   ptr->SPg=0;
-  ptr->Slack=NULL;
-  ptr->BSptr=NULL;
-  ptr->Elem=NULL;
-  ptr->AC=NULL;
-  ptr->DC=NULL;
-  ptr->Next=NULL;
+  ptr->Slack=nullptr;
+  ptr->BSptr=nullptr;
+  ptr->Elem=nullptr;
+  ptr->AC=nullptr;
+  ptr->DC=nullptr;
+  ptr->Next=nullptr;
   return(ptr);
 }
 
@@ -303,7 +303,7 @@ ElementData *Eptr;
   ELptr= new ElementList;
 #else
   ELptr=(ElementList *) malloc(sizeof(ElementList));
-  if (ELptr==NULL) {
+  if (ELptr==nullptr) {
     fclose(InputDataFile);
     ErrorHalt("Insufficient memory to allocate AC element data.");
     exit(ERROREXIT);
@@ -330,19 +330,19 @@ char *Type,*Ckt;
 
   if(N1==0 || N2==0) {
     if (N1!=0) ptrn=dataPtr->Element;
-    else ptrn=NULL;
+    else ptrn=nullptr;
 #ifdef WINDOWS
     dataPtr->Element= new ElementData;
 #else
     dataPtr->Element=(ElementData *) malloc(sizeof(ElementData));
-    if (dataPtr->Element==NULL) {
+    if (dataPtr->Element==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate AC element data.");
       exit(ERROREXIT);
     }
 #endif
     ptr=dataPtr->Element;
-    if(ptrn!=NULL) ptrn->Prev=ptr;
+    if(ptrn!=nullptr) ptrn->Prev=ptr;
     ptr->From=From;
     ptr->To=To;
     From->Elem=(ElementList *) AddElemToList(From->Elem,ptr);
@@ -351,8 +351,8 @@ char *Type,*Ckt;
     strcpy(ptr->Type,"");
     strcpy(ptr->Zone,"");
     strcpy(ptr->Owner,"");
-    ptr->Area=NULL;
-    ptr->Meter=NULL;
+    ptr->Area=nullptr;
+    ptr->Meter=nullptr;
     ptr->Sec=0;
     ptr->G=0;
     ptr->B=0;
@@ -363,7 +363,7 @@ char *Type,*Ckt;
     ptr->Tap=1;
     ptr->Taps=1;
     ptr->Ang=0;
-    ptr->Cont=NULL;
+    ptr->Cont=nullptr;
     ptr->Ncont=0;
     ptr->Cvar=0;
     strcpy(ptr->Ctype,"");
@@ -372,13 +372,13 @@ char *Type,*Ckt;
     ptr->Min=0;
     ptr->Max=0;
     ptr->Imax=0;
-    ptr->CheckIlimits=TRUE;
+    ptr->CheckIlimits=true;
     ptr->Next=ptrn;
-    ptr->Prev=NULL;
+    ptr->Prev=nullptr;
     return(ptr);
   }
   else {
-    for(ELptr=From->Elem;ELptr!=NULL;ELptr=ELptr->Next){
+    for(ELptr=From->Elem;ELptr!=nullptr;ELptr=ELptr->Next){
       ptr=ELptr->Eptr;
       if(strpbrk(ptr->Type,Type) &&
          (!strcmp(ptr->Ckt,Ckt)||!strcmp(Ckt," ")||!strcmp(ptr->Ckt," ")) &&
@@ -389,7 +389,7 @@ char *Type,*Ckt;
         }
       }
     }
-    return(NULL);
+    return(nullptr);
   }
 }
 
@@ -410,7 +410,7 @@ INDEX N;
     dataPtr->DCbus= new DCbusData;
 #else
     dataPtr->DCbus=(DCbusData *) malloc(sizeof(DCbusData));
-    if (dataPtr->DCbus==NULL){
+    if (dataPtr->DCbus==nullptr){
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate DC bus data.");
       exit(ERROREXIT);
@@ -420,7 +420,7 @@ INDEX N;
   }
   else {
     ptr=dataPtr->DCbus;
-    while (ptr!=NULL){
+    while (ptr!=nullptr){
       if(!strcmp(ptr->Name,BusName)) return(ptr);
       prevptr=ptr;
       ptr=ptr->Next;
@@ -429,7 +429,7 @@ INDEX N;
     ptr= new DCbusData;
 #else
     ptr=(DCbusData *) malloc(sizeof(DCbusData));
-    if (ptr==NULL) {
+    if (ptr==nullptr) {
       fclose(InputDataFile);
       ErrorHalt("Insufficient memory to allocate DC bus data.");
       exit(ERROREXIT);
@@ -443,8 +443,8 @@ INDEX N;
   strcpy(ptr->Cont1,"");
   strcpy(ptr->Cont2,"");
   strcpy(ptr->Zone,"");
-  ptr->Meter=NULL;
-  ptr->Area=NULL;
+  ptr->Meter=nullptr;
+  ptr->Area=nullptr;
   ptr->Xc=0;
   ptr->Nbr=0;
   ptr->Ntrf=0;
@@ -465,8 +465,8 @@ INDEX N;
   ptr->TapMax=0;
   ptr->Vn=0;
   ptr->Rd=0;
-  ptr->AC=NULL;
-  ptr->To=NULL;
-  ptr->Next=NULL;
+  ptr->AC=nullptr;
+  ptr->To=nullptr;
+  ptr->Next=nullptr;
   return(ptr);
 }

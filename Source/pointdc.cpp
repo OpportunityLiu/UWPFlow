@@ -4,10 +4,10 @@
 
 /* ------------------ DCFunHes ----------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN DCFunHes(BOOLEAN flagF, BOOLEAN flagJ)
+bool DCFunHes(bool flagF, bool flagJ)
 #else
-BOOLEAN DCFunHes(flagF, flagJ)
-    BOOLEAN flagF,
+bool DCFunHes(flagF, flagJ)
+    bool flagF,
     flagJ;
 #endif
 /* Construct the DC part of the PoC Jacobian. */
@@ -18,11 +18,11 @@ BOOLEAN DCFunHes(flagF, flagJ)
   VALUETYPE Sa1, Sa2;
   VALUETYPE Vdr, Vr, ar, cosar, cosgr, Xcr, Sr, Pr, Dr, Id;
   VALUETYPE Vdi, Vi, ai, cosai, cosgi, Xci, Si, Pi, Di, Rd;
-  BOOLEAN dVr = FALSE, dVi = FALSE;
+  bool dVr = false, dVi = false;
 
   i = NacVar;
   N = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /*  FACTS  */
-  for (DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
   {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R"))
@@ -35,10 +35,10 @@ BOOLEAN DCFunHes(flagF, flagJ)
       l = ACvar[DCptrI->AC->N];
       kp = ACvar[DCptrR->AC->N] + 1;
       lp = ACvar[DCptrI->AC->N] + 1;
-      if (DCptrR->AC->Cont != NULL)
-        dVr = TRUE;
-      if (DCptrI->AC->Cont != NULL)
-        dVi = TRUE;
+      if (DCptrR->AC->Cont != nullptr)
+        dVr = true;
+      if (DCptrI->AC->Cont != nullptr)
+        dVi = true;
       Vr = DCptrR->AC->V;
       Vi = DCptrI->AC->V;
       ar = DCptrR->Tap * DCptrR->Ntrf;
@@ -56,8 +56,8 @@ BOOLEAN DCFunHes(flagF, flagJ)
       Dr = Sr * Sr - Pr * Pr;
       Di = Si * Si - Pi * Pi;
       if (Dr <= 0 || Di <= 0)
-        return (TRUE);
-      if (Acont && DCptrR->Meter != NULL)
+        return (true);
+      if (Acont && DCptrR->Meter != nullptr)
       {
         if (DCptrR->Meter == DCptrR)
         {
@@ -345,5 +345,5 @@ BOOLEAN DCFunHes(flagF, flagJ)
       i = i + 11;
     }
   }
-  return (FALSE);
+  return (false);
 }

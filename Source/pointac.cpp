@@ -3,7 +3,7 @@
 #include "pointl.h"
 
 /* ------------------ ACFunHes ----------------------------- */
-void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
+void ACFunHes(bool flagF, bool flagJ)
 /* Construct the AC part of the PoC Jacobian. */
 {
   SparseMatrixElement *Jptr;
@@ -42,7 +42,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
     for (i = 1; i <= Jac->n1; i++)
     {
       Jptr = Jac->ColHead[i];
-      while (Jptr != NULL)
+      while (Jptr != nullptr)
       {
         j = Jptr->Col;
         if (OldCol->p[j])
@@ -55,15 +55,15 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
         Jptr = Jptr->ColNext;
       }
     }
-  for (ALptr = dataPtr->KGbus; ALptr != NULL; ALptr = ALptr->Next)
+  for (ALptr = dataPtr->KGbus; ALptr != nullptr; ALptr = ALptr->Next)
   {
     BSptr = ALptr->AC;
     if (strpbrk(ALptr->AC->Type, "S"))
       break;
   }
-  for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
-    if (ACptr->Area != NULL)
+    if (ACptr->Area != nullptr)
       BSptr = ACptr->Area->Slack;
     i = ACvar[ACptr->N];
     Vi = ACptr->V;
@@ -73,7 +73,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
     From = ACptr;
     Ddi = Dvi = Ddip = Dvip = 0;
     /*if (flagF) dF[Jac->n1]+=-ACptr->DPl*x0[i]-ACptr->DQl*x0[i+1];*/
-    for (ELptr = ACptr->Elem; ELptr != NULL; ELptr = ELptr->Next)
+    for (ELptr = ACptr->Elem; ELptr != nullptr; ELptr = ELptr->Next)
     {
       Eptr = ELptr->Eptr;
       if (Eptr->From == ACptr)
@@ -195,7 +195,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
       {
         if (!strpbrk(From->Type, "S"))
           dF[i + N] += Vi * Vj * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
-        if (From->Cont != NULL)
+        if (From->Cont != nullptr)
           dF[i + N + 1] += Vj * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) + Vi * (v5 + v7 + v9 + v11);
       }
       if (flagJ)
@@ -208,7 +208,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
           Dvi = Dvi + Vj * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
           if (!strpbrk(To->Type, "S"))
             JacElement(Jac, i + N, j, Ddj);
-          if (To->Cont != NULL)
+          if (To->Cont != nullptr)
             JacElement(Jac, i + N, j + 1, Dvj);
           else
             JacElement(Jac, i + N, j + 1, 0.);
@@ -225,7 +225,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Dval = 0;
             JacElement(Jac, i + N, k, Dval);
           }
-          else if (Rcont && Eptr->Cont != NULL)
+          else if (Rcont && Eptr->Cont != nullptr)
           {
             k = ACvar[Eptr->Cont->N] + 1;
             if (!strcmp(Eptr->Type, "R"))
@@ -235,7 +235,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
             JacElement(Jac, i + N, k, Dval);
           }
         }
-        if (From->Cont != NULL)
+        if (From->Cont != nullptr)
         {
           Ddj = -Vj * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
           Ddip = Ddip - Ddj;
@@ -243,7 +243,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
           Dvip = Dvip + v5 + v7 + v9 + v11;
           if (!strpbrk(To->Type, "S"))
             JacElement(Jac, i + 1 + N, j, Ddj);
-          if (To->Cont != NULL)
+          if (To->Cont != nullptr)
             JacElement(Jac, i + 1 + N, j + 1, Dvj);
           else
             JacElement(Jac, i + 1 + N, j + 1, 0.);
@@ -264,7 +264,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Dval = 0;
             JacElement(Jac, i + 1 + N, k, Dval);
           }
-          else if (Rcont && Eptr->Cont != NULL)
+          else if (Rcont && Eptr->Cont != nullptr)
           {
             k = ACvar[Eptr->Cont->N] + 1;
             if (!strcmp(Eptr->Type, "R"))
@@ -289,7 +289,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               k++;
             JacElement(Jac, i + 1 + N, k, 0.);
           }
-          else if (Rcont && Eptr->Cont != NULL)
+          else if (Rcont && Eptr->Cont != nullptr)
           {
             k = ACvar[Eptr->Cont->N] + 1;
             JacElement(Jac, i + 1 + N, k, 0.);
@@ -308,14 +308,14 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
         else if (Acont)
           dF[k + N + 2] += DPg * x0[i];
       }
-      if (ACptr->Cont != NULL)
+      if (ACptr->Cont != nullptr)
         dF[i + N + 1] += -2 * Vi * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) - 2 * Vi * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] - a * pow(Vi, a - 1) * (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] - 2 * Vi * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] - b * pow(Vi, b - 1) * (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
       if (QRcont && strpbrk(ACptr->Type, "G"))
       {
         j = ACvar[ACptr->Cont->N];
         if (strpbrk(ACptr->cont, "V"))
           dF[j + N + 1] += ACptr->Kbg * x0[i + 1];
-        else if (ACptr->Gen != NULL)
+        else if (ACptr->Gen != nullptr)
         {
           j = ACptr->Gen->Nvar;
           if (strpbrk(ACptr->cont, "E"))
@@ -328,7 +328,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
       {
         if (strpbrk(ACptr->cont, "V"))
           dF[i + N + 1] += x0[i + 1];
-        else if (ACptr->Gen != NULL)
+        else if (ACptr->Gen != nullptr)
         {
           j = ACptr->Gen->Nvar;
           if (strpbrk(ACptr->cont, "E"))
@@ -342,7 +342,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
     {
       if (!strpbrk(From->Type, "S"))
         JacElement(Jac, i + N, i, Ddi);
-      if (From->Cont != NULL)
+      if (From->Cont != nullptr)
       {
         Dvip = Dvip - 2 * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) - 2 * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] - a * (a - 1) * pow(Vi, a - 2) * (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] - 2 * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] - b * (b - 1) * pow(Vi, b - 2) * (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
         JacElement(Jac, i + N, i + 1, Dvi);
@@ -380,7 +380,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
 
     /* -------------- Regulating Transf. ----------------------- */
     if (PQcont || Rcont)
-      for (ELptr = ACptr->Reg; ELptr != NULL; ELptr = ELptr->Next)
+      for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next)
       {
         Eptr = ELptr->Eptr;
         From = Eptr->From;
@@ -475,7 +475,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddi = Vi * Vj * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
               JacElement(Jac, k + N, i, Ddi);
             }
-            if (From->Cont != NULL)
+            if (From->Cont != nullptr)
             {
               Dvi = -Vj * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
               JacElement(Jac, k + N, i + 1, Dvi);
@@ -487,7 +487,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddj = -Vi * Vj * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
               JacElement(Jac, k + N, j, Ddj);
             }
-            if (To->Cont != NULL)
+            if (To->Cont != nullptr)
             {
               Dvj = -Vi * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
               JacElement(Jac, k + N, j + 1, Dvj);
@@ -524,7 +524,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddi = Vi * Vj / Eptr->Tap * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
               JacElement(Jac, k + N, i, Ddi);
             }
-            if (From->Cont != NULL)
+            if (From->Cont != nullptr)
             {
               Dvi = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) + 2 * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
               JacElement(Jac, k + N, i + 1, Dvi);
@@ -536,7 +536,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddj = -Vi * Vj / Eptr->Tap * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
               JacElement(Jac, k + N, j, Ddj);
             }
-            if (To->Cont != NULL)
+            if (To->Cont != nullptr)
             {
               Dvj = Vi / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
               JacElement(Jac, k + N, j + 1, Dvj);
@@ -559,7 +559,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddi = Vi * Vj / Eptr->Tap * (-v1 + v2 + v3 + v4 + v6 + v8);
               JacElement(Jac, k + N, i, Ddi);
             }
-            if (From->Cont != NULL)
+            if (From->Cont != nullptr)
             {
               Dvi = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8) + 2 * Vi / Eptr->Tap * (v5 + v7 + v9);
               JacElement(Jac, k + N, i + 1, Dvi);
@@ -571,7 +571,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
               Ddj = -Vi * Vj / Eptr->Tap * (-v1 + v2 + v3 + v4 + v6 + v8);
               JacElement(Jac, k + N, j, Ddj);
             }
-            if (To->Cont != NULL)
+            if (To->Cont != nullptr)
             {
               Dvj = Vi / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8);
               JacElement(Jac, k + N, j + 1, Dvj);
@@ -590,7 +590,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
       }
 
     /* -------------- Generator Model ----------------------- */
-    if (ACptr->Gen != NULL)
+    if (ACptr->Gen != nullptr)
     {
       i = ACptr->Gen->Nvar;
       Ra = ACptr->Gen->Ra;
@@ -652,7 +652,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
         j = ACvar[ACptr->N];
         if (!strpbrk(ACptr->Type, "S"))
           dF[j + N] += Vi * sin(di) * x0[i + 9] - Vi * cos(di) * x0[i + 10];
-        if (ACptr->Cont != NULL)
+        if (ACptr->Cont != nullptr)
           dF[j + N + 1] += -cos(di) * x0[i + 9] - sin(di) * x0[i + 10];
       }
       if (flagJ)
@@ -684,7 +684,7 @@ void ACFunHes(BOOLEAN flagF, BOOLEAN flagJ)
         if (!strpbrk(ACptr->Type, "S"))
         {
           JacElement(Jac, j + N, j, Vi * cos(di) * x0[i + 9] + Vi * sin(di) * x0[i + 10]);
-          if (ACptr->Cont != NULL)
+          if (ACptr->Cont != nullptr)
           {
             JacElement(Jac, j + N, j + 1, sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);
             JacElement(Jac, j + N + 1, j, sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);

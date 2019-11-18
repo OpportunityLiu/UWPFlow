@@ -7,11 +7,11 @@ extern VALUETYPE *Dx,Dparam,param0,*x0,*x0p,Kh,Htol,SD0,AngTr,
                  VoltageSum,VoltageSum0,DxiMax,VSF,SF,ZeroDx,Tol;
 extern INDEX NewNumEq,CountSteps,NumSteps;
 extern AClist *Vlist,*Vlistp;
-extern BOOLEAN flagReducedContinuation,flagReduceSystem,*DxZero;
+extern bool flagReducedContinuation,flagReduceSystem,*DxZero;
 
 
 /* ------------------ HFunJac ----------------------------- */
-int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *vec)
+int HFunJac(bool FlagFunction,bool FlagJacobian,AreaData *Aptr,VALUETYPE *vec)
 /* Add a row to the Jacobian. */
 {
   ACbusData *ACptr,*ACptrp;
@@ -35,8 +35,8 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
     if (Dparam) JacElement(Jac,l,l,Dparam);
     else JacElement(Jac,l,l,1.0);
   }
-  for(ACptr=dataPtr->ACbus;ACptr!=NULL;ACptr=ACptr->Next){
-    if (ACptr->Cont!=NULL) {
+  for(ACptr=dataPtr->ACbus;ACptr!=nullptr;ACptr=ACptr->Next){
+    if (ACptr->Cont!=nullptr) {
       i=ACvar[ACptr->N];
       if (strpbrk(ACptr->Type,"S")) {
         if (FlagFunction) {
@@ -44,7 +44,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
           dF[l] +=vec[i]*(ACptr->Kg-x0[i]-vec[i]);
         }
         if (FlagJacobian) {
-          if (Aptr==NULL && fabs(vec[i])<1e-6) val=-1;
+          if (Aptr==nullptr && fabs(vec[i])<1e-6) val=-1;
           JacElement(Jac,l,i,vec[i]);
         }
       } else {
@@ -91,7 +91,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
         dF[l] +=vec[i]*(ACptr->Ang-x0[i]-vec[i]);
       }
       if (FlagJacobian) JacElement(Jac,l,i,vec[i]);
-      for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next){
+      for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next){
         Eptr=ELptr->Eptr;
         if(!strcmp(Eptr->Type,"R")) break;
       }
@@ -109,7 +109,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
           dF[l] +=vec[i]*(ACptr->Kg-x0[i]-vec[i]);
         }
         if (FlagJacobian) {
-          if (Aptr==NULL && fabs(vec[i])<1e-6) val=-1;
+          if (Aptr==nullptr && fabs(vec[i])<1e-6) val=-1;
           JacElement(Jac,l,i,vec[i]);
         }
       } else {
@@ -132,11 +132,11 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
         dF[l] +=vec[i]*(ACptr->Kg-x0[i]-vec[i]);
       }
       if (FlagJacobian) {
-        if (Aptr!=NULL && ACptr->Area==Aptr && fabs(vec[i])<1e-6) val=-1;
+        if (Aptr!=nullptr && ACptr->Area==Aptr && fabs(vec[i])<1e-6) val=-1;
         JacElement(Jac,l,i,vec[i]);
       }
     }
-    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=NULL;ELptr=ELptr->Next) {
+    if (PQcont) for(ELptr=ACptr->Reg;ELptr!=nullptr;ELptr=ELptr->Next) {
       Eptr=ELptr->Eptr;
       if(strpbrk(Eptr->Type,"PQNM")) {
         i=ACvar[ACptr->N]+1+ACptr->Ncont-Eptr->Ncont;
@@ -164,7 +164,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
         }
       }
     }
-    if (ACptr->Gen!=NULL) {
+    if (ACptr->Gen!=nullptr) {
       i=ACptr->Gen->Nvar+1;
       if (FlagFunction) {
         if (flagReducedContinuation && DxZero[i]) dF[i]=0;
@@ -236,7 +236,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
     }
   }
   i=NacVar;
-  for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
+  for(DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next){
     DCptrI=DCptrR->To;
     if(!strcmp(DCptrR->Type,"R")){
       for (j=1;j<=2;j++) {
@@ -278,7 +278,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
   }
                                      /* FACTS */
   i=NacVar+11*Ndc/2;
-  for(SVCptr=dataPtr->SVCbus;SVCptr!=NULL;SVCptr=SVCptr->Next){
+  for(SVCptr=dataPtr->SVCbus;SVCptr!=nullptr;SVCptr=SVCptr->Next){
      i++; if(FlagFunction) dF[l] +=vec[i]*(SVCptr->Qsvc-x0[i]-vec[i]);
      if(FlagJacobian)JacElement(Jac,l,i,vec[i]);
      i++; if(FlagFunction) dF[l] +=vec[i]*(SVCptr->Bv-x0[i]-vec[i]);
@@ -292,7 +292,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
      }
   }
   i=NacVar+11*Ndc/2+3*Nsvc;
-  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=NULL;TCSCptr=TCSCptr->Next){
+  for(TCSCptr=dataPtr->TCSCbus;TCSCptr!=nullptr;TCSCptr=TCSCptr->Next){
      i++; if(FlagFunction) dF[l] +=vec[i]*(TCSCptr->Ptcsc-x0[i]-vec[i]);
      if(FlagJacobian)JacElement(Jac,l,i,vec[i]);
      i++; if(FlagFunction) dF[l] +=vec[i]*(TCSCptr->Qtcsck-x0[i]-vec[i]);
@@ -309,7 +309,7 @@ int HFunJac(BOOLEAN FlagFunction,BOOLEAN FlagJacobian,AreaData *Aptr,VALUETYPE *
      if(FlagJacobian)JacElement(Jac,l,i,vec[i]);
   }
   i=NacVar+11*Ndc/2+3*Nsvc+NtcscVar;
-  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=NULL;STATCOMptr=STATCOMptr->Next){
+  for(STATCOMptr=dataPtr->STATCOMbus;STATCOMptr!=nullptr;STATCOMptr=STATCOMptr->Next){
      if (!strcmp(STATCOMptr->Cont,"PW") || !strcmp(STATCOMptr->Cont,"AL")) {
        i++; if(FlagFunction) dF[l] +=vec[i]*(STATCOMptr->I-x0[i]-vec[i]);
        if(FlagJacobian)JacElement(Jac,l,i,vec[i]);

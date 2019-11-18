@@ -6,10 +6,10 @@
 
 /* ------------------ DCFunJac ----------------------------- */
 #ifdef ANSIPROTO
-BOOLEAN DCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ)
+bool DCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ)
 #else
-BOOLEAN DCFunJac(Mptr,flagF,flagJ)
-BOOLEAN flagF,flagJ;
+bool DCFunJac(Mptr,flagF,flagJ)
+bool flagF,flagJ;
 SparseMatrix *Mptr;
 #endif
 /* Construct the DC part of the Jacobian. */
@@ -20,20 +20,20 @@ SparseMatrix *Mptr;
   VALUETYPE Pa1,Pa2,Sa1,Sa2;
   VALUETYPE Vdr,Vr,ar,cosar,cosgr,Xcr,Sr,Pr,Qr,Dr,Id;
   VALUETYPE Vdi,Vi,ai,cosai,cosgi,Xci,Si,Pi,Qi,Di,Rd;
-  BOOLEAN dVr=FALSE,dVi=FALSE;
+  bool dVr=false,dVi=false;
 
   i=NacVar;
-  for(DCptrR=dataPtr->DCbus;DCptrR!=NULL;DCptrR=DCptrR->Next){
+  for(DCptrR=dataPtr->DCbus;DCptrR!=nullptr;DCptrR=DCptrR->Next){
     DCptrI=DCptrR->To;
     if (!strcmp(DCptrR->Type,"R")){
       Id=DCptrR->Id;                Rd=DCptrR->Rd;
       Vdr=DCptrR->Vd;               Vdi=DCptrI->Vd;
       k=ACvar[DCptrR->AC->N];       l=ACvar[DCptrI->AC->N];
       kp=k+1;                       lp=l+1;
-      if (DCptrR->AC->Cont!=NULL) dVr=TRUE;
-      else dVr=FALSE;
-      if (DCptrI->AC->Cont!=NULL) dVi=TRUE;
-      else dVi=FALSE;
+      if (DCptrR->AC->Cont!=nullptr) dVr=true;
+      else dVr=false;
+      if (DCptrI->AC->Cont!=nullptr) dVi=true;
+      else dVi=false;
       Vr=DCptrR->AC->V;                 Vi=DCptrI->AC->V;
       ar=DCptrR->Tap*DCptrR->Ntrf;  ai=DCptrI->Tap*DCptrI->Ntrf;
       Xcr=DCptrR->Xc;               Xci=DCptrI->Xc;
@@ -43,8 +43,8 @@ SparseMatrix *Mptr;
       Qr=DCptrR->Q;                 Qi=DCptrI->Q;
       Sr=DCptrR->MVA;               Si=DCptrI->MVA;
       Dr=Sr*Sr-Pr*Pr;               Di=Si*Si-Pi*Pi;
-      if (Dr<=0 || Di<=0) return(TRUE);
-      if (Acont && DCptrR->Meter!=NULL) {
+      if (Dr<=0 || Di<=0) return(true);
+      if (Acont && DCptrR->Meter!=nullptr) {
         if(DCptrR->Meter==DCptrR) {
           Pa1= -Pr;  Pa2=Pr;
           Sa1= -1;   Sa2=1;
@@ -181,5 +181,5 @@ SparseMatrix *Mptr;
       i=i+11;
     }
   }
-  return(FALSE);
+  return(false);
 }

@@ -10,8 +10,8 @@
 #include "pflow.h"
 
 void JacElement(SparseMatrix *Mptr,INDEX I,INDEX J,VALUETYPE val);
-AreaData *ACFunJac(SparseMatrix *Mptr,int *val,BOOLEAN flagF,BOOLEAN flagJ,BOOLEAN flagP);
-BOOLEAN DCFunJac(SparseMatrix *Mptr,BOOLEAN flagF,BOOLEAN flagJ);
+AreaData *ACFunJac(SparseMatrix *Mptr,int *val,bool flagF,bool flagJ,bool flagP);
+bool DCFunJac(SparseMatrix *Mptr,bool flagF,bool flagJ);
 void Jacobian(void);
 
 /* ------- Global Variables ------ */
@@ -23,8 +23,8 @@ extern INDEX *ACvar;
 extern VALUETYPE *dx,*dF,Sn,lambda,*Dx,*x0,*x0p;
 extern VALUETYPE K1,K2;
 extern IntegerVector *NewRow,*OldRow,*NewCol,*OldCol,*RowPartition,*ColPartition;
-extern BOOLEAN Acont,PQcont,QRcont,Rcont,flagH,flagPoC,flagBS,flag2Vcontrol,
+extern bool Acont,PQcont,QRcont,Rcont,flagH,flagPoC,flagBS,flag2Vcontrol,
 	              flagPgMax,flagSmax,flagReducedContinuation,*DxZero;
-extern BOOLEAN *DxZero;
+extern bool *DxZero;
 extern AClist *Vlist,*Vlistp;
 

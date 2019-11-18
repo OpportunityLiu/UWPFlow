@@ -19,20 +19,20 @@ char *Line;
   DCbusData *DCptr,*DCptrp;
   char Name[13],Mode[2];
   VALUETYPE KV,KVp,Set1,Set2,R,L,P,V,alpha,gamma;
-  BOOLEAN flag=FALSE,flagEPRI=TRUE;
+  bool flag=false,flagEPRI=true;
   int i;
 
   /* --------------- DC bus data -------------------------------- */
     if (!strncmp(Line,"BD ",3)) {
       GetStr(Line,51,8,8,Name);
       for (i=0;i<8;i++) if (isalpha(Name[i])) {
-        flagEPRI=FALSE;
+        flagEPRI=false;
         break;
       }
 
     /* ------------ EPRI Format Multiterminal Format ------------- */
       if (flagEPRI) {
-        flag=FALSE;
+        flag=false;
         for(i=4;i<=12;i+=8) {
           GetStr(Line,i,8,8,Name);
           if(strncmp(Name,"GROUND",6)){
@@ -42,7 +42,7 @@ char *Line;
               ErrorHalt("The DC bus was previously defined (check BD cards).");
             }
             if (DCptr->N==0) { Ndc++; DCptr->N=Ndc;}
-          } else flag=TRUE;
+          } else flag=true;
         }
         if (!flag){
           fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -58,7 +58,7 @@ char *Line;
         ACptr->DC= new DClist;
 #else
         ACptr->DC=(DClist *) malloc(sizeof(DClist));
-        if(ACptr->DC==NULL) {
+        if(ACptr->DC==nullptr) {
           fclose(InputDataFile);
           ErrorHalt("Insufficient memory to allocate DC elemet data");
           exit(ERROREXIT);
@@ -124,7 +124,7 @@ char *Line;
         ACptr->DC= new DClist;
 #else
         ACptr->DC=(DClist *) malloc(sizeof(DClist));
-        if(ACptr->DC==NULL) {
+        if(ACptr->DC==nullptr) {
           fclose(InputDataFile);
           ErrorHalt("Insufficient memory to allocate DC elemet data");
           exit(ERROREXIT);
@@ -143,7 +143,7 @@ char *Line;
 
     /* ------------ EPRI Format Multiterminal Format ------------- */
     else if (!strncmp(Line,"BZ ",3)) {
-      flag=FALSE;
+      flag=false;
       for(i=4;i<=12;i+=8) {
         GetStr(Line,i,8,8,Name);
         if(strncmp(Name,"GROUND",6)){
@@ -153,7 +153,7 @@ char *Line;
             ErrorHalt("The DC bus was previously defined (check BD cards).");
           }
           if (DCptr->N==0) { Ndc++; DCptr->N=Ndc;}
-        } else flag=TRUE;
+        } else flag=true;
       }
       if (!flag){
         fprintf(stderr,"Input Line-> %d\n%s",LineNum,Line);
@@ -215,7 +215,7 @@ char *Line;
   /* --------------- DC element data -------------------------------- */
     else if (!strncmp(Line,"LD ",3)) {
       P=GetValue(Line,57,5,1);
-      if (P!=0) flagEPRI=FALSE;
+      if (P!=0) flagEPRI=false;
 
     /* ------------ EPRI Format Multiterminal Format ------------- */
       if (flagEPRI) {

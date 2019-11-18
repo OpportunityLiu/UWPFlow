@@ -19,14 +19,14 @@ void TCSCinit(void);    /* FACTS */
 void STATCOMinit(void); /* FACTS */
 void Jacobian(void);
 void ReadData(char *Name);
-BOOLEAN ReadInit(void);
+bool ReadInit(void);
 void WriteSolution(INDEX Iter, char *File1, char *str);
-int Pflow(int iter, BOOLEAN flagF, BOOLEAN flagD, BOOLEAN flagP);
+int Pflow(int iter, bool flagF, bool flagD, bool flagP);
 int Homot(void);
 int PoCPoint(void);
 int main(int argc, const char **argv);
 void InitializeLoad(void);
-int Evector(int M, int iter, VALUETYPE tol, BOOLEAN RightEvector, VALUETYPE *EigenValue);
+int Evector(int M, int iter, VALUETYPE tol, bool RightEvector, VALUETYPE *EigenValue);
 void PrintLeftEvector(INDEX N, FILE *Out);
 void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max);
 void CleanUp(void);
@@ -40,7 +40,7 @@ void TCSCinit();    // FACTS
 void STATCOMinit(); // FACTS
 void Jacobian();
 void ReadData();
-BOOLEAN ReadInit();
+bool ReadInit();
 void WriteSolution();
 int Pflow();
 int Homot();
@@ -55,22 +55,22 @@ void DeleteJac();
 #endif
 
 /* ------- Global Variables ------ */
-Data *dataPtr = NULL;
-SparseMatrix *Jac = NULL;
+Data *dataPtr = nullptr;
+SparseMatrix *Jac = nullptr;
 INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ngen, Ndc,
     Nslack, Nvolt, Narea, NacVar, Bl, *ACvar, NZvolt, NXvolt,
     Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
 ACbusData *BlPtr;
 VALUETYPE *dx, *dF, tol, Tol, Sn, lambda;
 VALUETYPE K1, K2, K3 = PI / 180.0, MaxdFi, alpha;
-IntegerVector *NewRow = NULL, *OldRow = NULL, *NewCol = NULL, *OldCol = NULL,
-              *RowPartition = NULL, *ColPartition = NULL;
-BOOLEAN Acont, PQcont, QRcont, Rcont, Xcont,
+IntegerVector *NewRow = nullptr, *OldRow = nullptr, *NewCol = nullptr, *OldCol = nullptr,
+              *RowPartition = nullptr, *ColPartition = nullptr;
+bool Acont, PQcont, QRcont, Rcont, Xcont,
     PQlim, Tlim, Qlim, Vlim, Elim, Ilim, Zlim, Xlim, flag2Vcontrol,
     flagH, flagPoC, flagL, flagR, flagPgMax, flagSmax, flagReducedContinuation,
     flagVloads, flagKdirection, flagBS;
 extern VALUETYPE *x0, *x0p, *Dx;
-extern BOOLEAN *DxZero;
+extern bool *DxZero;
 extern AClist *Vlist, *Vlistp;
 
 /* ------------------- DCinit -------------------- */
@@ -85,7 +85,7 @@ void DCinit()
   DCbusData *DCptrR, *DCptrI;
   VALUETYPE KVr, KVi, Vr, Vi, ar, ai, cosar, cosgi, Xcr, Xci, Id, Rd, Ld, Vn, In;
 
-  for (DCptrR = dataPtr->DCbus; DCptrR != NULL; DCptrR = DCptrR->Next)
+  for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
   {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R"))
@@ -165,7 +165,7 @@ void InitializeLoad()
   ACbusData *ACptr;
   VALUETYPE Pn, Qn, Pz, Qz, val;
 
-  for (ACptr = dataPtr->ACbus; ACptr != NULL; ACptr = ACptr->Next)
+  for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
   {
     if (ACptr->Pz == 0 && ACptr->a == 0)
       ACptr->Pn = ACptr->Pl;
@@ -195,7 +195,7 @@ int main(int argc, const char **argv)
 /* Main Routine. */
 {
   char *Name;
-  BOOLEAN flagv = FALSE, flagD = FALSE, PrintEvalue = FALSE;
+  bool flagv = false, flagD = false, PrintEvalue = false;
   VALUETYPE V, EigenValue;
   INDEX N1;
   FILE *Out;
@@ -219,72 +219,72 @@ int main(int argc, const char **argv)
 
   fprintf(stderr, "UW Continuation Power Flow (c)1992,1996,1999, 2006 C. Canizares, F. Alvarado and S. Zhang.\n");
   if (ExistParameter('A') || ExistParameter('6'))
-    Acont = FALSE;
+    Acont = false;
   else
-    Acont = TRUE;
+    Acont = true;
   if (ExistParameter('P'))
-    PQcont = FALSE;
+    PQcont = false;
   else
-    PQcont = TRUE;
+    PQcont = true;
   if (ExistParameter('Q') && NullName(NameParameter('Q')))
-    QRcont = FALSE;
+    QRcont = false;
   else
-    QRcont = TRUE;
+    QRcont = true;
   if (ExistParameter('Q') && !strcmp(NameParameter('Q'), "X"))
-    Xcont = FALSE;
+    Xcont = false;
   else
-    Xcont = TRUE;
+    Xcont = true;
   if (ExistParameter('R'))
-    Rcont = FALSE;
+    Rcont = false;
   else
-    Rcont = TRUE;
+    Rcont = true;
   if (ExistParameter('N'))
-    Acont = PQcont = QRcont = Rcont = Xcont = FALSE;
+    Acont = PQcont = QRcont = Rcont = Xcont = false;
   if (ExistParameter('a'))
-    Tlim = FALSE;
+    Tlim = false;
   else
-    Tlim = TRUE;
+    Tlim = true;
   if (ExistParameter('P') || ExistParameter('p'))
-    PQlim = FALSE;
+    PQlim = false;
   else
-    PQlim = TRUE;
+    PQlim = true;
   if (ExistParameter('q') && NullName(NameParameter('q')))
-    Qlim = FALSE;
+    Qlim = false;
   else
-    Qlim = TRUE;
+    Qlim = true;
   if (ExistParameter('q') && !strcmp(NameParameter('q'), "z"))
-    Zlim = FALSE;
+    Zlim = false;
   else
-    Zlim = TRUE;
+    Zlim = true;
   if (ExistParameter('q') && !strcmp(NameParameter('q'), "x"))
-    Xlim = FALSE;
+    Xlim = false;
   else
-    Xlim = TRUE;
+    Xlim = true;
   if (ExistParameter('r'))
-    Vlim = FALSE;
+    Vlim = false;
   else
-    Vlim = TRUE;
+    Vlim = true;
   if (ExistParameter('3'))
   {
     if (ExistParameter('4'))
-      Elim = FALSE;
+      Elim = false;
     else
-      Elim = TRUE;
+      Elim = true;
     if (ExistParameter('5'))
-      Ilim = FALSE;
+      Ilim = false;
     else
-      Ilim = TRUE;
+      Ilim = true;
   }
   else
-    Elim = Ilim = FALSE;
+    Elim = Ilim = false;
   flagPgMax = ExistParameter('X');
   flagSmax = ExistParameter('9');
   if (ExistParameter('n'))
   {
-    Tlim = PQlim = Qlim = Vlim = Elim = Ilim = Xlim = Zlim = FALSE;
-    flagPgMax = flagSmax = TRUE;
+    Tlim = PQlim = Qlim = Vlim = Elim = Ilim = Xlim = Zlim = false;
+    flagPgMax = flagSmax = true;
   }
-  flagVloads = flagKdirection = FALSE;
+  flagVloads = flagKdirection = false;
 
   //Call ReadData with the name of the inpute file
   ReadData(TrueParamStr(1));
@@ -299,21 +299,21 @@ int main(int argc, const char **argv)
   {
     fprintf(stderr, "Tol %lf   tol %lf   alpha %lf\n", Tol, tol, alpha);
   }
-  flagL = flagR = FALSE;
+  flagL = flagR = false;
   if ((ExistParameter('H') || ExistParameter('c')) && (!NullName(NameParameter('K')) || flagKdirection))
-    flagH = TRUE;
+    flagH = true;
   else
-    flagH = FALSE;
+    flagH = false;
   if (ExistParameter('C') && (!NullName(NameParameter('K')) || flagKdirection))
-    flagPoC = TRUE;
+    flagPoC = true;
   else
-    flagPoC = FALSE;
+    flagPoC = false;
   if ((ExistParameter('D') && (!NullName(NameParameter('D')))) || flagVloads)
-    flagD = TRUE;
+    flagD = true;
   else
-    flagD = FALSE;
+    flagD = false;
   flagv = ReadInit();
-  flagReducedContinuation = FALSE;
+  flagReducedContinuation = false;
   flagBS = ExistParameter('x');
   K1 = sqrt(2.0) * 3 / PI;
   K2 = 3 / PI;
@@ -341,9 +341,9 @@ int main(int argc, const char **argv)
     {
       if (ExistParameter('d'))
         fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, FALSE, &EigenValue);
+      Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
-      PrintEvalue = TRUE;
+      PrintEvalue = true;
       Out = OpenOutput(NameParameter('y'));
       N1 = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       PrintLeftEvector(N1, Out);
@@ -352,7 +352,7 @@ int main(int argc, const char **argv)
     {
       if (ExistParameter('d'))
         fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, TRUE, &EigenValue);
+      Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintDirection('Y', x0, 1.0);
@@ -380,7 +380,7 @@ int main(int argc, const char **argv)
     V = BlPtr->V;
     if (flagD)
     {
-      i = Pflow(i, FALSE, TRUE, TRUE);
+      i = Pflow(i, false, true, true);
       if (i < 0)
       {
         i = -i;
@@ -395,12 +395,12 @@ int main(int argc, const char **argv)
       InitializeLoad();
     RealParameter('L', &lambda, -1e6, 1e6);
     strcpy(BlPtr->Type, "BL");
-    if (BlPtr->Area != NULL && BlPtr->Area->Slack == BlPtr)
+    if (BlPtr->Area != nullptr && BlPtr->Area->Slack == BlPtr)
       strcat(BlPtr->Type, "A");
     Bl = BlPtr->N;
     BlPtr->V = V;
-    BlPtr->Cont = NULL;
-    i = Pflow(i, flagD, TRUE, FALSE);
+    BlPtr->Cont = nullptr;
+    i = Pflow(i, flagD, true, false);
     if (i < 0)
     {
       i = -i;
@@ -419,7 +419,7 @@ int main(int argc, const char **argv)
     i = 1;
     if (ExistParameter('b') || flagD)
     {
-      i = Pflow(i, FALSE, TRUE, TRUE);
+      i = Pflow(i, false, true, true);
       if (i < 0)
       {
         i = -i;
@@ -440,7 +440,7 @@ int main(int argc, const char **argv)
       if (!ExistParameter('b') && !flagD)
       {
         fprintf(stderr, "            The program will just solve the base case.\n");
-        i = Pflow(i, FALSE, TRUE, TRUE);
+        i = Pflow(i, false, true, true);
         if (i < 0)
         {
           i = -i;
@@ -454,7 +454,7 @@ int main(int argc, const char **argv)
     }
     else
     {
-      i = Pflow(i, flagD, TRUE, FALSE);
+      i = Pflow(i, flagD, true, false);
       if (i < 0)
       {
         i = -i;
@@ -475,7 +475,7 @@ int main(int argc, const char **argv)
       x0 = new VALUETYPE[N1];
 #else
       x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-      if (x0 == NULL)
+      if (x0 == nullptr)
       {
         ErrorHalt("Insufficient memory to allocate approx. left e-vector.");
         exit(ERROREXIT);
@@ -483,22 +483,22 @@ int main(int argc, const char **argv)
 #endif
       if (ExistParameter('d'))
         fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, FALSE, &EigenValue);
+      Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
-      PrintEvalue = TRUE;
+      PrintEvalue = true;
       Out = OpenOutput(NameParameter('y'));
       PrintLeftEvector(N1, Out);
     }
     if (ExistParameter('Y') && !NullName(NameParameter('Y')))
     {
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
-      if (x0 == NULL)
+      if (x0 == nullptr)
       {
 #ifdef WINDOWS
         x0 = new VALUETYPE[N1];
 #else
         x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-        if (x0 == NULL)
+        if (x0 == nullptr)
         {
           ErrorHalt("Insufficient memory to allocate approx. right e-vector.");
           exit(ERROREXIT);
@@ -507,7 +507,7 @@ int main(int argc, const char **argv)
       }
       if (ExistParameter('d'))
         fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, TRUE, &EigenValue);
+      Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintDirection('Y', x0, 1.0);
@@ -515,7 +515,7 @@ int main(int argc, const char **argv)
   }
   else
   {
-    i = Pflow(1, FALSE, TRUE, TRUE);
+    i = Pflow(1, false, true, true);
     if (i < 0)
     {
       i = -i;
@@ -533,7 +533,7 @@ int main(int argc, const char **argv)
       x0 = new VALUETYPE[N1];
 #else
       x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-      if (x0 == NULL)
+      if (x0 == nullptr)
       {
         ErrorHalt("Insufficient memory to allocate approx. left e-vector.");
         exit(ERROREXIT);
@@ -541,22 +541,22 @@ int main(int argc, const char **argv)
 #endif
       if (ExistParameter('d'))
         fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, FALSE, &EigenValue);
+      Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
-      PrintEvalue = TRUE;
+      PrintEvalue = true;
       Out = OpenOutput(NameParameter('y'));
       PrintLeftEvector(N1, Out);
     }
     if (ExistParameter('Y') && !NullName(NameParameter('Y')))
     {
       N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
-      if (x0 == NULL)
+      if (x0 == nullptr)
       {
 #ifdef WINDOWS
         x0 = new VALUETYPE[N1];
 #else
         x0 = (VALUETYPE *)calloc(N1, sizeof(VALUETYPE));
-        if (x0 == NULL)
+        if (x0 == nullptr)
         {
           ErrorHalt("Insufficient memory to allocate approx. right e-vector.");
           exit(ERROREXIT);
@@ -565,7 +565,7 @@ int main(int argc, const char **argv)
       }
       if (ExistParameter('d'))
         fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
-      Evector(40, 0, 0.00001, TRUE, &EigenValue);
+      Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintDirection('Y', x0, 1.0);
