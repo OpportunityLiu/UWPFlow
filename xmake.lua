@@ -9,6 +9,8 @@ target("uwpflow")
 
     set_languages("cxx17")
 
+    add_ldflags("-static")
+
     -- add files
     add_headerfiles("Source/*.h")
     add_includedirs("Source")
