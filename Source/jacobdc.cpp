@@ -189,8 +189,7 @@ bool DCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ)
           JacElement(Mptr, i + 8, ++j, 1.0);
           JacElement(Mptr, l + 1, j, 1.0);
         }
-        if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-            strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
+        if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") && strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
           JacElement(Mptr, i + 1, ++j, K2 * Xcr);
           JacElement(Mptr, i + 2, j, -K1 * ar * Vr);
           JacElement(Mptr, i + 3, j, Vdr);

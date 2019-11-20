@@ -46,8 +46,7 @@ void ReadEPRIdc(const char *Line)
       }
       if (!flag) {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-        ErrorHalt(
-            "One of the DC buses must be GROUND (2 terminal HVDC links).");
+        ErrorHalt("One of the DC buses must be GROUND (2 terminal HVDC links).");
       }
       GetStr(Line, 20, 12, 12, Name);
       KV = GetValue(Line, 28, 4, 0);
@@ -165,30 +164,23 @@ void ReadEPRIdc(const char *Line)
     GetStr(Line, 33, 2, 2, DCptr->Cont1);
     GetStr(Line, 35, 2, 2, DCptr->Cont2);
     GetStr(Line, 49, 1, 1, DCptr->Type);
-    if ((strcmp(DCptr->Cont1, "ID") && strcmp(DCptr->Cont1, "VD") &&
-         strcmp(DCptr->Cont1, "PA") && strcmp(DCptr->Cont1, "QA") &&
-         strcmp(DCptr->Cont1, "AL") && strcmp(DCptr->Cont1, "GA") &&
-         strcmp(DCptr->Cont1, "AT")) ||
-        (strcmp(DCptr->Cont2, "ID") && strcmp(DCptr->Cont2, "VD") &&
-         strcmp(DCptr->Cont2, "PA") && strcmp(DCptr->Cont2, "QA") &&
-         strcmp(DCptr->Cont2, "AL") && strcmp(DCptr->Cont2, "GA") &&
-         strcmp(DCptr->Cont2, "AT")) ||
+    if ((strcmp(DCptr->Cont1, "ID") && strcmp(DCptr->Cont1, "VD") && strcmp(DCptr->Cont1, "PA") && strcmp(DCptr->Cont1, "QA") && strcmp(DCptr->Cont1, "AL") &&
+         strcmp(DCptr->Cont1, "GA") && strcmp(DCptr->Cont1, "AT")) ||
+        (strcmp(DCptr->Cont2, "ID") && strcmp(DCptr->Cont2, "VD") && strcmp(DCptr->Cont2, "PA") && strcmp(DCptr->Cont2, "QA") && strcmp(DCptr->Cont2, "AL") &&
+         strcmp(DCptr->Cont2, "GA") && strcmp(DCptr->Cont2, "AT")) ||
         (strcmp(DCptr->Type, "R") && strcmp(DCptr->Type, "I"))) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("DC link has invalid type and/or control modes.");
     }
-    if ((!strcmp(DCptr->Cont1, "ID") && !strcmp(DCptr->Cont2, "VD")) ||
-        (!strcmp(DCptr->Cont1, "VD") && !strcmp(DCptr->Cont2, "ID"))) {
+    if ((!strcmp(DCptr->Cont1, "ID") && !strcmp(DCptr->Cont2, "VD")) || (!strcmp(DCptr->Cont1, "VD") && !strcmp(DCptr->Cont2, "ID"))) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("DC link has an invalid control mode: ID VD.");
     }
-    if ((!strcmp(DCptr->Cont1, "PA") && !strcmp(DCptr->Cont2, "VD")) ||
-        (!strcmp(DCptr->Cont1, "VD") && !strcmp(DCptr->Cont2, "PA"))) {
+    if ((!strcmp(DCptr->Cont1, "PA") && !strcmp(DCptr->Cont2, "VD")) || (!strcmp(DCptr->Cont1, "VD") && !strcmp(DCptr->Cont2, "PA"))) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("DC link has an invalid control mode: VD PA.");
     }
-    if ((!strcmp(DCptr->Cont1, "ID") && !strcmp(DCptr->Cont2, "PA")) ||
-        (!strcmp(DCptr->Cont1, "PA") && !strcmp(DCptr->Cont2, "ID"))) {
+    if ((!strcmp(DCptr->Cont1, "ID") && !strcmp(DCptr->Cont2, "PA")) || (!strcmp(DCptr->Cont1, "PA") && !strcmp(DCptr->Cont2, "ID"))) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       ErrorHalt("DC link has an invalid control mode: ID PA.");
     }

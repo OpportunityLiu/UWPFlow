@@ -73,15 +73,13 @@ void SVCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
 void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
   INDEX i, k, kp, m, mp;
   TCSCbusData *TCSCptr;
-  VALUETYPE Vk, Vm, thk, thm, Xl, Xc, Ptcsc, Qtcsck, Qtcscm, Be, alpha, Itcsc,
-      delta_t;
+  VALUETYPE Vk, Vm, thk, thm, Xl, Xc, Ptcsc, Qtcsck, Qtcscm, Be, alpha, Itcsc, delta_t;
   VALUETYPE Bset, Pset, Iset, delta_set, Ctrl, Kf;
   VALUETYPE s1, s2, s3, s4, s5, s6, s7, s8;
   bool dVk = false, dVm = false;
 
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc;
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     k = ACvar[TCSCptr->From->N];
     kp = k + 1;
     Vk = TCSCptr->From->V;
@@ -124,21 +122,13 @@ void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
       /*
      dF[i+4]=1.0/Xc-(2.0*(PI-alpha)+sin(2.0*alpha))/(PI*Xl)-Be;
      */
-      dF[i + 4] = PI * cos(Kf * (-PI + alpha)) *
-                      (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc /
-                      (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) +
-                       PI * cos(Kf * (-PI + alpha)) +
-                       2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
-                       2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) +
-                       pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) *
-                           cos(Kf * (-PI + alpha)) -
-                       sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf *
-                           cos(Kf * (-PI + alpha)) -
-                       4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) *
-                           sin(Kf * (-PI + alpha)) +
-                       4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) *
-                           cos(Kf * (-PI + alpha))) -
-                  Be;
+      dF[i + 4] =
+          PI * cos(Kf * (-PI + alpha)) * (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc /
+              (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) + PI * cos(Kf * (-PI + alpha)) + 2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
+               2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) + pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) * cos(Kf * (-PI + alpha)) -
+               sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) - 4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) * sin(Kf * (-PI + alpha)) +
+               4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) * cos(Kf * (-PI + alpha))) -
+          Be;
       if (Itcsc >= 0)
         dF[i + 5] = sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck) - Itcsc * Vk;
       else
@@ -202,55 +192,27 @@ void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
       JacElement(Mptr, i + 3, i + 4, -Vm * Vm + Vk * Vm * cos(thk - thm));
       JacElement(Mptr, i + 4, i + 4, -1.0);
       /*  JacElement(Mptr,i+4,i+5,(2.0-2.0*cos(2*alpha))/(PI*Xl));  */
-      s1 = -PI * sin(Kf * (-PI + alpha)) * Kf *
-           (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc /
-           (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) +
-            PI * cos(Kf * (-PI + alpha)) +
-            2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
-            2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) +
-            pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) *
-                cos(Kf * (-PI + alpha)) -
-            sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) -
-            4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) *
-                sin(Kf * (-PI + alpha)) +
-            4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) *
-                cos(Kf * (-PI + alpha)));
+      s1 = -PI * sin(Kf * (-PI + alpha)) * Kf * (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc /
+           (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) + PI * cos(Kf * (-PI + alpha)) + 2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
+            2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) + pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) * cos(Kf * (-PI + alpha)) -
+            sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) - 4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) * sin(Kf * (-PI + alpha)) +
+            4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) * cos(Kf * (-PI + alpha)));
       s3 = -PI * cos(Kf * (-PI + alpha));
       s5 = (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc;
-      s7 = 1 / (pow(-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) +
-                        PI * cos(Kf * (-PI + alpha)) +
-                        2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
-                        2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) +
-                        pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) *
-                            cos(Kf * (-PI + alpha)) -
-                        sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf *
-                            cos(Kf * (-PI + alpha)) -
-                        4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) *
-                            sin(Kf * (-PI + alpha)) +
-                        4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) *
-                            cos(Kf * (-PI + alpha)),
+      s7 = 1 / (pow(-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) + PI * cos(Kf * (-PI + alpha)) + 2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
+                        2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) + pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) * cos(Kf * (-PI + alpha)) -
+                        sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) -
+                        4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) * sin(Kf * (-PI + alpha)) +
+                        4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) * cos(Kf * (-PI + alpha)),
                     2.0));
-      s8 =
-          PI * pow(Kf, 5.0) * sin(Kf * (-PI + alpha)) -
-          PI * sin(Kf * (-PI + alpha)) * Kf +
-          2.0 * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) -
-          2.0 * pow(Kf, 5.0) * alpha * sin(Kf * (-PI + alpha)) -
-          2.0 * Kf * Kf * cos(Kf * (-PI + alpha)) +
-          2.0 * alpha * Kf * Kf * Kf * sin(Kf * (-PI + alpha)) +
-          2.0 * pow(Kf, 4.0) * cos(-2.0 * PI + 2.0 * alpha) *
-              cos(Kf * (-PI + alpha)) -
-          pow(Kf, 5.0) * sin(-2.0 * PI + 2.0 * alpha) *
-              sin(Kf * (-PI + alpha)) -
-          2.0 * cos(-2.0 * PI + 2.0 * alpha) * Kf * Kf *
-              cos(Kf * (-PI + alpha)) +
-          sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * Kf *
-              sin(Kf * (-PI + alpha)) +
-          4.0 * Kf * Kf * Kf * cos(-PI + alpha) * sin(Kf * (-PI + alpha)) *
-              sin(-PI + alpha) -
-          4.0 * pow(Kf, 4.0) * pow(cos(-PI + alpha), 2.0) *
-              cos(Kf * (-PI + alpha)) -
-          4.0 * Kf * Kf * pow(sin(-PI + alpha), 2.0) * cos(Kf * (-PI + alpha)) +
-          4.0 * Kf * Kf * pow(cos(-PI + alpha), 2.0) * cos(Kf * (-PI + alpha));
+      s8 = PI * pow(Kf, 5.0) * sin(Kf * (-PI + alpha)) - PI * sin(Kf * (-PI + alpha)) * Kf + 2.0 * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) -
+           2.0 * pow(Kf, 5.0) * alpha * sin(Kf * (-PI + alpha)) - 2.0 * Kf * Kf * cos(Kf * (-PI + alpha)) +
+           2.0 * alpha * Kf * Kf * Kf * sin(Kf * (-PI + alpha)) + 2.0 * pow(Kf, 4.0) * cos(-2.0 * PI + 2.0 * alpha) * cos(Kf * (-PI + alpha)) -
+           pow(Kf, 5.0) * sin(-2.0 * PI + 2.0 * alpha) * sin(Kf * (-PI + alpha)) - 2.0 * cos(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) +
+           sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * Kf * sin(Kf * (-PI + alpha)) +
+           4.0 * Kf * Kf * Kf * cos(-PI + alpha) * sin(Kf * (-PI + alpha)) * sin(-PI + alpha) -
+           4.0 * pow(Kf, 4.0) * pow(cos(-PI + alpha), 2.0) * cos(Kf * (-PI + alpha)) - 4.0 * Kf * Kf * pow(sin(-PI + alpha), 2.0) * cos(Kf * (-PI + alpha)) +
+           4.0 * Kf * Kf * pow(cos(-PI + alpha), 2.0) * cos(Kf * (-PI + alpha));
       s6 = s7 * s8;
       s4 = s5 * s6;
       s2 = s3 * s4;
@@ -259,24 +221,20 @@ void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
         if (Ptcsc == 0)
           JacElement(Mptr, i + 5, i + 1, 0.);
         else
-          JacElement(Mptr, i + 5, i + 1,
-                     Ptcsc / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
+          JacElement(Mptr, i + 5, i + 1, Ptcsc / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
         if (Qtcsck == 0)
           JacElement(Mptr, i + 5, i + 2, 0.);
         else
-          JacElement(Mptr, i + 5, i + 2,
-                     Qtcsck / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
+          JacElement(Mptr, i + 5, i + 2, Qtcsck / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
       } else {
         if (Ptcsc == 0)
           JacElement(Mptr, i + 5, i + 1, 0.);
         else
-          JacElement(Mptr, i + 5, i + 1,
-                     -Ptcsc / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
+          JacElement(Mptr, i + 5, i + 1, -Ptcsc / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
         if (Qtcsck == 0)
           JacElement(Mptr, i + 5, i + 2, 0.);
         else
-          JacElement(Mptr, i + 5, i + 2,
-                     -Qtcsck / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
+          JacElement(Mptr, i + 5, i + 2, -Qtcsck / (sqrt(Ptcsc * Ptcsc + Qtcsck * Qtcsck)));
       }
       JacElement(Mptr, i + 5, i + 6, -Vk);
       if (!strpbrk(TCSCptr->From->Type, "S"))
@@ -298,15 +256,13 @@ void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
       if (flagH) {
         if (strpbrk(TCSCptr->From->Type, "L")) {
           JacElement(Mptr, i + 1, Mptr->n1, -Vm * Be * sin(thk - thm));
-          JacElement(Mptr, i + 2, Mptr->n1,
-                     -2.0 * Vk * Be + Vm * Be * cos(thk - thm));
+          JacElement(Mptr, i + 2, Mptr->n1, -2.0 * Vk * Be + Vm * Be * cos(thk - thm));
           JacElement(Mptr, i + 3, Mptr->n1, Vm * Be * cos(thk - thm));
           JacElement(Mptr, i + 5, Mptr->n1, -Itcsc);
         } else if (strpbrk(TCSCptr->To->Type, "L")) {
           JacElement(Mptr, i + 1, Mptr->n1, -Vk * Be * sin(thk - thm));
           JacElement(Mptr, i + 2, Mptr->n1, Vk * Be * cos(thk - thm));
-          JacElement(Mptr, i + 3, Mptr->n1,
-                     -2.0 * Vm * Be + Vk * Be * cos(thk - thm));
+          JacElement(Mptr, i + 3, Mptr->n1, -2.0 * Vm * Be + Vk * Be * cos(thk - thm));
         }
       }
     }
@@ -318,13 +274,11 @@ void TCSCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
 void STATCOMFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
   INDEX i, k, l;
   STATCOMbusData *STATCOMptr;
-  VALUETYPE Vk, delta, Vl, R, G, B, Gc, Xsl, Vref, P, Q, I, theta, Vdc, alpha,
-      K, Cref;
+  VALUETYPE Vk, delta, Vl, R, G, B, Gc, Xsl, Vref, P, Q, I, theta, Vdc, alpha, K, Cref;
   bool flagLimits, flagPWM;
 
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar;
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     k = ACvar[STATCOMptr->From->N];
     Vk = STATCOMptr->From->V;
     delta = STATCOMptr->From->Ang;
@@ -367,10 +321,8 @@ void STATCOMFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
       dF[i + 3] = P - Gc * Vdc * Vdc - R * I * I;
       dF[i + 4] = P - Vk * I * cos(delta - theta);
       dF[i + 5] = Q - Vk * I * sin(delta - theta);
-      dF[i + 6] = P - G * Vk * Vk + G * K * Vdc * Vk * cos(delta - alpha) +
-                  B * K * Vdc * Vk * sin(delta - alpha);
-      dF[i + 7] = Q + B * Vk * Vk - B * K * Vdc * Vk * cos(delta - alpha) +
-                  G * K * Vdc * Vk * sin(delta - alpha);
+      dF[i + 6] = P - G * Vk * Vk + G * K * Vdc * Vk * cos(delta - alpha) + B * K * Vdc * Vk * sin(delta - alpha);
+      dF[i + 7] = Q + B * Vk * Vk - B * K * Vdc * Vk * cos(delta - alpha) + G * K * Vdc * Vk * sin(delta - alpha);
       dF[k] = dF[k] - P;
       dF[k + 1] = dF[k + 1] - Q;
     }
@@ -416,41 +368,21 @@ void STATCOMFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
       if (!strpbrk(STATCOMptr->From->Type, "S"))
         JacElement(Mptr, i + 5, k, -Vk * I * cos(delta - theta));
 
-      JacElement(Mptr, i + 6, i + 3,
-                 G * K * Vk * cos(delta - alpha) +
-                     B * K * Vk * sin(delta - alpha));
-      JacElement(Mptr, i + 6, i + 4,
-                 G * Vdc * Vk * cos(delta - alpha) +
-                     B * Vdc * Vk * sin(delta - alpha));
-      JacElement(Mptr, i + 6, i + 5,
-                 G * K * Vdc * Vk * sin(delta - alpha) -
-                     B * K * Vdc * Vk * cos(delta - alpha));
+      JacElement(Mptr, i + 6, i + 3, G * K * Vk * cos(delta - alpha) + B * K * Vk * sin(delta - alpha));
+      JacElement(Mptr, i + 6, i + 4, G * Vdc * Vk * cos(delta - alpha) + B * Vdc * Vk * sin(delta - alpha));
+      JacElement(Mptr, i + 6, i + 5, G * K * Vdc * Vk * sin(delta - alpha) - B * K * Vdc * Vk * cos(delta - alpha));
       JacElement(Mptr, i + 6, i + 6, 1.0);
-      JacElement(Mptr, i + 6, k + 1,
-                 -2.0 * G * Vk + G * K * Vdc * cos(delta - alpha) +
-                     B * K * Vdc * sin(delta - alpha));
+      JacElement(Mptr, i + 6, k + 1, -2.0 * G * Vk + G * K * Vdc * cos(delta - alpha) + B * K * Vdc * sin(delta - alpha));
       if (!strpbrk(STATCOMptr->From->Type, "S"))
-        JacElement(Mptr, i + 6, k,
-                   -G * K * Vdc * Vk * sin(delta - alpha) +
-                       B * K * Vdc * Vk * cos(delta - alpha));
+        JacElement(Mptr, i + 6, k, -G * K * Vdc * Vk * sin(delta - alpha) + B * K * Vdc * Vk * cos(delta - alpha));
 
-      JacElement(Mptr, i + 7, i + 3,
-                 -B * K * Vk * cos(delta - alpha) +
-                     G * K * Vk * sin(delta - alpha));
-      JacElement(Mptr, i + 7, i + 4,
-                 -B * Vdc * Vk * cos(delta - alpha) +
-                     G * Vdc * Vk * sin(delta - alpha));
-      JacElement(Mptr, i + 7, i + 5,
-                 -B * K * Vdc * Vk * sin(delta - alpha) -
-                     G * K * Vdc * Vk * cos(delta - alpha));
+      JacElement(Mptr, i + 7, i + 3, -B * K * Vk * cos(delta - alpha) + G * K * Vk * sin(delta - alpha));
+      JacElement(Mptr, i + 7, i + 4, -B * Vdc * Vk * cos(delta - alpha) + G * Vdc * Vk * sin(delta - alpha));
+      JacElement(Mptr, i + 7, i + 5, -B * K * Vdc * Vk * sin(delta - alpha) - G * K * Vdc * Vk * cos(delta - alpha));
       JacElement(Mptr, i + 7, i + 7, 1.0);
-      JacElement(Mptr, i + 7, k + 1,
-                 2.0 * B * Vk - B * K * Vdc * cos(delta - alpha) -
-                     G * K * Vdc * sin(delta - alpha));
+      JacElement(Mptr, i + 7, k + 1, 2.0 * B * Vk - B * K * Vdc * cos(delta - alpha) - G * K * Vdc * sin(delta - alpha));
       if (!strpbrk(STATCOMptr->From->Type, "S"))
-        JacElement(Mptr, i + 7, k,
-                   B * K * Vdc * Vk * sin(delta - alpha) +
-                       G * K * Vdc * Vk * cos(delta - alpha));
+        JacElement(Mptr, i + 7, k, B * K * Vdc * Vk * sin(delta - alpha) + G * K * Vdc * Vk * cos(delta - alpha));
 
       JacElement(Mptr, k, i + 6, -1.0);
 
@@ -460,12 +392,8 @@ void STATCOMFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ) {
         if (strpbrk(STATCOMptr->From->Type, "L")) {
           JacElement(Mptr, i + 4, Mptr->n1, -I * cos(delta - theta));
           JacElement(Mptr, i + 5, Mptr->n1, -I * sin(delta - theta));
-          JacElement(Mptr, i + 6, Mptr->n1,
-                     -2.0 * G * Vk + G * K * Vdc * cos(delta - alpha) +
-                         B * K * Vdc * sin(delta - alpha));
-          JacElement(Mptr, i + 7, Mptr->n1,
-                     2.0 * B * Vk - B * K * Vdc * cos(delta - alpha) -
-                         G * K * Vdc * sin(delta - alpha));
+          JacElement(Mptr, i + 6, Mptr->n1, -2.0 * G * Vk + G * K * Vdc * cos(delta - alpha) + B * K * Vdc * sin(delta - alpha));
+          JacElement(Mptr, i + 7, Mptr->n1, 2.0 * B * Vk - B * K * Vdc * cos(delta - alpha) - G * K * Vdc * sin(delta - alpha));
         }
         if (strpbrk(STATCOMptr->Ctrl->Type, "L")) {
           JacElement(Mptr, i + 1, Mptr->n1, 1.0);

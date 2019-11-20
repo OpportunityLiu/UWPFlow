@@ -101,6 +101,4 @@ void SortRowsColumns(SparseMatrix *Matrix) {
 } /* END RowSort */
 
 /* ============================ NearZero ===========================*/
-bool NearZero(ELEMENTVALUETYPE Value) {
-  return (fabs(Value) < SINGULARITYZERO);
-}
+bool NearZero(ELEMENTVALUETYPE Value) { return (fabs(Value) < SINGULARITYZERO); }

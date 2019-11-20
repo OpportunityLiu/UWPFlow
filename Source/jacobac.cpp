@@ -3,8 +3,7 @@
 #include "jacob.h"
 
 /* ------------------ ACFunJac ----------------------------- */
-AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
-                   bool flagP)
+AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool flagP)
 /* Construct the AC part of the Jacobian. */
 {
   ACbusData *ACptr, *To, *From, *BEptr;
@@ -26,8 +25,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
       break;
   }
   if (Acont)
-    for (Aptr = dataPtr->Area; Aptr != nullptr;
-         Aptr->SPg = 0, Aptr = Aptr->Next)
+    for (Aptr = dataPtr->Area; Aptr != nullptr; Aptr->SPg = 0, Aptr = Aptr->Next)
       ;
   if (Bl)
     l = ACvar[Bl] + 1;
@@ -47,10 +45,8 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
       Pl = ACptr->Pl;
       Ql = ACptr->Ql;
     } else {
-      Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(Vi, ACptr->a) +
-           (ACptr->Pz + lambda * ACptr->Pzl) * Vi * Vi;
-      Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(Vi, ACptr->b) +
-           (ACptr->Qz + lambda * ACptr->Qzl) * Vi * Vi;
+      Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(Vi, ACptr->a) + (ACptr->Pz + lambda * ACptr->Pzl) * Vi * Vi;
+      Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(Vi, ACptr->b) + (ACptr->Qz + lambda * ACptr->Qzl) * Vi * Vi;
     }
     Pg = ACptr->PG;
     DPg = ACptr->DPG;
@@ -80,8 +76,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
         bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
       } else {
         gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bij =
-            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         gsij = Eptr->G + Eptr->G2 - gij;
         bsij = Eptr->B + Eptr->B2 - bij;
       }
@@ -161,12 +156,8 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
       dPiiv = dPiiv - 2 * Vi * ACptr->G;
       dQiiv = dQiiv + 2 * Vi * ACptr->B;
       if (!flagP) {
-        dPiiv = dPiiv - 2 * (ACptr->Pz + ACptr->Pzl * lambda) * Vi -
-                ACptr->a * (ACptr->Pn + ACptr->Pnl * lambda) *
-                    pow(Vi, ACptr->a - 1.0);
-        dQiiv = dQiiv - 2 * (ACptr->Qz + ACptr->Qzl * lambda) * Vi -
-                ACptr->b * (ACptr->Qn + ACptr->Qnl * lambda) *
-                    pow(Vi, ACptr->b - 1.0);
+        dPiiv = dPiiv - 2 * (ACptr->Pz + ACptr->Pzl * lambda) * Vi - ACptr->a * (ACptr->Pn + ACptr->Pnl * lambda) * pow(Vi, ACptr->a - 1.0);
+        dQiiv = dQiiv - 2 * (ACptr->Qz + ACptr->Qzl * lambda) * Vi - ACptr->b * (ACptr->Qn + ACptr->Qnl * lambda) * pow(Vi, ACptr->b - 1.0);
       }
       /* df/dKg */
       j = ACvar[BEptr->N];
@@ -180,11 +171,9 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
       /* df/dlambda */
       if (l) {
         if (ACptr->Pzl || ACptr->Pnl)
-          JacElement(Mptr, i, l,
-                     -ACptr->Pzl * Vi * Vi - ACptr->Pnl * pow(Vi, ACptr->a));
+          JacElement(Mptr, i, l, -ACptr->Pzl * Vi * Vi - ACptr->Pnl * pow(Vi, ACptr->a));
         if (ACptr->Qzl || ACptr->Qnl)
-          JacElement(Mptr, i + 1, l,
-                     -ACptr->Qzl * Vi * Vi - ACptr->Qnl * pow(Vi, ACptr->b));
+          JacElement(Mptr, i + 1, l, -ACptr->Qzl * Vi * Vi - ACptr->Qnl * pow(Vi, ACptr->b));
       }
       /* df/ddelta_i */
       if (!strpbrk(ACptr->Type, "S")) {
@@ -249,21 +238,16 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
         Vj = To->V;
         dj = To->Ang;
         if (Eptr->From == Eptr->Meter) {
-          gij =
-              (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-          bij =
-              (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+          gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+          bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
           gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
         } else {
-          gij =
-              (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-          bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
-                Eptr->Tap;
+          gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+          bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
           gsij = Eptr->G + Eptr->G2 - gij;
         }
         dPiid = val2 * (-Vi * Vj * (gij * sin(di - dj) - bij * cos(di - dj)));
-        dPiiv = val2 * (-2 * Vi * (gij + gsij) +
-                        Vj * (gij * cos(di - dj) + bij * sin(di - dj)));
+        dPiiv = val2 * (-2 * Vi * (gij + gsij) + Vj * (gij * cos(di - dj) + bij * sin(di - dj)));
         dPijd = -dPiid;
         dPijv = val2 * (Vi * (gij * cos(di - dj) + bij * sin(di - dj)));
         SPij = SPij + val2 * Vi * Vi * (gij + gsij) - Vj * dPijv;
@@ -334,19 +318,15 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
           if (Eptr->From == ACptr) {
             From = Eptr->From;
             To = Eptr->To;
-            gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) *
-                  Eptr->Tap;
-            bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
-                  Eptr->Tap;
+            gij = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+            bij = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
             gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
             bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
           } else {
             From = Eptr->To;
             To = Eptr->From;
-            gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) *
-                  Eptr->Tap;
-            bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
-                  Eptr->Tap;
+            gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+            bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
             gsij = Eptr->G + Eptr->G2 - gij;
             bsij = Eptr->B + Eptr->B2 - bij;
           }
@@ -355,8 +335,7 @@ AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
           Vj = To->V;
           dj = To->Ang;
           dPiid = -Vi * Vj * (gij * sin(di - dj) - bij * cos(di - dj));
-          dPiiv = -2 * Vi * (gij + gsij) +
-                  Vj * (gij * cos(di - dj) + bij * sin(di - dj));
+          dPiiv = -2 * Vi * (gij + gsij) + Vj * (gij * cos(di - dj) + bij * sin(di - dj));
           dPijd = -dPiid;
           dPijv = Vi * (gij * cos(di - dj) + bij * sin(di - dj));
           SPij = Vi * Vi * (gij + gsij) - Vj * dPijv;

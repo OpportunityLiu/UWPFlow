@@ -15,10 +15,8 @@ void Output(INDEX Iter, char *File1, char *str) {
   ElementData *Eptr;
   ElementList *ELptr;
   AreaData *Aptr;
-  VALUETYPE P, Q, Pl, Ql, Pij, Qij, Pji, Qji, Vi, di, Vj, dj, Iij, Iji, I,
-      ratio;
-  VALUETYPE G, B, Gp, Bp, Gi, Bi, Gj, Bj, Pg, KVi, KVj, KV, Qm, delta, theta,
-      vals;
+  VALUETYPE P, Q, Pl, Ql, Pij, Qij, Pji, Qji, Vi, di, Vj, dj, Iij, Iji, I, ratio;
+  VALUETYPE G, B, Gp, Bp, Gi, Bi, Gj, Bj, Pg, KVi, KVj, KV, Qm, delta, theta, vals;
   FILE *OutFile;
   INDEX i, j;
   SVCbusData *SVCptr;         /* FACTS */
@@ -49,18 +47,15 @@ void Output(INDEX Iter, char *File1, char *str) {
   fprintf(OutFile, "               TCSCs -> %d\n", Ntcsc);    /* FACTS */
   fprintf(OutFile, "            STATCOMs -> %d\n", Nstatcom); /* FACTS */
   fprintf(OutFile, "           No. Areas -> %d\n", Narea);
-  fprintf(OutFile, "           Iterations -> %d (Maximum = %d)\n", Iter,
-          MaxIter);
-  fprintf(OutFile, "   Max. p.u. mismatch -> %-8.4lg (Tolerance = %-8.4lg)\n",
-          MaxdFi, Tol);
+  fprintf(OutFile, "           Iterations -> %d (Maximum = %d)\n", Iter, MaxIter);
+  fprintf(OutFile, "   Max. p.u. mismatch -> %-8.4lg (Tolerance = %-8.4lg)\n", MaxdFi, Tol);
   fprintf(OutFile, "    Reference Bus(es) -> ");
   i = 0;
   for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
     if (strpbrk(ACptr->Type, "S")) {
       if (i > 0)
         fprintf(OutFile, "                         ");
-      fprintf(OutFile, "%d %s (Angle=%6.2lf deg.)\n", ACptr->Num, ACptr->Name,
-              ACptr->Ang / K3);
+      fprintf(OutFile, "%d %s (Angle=%6.2lf deg.)\n", ACptr->Num, ACptr->Name, ACptr->Ang / K3);
       i++;
     }
   if (i == 0)
@@ -74,18 +69,13 @@ void Output(INDEX Iter, char *File1, char *str) {
     ACLptr = Aptr->AC;
     ACptr = ACLptr->AC;
   }
-  fprintf(OutFile,
-          "\n                                      ***** AC RESULTS *****\n");
+  fprintf(OutFile, "\n                                      ***** AC RESULTS *****\n");
   fprintf(OutFile, "                   L=lower limit    H=higher limit      "
                    "O=over limit    U=under limit\n");
-  fprintf(
-      OutFile,
-      "--|----|------------|------|-------|--------|--------|--------|----|----"
-      "--------|-|--------|--------|--------|-------|-|-----------------\n");
-  fprintf(
-      OutFile,
-      " A    i Bus           V(pu)   V(kV)   Pg(MW)    Pload   Pshunt|   j Bus "
-      "         C      Pij  Plosses |Iij|(A) kVi/kVj T  Controlled Bus  \n");
+  fprintf(OutFile, "--|----|------------|------|-------|--------|--------|--------|----|----"
+                   "--------|-|--------|--------|--------|-------|-|-----------------\n");
+  fprintf(OutFile, " A    i Bus           V(pu)   V(kV)   Pg(MW)    Pload   Pshunt|   j Bus "
+                   "         C      Pij  Plosses |Iij|(A) kVi/kVj T  Controlled Bus  \n");
   fprintf(OutFile, " n      Name         d(deg)  d(rad) Qg(MVAR)    Qload   "
                    "Qshunt|     Name         r      Qij  Qlosses           "
                    "a(deg)      k Name        \n");
@@ -136,10 +126,8 @@ void Output(INDEX Iter, char *File1, char *str) {
       fprintf(OutFile, "O");
     else
       fprintf(OutFile, " ");
-    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) +
-         (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
-    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) +
-         (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
+    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) + (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
+    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) + (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
     fprintf(OutFile, "%8.2lf ", Pl * Sn);
     fprintf(OutFile, "%8.2lf|", ACptr->G * ACptr->V * ACptr->V * Sn);
     i = 0;
@@ -250,15 +238,11 @@ void Output(INDEX Iter, char *File1, char *str) {
       Bp = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
       Gj = Eptr->G + Eptr->G2 - Gp;
       Bj = Eptr->B + Eptr->B2 - Bp;
-      Pij =
-          Vi * Vi * (Gi + G) - Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
-      Qij =
-          -Vi * Vi * (Bi + B) - Vi * Vj * (G * sin(di - dj) - B * cos(di - dj));
+      Pij = Vi * Vi * (Gi + G) - Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
+      Qij = -Vi * Vi * (Bi + B) - Vi * Vj * (G * sin(di - dj) - B * cos(di - dj));
       Iij = sqrt(Pij * Pij + Qij * Qij) / Vi;
-      Pji = Vj * Vj * (Gj + Gp) -
-            Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
-      Qji = -Vj * Vj * (Bj + Bp) -
-            Vi * Vj * (Gp * sin(dj - di) - Bp * cos(dj - di));
+      Pji = Vj * Vj * (Gj + Gp) - Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
+      Qji = -Vj * Vj * (Bj + Bp) - Vi * Vj * (Gp * sin(dj - di) - Bp * cos(dj - di));
       Iji = sqrt(Pji * Pji + Qji * Qji) / Vj;
       if (Eptr->From == ACptr)
         To = Eptr->To;
@@ -284,8 +268,7 @@ void Output(INDEX Iter, char *File1, char *str) {
       fprintf(OutFile, "%12s ", To->Name);
       fprintf(OutFile, "%1s ", Eptr->Ckt);
       fprintf(OutFile, "%8.2lf", Pij * Sn);
-      if (ACptr != Eptr->Cont || strcmp(Eptr->Ctype, "P") ||
-          Eptr->Max == Eptr->Min)
+      if (ACptr != Eptr->Cont || strcmp(Eptr->Ctype, "P") || Eptr->Max == Eptr->Min)
         fprintf(OutFile, " ");
       else if (Pij == Eptr->Min)
         fprintf(OutFile, "L");
@@ -366,8 +349,7 @@ void Output(INDEX Iter, char *File1, char *str) {
         fprintf(OutFile, "%62s|", "");
       fprintf(OutFile, "%19s ", "");
       fprintf(OutFile, "%8.2lf", Qij * Sn);
-      if (ACptr != Eptr->Cont || strcmp(Eptr->Ctype, "Q") ||
-          Eptr->Max == Eptr->Min)
+      if (ACptr != Eptr->Cont || strcmp(Eptr->Ctype, "Q") || Eptr->Max == Eptr->Min)
         fprintf(OutFile, " ");
       else if (Qij == Eptr->Min)
         fprintf(OutFile, "L");
@@ -443,8 +425,7 @@ void Output(INDEX Iter, char *File1, char *str) {
       if (ACptr->Gen->Ii == 0 && ACptr->Gen->Ir == 0)
         fprintf(OutFile, " al=%7.2lf[deg]", 0.0);
       else
-        fprintf(OutFile, " al=%7.2lf[deg]",
-                atan2(ACptr->Gen->Ii, ACptr->Gen->Ir) / K3);
+        fprintf(OutFile, " al=%7.2lf[deg]", atan2(ACptr->Gen->Ii, ACptr->Gen->Ir) / K3);
       fprintf(OutFile, "%23s|\n", "");
       fprintf(OutFile, "        Eq=%7.4lf[pu]", ACptr->Gen->Eq);
       if (ACptr->Gen->Eq > ACptr->Gen->EqMax)
@@ -478,9 +459,7 @@ void Output(INDEX Iter, char *File1, char *str) {
   }
 
   if (dataPtr->Area != nullptr) {
-    fprintf(
-        OutFile,
-        "\n\n                                ***** AC AREA RESULTS *****\n");
+    fprintf(OutFile, "\n\n                                ***** AC AREA RESULTS *****\n");
     fprintf(OutFile, "---------------------------------|-----------------|----|"
                      "------------|----|------------|-|--------|----\n");
     fprintf(OutFile, " Area                                Slack Bus     |   i "
@@ -532,13 +511,11 @@ void Output(INDEX Iter, char *File1, char *str) {
         if (Eptr->From == Eptr->Meter) {
           From = Eptr->From;
           To = Eptr->To;
-          P = Vi * Vi * (Gi + G) -
-              Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
+          P = Vi * Vi * (Gi + G) - Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
         } else {
           From = Eptr->To;
           To = Eptr->From;
-          P = Vj * Vj * (Gj + Gp) -
-              Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
+          P = Vj * Vj * (Gj + Gp) - Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
         }
         if (i != 0)
           fprintf(OutFile, "%51s|", "");
@@ -561,14 +538,12 @@ void Output(INDEX Iter, char *File1, char *str) {
       if (i == 0)
         fprintf(OutFile, "\n");
       else
-        fprintf(OutFile, "%51s| MW Export = %-10.2lf  MW Sched. = %-10.2lf\n",
-                "", Aptr->SPg * Sn, Aptr->P * Sn);
+        fprintf(OutFile, "%51s| MW Export = %-10.2lf  MW Sched. = %-10.2lf\n", "", Aptr->SPg * Sn, Aptr->P * Sn);
     }
   }
 
   if (dataPtr->DCbus != nullptr) {
-    fprintf(OutFile,
-            "\n\n                                  ***** DC RESULTS *****\n");
+    fprintf(OutFile, "\n\n                                  ***** DC RESULTS *****\n");
     fprintf(OutFile, "                   L=lower limit    H=higher limit      "
                      "O=over limit    U=under limit\n");
     fprintf(OutFile, "---|--|----|------------|--------|-|--|--|--------|------"
@@ -581,9 +556,8 @@ void Output(INDEX Iter, char *File1, char *str) {
     for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next) {
       DCptrI = DCptrR->To;
       if (!strcmp(DCptrR->Type, "R")) {
-        fprintf(OutFile,
-                "---|--|----|------------|--------|-|--|--|--------|--------|--"
-                "------|--------|--------|--------|---------\n");
+        fprintf(OutFile, "---|--|----|------------|--------|-|--|--|--------|--------|--"
+                         "------|--------|--------|--------|---------\n");
         fprintf(OutFile, "%3d ", ++i);
         for (j = 1; j <= 2; j++) {
           if (j == 1) {
@@ -639,8 +613,7 @@ void Output(INDEX Iter, char *File1, char *str) {
   /* FACTS */
   if (dataPtr->SVCbus != nullptr) {
     fprintf(OutFile, "\n\n                        ***** SVC RESULTS *****\n\n");
-    fprintf(OutFile,
-            "                         L=lower limit    H=higher limit\n\n");
+    fprintf(OutFile, "                         L=lower limit    H=higher limit\n\n");
     fprintf(OutFile, "---|--|----|------------|------|------|----|------------|"
                      "------|------|--------|--------|--------\n");
     fprintf(OutFile, "  i  A    j Cont. Bus      Vj     dj      k SVC Bus      "
@@ -657,11 +630,9 @@ void Output(INDEX Iter, char *File1, char *str) {
       else
         fprintf(OutFile, "%2d ", 0);
       fprintf(OutFile, "%4d %12s ", SVCptr->Ctrl->Num, SVCptr->Ctrl->Name);
-      fprintf(OutFile, "%6.4lf %6.2lf ", SVCptr->Ctrl->V,
-              SVCptr->Ctrl->Ang / K3);
+      fprintf(OutFile, "%6.4lf %6.2lf ", SVCptr->Ctrl->V, SVCptr->Ctrl->Ang / K3);
       fprintf(OutFile, "%4d %12s ", SVCptr->From->Num, SVCptr->Name);
-      fprintf(OutFile, "%6.4lf %6.2lf ", SVCptr->From->V,
-              SVCptr->From->Ang / K3);
+      fprintf(OutFile, "%6.4lf %6.2lf ", SVCptr->From->V, SVCptr->From->Ang / K3);
       fprintf(OutFile, "%8.2lf ", SVCptr->Qsvc * Sn);
       fprintf(OutFile, "%8.2lf", SVCptr->alpha_svc / K3);
       if (SVCptr->alpha_svc <= SVCptr->AlphaMin)
@@ -690,8 +661,7 @@ void Output(INDEX Iter, char *File1, char *str) {
                      " (pu)   (deg)  (MW)     (MVar)   (MVar)    (pu)    (deg) "
                      "   (kA)      (deg)  mode    val  \n");
     i = 0;
-    for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-         TCSCptr = TCSCptr->Next) {
+    for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
       fprintf(OutFile, "---|--|----|------------|------|------|----|-----------"
                        "-|------|------|--------|--------|--------|--------|---"
                        "-----|--------|--------|----|--------\n");
@@ -704,8 +674,7 @@ void Output(INDEX Iter, char *File1, char *str) {
       else
         fprintf(OutFile, "%2d ", 0);
       fprintf(OutFile, "%4d %12s ", TCSCptr->From->Num, TCSCptr->From->Name);
-      fprintf(OutFile, "%6.4lf %6.2lf ", TCSCptr->From->V,
-              TCSCptr->From->Ang / K3);
+      fprintf(OutFile, "%6.4lf %6.2lf ", TCSCptr->From->V, TCSCptr->From->Ang / K3);
       fprintf(OutFile, "%4d %12s ", TCSCptr->To->Num, TCSCptr->To->Name);
       fprintf(OutFile, "%6.4lf %6.2lf ", TCSCptr->To->V, TCSCptr->To->Ang / K3);
       fprintf(OutFile, "%8.2lf ", TCSCptr->Ptcsc * Sn);
@@ -735,9 +704,7 @@ void Output(INDEX Iter, char *File1, char *str) {
   }
 
   if (dataPtr->STATCOMbus != nullptr) {
-    fprintf(
-        OutFile,
-        "\n\n                                ***** STATCOM RESULTS *****\n\n");
+    fprintf(OutFile, "\n\n                                ***** STATCOM RESULTS *****\n\n");
     fprintf(OutFile, "                                  L=lower limit    "
                      "H=higher limit\n\n");
     fprintf(OutFile, "---|--|----|------------|------|------|----|------------|"
@@ -750,8 +717,7 @@ void Output(INDEX Iter, char *File1, char *str) {
                      " (pu)    (pu)     (pu)    (deg)     (MW)    (MVar)    "
                      "(kA)    STATCOM base)   (deg) \n");
     i = 0;
-    for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-         STATCOMptr = STATCOMptr->Next) {
+    for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
       fprintf(OutFile, "---|--|----|------------|------|------|----|-----------"
                        "-|------|--------|--------|--------|--------|--------|-"
                        "-------|--------------|--------\n");
@@ -760,10 +726,8 @@ void Output(INDEX Iter, char *File1, char *str) {
         fprintf(OutFile, "%2d ", STATCOMptr->From->Area->N);
       else
         fprintf(OutFile, "%2d ", 0);
-      fprintf(OutFile, "%4d %12s ", STATCOMptr->Ctrl->Num,
-              STATCOMptr->Ctrl->Name);
-      fprintf(OutFile, "%6.4lf %6.2lf ", STATCOMptr->Ctrl->V,
-              STATCOMptr->Ctrl->Ang / K3);
+      fprintf(OutFile, "%4d %12s ", STATCOMptr->Ctrl->Num, STATCOMptr->Ctrl->Name);
+      fprintf(OutFile, "%6.4lf %6.2lf ", STATCOMptr->Ctrl->V, STATCOMptr->Ctrl->Ang / K3);
       fprintf(OutFile, "%4d %12s ", STATCOMptr->From->Num, STATCOMptr->Name);
       fprintf(OutFile, "%6.4lf ", STATCOMptr->k * STATCOMptr->Vdc);
       fprintf(OutFile, "%8.6lf ", STATCOMptr->k);
@@ -807,6 +771,8 @@ void WriteSolution(INDEX Iter, char *File, char *str) {
     Output(Iter, File, str);
   if (ExistParameter('w') || ExistParameter('W'))
     IEEE();
+  if (ExistParameter('='))
+    Simple();
   if (ExistParameter('J') || ExistParameter('j'))
     WriteJac();
 }

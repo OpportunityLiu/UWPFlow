@@ -152,8 +152,7 @@ void RealPosParam(int Item, double *deflt) {
   /* BEGIN */
   k = 0;
   for (i = 1; (i < GlobalArgc) && (k != Item); i++) {
-    if ((GlobalArgv[i][0] != '-') ||
-        ((GlobalArgv[i][0] == '-') && (isdigit(GlobalArgv[i][1]) != 0)))
+    if ((GlobalArgv[i][0] != '-') || ((GlobalArgv[i][0] == '-') && (isdigit(GlobalArgv[i][1]) != 0)))
       k++;
   }
   i--;
@@ -224,8 +223,8 @@ FILE *OpenOutput(const char *Name) {
       OutputFile = stdout;
       // explanation for above: a really strange bug where stdout gets
       // initialized to something by itself. I(that is, Shu) really couldn't
-      // figure it out so I set OutputFile to nullptr instead which will print to
-      // screen anyways.
+      // figure it out so I set OutputFile to nullptr instead which will print
+      // to screen anyways.
     }
   } else
     OutputFile = stdout;

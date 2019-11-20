@@ -178,13 +178,11 @@ void IEEE(void) {
       sprintf(Area, "%2d", ACptr->Area->N);
     else
       strcpy(Area, "99");
-    if ((isdigit(ACptr->Zone[0]) || ACptr->Zone[0] == ' ') &&
-        (isdigit(ACptr->Zone[1]) || ACptr->Zone[1] == ' '))
+    if ((isdigit(ACptr->Zone[0]) || ACptr->Zone[0] == ' ') && (isdigit(ACptr->Zone[1]) || ACptr->Zone[1] == ' '))
       sprintf(Zone, "%3d", atoi(ACptr->Zone));
     else
       sprintf(Zone, "%3d", toascii(ACptr->Zone[0]) + toascii(ACptr->Zone[1]));
-    if (!strcmp(ACptr->Type, "B") || !strcmp(ACptr->Type, "BA") ||
-        strpbrk(ACptr->Type, "L,T,C,R"))
+    if (!strcmp(ACptr->Type, "B") || !strcmp(ACptr->Type, "BA") || strpbrk(ACptr->Type, "L,T,C,R"))
       Type = 0;
     else if (strpbrk(ACptr->Type, "V,X"))
       Type = 1;
@@ -207,11 +205,9 @@ void IEEE(void) {
       delta = delta - vals * 2 * PI;
     ACptr->Ang = delta;
     Print(OutFile, 1, 6, 2, ACptr->Ang / K3);
-    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) +
-         (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
+    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) + (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
     Print(OutFile, 1, 8, 2, Pl * Sn);
-    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) +
-         (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
+    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) + (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
     Print(OutFile, 1, 8, 2, Ql * Sn);
     Print(OutFile, 1, 8, 2, ACptr->PG * Sn);
     Print(OutFile, 1, 7, 2, ACptr->Qg * Sn);
@@ -282,8 +278,7 @@ void IEEE(void) {
       sprintf(Area, "%2d", Eptr->Area->N);
     else
       strcpy(Area, "**");
-    if ((isdigit(Eptr->Zone[0]) || Eptr->Zone[0] == ' ') &&
-        (isdigit(Eptr->Zone[1]) || Eptr->Zone[1] == ' '))
+    if ((isdigit(Eptr->Zone[0]) || Eptr->Zone[0] == ' ') && (isdigit(Eptr->Zone[1]) || Eptr->Zone[1] == ' '))
       sprintf(Zone, "%3d", atoi(Eptr->Zone));
     else
       sprintf(Zone, "%3d", toascii(Eptr->Zone[0]) + toascii(Eptr->Zone[1]));
@@ -299,8 +294,7 @@ void IEEE(void) {
       Type = 4;
     if (!strcmp(Eptr->Ckt, " "))
       strcpy(Eptr->Ckt, "1");
-    fprintf(OutFile, "%4s %4s %2s%3s %1s %1d", Num, Nump, Area, Zone, Eptr->Ckt,
-            Type);
+    fprintf(OutFile, "%4s %4s %2s%3s %1s %1d", Num, Nump, Area, Zone, Eptr->Ckt, Type);
     R = Eptr->G / (Eptr->G * Eptr->G + Eptr->B * Eptr->B);
     X = -Eptr->B / (Eptr->G * Eptr->G + Eptr->B * Eptr->B);
     Print(OutFile, 1, 9, 6, R);
@@ -533,8 +527,7 @@ void IEEE(void) {
     fprintf(OutFile, "\n");
   }
   /* --------------------- TCSC results ----------------------------- */
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     fprintf(OutFile, "%2s", TCSCptr->Type);
     if (TCSCptr->From->Area != nullptr)
       fprintf(OutFile, " %2d ", TCSCptr->From->Area->N);
@@ -565,8 +558,7 @@ void IEEE(void) {
     fprintf(OutFile, "\n");
   }
   /* --------------------- STATCOM results ----------------------------- */
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     fprintf(OutFile, "%2s", STATCOMptr->Type);
     if (STATCOMptr->From->Area != nullptr)
       fprintf(OutFile, " %2d ", STATCOMptr->From->Area->N);

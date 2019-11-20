@@ -19,8 +19,7 @@ char *GetStr(const char *ptr, int Pos, int Leng, int Tot, char *str) {
     }
   }
   count = 1;
-  for (i = 1; i <= Leng && *ptr != '\0' && *ptr != '\n';
-       str[i - 1] = *ptr, ptr++, i++, count++)
+  for (i = 1; i <= Leng && *ptr != '\0' && *ptr != '\n'; str[i - 1] = *ptr, ptr++, i++, count++)
     ;
   for (i = count; i <= Tot; str[i - 1] = ' ', i++)
     ;
@@ -100,8 +99,7 @@ INDEX GetInt(const char *ptr, int Pos, int Leng) {
 }
 
 /* --------------- ACbusInList  ------------------- */
-ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1,
-                       INDEX N2) {
+ACbusData *ACbusInList(INDEX BusN, char *BusName, VALUETYPE V, INDEX N1, INDEX N2) {
   ACbusData *ptr, *ptrp, *ptrn;
   int i;
 
@@ -243,8 +241,7 @@ ElementList *AddElemToList(ElementList *ELptr, ElementData *Eptr) {
 }
 
 /* --------------- ElemInList  ------------------- */
-ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2,
-                        char *Type, char *Ckt) {
+ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2, char *Type, char *Ckt) {
   ElementData *ptr, *ptrn;
   ElementList *ELptr;
 
@@ -293,11 +290,8 @@ ElementData *ElemInList(ACbusData *From, ACbusData *To, INDEX N1, INDEX N2,
   } else {
     for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
       ptr = ELptr->Eptr;
-      if (strpbrk(ptr->Type, Type) &&
-          (!strcmp(ptr->Ckt, Ckt) || !strcmp(Ckt, " ") ||
-           !strcmp(ptr->Ckt, " ")) &&
-          ((ptr->From == From && ptr->To == To) ||
-           (ptr->To == From && ptr->From == To))) {
+      if (strpbrk(ptr->Type, Type) && (!strcmp(ptr->Ckt, Ckt) || !strcmp(Ckt, " ") || !strcmp(ptr->Ckt, " ")) &&
+          ((ptr->From == From && ptr->To == To) || (ptr->To == From && ptr->From == To))) {
         if (strcmp(Type, "R") || !strcmp(ptr->Zone, "")) {
           if (!strcmp(ptr->Ckt, " "))
             strcpy(ptr->Ckt, Ckt);

@@ -22,8 +22,7 @@ void UpdateEvector(VALUETYPE cons) {
 }
 
 /* ----------------- Evector ---------------------------- */
-int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
-            VALUETYPE *EigenValue)
+int Evector(int M, int iter, VALUETYPE tol, bool RightEvector, VALUETYPE *EigenValue)
 /* Find an inital guess for the left eigenvector. */
 {
   AreaData *Aptr;
@@ -35,8 +34,7 @@ int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
   if (ExistParameter('d'))
     fprintf(stderr, "Order and factor Jacobian.\n");
   DeleteJac(Jac, NewRow, NewCol, OldRow, OldCol);
-  N = Jac->n2 = Jac->n1 =
-      NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
+  N = Jac->n2 = Jac->n1 = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
   NewRow->N = NewCol->N = N;
   OldRow->N = OldCol->N = N;
   RowPartition->N = ColPartition->N = 1;
@@ -49,15 +47,10 @@ int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
   STATCOMFunJac(Jac, false, true); /*  FACTS  */
   if (PgMax < 0) {
     if (Aptr != nullptr) {
-      fprintf(stderr,
-              "\nError: Area %d %s does not have any spinning reserves.\n",
-              Aptr->N, Aptr->Name);
-      fprintf(
-          stderr,
-          "       Increase the maximum P generation in this area, otherwise\n");
+      fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
+      fprintf(stderr, "       Increase the maximum P generation in this area, otherwise\n");
     } else {
-      fprintf(stderr,
-              "\nError: The system does not have any spinning reserves.\n");
+      fprintf(stderr, "\nError: The system does not have any spinning reserves.\n");
       fprintf(stderr, "       Increase the maximum P generation in this "
                       "system, otherwise\n");
     }
@@ -68,8 +61,7 @@ int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
   if (!RightEvector)
     TransposeMatrix(Jac);
   SortRowsColumns(Jac);
-  if (factorns(Jac, alpha, RowPartition, ColPartition, NewRow, NewCol, OldRow,
-               OldCol)) {
+  if (factorns(Jac, alpha, RowPartition, ColPartition, NewRow, NewCol, OldRow, OldCol)) {
     fprintf(stderr, "*** Singular Jacobian (possible voltage collapse, contol "
                     "or limit problems).\n");
     fprintf(stderr, "    Try changing the load levels, controls or limits, or "
@@ -97,8 +89,7 @@ int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
       x0[i] = x0[i] / Nx0;
     count++;
     if (ExistParameter('d'))
-      fprintf(stderr, "Evect iter.=%d  Max_x0i=%lf  E_value=%lf\n", count, Nx0,
-              1. / Nx0);
+      fprintf(stderr, "Evect iter.=%d  Max_x0i=%lf  E_value=%lf\n", count, Nx0, 1. / Nx0);
     if (count > M)
       break;
   }
@@ -199,24 +190,21 @@ void PrintLeftEvector(INDEX N, FILE *Out)
       }
     }
   /* FACTS */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr;
-       SVCptr = SVCptr->Next) {
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next) {
     for (k++, l = 1; l <= 3; l++) {
       sprintf(str, "Fsvc%-d_%-d", k, l);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, x0[i]);
     }
   }
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     for (k++, l = 1; l <= 7; l++) {
       sprintf(str, "Ftcsc%-d_%-d", k, l);
       i++;
       fprintf(Out, "%4d %8s %-11.5g\n", i, str, x0[i]);
     }
   }
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     for (k++, l = 1; l <= 7; l++) {
       sprintf(str, "Fstat%-d_%-d", k, l);
       i++;
@@ -309,9 +297,7 @@ int PoCPoint(void)
 
   /* Direct method */
   for (flagL = flags = true, M = 5, count = 0;;) {
-    N = Jac->n2 = Jac->n1 =
-        2 * (NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom) +
-        1; /* FACTS */
+    N = Jac->n2 = Jac->n1 = 2 * (NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom) + 1; /* FACTS */
     NewRow->N = NewCol->N = N;
     OldRow->N = OldCol->N = N;
     RowPartition->p[1] = ColPartition->p[1] = N;
@@ -330,8 +316,7 @@ int PoCPoint(void)
                         "Try running the case using\n");
         fprintf(stderr, "     the -F option, or change load levels, AC/DC "
                         "controls, or increase the\n");
-        fprintf(stderr,
-                "     maximum number of iterations with the -M option.\n");
+        fprintf(stderr, "     maximum number of iterations with the -M option.\n");
         fprintf(stderr, "Loading factor -> %-10.6lg\n\n", lambda);
         WriteSolution(iter, TrueParamStr(2), "Unsolved PoC case:");
         exit(1);

@@ -2,8 +2,8 @@
 
 /* param.h 030390 */
 
-#include <stdio.h>
 #include "constant.h"
+#include <stdio.h>
 
 void SetArguments(int argc, const char **argv);
 bool ExistParameter(char ch);

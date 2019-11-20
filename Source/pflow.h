@@ -2,7 +2,7 @@
 
 #include "constant.h"
 
-typedef struct AreaData {
+struct AreaData {
   INDEX N;
   INDEX i;
   char Name[31];
@@ -15,9 +15,9 @@ typedef struct AreaData {
   struct DClist *DC;
   struct ElementList *Elem;
   struct AreaData *Next;
-} AreaData;
+};
 
-typedef struct ACbusData {
+struct ACbusData {
   char Name[13];
   INDEX N;
   INDEX Num;
@@ -90,10 +90,10 @@ typedef struct ACbusData {
   struct AClist *ContBus;
   struct ACbusData *Next;
   struct ACbusData *Prev;
-} ACbusData;
+};
 
 /* Generator Steady State Model */
-typedef struct GenModel {
+struct GenModel {
   INDEX Nvar;
   VALUETYPE Ra;
   VALUETYPE Xd;
@@ -112,9 +112,9 @@ typedef struct GenModel {
   VALUETYPE Iq;
   VALUETYPE Id;
   VALUETYPE Ia;
-} GenModel;
+};
 
-typedef struct DCbusData {
+struct DCbusData {
   char Name[13];
   INDEX N;
   char Type[2];
@@ -146,12 +146,12 @@ typedef struct DCbusData {
   VALUETYPE Rd;
   VALUETYPE Ld;
   VALUETYPE val[4];
-  struct ACbusData *AC;
-  struct DCbusData *To;
-  struct DCbusData *Next;
-} DCbusData;
+  ACbusData *AC;
+  DCbusData *To;
+  DCbusData *Next;
+};
 
-typedef struct ElementData {
+struct ElementData {
   struct ACbusData *From;
   struct ACbusData *To;
   char Ckt[2];
@@ -183,28 +183,28 @@ typedef struct ElementData {
   VALUETYPE val;
   struct ElementData *Next;
   struct ElementData *Prev;
-} ElementData;
+};
 
-typedef struct AClist {
+struct AClist {
   struct ACbusData *AC;
   struct AClist *Next;
   struct AClist *Prev;
   struct AreaData *Area;
   INDEX N;
   char Type[3];
-} AClist;
+};
 
-typedef struct DClist {
+struct DClist {
   struct DCbusData *DC;
   struct DClist *Next;
-} DClist;
+};
 
 typedef struct ElementList {
   struct ElementData *Eptr;
   struct ElementList *Next;
 } ElementList;
 
-typedef struct Data {
+struct Data {
   char Title[3][BUFLEN + 1];
   struct ACbusData *ACbus;
   struct DCbusData *DCbus;
@@ -214,11 +214,11 @@ typedef struct Data {
   struct TCSCbusData *TCSCbus;       /* FACTS */
   struct STATCOMbusData *STATCOMbus; /* FACTS */
   struct AClist *KGbus;
-} Data;
+};
 
 /* FACTS */
 
-typedef struct SVCbusData {
+struct SVCbusData {
   char Name[13];
   INDEX N;
   char Type[3];
@@ -241,9 +241,9 @@ typedef struct SVCbusData {
   struct ACbusData *Ctrl;
   struct SVCbusData *Prev;
   struct SVCbusData *Next;
-} SVCbusData;
+};
 
-typedef struct TCSCbusData {
+struct TCSCbusData {
   char Name[13];
   INDEX N;
   char Type[3];
@@ -268,9 +268,9 @@ typedef struct TCSCbusData {
   struct ACbusData *To;
   struct TCSCbusData *Prev;
   struct TCSCbusData *Next;
-} TCSCbusData;
+};
 
-typedef struct STATCOMbusData {
+struct STATCOMbusData {
   char Name[13];
   INDEX N;
   char Type[3];
@@ -299,19 +299,19 @@ typedef struct STATCOMbusData {
   struct ACbusData *Ctrl;
   struct STATCOMbusData *Prev;
   struct STATCOMbusData *Next;
-} STATCOMbusData;
+};
 
-typedef struct SVClist {
+struct SVClist {
   struct SVCbusData *SVC;
   struct SVClist *Next;
-} SVClist;
+};
 
-typedef struct TCSClist {
+struct TCSClist {
   struct TCSCbusData *TCSC;
   struct TCSClist *Next;
-} TCSClist;
+};
 
-typedef struct STATCOMlist {
+struct STATCOMlist {
   struct STATCOMbusData *STATCOM;
   struct STATCOMlist *Next;
-} STATCOMlist;
+};

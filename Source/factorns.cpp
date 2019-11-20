@@ -21,10 +21,7 @@
 void InitializeLSWR(void);
 void AllocateOrderArrays(void);
 void LoadUnloadWorkingRow(INDEX i, bool SetReset);
-SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol,
-                               ELEMENTVALUETYPE PutVal,
-                               SparseMatrixElement *PutRNext,
-                               SparseMatrixElement *PutCNext);
+SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol, ELEMENTVALUETYPE PutVal, SparseMatrixElement *PutRNext, SparseMatrixElement *PutCNext);
 void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal);
 void LinkVal(INDEX Ival, VALENCE valVal);
 void UNLinkVal(INDEX Iunl);
@@ -37,9 +34,8 @@ void UpdateVals(INDEX Jpivot);
 int OrderMatrix(INDEX Ibeg, INDEX Iend);
 void InvertNormalize(void);
 void FinishVectors(void);
-int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow,
-             IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col,
-             IntegerVector *P2Row, IntegerVector *P2Col);
+int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row,
+             IntegerVector *P2Col);
 
 /* Global array and variable definitions */
 SparseMatrix *Matrix;
@@ -108,9 +104,7 @@ void LoadUnloadWorkingRow(INDEX i, bool SetReset) {
 }
 
 /* ========================== PutMatrix =============================== */
-SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol,
-                               ELEMENTVALUETYPE PutVal,
-                               SparseMatrixElement *PutRNext,
+SparseMatrixElement *PutMatrix(INDEX PutRow, INDEX PutCol, ELEMENTVALUETYPE PutVal, SparseMatrixElement *PutRNext,
                                SparseMatrixElement *PutCNext) { /* PutMatrix */
   SparseMatrixElement *PutPtr;
   /* BEGIN */
@@ -154,8 +148,7 @@ void SimElim(INDEX Ipivot, INDEX Jpivot, ELEMENTVALUETYPE *DiagVal) {
         if (ColNew->p[Ksim] == 0) {
           if (Lswr[Ksim] != true) {
             Nfills++;
-            Matrix->RowHead[Jsim] = PutMatrix(
-                Jsim, Ksim, 0.0, Matrix->RowHead[Jsim], Matrix->ColHead[Ksim]);
+            Matrix->RowHead[Jsim] = PutMatrix(Jsim, Ksim, 0.0, Matrix->RowHead[Jsim], Matrix->ColHead[Ksim]);
             Matrix->ColHead[Ksim] = Matrix->RowHead[Jsim];
             Lswr[Ksim] = true;
             Swr[Ksim] = 0.0;
@@ -340,20 +333,17 @@ int OrderMatrix(INDEX Ibeg, INDEX Iend) {
       if (Jpivot == 0) {
         UNLinkVal(Ipivot);
         if (Matrix->n1 == Matrix->n2) {
-          fprintf(stderr, "\nUnable to find a nonzero pivot for row %d\n",
-                  RowOld->p[Ipivot]);
+          fprintf(stderr, "\nUnable to find a nonzero pivot for row %d\n", RowOld->p[Ipivot]);
           fprintf(stderr, "Matrix is probably numerically singular\n");
           return (WARNINGEXIT);
         }
         Valence[Ipivot] = Valence[Ipivot] + DeltaValence;
         LinkVal(Ipivot, Valence[Ipivot]);
       }
-    } while (((Jpivot <= 0) || (PivotV <= SINGULARITYZERO)) &&
-             (LinkCount > 0) && (LoopLimit >= 0));
+    } while (((Jpivot <= 0) || (PivotV <= SINGULARITYZERO)) && (LinkCount > 0) && (LoopLimit >= 0));
 
     if (Jpivot <= 0) {
-      fprintf(stderr, "\nUnable to find an available pivot for row %d\n",
-              RowOld->p[Ipivot]);
+      fprintf(stderr, "\nUnable to find an available pivot for row %d\n", RowOld->p[Ipivot]);
       fprintf(stderr, "Matrix is probably topologically singular\n");
       return (WARNINGEXIT);
       /* Iorder = Istop; */
@@ -361,8 +351,7 @@ int OrderMatrix(INDEX Ibeg, INDEX Iend) {
       RowNew->p[Ipivot] = Iorder;
       RowOld->p[Iorder] = Ipivot;
       if (NearZero(PivotV)) {
-        fprintf(stderr, "\nEquation %d Depends on Other Equations\n",
-                RowOld->p[Ipivot]);
+        fprintf(stderr, "\nEquation %d Depends on Other Equations\n", RowOld->p[Ipivot]);
         fprintf(stderr, "Matrix is probably numerically singular\n");
         return (WARNINGEXIT);
         /* Iorder = Istop; */
@@ -438,9 +427,8 @@ void FinishVectors() {
 }
 
 /* ============================= factorns ================================ */
-int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow,
-             IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col,
-             IntegerVector *P2Row, IntegerVector *P2Col) { /* FactorNS */
+int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row,
+             IntegerVector *P2Col) { /* FactorNS */
   double MinAlpha = 0.0;
   double MaxAlpha = 1.0;
   SparseMatrixElement *Ptr;

@@ -12,8 +12,7 @@ void ACFunHes(bool flagF, bool flagJ)
   ElementList *ELptr;
   ElementData *Eptr;
   VALUETYPE Vi, Vj, di, dj, gij, bij, gsij, bsij, gji, bji;
-  VALUETYPE v1, dv1, v2, dv2, v3, dv3, v4, dv4, v5, v6, dv6, v7, v8, dv8, v9,
-      v10, dv10, v11;
+  VALUETYPE v1, dv1, v2, dv2, v3, dv3, v4, dv4, v5, v6, dv6, v7, v8, dv8, v9, v10, dv10, v11;
   VALUETYPE Ddi, Dvi, Ddip, Dvip, Ddj, Dvj, Dval, a, b, Dlambda, DPg;
   VALUETYPE Ra, Xd, Xq, dg, Vd, Vq, Vr, Vim, Iq, Id, Ir, Iim, Ia;
   INDEX N, i, j, k, l;
@@ -83,12 +82,10 @@ void ACFunHes(bool flagF, bool flagJ)
         gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
         bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
         gji = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bji =
-            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bji = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
       } else {
         gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bij =
-            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         gsij = Eptr->G + Eptr->G2 - gij;
         bsij = Eptr->B + Eptr->B2 - bij;
         gji = (Eptr->G * cos(Eptr->Ang) - Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
@@ -166,8 +163,7 @@ void ACFunHes(bool flagF, bool flagJ)
         if (!strpbrk(From->Type, "S"))
           dF[i + N] += Vi * Vj * (-v1 + v2 + v3 + v4 + v6 + v8 + v10);
         if (From->Cont != nullptr)
-          dF[i + N + 1] += Vj * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) +
-                           Vi * (v5 + v7 + v9 + v11);
+          dF[i + N + 1] += Vj * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) + Vi * (v5 + v7 + v9 + v11);
       }
       if (flagJ) {
         if (!strpbrk(From->Type, "S")) {
@@ -217,8 +213,7 @@ void ACFunHes(bool flagF, bool flagJ)
             if (Acont && strpbrk(Eptr->Cont->Type, "A"))
               k++;
             if (!strcmp(Eptr->Type, "RQ")) {
-              Dval =
-                  Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
+              Dval = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
               if (Eptr->From == From)
                 Dval = Dval + 2 * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
             } else if (!strcmp(Eptr->Type, "RP"))
@@ -229,8 +224,7 @@ void ACFunHes(bool flagF, bool flagJ)
           } else if (Rcont && Eptr->Cont != nullptr) {
             k = ACvar[Eptr->Cont->N] + 1;
             if (!strcmp(Eptr->Type, "R")) {
-              Dval =
-                  Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
+              Dval = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10);
               if (Eptr->From == From)
                 Dval = Dval + 2 * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
             } else
@@ -262,12 +256,9 @@ void ACFunHes(bool flagF, bool flagJ)
           dF[k + N + 2] += DPg * x0[i];
       }
       if (ACptr->Cont != nullptr)
-        dF[i + N + 1] +=
-            -2 * Vi * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) -
-            2 * Vi * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] -
-            a * pow(Vi, a - 1) * (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] -
-            2 * Vi * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] -
-            b * pow(Vi, b - 1) * (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
+        dF[i + N + 1] += -2 * Vi * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) - 2 * Vi * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] -
+                         a * pow(Vi, a - 1) * (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] - 2 * Vi * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] -
+                         b * pow(Vi, b - 1) * (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
       if (QRcont && strpbrk(ACptr->Type, "G")) {
         j = ACvar[ACptr->Cont->N];
         if (strpbrk(ACptr->cont, "V"))
@@ -279,8 +270,7 @@ void ACFunHes(bool flagF, bool flagJ)
           else
             dF[j + N + 11] += x0[i + 1];
         }
-      } else if (strpbrk(ACptr->Type, "V,Q,S,Z") ||
-                 (!QRcont && strpbrk(ACptr->Type, "G"))) {
+      } else if (strpbrk(ACptr->Type, "V,Q,S,Z") || (!QRcont && strpbrk(ACptr->Type, "G"))) {
         if (strpbrk(ACptr->cont, "V"))
           dF[i + N + 1] += x0[i + 1];
         else if (ACptr->Gen != nullptr) {
@@ -296,19 +286,13 @@ void ACFunHes(bool flagF, bool flagJ)
       if (!strpbrk(From->Type, "S"))
         JacElement(Jac, i + N, i, Ddi);
       if (From->Cont != nullptr) {
-        Dvip = Dvip - 2 * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) -
-               2 * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] -
-               a * (a - 1) * pow(Vi, a - 2) *
-                   (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] -
-               2 * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] -
-               b * (b - 1) * pow(Vi, b - 2) *
-                   (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
+        Dvip = Dvip - 2 * (ACptr->G * x0[i] - ACptr->B * x0[i + 1]) - 2 * (ACptr->Pz + ACptr->Pzl * lambda) * x0[i] -
+               a * (a - 1) * pow(Vi, a - 2) * (ACptr->Pn + ACptr->Pnl * lambda) * x0[i] - 2 * (ACptr->Qz + ACptr->Qzl * lambda) * x0[i + 1] -
+               b * (b - 1) * pow(Vi, b - 2) * (ACptr->Qn + ACptr->Qnl * lambda) * x0[i + 1];
         JacElement(Jac, i + N, i + 1, Dvi);
         JacElement(Jac, i + 1 + N, i, Ddip);
         JacElement(Jac, i + 1 + N, i + 1, Dvip);
-        Dlambda =
-            -(2 * Vi * ACptr->Pzl + a * pow(Vi, a - 1) * ACptr->Pnl) * x0[i] -
-            (2 * Vi * ACptr->Qzl + b * pow(Vi, b - 1) * ACptr->Qnl) * x0[i + 1];
+        Dlambda = -(2 * Vi * ACptr->Pzl + a * pow(Vi, a - 1) * ACptr->Pnl) * x0[i] - (2 * Vi * ACptr->Qzl + b * pow(Vi, b - 1) * ACptr->Qnl) * x0[i + 1];
         if (Dlambda) {
           JacElement(Jac, i + 1 + N, Jac->n1, Dlambda);
           /*JacElement(Jac,Jac->n1,i+1,Dlambda);*/
@@ -349,8 +333,7 @@ void ACFunHes(bool flagF, bool flagJ)
         gsij = (Eptr->G1 + Eptr->G) * Eptr->Tap * Eptr->Tap - gij;
         bsij = (Eptr->B1 + Eptr->B) * Eptr->Tap * Eptr->Tap - bij;
         gji = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bji =
-            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bji = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         v1 = sin(di - dj) * (gij * x0[i] + gji * x0[j]);
         dv1 = cos(di - dj) * (gij * x0[i] + gji * x0[j]);
         v2 = cos(di - dj) * (bij * x0[i] - bji * x0[j]);
@@ -440,9 +423,7 @@ void ACFunHes(bool flagF, bool flagJ)
             v11 = 0;
           }
           if (flagF)
-            dF[k + N] += Vi * Vj / Eptr->Tap *
-                             (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) +
-                         Vi * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
+            dF[k + N] += Vi * Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) + Vi * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
           if (flagJ) {
             Dval = Vi * Vi / (Eptr->Tap * Eptr->Tap) * (v5 + v7 + v9 + v11);
             JacElement(Jac, k + N, k, Dval);
@@ -451,9 +432,7 @@ void ACFunHes(bool flagF, bool flagJ)
               JacElement(Jac, k + N, i, Ddi);
             }
             if (From->Cont != nullptr) {
-              Dvi =
-                  Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) +
-                  2 * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
+              Dvi = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8 - dv10) + 2 * Vi / Eptr->Tap * (v5 + v7 + v9 + v11);
               JacElement(Jac, k + N, i + 1, Dvi);
             } else
               JacElement(Jac, k + N, i + 1, 0.);
@@ -470,9 +449,7 @@ void ACFunHes(bool flagF, bool flagJ)
         } else if (Rcont && !strcmp(Eptr->Type, "R")) {
           k = ACvar[Eptr->Cont->N] + 1;
           if (flagF)
-            dF[k + N] +=
-                Vi * Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8) +
-                Vi * Vi / Eptr->Tap * (v5 + v7 + v9);
+            dF[k + N] += Vi * Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8) + Vi * Vi / Eptr->Tap * (v5 + v7 + v9);
           if (flagJ) {
             Dval = Vi * Vi / (Eptr->Tap * Eptr->Tap) * (v5 + v7 + v9);
             JacElement(Jac, k + N, k, Dval);
@@ -481,8 +458,7 @@ void ACFunHes(bool flagF, bool flagJ)
               JacElement(Jac, k + N, i, Ddi);
             }
             if (From->Cont != nullptr) {
-              Dvi = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8) +
-                    2 * Vi / Eptr->Tap * (v5 + v7 + v9);
+              Dvi = Vj / Eptr->Tap * (dv1 - dv2 - dv3 - dv4 - dv6 - dv8) + 2 * Vi / Eptr->Tap * (v5 + v7 + v9);
               JacElement(Jac, k + N, i + 1, Dvi);
             } else
               JacElement(Jac, k + N, i + 1, 0.);
@@ -534,24 +510,16 @@ void ACFunHes(bool flagF, bool flagJ)
           dF[i + N + 1] += x0[i + 2];
         else
           dF[i + N + 1] += x0[i + 3];
-        dF[i + N + 2] += (sin(dg) * Vq + cos(dg) * Vd) * x0[i + 5] +
-                         (-cos(dg) * Vq + sin(dg) * Vd) * x0[i + 6] +
-                         (sin(dg) * Iq + cos(dg) * Id) * x0[i + 7] +
+        dF[i + N + 2] += (sin(dg) * Vq + cos(dg) * Vd) * x0[i + 5] + (-cos(dg) * Vq + sin(dg) * Vd) * x0[i + 6] + (sin(dg) * Iq + cos(dg) * Id) * x0[i + 7] +
                          (-cos(dg) * Iq + sin(dg) * Id) * x0[i + 8];
-        dF[i + N + 3] +=
-            -Ir * x0[i + 1] + Iim * x0[i + 2] + x0[i + 5] + x0[i + 9];
-        dF[i + N + 4] +=
-            -Iim * x0[i + 1] - Ir * x0[i + 2] + x0[i + 6] + x0[i + 10];
-        dF[i + N + 5] +=
-            -Vr * x0[i + 1] - Vim * x0[i + 2] + x0[i + 7] - 2 * Ir * x0[i + 11];
-        dF[i + N + 6] += -Vim * x0[i + 1] + Vr * x0[i + 2] + x0[i + 8] -
-                         2 * Iim * x0[i + 11];
+        dF[i + N + 3] += -Ir * x0[i + 1] + Iim * x0[i + 2] + x0[i + 5] + x0[i + 9];
+        dF[i + N + 4] += -Iim * x0[i + 1] - Ir * x0[i + 2] + x0[i + 6] + x0[i + 10];
+        dF[i + N + 5] += -Vr * x0[i + 1] - Vim * x0[i + 2] + x0[i + 7] - 2 * Ir * x0[i + 11];
+        dF[i + N + 6] += -Vim * x0[i + 1] + Vr * x0[i + 2] + x0[i + 8] - 2 * Iim * x0[i + 11];
         dF[i + N + 7] += -x0[i + 3] - cos(dg) * x0[i + 5] - sin(dg) * x0[i + 6];
         dF[i + N + 8] += x0[i + 4] + sin(dg) * x0[i + 5] - cos(dg) * x0[i + 6];
-        dF[i + N + 9] += -Ra * x0[i + 3] + Xq * x0[i + 4] -
-                         cos(dg) * x0[i + 7] - sin(dg) * x0[i + 8];
-        dF[i + N + 10] += Xd * x0[i + 3] + Ra * x0[i + 4] +
-                          sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8];
+        dF[i + N + 9] += -Ra * x0[i + 3] + Xq * x0[i + 4] - cos(dg) * x0[i + 7] - sin(dg) * x0[i + 8];
+        dF[i + N + 10] += Xd * x0[i + 3] + Ra * x0[i + 4] + sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8];
         if (strpbrk(ACptr->cont, "I"))
           dF[i + N + 11] += x0[i + 2];
         else
@@ -571,18 +539,12 @@ void ACFunHes(bool flagF, bool flagJ)
       }
       if (flagJ) {
         JacElement(Jac, i + N + 2, i + 2,
-                   (cos(dg) * Vq - sin(dg) * Vd) * x0[i + 5] +
-                       (sin(dg) * Vq + cos(dg) * Vd) * x0[i + 6] +
-                       (cos(dg) * Iq - sin(dg) * Id) * x0[i + 7] +
+                   (cos(dg) * Vq - sin(dg) * Vd) * x0[i + 5] + (sin(dg) * Vq + cos(dg) * Vd) * x0[i + 6] + (cos(dg) * Iq - sin(dg) * Id) * x0[i + 7] +
                        (sin(dg) * Iq + cos(dg) * Id) * x0[i + 8]);
-        JacElement(Jac, i + N + 2, i + 7,
-                   sin(dg) * x0[i + 5] - cos(dg) * x0[i + 6]);
-        JacElement(Jac, i + N + 2, i + 8,
-                   cos(dg) * x0[i + 5] + sin(dg) * x0[i + 6]);
-        JacElement(Jac, i + N + 2, i + 9,
-                   sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8]);
-        JacElement(Jac, i + N + 2, i + 10,
-                   cos(dg) * x0[i + 7] + sin(dg) * x0[i + 8]);
+        JacElement(Jac, i + N + 2, i + 7, sin(dg) * x0[i + 5] - cos(dg) * x0[i + 6]);
+        JacElement(Jac, i + N + 2, i + 8, cos(dg) * x0[i + 5] + sin(dg) * x0[i + 6]);
+        JacElement(Jac, i + N + 2, i + 9, sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8]);
+        JacElement(Jac, i + N + 2, i + 10, cos(dg) * x0[i + 7] + sin(dg) * x0[i + 8]);
         JacElement(Jac, i + N + 3, i + 5, -x0[i + 1]);
         JacElement(Jac, i + N + 3, i + 6, x0[i + 2]);
         JacElement(Jac, i + N + 4, i + 5, -x0[i + 2]);
@@ -593,27 +555,20 @@ void ACFunHes(bool flagF, bool flagJ)
         JacElement(Jac, i + N + 6, i + 3, x0[i + 2]);
         JacElement(Jac, i + N + 6, i + 4, -x0[i + 1]);
         JacElement(Jac, i + N + 6, i + 6, -2 * x0[i + 11]);
-        JacElement(Jac, i + N + 7, i + 2,
-                   sin(dg) * x0[i + 5] - cos(dg) * x0[i + 6]);
-        JacElement(Jac, i + N + 8, i + 2,
-                   cos(dg) * x0[i + 5] + sin(dg) * x0[i + 6]);
-        JacElement(Jac, i + N + 9, i + 2,
-                   sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8]);
-        JacElement(Jac, i + N + 10, i + 2,
-                   cos(dg) * x0[i + 7] + sin(dg) * x0[i + 8]);
+        JacElement(Jac, i + N + 7, i + 2, sin(dg) * x0[i + 5] - cos(dg) * x0[i + 6]);
+        JacElement(Jac, i + N + 8, i + 2, cos(dg) * x0[i + 5] + sin(dg) * x0[i + 6]);
+        JacElement(Jac, i + N + 9, i + 2, sin(dg) * x0[i + 7] - cos(dg) * x0[i + 8]);
+        JacElement(Jac, i + N + 10, i + 2, cos(dg) * x0[i + 7] + sin(dg) * x0[i + 8]);
         if (!strpbrk(ACptr->cont, "I"))
           JacElement(Jac, i + N + 11, i + 11, 2 * x0[i + 11]);
         else
           JacElement(Jac, i + N + 11, i + 11, 0.);
         j = ACvar[ACptr->N];
         if (!strpbrk(ACptr->Type, "S")) {
-          JacElement(Jac, j + N, j,
-                     Vi * cos(di) * x0[i + 9] + Vi * sin(di) * x0[i + 10]);
+          JacElement(Jac, j + N, j, Vi * cos(di) * x0[i + 9] + Vi * sin(di) * x0[i + 10]);
           if (ACptr->Cont != nullptr) {
-            JacElement(Jac, j + N, j + 1,
-                       sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);
-            JacElement(Jac, j + N + 1, j,
-                       sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);
+            JacElement(Jac, j + N, j + 1, sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);
+            JacElement(Jac, j + N + 1, j, sin(di) * x0[i + 9] - cos(di) * x0[i + 10]);
           } else {
             JacElement(Jac, j + N, j + 1, 0.);
             JacElement(Jac, j + N + 1, j, 0.);

@@ -30,17 +30,14 @@ void Divide(VALUETYPE *a, VALUETYPE *b, VALUETYPE c, VALUETYPE d) {
 }
 
 /* ---------------- AddSection --------------------------- */
-bool AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt,
-                INDEX Sec) {
+bool AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt, INDEX Sec) {
   ElementList *ELptr;
   ElementData *Eptr;
   VALUETYPE Ge, Be, Ge1, Be1, Ge2, Be2, Gs, Bs;
 
   for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
     Eptr = ELptr->Eptr;
-    if (((From == Eptr->From && To == Eptr->To) ||
-         (From == Eptr->To && To == Eptr->From)) &&
-        !strcmp(Ckt, Eptr->Ckt) && strcmp(Eptr->Zone, "")) {
+    if (((From == Eptr->From && To == Eptr->To) || (From == Eptr->To && To == Eptr->From)) && !strcmp(Ckt, Eptr->Ckt) && strcmp(Eptr->Zone, "")) {
       if (!strncmp(Line, "T", 1) && !strpbrk(Eptr->Type, "RT"))
         strcpy(Eptr->Type, "T");
       if (Sec < Eptr->Sec) {
@@ -70,11 +67,8 @@ bool AddSection(ACbusData *From, ACbusData *To, char *Line, char *Ckt,
         Eptr->G2 = Eptr->G2 / (Tap * Tap);
         Eptr->B2 = Eptr->B2 / (Tap * Tap);
       }
-      if ((fabs(Eptr->G) < 1e-7 && fabs(Eptr->B) < 1e-7) ||
-          (fabs(G) < 1e-7 && fabs(B) < 1e-7)) {
-        fprintf(stderr, "***Warning: A section of element %d %s - %d %s\n",
-                Eptr->From->Num, Eptr->From->Name, Eptr->To->Num,
-                Eptr->To->Name);
+      if ((fabs(Eptr->G) < 1e-7 && fabs(Eptr->B) < 1e-7) || (fabs(G) < 1e-7 && fabs(B) < 1e-7)) {
+        fprintf(stderr, "***Warning: A section of element %d %s - %d %s\n", Eptr->From->Num, Eptr->From->Name, Eptr->To->Num, Eptr->To->Name);
         fprintf(stderr, "            has a zero impedance.  Check the section "
                         "data for this element.\n");
       }
@@ -158,13 +152,9 @@ void ReadWSCC()
     }
 
     /* --------------- AC bus data -------------------------------- */
-    else if (!strncmp(Line, "B  ", 3) || !strncmp(Line, "BQ ", 3) ||
-             !strncmp(Line, "BV ", 3) || !strncmp(Line, "BE ", 3) ||
-             !strncmp(Line, "BC ", 3) || !strncmp(Line, "BG ", 3) ||
-             !strncmp(Line, "BT ", 3) || !strncmp(Line, "BX ", 3) ||
-             !strncmp(Line, "BA ", 3) || !strncmp(Line, "BF ", 3) ||
-             !strncmp(Line, "BJ ", 3) || !strncmp(Line, "BK ", 3) ||
-             !strncmp(Line, "BL ", 3) || !strncmp(Line, "BS ", 3)) {
+    else if (!strncmp(Line, "B  ", 3) || !strncmp(Line, "BQ ", 3) || !strncmp(Line, "BV ", 3) || !strncmp(Line, "BE ", 3) || !strncmp(Line, "BC ", 3) ||
+             !strncmp(Line, "BG ", 3) || !strncmp(Line, "BT ", 3) || !strncmp(Line, "BX ", 3) || !strncmp(Line, "BA ", 3) || !strncmp(Line, "BF ", 3) ||
+             !strncmp(Line, "BJ ", 3) || !strncmp(Line, "BK ", 3) || !strncmp(Line, "BL ", 3) || !strncmp(Line, "BS ", 3)) {
       GetStr(Line, 7, 12, 12, Name);
       KV = GetValue(Line, 15, 4, 0);
       ACptr = ACbusInList(0, Name, KV, Nac, 1);
@@ -200,19 +190,15 @@ void ReadWSCC()
       }
       ACptr->Pmax = ACptr->PgMax;
       ACptr->Qg = GetValue(Line, 48, 5, 0) / Sn;
-      if ((!strncmp(Line, "B  ", 3) || !strncmp(Line, "BJ ", 3) ||
-           !strncmp(Line, "BF ", 3)) &&
-          strcmp(ACptr->Type, "BC")) {
+      if ((!strncmp(Line, "B  ", 3) || !strncmp(Line, "BJ ", 3) || !strncmp(Line, "BF ", 3)) && strcmp(ACptr->Type, "BC")) {
         ACptr->Cont = ACptr;
         if (!strncmp(Line, "BJ ", 3)) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr,
-                  "***Warning: BJ bus has been transformed to a B bus.\n");
+          fprintf(stderr, "***Warning: BJ bus has been transformed to a B bus.\n");
         }
         if (!strncmp(Line, "BF ", 3)) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr,
-                  "***Warning: BF bus has been transformed to a B bus.\n");
+          fprintf(stderr, "***Warning: BF bus has been transformed to a B bus.\n");
         }
       } else if (!strncmp(Line, "BC ", 3))
         strcpy(ACptr->Type, "BC");
@@ -227,8 +213,7 @@ void ReadWSCC()
         ACptr->Qmin = -99999999.;
         if (!strncmp(Line, "BK ", 3)) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr,
-                  "***Warning: BK bus has been transformed to a BE bus.\n");
+          fprintf(stderr, "***Warning: BK bus has been transformed to a BE bus.\n");
         }
       }
       if (!strncmp(Line, "BQ ", 3) || !strncmp(Line, "BK ", 3)) {
@@ -244,8 +229,7 @@ void ReadWSCC()
         }
         if (!strncmp(Line, "BL ", 3)) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr,
-                  "***Warning: BL bus has been transformed to a BQ bus.\n");
+          fprintf(stderr, "***Warning: BL bus has been transformed to a BQ bus.\n");
         }
       } else if (!strncmp(Line, "BG ", 3)) {
         Nvolt++;
@@ -308,8 +292,7 @@ void ReadWSCC()
         ACptr->Cont = ACptr;
         if (!strncmp(Line, "BA ", 3)) {
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-          fprintf(stderr,
-                  "***Warning: BA bus has been transformed to a BV bus.\n");
+          fprintf(stderr, "***Warning: BA bus has been transformed to a BV bus.\n");
         }
       } else if (!strncmp(Line, "BX ", 3)) {
         ACptr->Vmax = GetValue(Line, 58, 4, 3);
@@ -396,9 +379,8 @@ void ReadWSCC()
               } else {
                 if (ACptr->Bx[0] * Bx < 0 && flagPrint) {
                   fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-                  fprintf(stderr,
-                          "***Warning: All MVAr compensation steps are assumed "
-                          "to be either positive or negative,\n");
+                  fprintf(stderr, "***Warning: All MVAr compensation steps are assumed "
+                                  "to be either positive or negative,\n");
                   fprintf(stderr, "            as defined by the first nonzero "
                                   "step on this card. \n");
                   flagPrint = false;
@@ -418,8 +400,7 @@ void ReadWSCC()
     }
 
     /* --------------- AC element data -------------------------------- */
-    else if (!strncmp(Line, "L  ", 3) || !strncmp(Line, "T  ", 3) ||
-             !strncmp(Line, "E  ", 3)) {
+    else if (!strncmp(Line, "L  ", 3) || !strncmp(Line, "T  ", 3) || !strncmp(Line, "E  ", 3)) {
       GetStr(Line, 7, 12, 12, Name);
       KV = GetValue(Line, 15, 4, 0);
       if (KV == 0) {
@@ -527,9 +508,7 @@ void ReadWSCC()
     }
 
     /* ------------ Regulating transformer data ------------------- */
-    else if (!strncmp(Line, "R  ", 3) || !strncmp(Line, "RP ", 3) ||
-             !strncmp(Line, "RM ", 3) || !strncmp(Line, "RQ ", 3) ||
-             !strncmp(Line, "RN ", 3)) {
+    else if (!strncmp(Line, "R  ", 3) || !strncmp(Line, "RP ", 3) || !strncmp(Line, "RM ", 3) || !strncmp(Line, "RQ ", 3) || !strncmp(Line, "RN ", 3)) {
       GetStr(Line, 7, 12, 12, Name);
       KV = GetValue(Line, 15, 4, 0);
       ACptr = ACbusInList(0, Name, KV, Nac, 1);
@@ -636,8 +615,7 @@ void ReadWSCC()
     }
 
     /* -------------------- DC data -------------------------------- */
-    else if (!strncmp(Line, "BD ", 3) || !strncmp(Line, "BZ ", 3) ||
-             !strncmp(Line, "LD ", 3))
+    else if (!strncmp(Line, "BD ", 3) || !strncmp(Line, "BZ ", 3) || !strncmp(Line, "LD ", 3))
       ReadEPRIdc(Line);
 
     /* ------------------------ Area data -------------------------- */
@@ -700,8 +678,7 @@ void ReadWSCC()
 
     else if (!strncmp(Line, "END", 3) || !strncmp(Line, "FIM", 3))
       break;
-    else if (strncmp(Line, "ZZ", 2) && strncmp(Line, "D", 1) &&
-             strncmp(Line, "9999", 4)) {
+    else if (strncmp(Line, "ZZ", 2) && strncmp(Line, "D", 1) && strncmp(Line, "9999", 4)) {
       fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
       fprintf(stderr, "***Warning: The program will ignore this line.\n");
     }

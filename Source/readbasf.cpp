@@ -4,8 +4,7 @@
 extern FILE *InputDataFile;
 
 /* --------------- SVCbusInList  ------------------- */
-SVCbusData *SVCbusInList(char *BusName, INDEX N, ACbusData *ptrac,
-                         ACbusData *ptrac1) {
+SVCbusData *SVCbusInList(char *BusName, INDEX N, ACbusData *ptrac, ACbusData *ptrac1) {
   SVCbusData *ptr, *ptrp, *ptrn;
 
   if (N == 0) {
@@ -50,8 +49,7 @@ SVCbusData *SVCbusInList(char *BusName, INDEX N, ACbusData *ptrac,
 }
 
 /* --------------- TCSCbusInList  ------------------- */
-TCSCbusData *TCSCbusInList(char *BusName, INDEX N, ACbusData *ptrac,
-                           ACbusData *ptrac1) {
+TCSCbusData *TCSCbusInList(char *BusName, INDEX N, ACbusData *ptrac, ACbusData *ptrac1) {
   TCSCbusData *ptr, *ptrp, *ptrn;
 
   if (N == 0) {
@@ -98,8 +96,7 @@ TCSCbusData *TCSCbusInList(char *BusName, INDEX N, ACbusData *ptrac,
 }
 
 /* --------------- STATCOMbusInList  ------------------- */
-STATCOMbusData *STATCOMbusInList(char *BusName, INDEX N, ACbusData *ptrac,
-                                 ACbusData *ptrac1) {
+STATCOMbusData *STATCOMbusInList(char *BusName, INDEX N, ACbusData *ptrac, ACbusData *ptrac1) {
   STATCOMbusData *ptr, *ptrp, *ptrn;
 
   if (N == 0) {

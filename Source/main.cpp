@@ -25,29 +25,22 @@ int Homot(void);
 int PoCPoint(void);
 int main(int argc, const char **argv);
 void InitializeLoad(void);
-int Evector(int M, int iter, VALUETYPE tol, bool RightEvector,
-            VALUETYPE *EigenValue);
+int Evector(int M, int iter, VALUETYPE tol, bool RightEvector, VALUETYPE *EigenValue);
 void PrintLeftEvector(INDEX N, FILE *Out);
 void PrintDirection(char Option, VALUETYPE *vector, VALUETYPE Max);
 void CleanUp(void);
-void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
-               IntegerVector *P2Row, IntegerVector *P2Col);
+void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row, IntegerVector *P2Col);
 
 /* ------- Global Variables ------ */
 Data *dataPtr = nullptr;
 SparseMatrix *Jac = nullptr;
-INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ngen, Ndc, Nslack, Nvolt, Narea,
-    NacVar, Bl, *ACvar, NZvolt, NXvolt, Nsvc, Ntcsc, NtcscVar,
-    Nstatcom; /* FACTS */
+INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ngen, Ndc, Nslack, Nvolt, Narea, NacVar, Bl, *ACvar, NZvolt, NXvolt, Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
 ACbusData *BlPtr;
 VALUETYPE *dx, *dF, tol, Tol, Sn, lambda;
 VALUETYPE K1, K2, K3 = PI / 180.0, MaxdFi, alpha;
-IntegerVector *NewRow = nullptr, *OldRow = nullptr, *NewCol = nullptr,
-              *OldCol = nullptr, *RowPartition = nullptr,
-              *ColPartition = nullptr;
-bool Acont, PQcont, QRcont, Rcont, Xcont, PQlim, Tlim, Qlim, Vlim, Elim, Ilim,
-    Zlim, Xlim, flag2Vcontrol, flagH, flagPoC, flagL, flagR, flagPgMax,
-    flagSmax, flagReducedContinuation, flagVloads, flagKdirection, flagBS;
+IntegerVector *NewRow = nullptr, *OldRow = nullptr, *NewCol = nullptr, *OldCol = nullptr, *RowPartition = nullptr, *ColPartition = nullptr;
+bool Acont, PQcont, QRcont, Rcont, Xcont, PQlim, Tlim, Qlim, Vlim, Elim, Ilim, Zlim, Xlim, flag2Vcontrol, flagH, flagPoC, flagL, flagR, flagPgMax, flagSmax,
+    flagReducedContinuation, flagVloads, flagKdirection, flagBS;
 extern VALUETYPE *x0, *x0p, *Dx;
 extern bool *DxZero;
 extern AClist *Vlist, *Vlistp;
@@ -58,8 +51,7 @@ void DCinit(void)
 {
   ACbusData *ACptrR, *ACptrI;
   DCbusData *DCptrR, *DCptrI;
-  VALUETYPE KVr, KVi, Vr, Vi, ar, ai, cosar, cosgi, Xcr, Xci, Id, Rd, Ld, Vn,
-      In;
+  VALUETYPE KVr, KVi, Vr, Vi, ar, ai, cosar, cosgi, Xcr, Xci, Id, Rd, Ld, Vn, In;
 
   for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next) {
     DCptrI = DCptrR->To;
@@ -140,8 +132,7 @@ void InitializeLoad(void)
     else {
       Pn = ACptr->Pn;
       Pz = 1 - Pn;
-      val =
-          ACptr->Pl / (Pn * pow(ACptr->V, ACptr->a) + Pz * ACptr->V * ACptr->V);
+      val = ACptr->Pl / (Pn * pow(ACptr->V, ACptr->a) + Pz * ACptr->V * ACptr->V);
       ACptr->Pn = Pn * val;
       ACptr->Pz = Pz * val;
     }
@@ -150,8 +141,7 @@ void InitializeLoad(void)
     else {
       Qn = ACptr->Qn;
       Qz = 1 - Qn;
-      val =
-          ACptr->Ql / (Qn * pow(ACptr->V, ACptr->b) + Qz * ACptr->V * ACptr->V);
+      val = ACptr->Ql / (Qn * pow(ACptr->V, ACptr->b) + Qz * ACptr->V * ACptr->V);
       ACptr->Qn = Qn * val;
       ACptr->Qz = Qz * val;
     }
@@ -263,8 +253,7 @@ int main(int argc, const char **argv)
     fprintf(stderr, "Tol %lf   tol %lf   alpha %lf\n", Tol, tol, alpha);
   }
   flagL = flagR = false;
-  if ((ExistParameter('H') || ExistParameter('c')) &&
-      (!NullName(NameParameter('K')) || flagKdirection))
+  if ((ExistParameter('H') || ExistParameter('c')) && (!NullName(NameParameter('K')) || flagKdirection))
     flagH = true;
   else
     flagH = false;
@@ -291,9 +280,7 @@ int main(int argc, const char **argv)
     i = Homot();
     if (i < 0) {
       i = -i;
-      fprintf(
-          stderr,
-          "\n *** The DC equations have a square root of a negative number.\n");
+      fprintf(stderr, "\n *** The DC equations have a square root of a negative number.\n");
       fprintf(stderr, "     Try changing the DC controls.\n");
       fprintf(stderr, "Loading factor -> %-10.6lg\n\n", lambda);
       WriteSolution(--i, TrueParamStr(2), "DC problems:");
@@ -303,20 +290,17 @@ int main(int argc, const char **argv)
     WriteSolution(--i, TrueParamStr(2), "U.E.P. Solution:");
     if (ExistParameter('y') && !NullName(NameParameter('y'))) {
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write left e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintEvalue = true;
       Out = OpenOutput(NameParameter('y'));
-      N1 = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar +
-           7 * Nstatcom; /* FACTS */
+      N1 = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       PrintLeftEvector(N1, Out);
     }
     if (ExistParameter('Y') && !NullName(NameParameter('Y'))) {
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write right e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
@@ -326,9 +310,7 @@ int main(int argc, const char **argv)
     i = PoCPoint();
     if (i < 0) {
       i = -i;
-      fprintf(
-          stderr,
-          "\n *** The DC equations have a square root of a negative number.\n");
+      fprintf(stderr, "\n *** The DC equations have a square root of a negative number.\n");
       fprintf(stderr, "     Try changing the DC controls.\n");
       fprintf(stderr, "Loading factor -> %-10.6lg\n\n", lambda);
       WriteSolution(--i, TrueParamStr(2), "DC problems:");
@@ -350,9 +332,7 @@ int main(int argc, const char **argv)
         WriteSolution(--i, TrueParamStr(2), "DC problems:");
         exit(1);
       }
-      fprintf(
-          stderr,
-          "**** Base Case Solved (to calculate OH load parameters) ****\n\n");
+      fprintf(stderr, "**** Base Case Solved (to calculate OH load parameters) ****\n\n");
     } else
       InitializeLoad();
     RealParameter('L', &lambda, -1e6, 1e6);
@@ -365,9 +345,7 @@ int main(int argc, const char **argv)
     i = Pflow(i, flagD, true, false);
     if (i < 0) {
       i = -i;
-      fprintf(
-          stderr,
-          "\n *** The DC equations have a square root of a negative number.\n");
+      fprintf(stderr, "\n *** The DC equations have a square root of a negative number.\n");
       fprintf(stderr, "     Try changing the DC controls.\n");
       fprintf(stderr, "Loading factor -> %-10.6lg\n\n", lambda);
       WriteSolution(--i, TrueParamStr(2), "DC problems:");
@@ -388,19 +366,16 @@ int main(int argc, const char **argv)
         WriteSolution(--i, TrueParamStr(2), "DC problems:");
         exit(1);
       }
-      fprintf(stderr,
-              "**** Base Case Solved (to initialize power flow) ****\n\n");
+      fprintf(stderr, "**** Base Case Solved (to initialize power flow) ****\n\n");
     } else
       InitializeLoad();
     RealParameter('L', &lambda, -1e6, 1e6);
     if (lambda == 0 || (NullName(NameParameter('K')) && !flagKdirection)) {
       fprintf(stderr, "***Warning: The program has detected the -L option but "
                       "either lambda is zero\n");
-      fprintf(stderr,
-              "            or there is no gen./load variations defined.\n");
+      fprintf(stderr, "            or there is no gen./load variations defined.\n");
       if (!ExistParameter('b') && !flagD) {
-        fprintf(stderr,
-                "            The program will just solve the base case.\n");
+        fprintf(stderr, "            The program will just solve the base case.\n");
         i = Pflow(i, false, true, true);
         if (i < 0) {
           i = -i;
@@ -428,12 +403,10 @@ int main(int argc, const char **argv)
     }
     WriteSolution(--i, TrueParamStr(2), "Lambda Solution:");
     if (ExistParameter('y') && !NullName(NameParameter('y'))) {
-      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar +
-           7 * Nstatcom; /* FACTS */
+      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       x0 = new VALUETYPE[N1];
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write left e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintEvalue = true;
@@ -441,14 +414,12 @@ int main(int argc, const char **argv)
       PrintLeftEvector(N1, Out);
     }
     if (ExistParameter('Y') && !NullName(NameParameter('Y'))) {
-      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar +
-           7 * Nstatcom; /* FACTS */
+      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       if (x0 == nullptr) {
         x0 = new VALUETYPE[N1];
       }
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write right e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
@@ -458,9 +429,7 @@ int main(int argc, const char **argv)
     i = Pflow(1, false, true, true);
     if (i < 0) {
       i = -i;
-      fprintf(
-          stderr,
-          "\n *** The DC equations have a square root of a negative number.\n");
+      fprintf(stderr, "\n *** The DC equations have a square root of a negative number.\n");
       fprintf(stderr, "     Try changing the DC controls.\n");
       WriteSolution(--i, TrueParamStr(2), "DC problems:");
       exit(1);
@@ -468,12 +437,10 @@ int main(int argc, const char **argv)
     fprintf(stderr, "**** Base Case Solved ****\n\n");
     WriteSolution(--i, TrueParamStr(2), "Base Solution:");
     if (ExistParameter('y') && !NullName(NameParameter('y'))) {
-      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar +
-           7 * Nstatcom; /* FACTS */
+      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       x0 = new VALUETYPE[N1];
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write left e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write left e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, false, &EigenValue);
       fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);
       PrintEvalue = true;
@@ -481,14 +448,12 @@ int main(int argc, const char **argv)
       PrintLeftEvector(N1, Out);
     }
     if (ExistParameter('Y') && !NullName(NameParameter('Y'))) {
-      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar +
-           7 * Nstatcom; /* FACTS */
+      N1 = NacVar + 11 * Ndc / 2 + 1 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
       if (x0 == nullptr) {
         x0 = new VALUETYPE[N1];
       }
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Write right e-vector for base case (see file 'evect.dat').\n");
+        fprintf(stderr, "Write right e-vector for base case (see file 'evect.dat').\n");
       Evector(40, 0, 0.00001, true, &EigenValue);
       if (!PrintEvalue)
         fprintf(stderr, "Minimum |e_value| -> %-10.6lg\n\n", EigenValue);

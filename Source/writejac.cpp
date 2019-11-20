@@ -46,8 +46,7 @@ void WriteJac(void) {
   DeleteJac(Jac, NewRow, NewCol, OldRow, OldCol);
   RowPer = NewRow;
   ColPer = NewCol;
-  Nvar =
-      NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /*  FACTS  */
+  Nvar = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /*  FACTS  */
   ACFunJac(Jac, nullptr, true, true, false);
   DCFunJac(Jac, true, true);
   SVCFunJac(Jac, true, true);     /*  FACTS  */
@@ -136,8 +135,7 @@ void WriteJac(void) {
       fprintf(OutFile, "%4d %8s %-11.5g\n", ++i, "l", lambda);
       sprintf(str, "dQ%-d", ACptr->Num);
       fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
-    } else if (strpbrk(ACptr->Type, "Q") || strpbrk(ACptr->Type, "V") ||
-               (!QRcont && strpbrk(ACptr->Type, "G"))) {
+    } else if (strpbrk(ACptr->Type, "Q") || strpbrk(ACptr->Type, "V") || (!QRcont && strpbrk(ACptr->Type, "G"))) {
       if (strpbrk(ACptr->Type, "S")) {
         sprintf(str, "kg%-d", ACptr->Num);
         fprintf(OutFile, "%4d %8s %-11.5g\n", ++i, str, ACptr->Kg);
@@ -269,8 +267,7 @@ void WriteJac(void) {
       }
     }
   }
-  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr;
-       DCptrR = DCptrR->Next) {
+  for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next) {
     DCptrI = DCptrR->To;
     if (!strcmp(DCptrR->Type, "R")) {
       for (k++, l = 1; l <= 11; l++) {
@@ -313,8 +310,7 @@ void WriteJac(void) {
           fprintf(OutFile, "%4d %8s %-11.5g\n", ++l, str, DCptr->Q);
         }
       }
-      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-          strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
+      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") && strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
         sprintf(str, "Id%-d", k);
         fprintf(OutFile, "%4d %8s %-11.5g\n", ++l, str, DCptrR->Id);
       }
@@ -322,8 +318,7 @@ void WriteJac(void) {
   }
 
   /*   FACTS   */
-  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr;
-       SVCptr = SVCptr->Next) {
+  for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next) {
     k++;
     l = 0;
     sprintf(str, "Qsvc%-d", k);
@@ -349,8 +344,7 @@ void WriteJac(void) {
     fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
   }
 
-  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     k++;
     l = 0;
     sprintf(str, "Ptcsc%-d", k);
@@ -389,8 +383,7 @@ void WriteJac(void) {
     sprintf(str, "Ftcsc%-d_%-d", k, ++l);
     fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
   }
-  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     k++;
     l = 0;
     if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) {
@@ -544,8 +537,7 @@ void WriteJac(void) {
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr;
-         DCptrR = DCptrR->Next) {
+    for (k = 0, DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next) {
       if (!strcmp(DCptrR->Type, "R")) {
         for (k++, l = 1; l <= 11; l++) {
           i++;
@@ -558,8 +550,7 @@ void WriteJac(void) {
     }
 
     /* FACTS */
-    for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr;
-         SVCptr = SVCptr->Next) {
+    for (k = 0, SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next) {
       for (k++, l = 1; l <= 3; l++) {
         i++;
         sprintf(str, "wsvc%-d_%-d", k, l);
@@ -568,8 +559,7 @@ void WriteJac(void) {
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-         TCSCptr = TCSCptr->Next) {
+    for (k = 0, TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
       for (k++, l = 1; l <= 7; l++) {
         i++;
         sprintf(str, "wtcsc%-d_%-d", k, l);
@@ -578,8 +568,7 @@ void WriteJac(void) {
         fprintf(OutFilep, "%4d %8s %-11.5g\n", i, str, dF[i]);
       }
     }
-    for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-         STATCOMptr = STATCOMptr->Next) {
+    for (k = 0, STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
       for (k++, l = 1; l <= 7; l++) {
         i++;
         sprintf(str, "wstat%-d_%-d", k, l);
@@ -618,8 +607,7 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
     TFbus = IntegerParameter('1', 0, 1, 9999);
   Nvar = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom; /* FACTS */
   for (i = 1; i <= Nvar + 1; i++)
-    for (Jptr = Jac->RowHead[i]; Jptr != nullptr;
-         Jptr->Value = 0, Jptr = Jptr->RowNext)
+    for (Jptr = Jac->RowHead[i]; Jptr != nullptr; Jptr->Value = 0, Jptr = Jptr->RowNext)
       ;
   ACFunJac(Jac, nullptr, false, true, false);
   DCFunJac(Jac, false, true);
@@ -650,17 +638,13 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
   for (m = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
     i = ACvar[ACptr->N];
     j = i + 1;
-    fprintf(OutFile, "Vars(%d,2)=%d; Vars(%d,2)=%d;\n", i, -ACptr->Num, j,
-            ACptr->Num);
+    fprintf(OutFile, "Vars(%d,2)=%d; Vars(%d,2)=%d;\n", i, -ACptr->Num, j, ACptr->Num);
     if (!strpbrk(ACptr->Type, "S"))
       fprintf(OutFile, "Vars(%d,3)=1;\n", i);
-    if ((ACptr->Cont != nullptr && (QRcont || !strpbrk(ACptr->Type, "G"))) ||
-        (!Rcont && strpbrk(ACptr->Type, "T")) ||
-        (!QRcont && strpbrk(ACptr->Type, "C"))) {
+    if ((ACptr->Cont != nullptr && (QRcont || !strpbrk(ACptr->Type, "G"))) || (!Rcont && strpbrk(ACptr->Type, "T")) || (!QRcont && strpbrk(ACptr->Type, "C"))) {
       i++;
       m++;
-      fprintf(OutFile, "Vbuses(%d,1)=%d; Vbuses(%d,2)=%d;\n", m, i, m,
-              ACptr->Num);
+      fprintf(OutFile, "Vbuses(%d,1)=%d; Vbuses(%d,2)=%d;\n", m, i, m, ACptr->Num);
       fprintf(OutFile, "Vars(%d,3)=1; Vars(%d,4)=0;\n", i, i);
       if (count == 1) {
         val = fabs(vec[i]);
@@ -687,8 +671,7 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
   fprintf(OutFile, "%s Bus for test functions and tangent vector:\n", "%%");
   fprintf(OutFile, "l=%d;\n", TFbus);
   fprintf(OutFile, "\n");
-  fprintf(OutFile, "%s Minimum singular value and real |e-value| for full J:\n",
-          "%%");
+  fprintf(OutFile, "%s Minimum singular value and real |e-value| for full J:\n", "%%");
   fprintf(OutFile, "[val,svecJ]=inviter(J'*J); svJ(%d)=sqrt(val);\n", count);
   fprintf(OutFile, "[val,evecJ]=inviter(J); evJ(%d)=abs(val);\n", count);
   fprintf(OutFile, "  %s Critical bus numbers and ranking of bus l:\n", "%%");
@@ -719,12 +702,8 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
   fprintf(OutFile, "end\n");
   fprintf(OutFile, "P0=sparse(P0); Jp=P0'*J*P0;\n");
   fprintf(OutFile, "J_PF=Jp(1:M,1:M);\n");
-  fprintf(
-      OutFile,
-      "%s Minimum singular value and real |e-value| for standard P.F. J_PF:\n",
-      "%%");
-  fprintf(OutFile, "[val,svecPF]=inviter(J_PF'*J_PF); svPF(%d)=sqrt(val);\n",
-          count);
+  fprintf(OutFile, "%s Minimum singular value and real |e-value| for standard P.F. J_PF:\n", "%%");
+  fprintf(OutFile, "[val,svecPF]=inviter(J_PF'*J_PF); svPF(%d)=sqrt(val);\n", count);
   fprintf(OutFile, "[val,evecPF]=inviter(J_PF); evPF(%d)=abs(val);\n", count);
   fprintf(OutFile, "  %s Critical bus numbers and ranking of bus l:\n", "%%");
   fprintf(OutFile, "  [val,max_sv]=max(abs(svecPF));\n");
@@ -749,12 +728,9 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
                    "D1=Jp(Mp+1:N,Mp+1:N);\n");
   fprintf(OutFile, "J_QV=A1-B1*(D1\\C1);\n");
   fprintf(OutFile, "\n");
-  fprintf(OutFile, "%s Minimum singular value and real |e-value| for J_QV:\n",
-          "%%");
-  fprintf(OutFile, "[val,svecQV]=inviter(J_QV'*J_QV); svQV(%d)=sqrt(val);\n",
-          count);
-  fprintf(OutFile, "[val,evecQV]=inviter(J_QV,-0.001); evQV(%d)=abs(val);\n",
-          count);
+  fprintf(OutFile, "%s Minimum singular value and real |e-value| for J_QV:\n", "%%");
+  fprintf(OutFile, "[val,svecQV]=inviter(J_QV'*J_QV); svQV(%d)=sqrt(val);\n", count);
+  fprintf(OutFile, "[val,evecQV]=inviter(J_QV,-0.001); evQV(%d)=abs(val);\n", count);
   fprintf(OutFile, "  %s Critical V bus numbers and ranking of bus l:\n", "%%");
   fprintf(OutFile, "  [val,max_sv]=max(abs(svecQV));\n");
   fprintf(OutFile, "  crsvQV(%d,1)=Vbuses(max_sv,2);\n", count);
@@ -763,19 +739,15 @@ void WriteQmatrix(INDEX count, VALUETYPE *vec) {
   fprintf(OutFile, "  crsvQV(%d,2)=rankbus(svecQV,lnumQV);\n", count);
   fprintf(OutFile, "  crevQV(%d,2)=rankbus(evecQV,lnumQV);\n", count);
   fprintf(OutFile, "\n");
-  fprintf(OutFile, "%s Reduced determinant detD_ll, for bus l=%d, '%12s':\n",
-          "%%", TFbus, TFname);
+  fprintf(OutFile, "%s Reduced determinant detD_ll, for bus l=%d, '%12s':\n", "%%", TFbus, TFname);
   fprintf(OutFile, "P2=speye(N);\n");
-  fprintf(OutFile, "v=P2(1,:); P2(1,:)=P2(%d,:); P2(%d,:)=v; \n", TFnum - 1,
-          TFnum - 1);
+  fprintf(OutFile, "v=P2(1,:); P2(1,:)=P2(%d,:); P2(%d,:)=v; \n", TFnum - 1, TFnum - 1);
   fprintf(OutFile, "v=P2(2,:); P2(2,:)=P2(%d,:); P2(%d,:)=v; \n", TFnum, TFnum);
   fprintf(OutFile, "Jp=P2'*J*P2;\n");
-  fprintf(OutFile,
-          "A2=Jp(1:2,1:2);  B2=Jp(1:2,3:N); C2=Jp(3:N,1:2); D2=Jp(3:N,3:N);\n");
+  fprintf(OutFile, "A2=Jp(1:2,1:2);  B2=Jp(1:2,3:N); C2=Jp(3:N,1:2); D2=Jp(3:N,3:N);\n");
   fprintf(OutFile, "detD_ll(%d)=det(A2-B2*(D2\\C2));\n", count);
   fprintf(OutFile, "\n");
-  fprintf(OutFile, "%s Test Function t_ll, for bus l=%d, '%12s':\n", "%%",
-          TFbus, TFname);
+  fprintf(OutFile, "%s Test Function t_ll, for bus l=%d, '%12s':\n", "%%", TFbus, TFname);
   fprintf(OutFile, "el=zeros(N,1); el(%d)=1; el=sparse(el);\n", TFnum);
   fprintf(OutFile, "J_ll=(speye(N)-el*el')*J+el*el';\n");
   fprintf(OutFile, "t_ll(%d)=el'*J*(J_ll\\el);\n", count);

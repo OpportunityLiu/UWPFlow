@@ -53,16 +53,13 @@ void ErrorDetect(void)
   ieee = ExistParameter('I');
   while (ACptr != nullptr) {
     if (ACptr->V == 0) {
-      fprintf(stderr, "ERROR: AC/DC bus %d %s has not been defined.\n",
-              ACptr->Num, ACptr->Name);
+      fprintf(stderr, "ERROR: AC/DC bus %d %s has not been defined.\n", ACptr->Num, ACptr->Name);
       fprintf(stderr, "       Check the bus input cards.\n");
       InputError = true;
     }
     /* FACTS */
-    if (ACptr->Elem == nullptr && ACptr->DC == nullptr &&
-        ACptr->TCSC == nullptr) {
-      fprintf(stderr, "ERROR: AC bus %d %s is isolated.\n", ACptr->Num,
-              ACptr->Name);
+    if (ACptr->Elem == nullptr && ACptr->DC == nullptr && ACptr->TCSC == nullptr) {
+      fprintf(stderr, "ERROR: AC bus %d %s is isolated.\n", ACptr->Num, ACptr->Name);
       fprintf(stderr, "       Check the AC/DC/FACTS input cards.\n");
       InputError = true;
     }
@@ -74,12 +71,8 @@ void ErrorDetect(void)
       ACptr->ContBus->Next = ACptr->ContBus->Prev = nullptr;
       if (ACptr->Cont != nullptr) {
         if (!strpbrk(ACptr->Cont->Type, "C")) {
-          fprintf(stderr, "ERROR: The voltage controlled bus %d %s of PV bus\n",
-                  ACptr->Cont->Num, ACptr->Cont->Name);
-          fprintf(
-              stderr,
-              "       %d %s, is not a PQ bus.  Check the AC bus input data.\n",
-              ACptr->Num, ACptr->Name);
+          fprintf(stderr, "ERROR: The voltage controlled bus %d %s of PV bus\n", ACptr->Cont->Num, ACptr->Cont->Name);
+          fprintf(stderr, "       %d %s, is not a PQ bus.  Check the AC bus input data.\n", ACptr->Num, ACptr->Name);
           InputError = true;
         } else {
           ptrp = new AClist;
@@ -116,16 +109,13 @@ void ErrorDetect(void)
           ACptr->Cont->Qr = ACptr->Cont->Qr + ACptr->Qg;
         }
       } else {
-        fprintf(stderr, "ERROR: The remote controlled bus of PV bus %d %s\n",
-                ACptr->Num, ACptr->Name);
-        fprintf(stderr,
-                "       has not been defined.  Check the AC bus input data.\n");
+        fprintf(stderr, "ERROR: The remote controlled bus of PV bus %d %s\n", ACptr->Num, ACptr->Name);
+        fprintf(stderr, "       has not been defined.  Check the AC bus input data.\n");
         InputError = true;
       }
     }
     if (strpbrk(ACptr->Type, "C") && ACptr->Kbg < 1) {
-      fprintf(stderr, "ERROR: The voltage controlled bus %d %s does not have\n",
-              ACptr->Num, ACptr->Name);
+      fprintf(stderr, "ERROR: The voltage controlled bus %d %s does not have\n", ACptr->Num, ACptr->Name);
       fprintf(stderr, "       any generator controlling the voltage. Check the "
                       "AC bus input data.\n");
       InputError = true;
@@ -141,8 +131,7 @@ void ErrorDetect(void)
               if (strpbrk(ACptr->Type, "S"))
                 Aptr->i++;
               if (Aptr->i > 1) {
-                fprintf(stderr, "ERROR: Area %d %s has 2 slack buses.\n",
-                        Aptr->N, Aptr->Name);
+                fprintf(stderr, "ERROR: Area %d %s has 2 slack buses.\n", Aptr->N, Aptr->Name);
                 fprintf(stderr, "       Check AC area and bus input data.\n");
                 InputError = true;
               }
@@ -153,14 +142,12 @@ void ErrorDetect(void)
             break;
         }
       if (ACptr->Area == nullptr) {
-        fprintf(stderr, "ERROR: AC/DC bus %d %s is not in any area.\n",
-                ACptr->Num, ACptr->Name);
+        fprintf(stderr, "ERROR: AC/DC bus %d %s is not in any area.\n", ACptr->Num, ACptr->Name);
         fprintf(stderr, "       Check area and bus input data.\n");
         InputError = true;
       } else {
         if (!strcmp(ACptr->Area->Name, "")) {
-          fprintf(stderr, "ERROR: Area %d has not been defined.\n",
-                  ACptr->Area->N);
+          fprintf(stderr, "ERROR: Area %d has not been defined.\n", ACptr->Area->N);
           fprintf(stderr, "       Check area and bus input data.\n");
           InputError = true;
         }
@@ -168,8 +155,7 @@ void ErrorDetect(void)
           strcat(ACptr->Type, "A");
           ACptr->Area->i++;
           if (ACptr->Area->i > 1) {
-            fprintf(stderr, "ERROR: Area %d %s has 2 slack buses.\n",
-                    ACptr->Area->N, ACptr->Area->Name);
+            fprintf(stderr, "ERROR: Area %d %s has 2 slack buses.\n", ACptr->Area->N, ACptr->Area->Name);
             fprintf(stderr, "       Check AC area and bus input data.\n");
             InputError = true;
           }
@@ -203,9 +189,7 @@ void ErrorDetect(void)
     ACptr->DPG = ACptr->DPg;
     if (strpbrk(ACptr->Type, "X")) {
       if (ACptr->Cont == nullptr) {
-        fprintf(stderr,
-                "ERROR: The reactance controlled bus %d %s does not have\n",
-                ACptr->Num, ACptr->Name);
+        fprintf(stderr, "ERROR: The reactance controlled bus %d %s does not have\n", ACptr->Num, ACptr->Name);
         fprintf(stderr, "       a controlling bus. Check the AC input data.\n");
         InputError = true;
       } else {
@@ -213,10 +197,7 @@ void ErrorDetect(void)
         ACptr->Vmax = ACptrp->Vmax;
         ACptr->Vmin = ACptrp->Vmin;
         if (ACptr->Vmin >= ACptr->Vmax) {
-          fprintf(
-              stderr,
-              "ERROR: The reactance controlling bus %d %s has inconsistent\n",
-              ACptrp->Num, ACptrp->Name);
+          fprintf(stderr, "ERROR: The reactance controlling bus %d %s has inconsistent\n", ACptrp->Num, ACptrp->Name);
           fprintf(stderr, "       voltage limits. Check the AC input data.\n");
           InputError = true;
         } else if (ACptrp->steps == 0) {
@@ -234,21 +215,16 @@ void ErrorDetect(void)
     i = 0;
     for (ELptr = ACptr->Reg; ELptr != nullptr; ELptr = ELptr->Next) {
       Eptr = ELptr->Eptr;
-      if ((!strcmp(Eptr->Type, "R") && !strpbrk(ACptr->Type, "T")) ||
-          (!strcmp(Eptr->Type, "RV") && !strpbrk(ACptr->Type, "R"))) {
-        fprintf(stderr, "ERROR: LTC volt. controlled bus %d %s is not PQ.\n",
-                ACptr->Num, ACptr->Name);
+      if ((!strcmp(Eptr->Type, "R") && !strpbrk(ACptr->Type, "T")) || (!strcmp(Eptr->Type, "RV") && !strpbrk(ACptr->Type, "R"))) {
+        fprintf(stderr, "ERROR: LTC volt. controlled bus %d %s is not PQ.\n", ACptr->Num, ACptr->Name);
         fprintf(stderr, "       Check the AC/DC bus input cards.\n");
         InputError = true;
       }
       if (!strcmp(Eptr->Type, "R") || !strcmp(Eptr->Type, "RV"))
         i++;
     }
-    if ((ACptr->Reg == nullptr || (ACptr->Reg != nullptr && i == 0)) &&
-        strpbrk(ACptr->Type, "T")) {
-      fprintf(stderr,
-              "ERROR: LTC volt. controlled bus %d %s does not have LTCs.\n",
-              ACptr->Num, ACptr->Name);
+    if ((ACptr->Reg == nullptr || (ACptr->Reg != nullptr && i == 0)) && strpbrk(ACptr->Type, "T")) {
+      fprintf(stderr, "ERROR: LTC volt. controlled bus %d %s does not have LTCs.\n", ACptr->Num, ACptr->Name);
       fprintf(stderr, "       Check the AC/DC bus and element input cards.\n");
       InputError = true;
     }
@@ -276,8 +252,7 @@ void ErrorDetect(void)
   Eptr = dataPtr->Element;
   while (Eptr != nullptr) {
     if (strpbrk(Eptr->Type, "R") && !strcmp(Eptr->Zone, "")) {
-      fprintf(stderr, "ERROR: Reg. transf. from %d %s to %d %s\n",
-              Eptr->From->Num, Eptr->From->Name, Eptr->To->Num, Eptr->To->Name);
+      fprintf(stderr, "ERROR: Reg. transf. from %d %s to %d %s\n", Eptr->From->Num, Eptr->From->Name, Eptr->To->Num, Eptr->To->Name);
       fprintf(stderr, "       has not been completely defined.  Check T cards "
                       "on WSCC format.\n");
       InputError = true;
@@ -324,18 +299,14 @@ void ErrorDetect(void)
   for (DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next) {
     ACptr = DCptr->AC;
     if (ACptr == nullptr || !strcmp(DCptr->Type, "")) {
-      fprintf(
-          stderr,
-          "ERROR: DC bus %8s has not been fully defined in the input data.\n",
-          DCptr->Name);
+      fprintf(stderr, "ERROR: DC bus %8s has not been fully defined in the input data.\n", DCptr->Name);
       fprintf(stderr, "       Check the BD, LD, and/or BZ cards.\n");
       InputError = true;
     }
 
     /* --------- Fix data read in WSCC/BPA Format --------- */
     if (DCptr->Xc == 0) {
-      for (ELptrp = ELptr = ACptr->Elem; ELptr != nullptr;
-           ELptrp = ELptr, ELptr = ELptr->Next) {
+      for (ELptrp = ELptr = ACptr->Elem; ELptr != nullptr; ELptrp = ELptr, ELptr = ELptr->Next) {
         Eptr = ELptr->Eptr;
         if (!strcmp(Eptr->From->Name, DCptr->Name)) {
           ACptrp = Eptr->From;
@@ -363,8 +334,7 @@ void ErrorDetect(void)
                   "ERROR: DC bus %8s regulating transfomer may only control "
                   "voltage.\n",
                   DCptr->Name);
-          fprintf(stderr,
-                  "       Check the related R transfomer input cards.\n");
+          fprintf(stderr, "       Check the related R transfomer input cards.\n");
           InputError = true;
         }
         if (!strcmp(Eptr->Type, "R")) {
@@ -389,10 +359,7 @@ void ErrorDetect(void)
       if (ELptrp == ELptr) {
         ACptr->Elem = ELptr->Next;
         if (ACptr->Elem == nullptr) {
-          fprintf(
-              stderr,
-              "ERROR: AC bus %d %s is isolated from the rest of the system.\n",
-              ACptr->Num, ACptr->Name);
+          fprintf(stderr, "ERROR: AC bus %d %s is isolated from the rest of the system.\n", ACptr->Num, ACptr->Name);
           fprintf(stderr, "       Check the related AC element input cards.\n");
           InputError = true;
         }
@@ -401,8 +368,7 @@ void ErrorDetect(void)
       delete ELptr;
       Aptr = ACptr->Area;
       if (Aptr != nullptr) {
-        for (ELptrp = ELptr = Aptr->Elem; ELptr != nullptr;
-             ELptrp = ELptr, ELptr = ELptr->Next)
+        for (ELptrp = ELptr = Aptr->Elem; ELptr != nullptr; ELptrp = ELptr, ELptr = ELptr->Next)
           if (Eptr == ELptr->Eptr)
             break;
         if (ELptr != nullptr) {
@@ -446,8 +412,7 @@ void ErrorDetect(void)
         }
       }
       Nac--;
-      for (ACptrs = ACptrp->Next; ACptrs != nullptr;
-           ACptrs->N--, ACptrs = ACptrs->Next)
+      for (ACptrs = ACptrp->Next; ACptrs != nullptr; ACptrs->N--, ACptrs = ACptrs->Next)
         ;
       if (ACptrp->Prev == nullptr) {
         ACptrs = ACptrp->Next;
@@ -468,10 +433,7 @@ void ErrorDetect(void)
       DCptr->Xc = (DCptr->Xc * KVs * KVs / DCptr->MVA) * DCptr->Nbr;
     }
     if (DCptr->Xc <= 0.1) {
-      fprintf(
-          stderr,
-          "ERROR: DC bus %8s has a negative or zero commutation reactance ->\n",
-          DCptr->Name);
+      fprintf(stderr, "ERROR: DC bus %8s has a negative or zero commutation reactance ->\n", DCptr->Name);
       fprintf(stderr, "       Xc=%6.3lf (Ohms)\n", DCptr->Xc);
       fprintf(stderr, "       Check the BD and/or BZ cards.\n");
       InputError = true;
@@ -484,16 +446,14 @@ void ErrorDetect(void)
     DCptr->Area = ACptr->Area;
     if (!strcmp(DCptr->Cont1, "AL") || !strcmp(DCptr->Cont2, "AL")) {
       if (DCptr->Alfa > DCptr->AlfaMax || DCptr->Alfa < DCptr->AlfaMin) {
-        fprintf(stderr, "ERROR: DC bus %8s has ALPHA outside its limits.\n",
-                DCptr->Name);
+        fprintf(stderr, "ERROR: DC bus %8s has ALPHA outside its limits.\n", DCptr->Name);
         fprintf(stderr, "       Check the BD (limits) and/or BZ card.\n");
         InputError = true;
       }
       DCptr->Gamma = 180 - DCptr->Alfa;
     } else if (!strcmp(DCptr->Cont1, "GA") || !strcmp(DCptr->Cont2, "GA")) {
       if (DCptr->Gamma < DCptr->GammaMin) {
-        fprintf(stderr, "ERROR: DC bus %8s has GAMMA outside its limits.\n",
-                DCptr->Name);
+        fprintf(stderr, "ERROR: DC bus %8s has GAMMA outside its limits.\n", DCptr->Name);
         fprintf(stderr, "       Check the BD (limits) and/or BZ card.\n");
         InputError = true;
       }
@@ -505,12 +465,8 @@ void ErrorDetect(void)
       DCptr->Gamma = DCptr->GammaMin;
       DCptr->Alfa = 180 - DCptr->Gamma;
     }
-    if (DCptr->Alfa > DCptr->AlfaMax || DCptr->Alfa < DCptr->AlfaMin ||
-        DCptr->Gamma < DCptr->GammaMin)
-      fprintf(
-          stderr,
-          "***Warning: DC bus %8s could have wrong ALPHA or GAMMA limits.\n",
-          DCptr->Name);
+    if (DCptr->Alfa > DCptr->AlfaMax || DCptr->Alfa < DCptr->AlfaMin || DCptr->Gamma < DCptr->GammaMin)
+      fprintf(stderr, "***Warning: DC bus %8s could have wrong ALPHA or GAMMA limits.\n", DCptr->Name);
     if (DCptr->Tap <= 0)
       DCptr->Tap = 1;
     if (DCptr->Tap < DCptr->TapMin)
@@ -531,19 +487,13 @@ void ErrorDetect(void)
   for (DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next) {
     DCptrp = DCptr->To;
     if (DCptr->N != 0 && DCptrp->N != 0) {
-      if ((strcmp(DCptr->Type, "R") || strcmp(DCptrp->Type, "I")) &&
-          (strcmp(DCptr->Type, "I") || strcmp(DCptrp->Type, "R"))) {
-        fprintf(stderr,
-                "ERROR: Both converters for the DC link between %8s and %8s\n",
-                DCptr->Name, DCptrp->Name);
+      if ((strcmp(DCptr->Type, "R") || strcmp(DCptrp->Type, "I")) && (strcmp(DCptr->Type, "I") || strcmp(DCptrp->Type, "R"))) {
+        fprintf(stderr, "ERROR: Both converters for the DC link between %8s and %8s\n", DCptr->Name, DCptrp->Name);
         fprintf(stderr, "       are either rectifiers or inverters.\n");
         InputError = true;
       }
-      if ((!strcmp(DCptr->Cont1, "ID") || !strcmp(DCptr->Cont2, "ID")) &&
-          (!strcmp(DCptrp->Cont1, "ID") || !strcmp(DCptrp->Cont2, "ID"))) {
-        fprintf(stderr,
-                "ERROR: Both converters for the DC link between %8s and %8s\n",
-                DCptr->Name, DCptrp->Name);
+      if ((!strcmp(DCptr->Cont1, "ID") || !strcmp(DCptr->Cont2, "ID")) && (!strcmp(DCptrp->Cont1, "ID") || !strcmp(DCptrp->Cont2, "ID"))) {
+        fprintf(stderr, "ERROR: Both converters for the DC link between %8s and %8s\n", DCptr->Name, DCptrp->Name);
         fprintf(stderr, "       are controlling the current.\n");
         InputError = true;
       }
@@ -589,16 +539,12 @@ void ErrorDetect(void)
         Aptrp = Eptr->From->Area;
       else
         Aptrp = Eptr->To->Area;
-      if (!Acont && strpbrk(Aptr->Slack->Type, "S") &&
-          !strpbrk(Aptrp->Slack->Type, "S"))
+      if (!Acont && strpbrk(Aptr->Slack->Type, "S") && !strpbrk(Aptrp->Slack->Type, "S"))
         ExpandSlack(Aptr->Slack, Aptrp);
     }
     if (!flag && i == j) {
-      fprintf(stderr,
-              "ERROR: All tie lines for area %d %s are P reg. transf.\n",
-              Aptr->N, Aptr->Name);
-      fprintf(stderr,
-              "       Change at least one reg. transf. to a standard one.\n");
+      fprintf(stderr, "ERROR: All tie lines for area %d %s are P reg. transf.\n", Aptr->N, Aptr->Name);
+      fprintf(stderr, "       Change at least one reg. transf. to a standard one.\n");
       InputError = true;
     }
     if (flag && !strpbrk(Aptr->Slack->Type, "S")) {
@@ -620,16 +566,13 @@ void ErrorDetect(void)
   for (SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next) {
     ACptr = SVCptr->Ctrl;
     if (ACptr->Cont == nullptr) {
-      fprintf(stderr,
-              "ERROR: The SVC controlled bus %d %s is already controlled.\n",
-              ACptr->N, ACptr->Name);
+      fprintf(stderr, "ERROR: The SVC controlled bus %d %s is already controlled.\n", ACptr->N, ACptr->Name);
       fprintf(stderr, "       Check the AC bus cards.\n");
       InputError = true;
     }
     ACptr = SVCptr->From;
     if (ACptr->Cont == nullptr) {
-      fprintf(stderr, "ERROR: The SVC bus %d %s is a voltage controlled bus.\n",
-              ACptr->N, ACptr->Name);
+      fprintf(stderr, "ERROR: The SVC bus %d %s is a voltage controlled bus.\n", ACptr->N, ACptr->Name);
       fprintf(stderr, "       Check the AC bus cards.\n");
       InputError = true;
     }
@@ -644,22 +587,16 @@ void ErrorDetect(void)
       InputError = true;
     }
   }
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     ACptr = STATCOMptr->Ctrl;
     if (ACptr->Cont == nullptr) {
-      fprintf(
-          stderr,
-          "ERROR: The STATCOM controlled bus %d %s is already controlled.\n",
-          ACptr->N, ACptr->Name);
+      fprintf(stderr, "ERROR: The STATCOM controlled bus %d %s is already controlled.\n", ACptr->N, ACptr->Name);
       fprintf(stderr, "       Check the AC bus cards.\n");
       InputError = true;
     }
     ACptr = STATCOMptr->From;
     if (ACptr->Cont == nullptr) {
-      fprintf(stderr,
-              "ERROR: The STATCOM bus %d %s is a voltage controlled bus.\n",
-              ACptr->N, ACptr->Name);
+      fprintf(stderr, "ERROR: The STATCOM bus %d %s is a voltage controlled bus.\n", ACptr->N, ACptr->Name);
       fprintf(stderr, "       Check the AC bus cards.\n");
       InputError = true;
     }
@@ -714,8 +651,7 @@ void WriteSummary(void) {
     if (strpbrk(ACptr->Type, "S")) {
       if (i > 0)
         fprintf(stderr, "                        ");
-      fprintf(stderr, "%d %s (Angle=%6.2lf deg.)\n", ACptr->Num, ACptr->Name,
-              ACptr->Ang * 180 / PI);
+      fprintf(stderr, "%d %s (Angle=%6.2lf deg.)\n", ACptr->Num, ACptr->Name, ACptr->Ang * 180 / PI);
       i++;
     }
   if (i == 0)
@@ -752,17 +688,20 @@ void ReadData(char *Name)
   NZvolt = NXvolt = 0;
   InputError = false;
   flag2Vcontrol = ExistParameter('#');
-  if (ExistParameter('I'))
-    ReadIEEE();
-  else if (ExistParameter('6'))
+  if (ExistParameter('I')) {
+    if (!strcmp(NameParameter('I'), "m")) {
+      ReadIEEEMod();
+    } else {
+      ReadIEEE();
+    }
+  } else if (ExistParameter('6'))
     ReadITALY();
   else
     ReadWSCC();
   ErrorDetect();
   WriteSummary();
   if (InputError == true) {
-    fprintf(stderr,
-            "*** The data has errors! Please review the input file. ***\n");
+    fprintf(stderr, "*** The data has errors! Please review the input file. ***\n");
     exit(ERROREXIT);
   } else
     fprintf(stderr, "*** The data has been read successfully ***\n");

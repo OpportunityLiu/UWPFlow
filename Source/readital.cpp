@@ -3,10 +3,8 @@
 #include "readdata.h"
 
 bool ReadADDfile();
-ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
-                        bool flagAddBus);
-ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type,
-                         char *Ckt, bool flagAddElement);
+ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flagAddBus);
+ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type, char *Ckt, bool flagAddElement);
 VALUETYPE GetVelevels(char *BusName);
 ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr);
 
@@ -14,8 +12,7 @@ ElementList *TakeElemFromList(ElementList *ELptr, ElementData *Eptr);
 extern FILE *InputDataFile;
 
 /* --------------- ACbusInList2  ------------------- */
-ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
-                        bool flagAddBus) {
+ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2, bool flagAddBus) {
   ACbusData *ptr, *ptrp, *ptrn;
   INDEX i;
 
@@ -32,8 +29,7 @@ ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
   } else {
     ptr = dataPtr->ACbus;
     while (ptr != nullptr) {
-      if (BusN == ptr->Num ||
-          (BusN == 0 && !strncmp(ptr->Name, BusCode, strlen(BusCode))))
+      if (BusN == ptr->Num || (BusN == 0 && !strncmp(ptr->Name, BusCode, strlen(BusCode))))
         return (ptr);
       ptrp = ptr;
       ptr = ptr->Next;
@@ -115,8 +111,7 @@ ACbusData *ACbusInList2(INDEX BusN, char *BusCode, INDEX N1, INDEX N2,
 }
 
 /* --------------- ElemInList2  ------------------- */
-ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type,
-                         char *Ckt, bool flagAddElement) {
+ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type, char *Ckt, bool flagAddElement) {
   ElementData *ptr, *ptrp;
   ElementList *ELptr;
 
@@ -126,9 +121,7 @@ ElementData *ElemInList2(ACbusData *From, ACbusData *To, INDEX N, char *Type,
   } else {
     for (ELptr = From->Elem; ELptr != nullptr; ELptr = ELptr->Next) {
       ptr = ELptr->Eptr;
-      if (((ptr->From == From && ptr->To == To) ||
-           (ptr->From == To && ptr->To == From)) &&
-          strpbrk(ptr->Type, Type) && !strcmp(ptr->Ckt, Ckt)) {
+      if (((ptr->From == From && ptr->To == To) || (ptr->From == To && ptr->To == From)) && strpbrk(ptr->Type, Type) && !strcmp(ptr->Ckt, Ckt)) {
         if (flagAddElement)
           return (nullptr);
         else
@@ -271,10 +264,7 @@ void ReadITALY()
       if (Line[20] == 'T') {
         EstimatePl = true;
         ACptrEstimate = ACptr;
-        fprintf(
-            stderr,
-            "***Warning: The P load at bus %d %s will be estimated from the\n",
-            ACptr->N, ACptr->Name);
+        fprintf(stderr, "***Warning: The P load at bus %d %s will be estimated from the\n", ACptr->N, ACptr->Name);
         fprintf(stderr, "            oncoming element data for this bus.\n");
       } else {
         EstimatePl = false;
@@ -283,10 +273,7 @@ void ReadITALY()
       if (Line[42] == 'T') {
         EstimateQl = true;
         ACptrEstimate = ACptr;
-        fprintf(
-            stderr,
-            "***Warning: The Q load at bus %d %s will be estimated from the\n",
-            ACptr->N, ACptr->Name);
+        fprintf(stderr, "***Warning: The Q load at bus %d %s will be estimated from the\n", ACptr->N, ACptr->Name);
         fprintf(stderr, "            oncoming element data for this bus.\n");
       } else {
         EstimateQl = false;
@@ -349,14 +336,12 @@ void ReadITALY()
         ACptr->Smax = 99999999.;
       if (ACptr->PgMax > ACptr->Smax) {
         ACptr->PgMax = ACptr->Smax;
-        fprintf(stderr, "***Warning: Bus %d %s has PgMax > Smax.\n", ACptr->N,
-                ACptr->Name);
+        fprintf(stderr, "***Warning: Bus %d %s has PgMax > Smax.\n", ACptr->N, ACptr->Name);
         fprintf(stderr, "            PgMax will be set to Smax.\n");
       }
       if (ACptr->Pg > ACptr->PgMax) {
         ACptr->Pg = ACptr->PgMax;
-        fprintf(stderr, "***Warning: Bus %d %s has Pg > PgMax.\n", ACptr->N,
-                ACptr->Name);
+        fprintf(stderr, "***Warning: Bus %d %s has Pg > PgMax.\n", ACptr->N, ACptr->Name);
         fprintf(stderr, "            Pg will be set to PgMax.\n");
       }
       ACptr->Qg += -GetValue(Line, 36, 6, 0) / Sn;
@@ -485,10 +470,7 @@ void ReadITALY()
       }
       if (EstimatePl) {
         if (Line[20] == 'T') {
-          fprintf(
-              stderr,
-              "***Warning: The P load estimate at bus %d %s may be incorrect\n",
-              ACptrEstimate->N, ACptrEstimate->Name);
+          fprintf(stderr, "***Warning: The P load estimate at bus %d %s may be incorrect\n", ACptrEstimate->N, ACptrEstimate->Name);
           fprintf(stderr, "            due to lack of P flow information in "
                           "the corresponding element data:\n");
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
@@ -501,10 +483,7 @@ void ReadITALY()
       }
       if (EstimateQl) {
         if (Line[42] == 'T') {
-          fprintf(
-              stderr,
-              "***Warning: The Q load estimate at bus %d %s may be incorrect\n",
-              ACptrEstimate->N, ACptrEstimate->Name);
+          fprintf(stderr, "***Warning: The Q load estimate at bus %d %s may be incorrect\n", ACptrEstimate->N, ACptrEstimate->Name);
           fprintf(stderr, "            due to lack of Q flow information in "
                           "the corresponding element data:\n");
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
@@ -584,8 +563,7 @@ void ReadITALY()
     }
 
     /* -------------------- DC data -------------------------------- */
-    else if (!strncmp(Line, "BD ", 3) || !strncmp(Line, "BZ ", 3) ||
-             !strncmp(Line, "LD ", 3))
+    else if (!strncmp(Line, "BD ", 3) || !strncmp(Line, "BZ ", 3) || !strncmp(Line, "LD ", 3))
       ReadEPRIdc(Line);
 
     /* FACTS */
@@ -641,8 +619,7 @@ bool ReadADDfile()
   AreaData *Aptr;
   ElementList *ELptr;
   ElementData *Eptr;
-  VALUETYPE KV, KVp, KVs, KVmax, KVmin, val, Tap, Taps, Tmax, Tmin, Q, Qmax,
-      Qmin, Pn, Qn, Sum = 0;
+  VALUETYPE KV, KVp, KVs, KVmax, KVmin, val, Tap, Taps, Tmax, Tmin, Q, Qmax, Qmin, Pn, Qn, Sum = 0;
   bool flagAreas = false, flagPrint = true, flagScards = false;
   INDEX N, NJcard = 0, N2SVCarea = 0, KVl;
 
@@ -669,16 +646,13 @@ bool ReadADDfile()
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           fprintf(stderr, "***Warning: This bus has not been defined on the "
                           "main input data file.\n");
-          fprintf(stderr,
-                  "            This line in the ADD file will be ignored.\n");
+          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
         } else {
           KV = GetValue(Line, 6, 7, 0);
           if (KV == 0) {
             fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-            fprintf(stderr,
-                    "***Warning: This bus has a zero base bus voltage.\n");
-            fprintf(stderr,
-                    "            This line in the ADD file will be ignored.\n");
+            fprintf(stderr, "***Warning: This bus has a zero base bus voltage.\n");
+            fprintf(stderr, "            This line in the ADD file will be ignored.\n");
           } else {
             sprintf(ACptr->Name, "%5s %6.0lf", Code, KV);
             KVp = ACptr->KV;
@@ -727,9 +701,7 @@ bool ReadADDfile()
                               "bus in the main input data file; \n");
               fprintf(stderr, "            hence, its Q-limits cannot be "
                               "released (check field 50).\n");
-              fprintf(
-                  stderr,
-                  "            This line in the ADD file will be ignored.\n");
+              fprintf(stderr, "            This line in the ADD file will be ignored.\n");
             }
           }
           GetStr(Line, 58, 1, 1, Code);
@@ -883,8 +855,7 @@ bool ReadADDfile()
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           fprintf(stderr, "***Warning: This transformer has not been defined "
                           "in the main data file.\n");
-          fprintf(stderr,
-                  "            This line in the ADD file will be ignored.\n");
+          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
         }
       }
 
@@ -899,8 +870,7 @@ bool ReadADDfile()
           fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
           fprintf(stderr, "***Warning: This bus has not been defined on the "
                           "main input data file.\n");
-          fprintf(stderr,
-                  "            This line in the ADD file will be ignored.\n");
+          fprintf(stderr, "            This line in the ADD file will be ignored.\n");
         } else {
           Q = GetValue(Line, 15, 8, 0) / Sn;
           GetStr(Line, 31, 1, 1, Code);
@@ -997,9 +967,7 @@ bool ReadADDfile()
                       "***Warning: Secondary voltage control area %s has more "
                       "than 1 pilot node.\n",
                       Code);
-              fprintf(stderr,
-                      "            The pilot node %d %s will be ignored.\n",
-                      ACptr->N, ACptr->Name);
+              fprintf(stderr, "            The pilot node %d %s will be ignored.\n", ACptr->N, ACptr->Name);
               strcpy(ACptr->Type, "B");
             }
           }
@@ -1019,16 +987,14 @@ bool ReadADDfile()
                   "***Warning: The secondary voltage control area does not "
                   "have a pilot node.\n",
                   Code);
-          fprintf(stderr,
-                  "            This area in the ADD file will be ignored.\n");
+          fprintf(stderr, "            This area in the ADD file will be ignored.\n");
         }
       }
 
       /* --------------- Ignore data  ------------------------- */
       else {
         fprintf(stderr, "Input Line-> %d\n%s", LineNum, Line);
-        fprintf(stderr,
-                "***Warning: This line in the ADD file will be ignored.\n");
+        fprintf(stderr, "***Warning: This line in the ADD file will be ignored.\n");
       }
     }
 

@@ -5,9 +5,9 @@
 /* --------- Global Input File --------- */
 extern FILE *InputDataFile;
 
-/* ---------------- ReadIEEE ----------------------------- */
-void ReadIEEE()
-/* Read Bus and Element data in WSCC format. */
+/* ---------------- ReadIEEE Modified version ----------------------------- */
+void ReadIEEEMod()
+/* Read Bus and Element data in modified WSCC format. */
 {
   ACbusData *ACptr, *ACptrp, *ACptrs;
   ElementData *Eptr;

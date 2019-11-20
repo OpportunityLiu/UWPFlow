@@ -15,8 +15,7 @@ void ForwardSubstitution(void);
 void DiagonalScaling(void);
 void BackSubstitution(void);
 void CreateDiagonalPointer(void);
-void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR,
-             IntegerVector *PermC);
+void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR, IntegerVector *PermC);
 
 /* ==================== Global definitions ============================= */
 SparseMatrix *Matrix1;
@@ -99,8 +98,7 @@ void CreateDiagonalPointer() {
 }
 
 /* =========================== repsolp ================================== */
-void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR,
-             IntegerVector *PermC) {
+void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR, IntegerVector *PermC) {
   INDEX i;
   /* BEGIN RepeatSolution */
   Matrix1 = Mptr;

@@ -25,8 +25,7 @@ extern AClist *Vlist;
 extern bool flagBS, flagPgMax;
 VALUETYPE Vac;
 extern int field;
-extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg,
-    flagPrintTotalQg;
+extern bool flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
 
 /* ------------------ TEFac ----------------------------- */
 void TEFac(bool flag)
@@ -91,14 +90,12 @@ void TEFac(bool flag)
         bsij = (Eptr->B1 + Eptr->B) * pow(Eptr->Tap, 2.0) - bij;
       } else {
         gij = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-        bij =
-            (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
+        bij = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
         gsij = Eptr->G + Eptr->G2 - gij;
         bsij = Eptr->B + Eptr->B2 - bij;
       }
       val = val + 0.5 * bij * Vi * Vj * cos(di - dj);
-      val = val - gij * x0p[i + 1] * x0p[j + 1] * cos(x0p[i] - x0p[j]) * di -
-            gij * x0p[j + 1] * sin(x0p[i] - x0p[j]) * Vi;
+      val = val - gij * x0p[i + 1] * x0p[j + 1] * cos(x0p[i] - x0p[j]) * di - gij * x0p[j + 1] * sin(x0p[i] - x0p[j]) * Vi;
       gii = gii + gij + gsij;
       bii = bii + bij + bsij;
     }
@@ -302,10 +299,8 @@ void MatlabV(FILE *Out)
           fprintf(Out, "hold;\nlmax=max(K*x(:,1)); lmin=min(K*x(:,1));\n");
           i = 1;
         }
-        fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');  ",
-                KV * Lptr->AC->Vlmax, KV * Lptr->AC->Vlmax);
-        fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');\n",
-                KV * Lptr->AC->Vlmin, KV * Lptr->AC->Vlmin);
+        fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');  ", KV * Lptr->AC->Vlmax, KV * Lptr->AC->Vlmax);
+        fprintf(Out, "plot([lmin lmax],[%5.1lf %5.1lf],':');\n", KV * Lptr->AC->Vlmin, KV * Lptr->AC->Vlmin);
       }
       if (ExistParameter('e') && Lptr->AC->Gen != nullptr)
         count = count + 3;
@@ -315,8 +310,7 @@ void MatlabV(FILE *Out)
   if (ExistParameter('O')) {
     fprintf(Out, "%s Define variables for AC/DC TEF profiles:\n", "%%");
     fprintf(Out, "L=x(:,1); Vac=x(:,%1d);\n", count + 2);
-    for (count += 2, i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr;
-         DCptr = DCptr->Next)
+    for (count += 2, i = 0, DCptr = dataPtr->DCbus; DCptr != nullptr; DCptr = DCptr->Next)
       if (!strcmp(DCptr->Type, "R")) {
         i++;
         DCptrp = DCptr->To;
@@ -340,8 +334,7 @@ void MatlabV(FILE *Out)
         fprintf(Out, "a=[x(:,%1d) x(:,%1d)];\n", count, count + 3);
         fprintf(Out, "b=[x(:,%1d) x(:,%1d)];\n", count + 1, count + 4);
         fprintf(Out, "d=[x(:,%1d) x(:,%1d)];\n", count + 2, count + 5);
-        k1 = 3 * sqrt(2.0) / PI / DCptr->Ld * DCptr->AC->V * DCptr->Tap *
-             DCptr->Ntrf;
+        k1 = 3 * sqrt(2.0) / PI / DCptr->Ld * DCptr->AC->V * DCptr->Tap * DCptr->Ntrf;
         k2 = (3 / PI * (DCptr->Xc - DCptrp->Xc) + DCptr->Rd) / DCptr->Ld;
         /* if (ExistParameter('O')) {
         printf("Input DC bus %8s PI controller gains:\n",DCptr->Name);
@@ -367,8 +360,7 @@ void MatlabV(FILE *Out)
           P11 = 0.5 / ki * ((ki + k1) / (k1 * kp + k2) + (k1 * kp + k2) / k1);
           P12 = -0.5 / k1;
         }
-        k1 = 3 * sqrt(2.0) / PI / DCptrp->Ld * DCptrp->AC->V * DCptrp->Tap *
-             DCptrp->Ntrf;
+        k1 = 3 * sqrt(2.0) / PI / DCptrp->Ld * DCptrp->AC->V * DCptrp->Tap * DCptrp->Ntrf;
         /* if (ExistParameter('O')) {
        printf("Input DC bus %8s PI controller gains:\n",DCptr->Name);
         for(;;) {
@@ -392,8 +384,7 @@ void MatlabV(FILE *Out)
         if (ExistParameter('d'))
           fprintf(stderr, "Beta=%lf\n", Beta);
         if (ki) {
-          P33 = Beta * 0.5 / ki *
-                ((ki + k1) / (k1 * kp + k2) + (k1 * kp + k2) / k1);
+          P33 = Beta * 0.5 / ki * ((ki + k1) / (k1 * kp + k2) + (k1 * kp + k2) / k1);
           P23 = Beta * 0.5 / k1;
         }
         fprintf(Out, "P=[%lf %lf %lf\n", P11, P12, 0.);
@@ -454,16 +445,13 @@ void TEFMatlabFiles(void)
     fprintf(Out, "%s", "V3=abs(interp1(L3,V3,L1)-V1);\n");
     fprintf(Out, "%s", "figure;\n");
     fprintf(Out, "%s", "plot(L1,V3); \n");
-    fprintf(
-        Out, "%s",
-        "title('TEF profile'); xlabel('L.F. [p.u.]'); ylabel('TEF [p.u.]');\n");
+    fprintf(Out, "%s", "title('TEF profile'); xlabel('L.F. [p.u.]'); ylabel('TEF [p.u.]');\n");
     fclose(Out);
     /* ----------------  Create 'addtotef.m' file needed for Matlab computations
      * --------------- */
     if (dataPtr->DCbus != nullptr) {
       Out = OpenOutput("addtotef.m");
-      fprintf(Out, "%s",
-              "function [Vac,Vdc]=addtotef(L,di,a,b,d,V,Vac,P,Xc)\n");
+      fprintf(Out, "%s", "function [Vac,Vdc]=addtotef(L,di,a,b,d,V,Vac,P,Xc)\n");
       fprintf(Out, "%s", "%%\n");
       fprintf(Out, "%s", "%%  Add coupling Qdc terms to AC Vac.\n");
       fprintf(Out, "%s", "%%\n");
@@ -472,9 +460,7 @@ void TEFMatlabFiles(void)
       fprintf(Out, "%s", "x=[x sqrt(-a(:,1))./Xc(1)]; %c Id\n");
       fprintf(Out, "%s", "x=[x b(:,2)./sqrt(d(:,2))]; %c cosgi\n");
       fprintf(Out, "%s", "\n");
-      fprintf(
-          Out, "%s",
-          "c=d(:,1)./(4.*Xc(1).^2.*x(:,2).^2).*(ones(d(:,1))-x(:,1).^2);\n");
+      fprintf(Out, "%s", "c=d(:,1)./(4.*Xc(1).^2.*x(:,2).^2).*(ones(d(:,1))-x(:,1).^2);\n");
       fprintf(Out, "%s",
               "c=[c "
               "d(:,2)./(4.*Xc(2).^2.*x(:,2).^2).*(ones(d(:,2))-x(:,3).^2)];\n");

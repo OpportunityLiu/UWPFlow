@@ -10,8 +10,7 @@
 #include <string.h>
 
 void ErrorStop(char *Msg);
-AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ,
-                   bool flagFirst);
+AreaData *ACFunJac(SparseMatrix *Mptr, int *val, bool flagF, bool flagJ, bool flagFirst);
 bool DCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ);
 void UpdateSVCvar(VALUETYPE cons, INDEX j);                     /* FACTS */
 void SVCFunJac(SparseMatrix *Mptr, bool flagF, bool flagJ);     /* FACTS */
@@ -25,11 +24,9 @@ bool DCFunHes(bool flagF, bool flagJ);
 void SVCFunHes(bool flagF, bool flagJ);     /* FACTS */
 void TCSCFunHes(bool flagF, bool flagJ);    /* FACTS */
 void STATCOMFunHes(bool flagF, bool flagJ); /* FACTS */
-int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow,
-             IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col,
-             IntegerVector *P2Row, IntegerVector *P2Col);
-void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR,
-             IntegerVector *PermC);
+int factorns(SparseMatrix *Mptr, double Param, IntegerVector *PartRow, IntegerVector *PartCol, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row,
+             IntegerVector *P2Col);
+void repsolp(SparseMatrix *Mptr, VALUETYPE *Vptr, IntegerVector *PermR, IntegerVector *PermC);
 VALUETYPE Norm(VALUETYPE *Vptr, INDEX N, INDEX *N1);
 void WriteSolution(INDEX Iter, char *File1, char *str);
 int factor(SparseMatrix *Mptr);
@@ -46,8 +43,7 @@ bool ChangeSTATCOMmode(void); /* FACTS */
 bool ChangeDCmode(void);
 ACbusData *GetACbus(INDEX N);
 void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1);
-void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
-               IntegerVector *P2Row, IntegerVector *P2Col);
+void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row, IntegerVector *P2Col);
 void WriteJac(void);
 int Pflow(int iter, bool flagF, bool flagD, bool flagFirst);
 void InitializeLoad(void);
@@ -55,16 +51,13 @@ void InitializeLoad(void);
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
 extern SparseMatrix *Jac;
-extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea,
-    NacVar, Bl, Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
+extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea, NacVar, Bl, Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
 extern INDEX *ACvar;
 extern VALUETYPE *dx, *dF, tol, Tol, Sn, lambda, *x0, *Dx;
 extern VALUETYPE K1, K2, MaxdFi, alpha;
-extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition,
-    *ColPartition;
+extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition, *ColPartition;
 extern IntegerVector *RowPer, *ColPer;
-extern bool Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH,
-    flagPoC, flagL, flagR;
+extern bool Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH, flagPoC, flagL, flagR;
 extern INDEX *InvRowPerm, *InvColPerm;
 extern bool *MarkRowPerm, *MarkColPerm;
 extern int SD0;
@@ -123,8 +116,7 @@ void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1) {
         l = l + 11;
       }
     /* FACTS */
-    else if (N1 > NacVar + 11 * Ndc / 2 &&
-             N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc)
+    else if (N1 > NacVar + 11 * Ndc / 2 && N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc)
       for (k = 1; k <= Nsvc; k++) {
         N4 = k;
         if (N1 <= m + 3) {
@@ -133,8 +125,7 @@ void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1) {
         }
         m = m + 3;
       }
-    else if (N1 > NacVar + 11 * Ndc / 2 + 3 * Nsvc &&
-             N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar)
+    else if (N1 > NacVar + 11 * Ndc / 2 + 3 * Nsvc && N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar)
       for (k = 1; k <= Ntcsc; k++) {
         N5 = k;
         if (N1 <= n + 7) {
@@ -143,8 +134,7 @@ void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1) {
         }
         n = n + 7;
       }
-    else if (N1 > NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar &&
-             N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom)
+    else if (N1 > NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar && N1 <= NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar + 7 * Nstatcom)
       for (k = 1; k <= Nstatcom; k++) {
         N6 = k;
         if (N1 <= o + 7) {
@@ -189,8 +179,7 @@ void PrintMismatch(VALUETYPE val, INDEX j, INDEX N1) {
 }
 
 /* ------------------------ DeleteJac --------------------------------- */
-void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col,
-               IntegerVector *P2Row, IntegerVector *P2Col) {
+void DeleteJac(SparseMatrix *Mptr, IntegerVector *P1Row, IntegerVector *P1Col, IntegerVector *P2Row, IntegerVector *P2Col) {
   INDEX k;
   SparseMatrixElement *Jptr, *Jptrp;
 
@@ -250,13 +239,11 @@ NewtonRapson:
     /* if (ExistParameter('d')) fprintf(stderr,"i %d   MaxdFi %lf   Tol
      * %lf\n",i,MaxdFi,Tol); */
     if ((MaxdFi > Tol) || flagDCLimits) {
-      if ((i > 1 || flagR || flagL) && !flagDCLimits &&
-          (flagLimits || (i == N3))) {
+      if ((i > 1 || flagR || flagL) && !flagDCLimits && (flagLimits || (i == N3))) {
         if (ExistParameter('d'))
           fprintf(stderr, "Factor Jacobian.\n");
         for (k = 1; k <= N; k++)
-          for (Jptr = Jac->RowHead[k]; Jptr != nullptr;
-               Jptr->Value = 0, Jptr = Jptr->RowNext)
+          for (Jptr = Jac->RowHead[k]; Jptr != nullptr; Jptr->Value = 0, Jptr = Jptr->RowNext)
             ;
         Aptr = ACFunJac(Jac, &PgMax, true, true, flagFirst);
         if (DCFunJac(Jac, true, true))
@@ -276,16 +263,11 @@ NewtonRapson:
         }
         if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0))) {
           if (Aptr != nullptr) {
-            fprintf(
-                stderr,
-                "\nError: Area %d %s does not have any spinning reserves.\n",
-                Aptr->N, Aptr->Name);
+            fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
             fprintf(stderr, "       Increase the maximum P generation in this "
                             "area, otherwise\n");
           } else {
-            fprintf(
-                stderr,
-                "\nError: The system does not have any spinning reserves.\n");
+            fprintf(stderr, "\nError: The system does not have any spinning reserves.\n");
             fprintf(stderr, "       Increase the maximum P generation in this "
                             "system, otherwise\n");
           }
@@ -321,16 +303,11 @@ NewtonRapson:
         }
         if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0))) {
           if (Aptr != nullptr) {
-            fprintf(
-                stderr,
-                "\nError: Area %d %s does not have any spinning reserves.\n",
-                Aptr->N, Aptr->Name);
+            fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
             fprintf(stderr, "       Increase the maximum P generation in this "
                             "area, otherwise\n");
           } else {
-            fprintf(
-                stderr,
-                "\nError: The system does not have any spinning reserves.\n");
+            fprintf(stderr, "\nError: The system does not have any spinning reserves.\n");
             fprintf(stderr, "       Increase the maximum P generation in this "
                             "system, otherwise\n");
           }
@@ -341,8 +318,7 @@ NewtonRapson:
           exit(1);
         }
         SortRowsColumns(Jac);
-        if (factorns(Jac, alpha, RowPartition, ColPartition, NewRow, NewCol,
-                     OldRow, OldCol)) {
+        if (factorns(Jac, alpha, RowPartition, ColPartition, NewRow, NewCol, OldRow, OldCol)) {
           fprintf(stderr, "*** Singular Jacobian (possible voltage collapse, "
                           "contol or limit problems).\n");
           fprintf(stderr, "    Try changing the load levels, controls or "
@@ -406,8 +382,7 @@ NewtonRapson:
       }
       /* if (ExistParameter('d')) fprintf(stderr,"j %d   MaxdFi %lf   Tol %lf
        * MaxdFi1 %lf   tol %lf\n",j,MaxdFi,Tol,MaxdFi1,tol); */
-      if ((MaxdFi > Tol) &&
-          (j > N2 || (fabs(MaxdFi1 - MaxdFi) / MaxdFi) <= tol)) {
+      if ((MaxdFi > Tol) && (j > N2 || (fabs(MaxdFi1 - MaxdFi) / MaxdFi) <= tol)) {
         if (flagL)
           return (-(++i));
         if (!flagR) {
@@ -463,9 +438,7 @@ NewtonRapson:
                           "or AC/DC/FACTS control\n");
           fprintf(stderr, "     problems).  Try changing the load levels or "
                           "AC/DC/FACTS controls, or\n");
-          fprintf(
-              stderr,
-              "     use the -F option or decrease the tolerance between two\n");
+          fprintf(stderr, "     use the -F option or decrease the tolerance between two\n");
           fprintf(stderr, "     consecutive iterations with the -t option.\n");
           if (flagFirst)
             InitializeLoad();

@@ -19,16 +19,13 @@ bool ChangeSTATCOMmode(void);
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
 extern SparseMatrix *Jac;
-extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea,
-    NacVar, Bl, Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
+extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea, NacVar, Bl, Nsvc, Ntcsc, NtcscVar, Nstatcom; /* FACTS */
 extern INDEX *ACvar;
 extern VALUETYPE *dx, *dF, tol, Tol, Sn, lambda, *x0;
 extern VALUETYPE K1, K2, MaxdFi, alpha;
-extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition,
-    *ColPartition;
+extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition, *ColPartition;
 extern IntegerVector *RowPer, *ColPer;
-extern bool Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH,
-    flagPoC, flagL, flagR, flagBS;
+extern bool Acont, PQcont, QRcont, Rcont, PQlim, Tlim, Qlim, Vlim, flagH, flagPoC, flagL, flagR, flagBS;
 
 void UpdateSVCvar(VALUETYPE cons, INDEX j) {
   SVCbusData *SVCptr;
@@ -82,22 +79,17 @@ bool ChangeSVCmode() {
       SVCptr->Vvar = SVCptr->Vref;
       if (flagH)
         x0[i + 3] = SVCptr->Vvar;
-      fprintf(stderr,
-              "***Warning: %s SVC firing angle is at its maximum limit.\n",
-              SVCptr->Name);
+      fprintf(stderr, "***Warning: %s SVC firing angle is at its maximum limit.\n", SVCptr->Name);
       fprintf(stderr, "            The SVC will be treated as a fixed "
                       "capacitive reactance.\n");
       flag = true;
-    } else if (!strcmp(SVCptr->Cont, "AL") &&
-               SVCptr->alpha_svc <= SVCptr->AlphaMin) {
+    } else if (!strcmp(SVCptr->Cont, "AL") && SVCptr->alpha_svc <= SVCptr->AlphaMin) {
       strcpy(SVCptr->Cont, "MN");
       SVCptr->alpha_svc = SVCptr->AlphaMin;
       SVCptr->Vvar = SVCptr->Vref;
       if (flagH)
         x0[i + 3] = SVCptr->Vvar;
-      fprintf(stderr,
-              "***Warning: %s SVC firing angle is at its minimum limit.\n",
-              SVCptr->Name);
+      fprintf(stderr, "***Warning: %s SVC firing angle is at its minimum limit.\n", SVCptr->Name);
       fprintf(stderr, "            The SVC will be treated as a fixed "
                       "inductive reactance.\n");
       flag = true;
@@ -107,11 +99,8 @@ bool ChangeSVCmode() {
       SVCptr->Vvar = SVCptr->Vref;
       if (flagH)
         x0[i + 3] = SVCptr->alpha_svc;
-      fprintf(stderr, "***Warning: %s SVC firing angle is within limits.\n",
-              SVCptr->Name);
-      fprintf(
-          stderr,
-          "            The SVC voltage is now within controllable range.\n");
+      fprintf(stderr, "***Warning: %s SVC firing angle is within limits.\n", SVCptr->Name);
+      fprintf(stderr, "            The SVC voltage is now within controllable range.\n");
       flag = true;
     } else if (!strcmp(SVCptr->Cont, "MN") && SVCptr->Vvar <= SVCptr->Vref) {
       strcpy(SVCptr->Cont, "AL");
@@ -119,11 +108,8 @@ bool ChangeSVCmode() {
       SVCptr->Vvar = SVCptr->Vref;
       if (flagH)
         x0[i + 3] = SVCptr->alpha_svc;
-      fprintf(stderr, "***Warning: %s SVC firing angle is within limits.\n",
-              SVCptr->Name);
-      fprintf(
-          stderr,
-          "            The SVC voltage is now within controllable range.\n");
+      fprintf(stderr, "***Warning: %s SVC firing angle is within limits.\n", SVCptr->Name);
+      fprintf(stderr, "            The SVC voltage is now within controllable range.\n");
       flag = true;
     }
     i = i + 3;
@@ -136,8 +122,7 @@ void UpdateTCSCvar(VALUETYPE cons, INDEX j) {
   INDEX i;
 
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc;
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     TCSCptr->Ptcsc = TCSCptr->Ptcsc + cons * dx[i + 1];
     TCSCptr->Qtcsck = TCSCptr->Qtcsck + cons * dx[i + 2];
     TCSCptr->Qtcscm = TCSCptr->Qtcscm + cons * dx[i + 3];
@@ -162,30 +147,23 @@ bool ChangeTCSCmode() {
   VALUETYPE alpha, Xc, Xl, Be;
   bool flag = false;
 
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     alpha = TCSCptr->alpha_tcsc;
     Xc = TCSCptr->Xc;
     Xl = TCSCptr->Xl;
-    if (!strpbrk(TCSCptr->Cont, "X") &&
-        TCSCptr->alpha_tcsc >= TCSCptr->AlphaMax) {
+    if (!strpbrk(TCSCptr->Cont, "X") && TCSCptr->alpha_tcsc >= TCSCptr->AlphaMax) {
       strcpy(TCSCptr->Cont, "X");
       Be = 1.0 / Xc - (2.0 * PI - 2.0 * alpha + sin(2.0 * alpha)) / (PI * Xl);
       TCSCptr->Bset = Be;
-      fprintf(stderr,
-              "***Warning: %s TCSC firing angle is at its maximum limit.\n",
-              TCSCptr->Name);
+      fprintf(stderr, "***Warning: %s TCSC firing angle is at its maximum limit.\n", TCSCptr->Name);
       fprintf(stderr, "            The TCSC will be treated as a fixed series "
                       "capacitor.\n");
       flag = true;
-    } else if (!strpbrk(TCSCptr->Cont, "X") &&
-               TCSCptr->alpha_tcsc <= TCSCptr->AlphaMin) {
+    } else if (!strpbrk(TCSCptr->Cont, "X") && TCSCptr->alpha_tcsc <= TCSCptr->AlphaMin) {
       strcpy(TCSCptr->Cont, "X");
       Be = 1.0 / Xc - (2.0 * PI - 2.0 * alpha + sin(2.0 * alpha)) / (PI * Xl);
       TCSCptr->Bset = Be;
-      fprintf(stderr,
-              "***Warning: %s TCSC firing angle is at its minimum limit.\n",
-              TCSCptr->Name);
+      fprintf(stderr, "***Warning: %s TCSC firing angle is at its minimum limit.\n", TCSCptr->Name);
       fprintf(stderr, "            The TCSC will be treated as a fixed series "
                       "capacitor.\n");
       flag = true;
@@ -200,8 +178,7 @@ void UpdateSTATCOMvar(VALUETYPE cons, INDEX j) {
   INDEX i;
 
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar;
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     Q = STATCOMptr->Q;
     if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) {
       if (j == 0)
@@ -258,57 +235,45 @@ bool ChangeSTATCOMmode() {
   INDEX i;
 
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar;
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     Q = STATCOMptr->Q;
-    if ((!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) &&
-        STATCOMptr->I >= STATCOMptr->Imax && Q > 0) {
+    if ((!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) && STATCOMptr->I >= STATCOMptr->Imax && Q > 0) {
       strcpy(STATCOMptr->Cont, "MX");
       STATCOMptr->I = STATCOMptr->Imax;
       STATCOMptr->Vvar = STATCOMptr->Vref;
       if (flagH)
         x0[i + 1] = STATCOMptr->Vvar;
-      fprintf(stderr,
-              "***Warning: %s STATCOM current is at its maximum limit.\n",
-              STATCOMptr->Name);
+      fprintf(stderr, "***Warning: %s STATCOM current is at its maximum limit.\n", STATCOMptr->Name);
       fprintf(stderr, "            The STATCOM will be treated as a fixed "
                       "inductive current source.\n");
       flag = true;
-    } else if ((!strcmp(STATCOMptr->Cont, "PW") ||
-                !strcmp(STATCOMptr->Cont, "AL")) &&
-               STATCOMptr->I >= STATCOMptr->Imin && Q < 0) {
+    } else if ((!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) && STATCOMptr->I >= STATCOMptr->Imin && Q < 0) {
       strcpy(STATCOMptr->Cont, "MN");
       STATCOMptr->I = STATCOMptr->Imin;
       STATCOMptr->Vvar = STATCOMptr->Vref;
       if (flagH)
         x0[i + 1] = STATCOMptr->Vvar;
-      fprintf(stderr,
-              "***Warning: %s STATCOM current is at its minimum limit.\n",
-              STATCOMptr->Name);
+      fprintf(stderr, "***Warning: %s STATCOM current is at its minimum limit.\n", STATCOMptr->Name);
       fprintf(stderr, "            The STATCOM will be treated as a fixed "
                       "capacitive current source.\n");
       flag = true;
-    } else if (!strcmp(STATCOMptr->Cont, "MN") &&
-               STATCOMptr->Vvar >= STATCOMptr->Vref) {
+    } else if (!strcmp(STATCOMptr->Cont, "MN") && STATCOMptr->Vvar >= STATCOMptr->Vref) {
       strcpy(STATCOMptr->Cont, STATCOMptr->Cont1);
       STATCOMptr->I = STATCOMptr->Imax;
       STATCOMptr->Vvar = STATCOMptr->Vref;
       if (flagH)
         x0[i + 1] = STATCOMptr->I;
-      fprintf(stderr, "***Warning: %s STATCOM current is within limits.\n",
-              STATCOMptr->Name);
+      fprintf(stderr, "***Warning: %s STATCOM current is within limits.\n", STATCOMptr->Name);
       fprintf(stderr, "            The STATCOM voltage is now within "
                       "controllable range.\n");
       flag = true;
-    } else if (!strcmp(STATCOMptr->Cont, "MX") &&
-               STATCOMptr->Vvar <= STATCOMptr->Vref) {
+    } else if (!strcmp(STATCOMptr->Cont, "MX") && STATCOMptr->Vvar <= STATCOMptr->Vref) {
       strcpy(STATCOMptr->Cont, STATCOMptr->Cont1);
       STATCOMptr->I = STATCOMptr->Imin;
       STATCOMptr->Vvar = STATCOMptr->Vref;
       if (flagH)
         x0[i + 1] = STATCOMptr->I;
-      fprintf(stderr, "***Warning: %s STATCOM current is within limits.\n",
-              STATCOMptr->Name);
+      fprintf(stderr, "***Warning: %s STATCOM current is within limits.\n", STATCOMptr->Name);
       fprintf(stderr, "            The STATCOM voltage is now within "
                       "controllable range.\n");
       flag = true;

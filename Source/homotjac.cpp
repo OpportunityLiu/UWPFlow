@@ -3,15 +3,13 @@
 #include "homot.h"
 
 /* ------- Global Variables ------ */
-extern VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, SD0, AngTr,
-    VoltageSum, VoltageSum0, DxiMax, VSF, SF, ZeroDx, Tol;
+extern VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, SD0, AngTr, VoltageSum, VoltageSum0, DxiMax, VSF, SF, ZeroDx, Tol;
 extern INDEX NewNumEq, CountSteps, NumSteps;
 extern AClist *Vlist, *Vlistp;
 extern bool flagReducedContinuation, flagReduceSystem, *DxZero;
 
 /* ------------------ HFunJac ----------------------------- */
-int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr,
-            VALUETYPE *vec)
+int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr, VALUETYPE *vec)
 /* Add a row to the Jacobian. */
 {
   ACbusData *ACptr, *ACptrp;
@@ -121,8 +119,7 @@ int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr,
       }
       if (FlagJacobian)
         JacElement(Jac, l, i + 1, vec[i + 1]);
-    } else if (strpbrk(ACptr->Type, "Q,S,V,Z") ||
-               (!QRcont && strpbrk(ACptr->Type, "G"))) {
+    } else if (strpbrk(ACptr->Type, "Q,S,V,Z") || (!QRcont && strpbrk(ACptr->Type, "G"))) {
       i = ACvar[ACptr->N];
       if (strpbrk(ACptr->Type, "S")) {
         if (FlagFunction) {
@@ -353,8 +350,7 @@ int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr,
             JacElement(Jac, l, i, vec[i]);
         }
       }
-      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-          strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
+      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") && strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
         i++;
         if (FlagFunction)
           dF[l] += vec[i] * (DCptrR->Id - x0[i] - vec[i]);
@@ -391,8 +387,7 @@ int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr,
     }
   }
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc;
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     i++;
     if (FlagFunction)
       dF[l] += vec[i] * (TCSCptr->Ptcsc - x0[i] - vec[i]);
@@ -430,8 +425,7 @@ int HFunJac(bool FlagFunction, bool FlagJacobian, AreaData *Aptr,
       JacElement(Jac, l, i, vec[i]);
   }
   i = NacVar + 11 * Ndc / 2 + 3 * Nsvc + NtcscVar;
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     if (!strcmp(STATCOMptr->Cont, "PW") || !strcmp(STATCOMptr->Cont, "AL")) {
       i++;
       if (FlagFunction)

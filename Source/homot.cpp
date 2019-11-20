@@ -6,12 +6,10 @@ void AddLoad(void);
 bool CheckVIlimits(bool flagVoltage, bool flagCurrent);
 
 /* ------- Global Variables ------ */
-VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, AngTr, VoltageSum,
-    VoltageSum0, DxiMax, VSFone, VSFinf, SF, TVI, ZeroDx, lambda_o, TotalPl,
-    TotalQl, TotalPg, TotalQg;
+VALUETYPE *Dx, Dparam, param0, *x0, *x0p, Kh, Htol, AngTr, VoltageSum, VoltageSum0, DxiMax, VSFone, VSFinf, SF, TVI, ZeroDx, lambda_o, TotalPl, TotalQl,
+    TotalPg, TotalQg;
 INDEX RedNumEq, NewNumEq, CountSteps, NumSteps, TVIbus, TVIrank, VSFbus;
-bool flagReduceSystem, *DxZero, flagPrintTotalPl, flagPrintTotalQl,
-    flagPrintTotalPg, flagPrintTotalQg;
+bool flagReduceSystem, *DxZero, flagPrintTotalPl, flagPrintTotalQl, flagPrintTotalPg, flagPrintTotalQg;
 AClist *Vlist = nullptr, *Vlistp = nullptr;
 FILE *OutputHomot;
 int field, SD0;
@@ -42,8 +40,7 @@ bool DCsetup(void)
         flag = true;
       else if (strcmp(DCptrI->Cont1, "VD") && strcmp(DCptrI->Cont2, "VD"))
         flag = true;
-      if (!strcmp(DCptrR->Cont1, "PA") || !strcmp(DCptrR->Cont2, "PA") ||
-          !strcmp(DCptrI->Cont1, "PA") || !strcmp(DCptrI->Cont2, "PA"))
+      if (!strcmp(DCptrR->Cont1, "PA") || !strcmp(DCptrR->Cont2, "PA") || !strcmp(DCptrI->Cont1, "PA") || !strcmp(DCptrI->Cont2, "PA"))
         flagP = true;
       if (!strcmp(DCptrR->Cont1, "AL") || !strcmp(DCptrR->Cont2, "AL"))
         strcpy(DCptrR->Cont1, "AL");
@@ -100,14 +97,9 @@ bool DCsetup(void)
                 "for inv. %s\n",
                 DCptrI->Name);
       }
-      fprintf(
-          stderr,
-          "***Warning: The startup control mode for HVDC link from %s to %s\n",
-          DCptrR->Name, DCptrI->Name);
-      fprintf(stderr, "            is: rectifier -> %s-%s\n", DCptrR->Cont1,
-              DCptrR->Cont2);
-      fprintf(stderr, "                inverter  -> %s-%s\n", DCptrI->Cont1,
-              DCptrI->Cont2);
+      fprintf(stderr, "***Warning: The startup control mode for HVDC link from %s to %s\n", DCptrR->Name, DCptrI->Name);
+      fprintf(stderr, "            is: rectifier -> %s-%s\n", DCptrR->Cont1, DCptrR->Cont2);
+      fprintf(stderr, "                inverter  -> %s-%s\n", DCptrI->Cont1, DCptrI->Cont2);
     }
   return (flag);
 }
@@ -124,12 +116,10 @@ bool ChangeDCmode(void)
   for (DCptrR = dataPtr->DCbus; DCptrR != nullptr; DCptrR = DCptrR->Next)
     if (!strcmp(DCptrR->Type, "R")) {
       DCptrI = DCptrR->To;
-      if (!strcmp(DCptrR->Cont1, "AL") && strpbrk(DCptrR->Cont2, "IP") &&
-          (DCptrR->Tap >= DCptrR->TapMax || DCptrR->Tap <= DCptrR->TapMin)) {
+      if (!strcmp(DCptrR->Cont1, "AL") && strpbrk(DCptrR->Cont2, "IP") && (DCptrR->Tap >= DCptrR->TapMax || DCptrR->Tap <= DCptrR->TapMin)) {
         flag = flagp = true;
         strcpy(DCptrR->Cont1, "AT");
-      } else if (!strcmp(DCptrR->Cont1, "AT") && strpbrk(DCptrR->Cont2, "IP") &&
-                 DCptrR->Alfa <= DCptrR->AlfaMin) {
+      } else if (!strcmp(DCptrR->Cont1, "AT") && strpbrk(DCptrR->Cont2, "IP") && DCptrR->Alfa <= DCptrR->AlfaMin) {
         flag = flagp = true;
         if (!strcmp(DCptrR->Cont2, "ID"))
           strcpy(DCptrI->Cont2, "ID");
@@ -138,13 +128,10 @@ bool ChangeDCmode(void)
         strcpy(DCptrR->Cont1, "AL");
         strcpy(DCptrR->Cont2, "AT");
         strcpy(DCptrI->Cont1, "AT");
-      } else if (!strcmp(DCptrR->Cont1, "AT") && strpbrk(DCptrR->Cont2, "IP") &&
-                 DCptrR->Alfa == DCptrR->AlfaN) {
+      } else if (!strcmp(DCptrR->Cont1, "AT") && strpbrk(DCptrR->Cont2, "IP") && DCptrR->Alfa == DCptrR->AlfaN) {
         flag = flagp = true;
         strcpy(DCptrR->Cont1, "AL");
-      } else if (!strcmp(DCptrI->Cont1, "AT") && strpbrk(DCptrI->Cont2, "IP") &&
-                 DCptrI->Tap <= DCptrI->TapMin &&
-                 DCptrI->Gamma <= DCptrI->GammaMin) {
+      } else if (!strcmp(DCptrI->Cont1, "AT") && strpbrk(DCptrI->Cont2, "IP") && DCptrI->Tap <= DCptrI->TapMin && DCptrI->Gamma <= DCptrI->GammaMin) {
         flag = flagp = true;
         if (!strcmp(DCptrI->Cont2, "ID"))
           strcpy(DCptrR->Cont2, "ID");
@@ -153,9 +140,7 @@ bool ChangeDCmode(void)
         strcpy(DCptrR->Cont1, "AT");
         strcpy(DCptrI->Cont1, "GA");
         strcpy(DCptrI->Cont2, "AT");
-      } else if (!strcmp(DCptrI->Cont1, "AT") && strpbrk(DCptrI->Cont2, "IP") &&
-                 DCptrI->Tap > DCptrI->TapMin &&
-                 DCptrI->Gamma <= DCptrI->GammaMin) {
+      } else if (!strcmp(DCptrI->Cont1, "AT") && strpbrk(DCptrI->Cont2, "IP") && DCptrI->Tap > DCptrI->TapMin && DCptrI->Gamma <= DCptrI->GammaMin) {
         flag = flagp = true;
         if (!strcmp(DCptrI->Cont2, "ID"))
           strcpy(DCptrR->Cont2, "ID");
@@ -164,13 +149,10 @@ bool ChangeDCmode(void)
         strcpy(DCptrR->Cont1, "AT");
         strcpy(DCptrI->Cont1, "GA");
         strcpy(DCptrI->Cont2, "VD");
-      } else if (!strcmp(DCptrI->Cont1, "GA") && !strcmp(DCptrI->Cont2, "VD") &&
-                 (DCptrI->Tap <= DCptrI->TapMin ||
-                  DCptrI->Tap >= DCptrI->TapMax)) {
+      } else if (!strcmp(DCptrI->Cont1, "GA") && !strcmp(DCptrI->Cont2, "VD") && (DCptrI->Tap <= DCptrI->TapMin || DCptrI->Tap >= DCptrI->TapMax)) {
         flag = flagp = true;
         strcpy(DCptrI->Cont2, "AT");
-      } else if (!strcmp(DCptrI->Cont1, "GA") && !strcmp(DCptrI->Cont2, "AT") &&
-                 DCptrI->Vd == DCptrI->VdN) {
+      } else if (!strcmp(DCptrI->Cont1, "GA") && !strcmp(DCptrI->Cont2, "AT") && DCptrI->Vd == DCptrI->VdN) {
         flag = flagp = true;
         strcpy(DCptrI->Cont2, "VD");
       }
@@ -229,22 +211,16 @@ bool ChangeDCmode(void)
         }
         i++;
         x0[i] = DCptrI->MVA;
-        if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-            strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
+        if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") && strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID")) {
           i++;
           x0[i] = DCptrR->Id;
         }
       }
       if (flagp) {
         flagp = false;
-        fprintf(
-            stderr,
-            "***Warning: HVDC link from %s to %s will switch control mode\n",
-            DCptrR->Name, DCptrI->Name);
-        fprintf(stderr, "            to: rectifier -> %s-%s\n", DCptrR->Cont1,
-                DCptrR->Cont2);
-        fprintf(stderr, "                inverter  -> %s-%s\n", DCptrI->Cont1,
-                DCptrI->Cont2);
+        fprintf(stderr, "***Warning: HVDC link from %s to %s will switch control mode\n", DCptrR->Name, DCptrI->Name);
+        fprintf(stderr, "            to: rectifier -> %s-%s\n", DCptrR->Cont1, DCptrR->Cont2);
+        fprintf(stderr, "                inverter  -> %s-%s\n", DCptrI->Cont1, DCptrI->Cont2);
       }
     }
   return (flag);
@@ -265,8 +241,7 @@ int Direction(SparseMatrix *Mptr, VALUETYPE *vec, bool flag)
     if (ExistParameter('d'))
       fprintf(stderr, "Direction Factor Jacobian.\n");
     for (i = 1; i <= N; i++)
-      for (vec[i] = dx[i] = 0, Jptr = Mptr->RowHead[i]; Jptr != nullptr;
-           Jptr->Value = 0, Jptr = Jptr->RowNext)
+      for (vec[i] = dx[i] = 0, Jptr = Mptr->RowHead[i]; Jptr != nullptr; Jptr->Value = 0, Jptr = Jptr->RowNext)
         ;
     Aptr = ACFunJac(Mptr, &PgMax, false, true, false);
     if (DCFunJac(Mptr, false, true))
@@ -291,14 +266,11 @@ int Direction(SparseMatrix *Mptr, VALUETYPE *vec, bool flag)
     }
     if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0))) {
       if (Aptr != nullptr) {
-        fprintf(stderr,
-                "\nError: Area %d %s does not have any spinning reserves.\n",
-                Aptr->N, Aptr->Name);
+        fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
         fprintf(stderr, "       Increase the maximum P generation in this "
                         "area, otherwise\n");
       } else {
-        fprintf(stderr,
-                "\nError: The system does not have any spinning reserves.\n");
+        fprintf(stderr, "\nError: The system does not have any spinning reserves.\n");
         fprintf(stderr, "       Increase the maximum P generation in this "
                         "system, otherwise\n");
       }
@@ -334,14 +306,11 @@ int Direction(SparseMatrix *Mptr, VALUETYPE *vec, bool flag)
     }
     if (PgMax < 0 && (!flagH || (flagH && PgMaxH < 0))) {
       if (Aptr != nullptr) {
-        fprintf(stderr,
-                "\nError: Area %d %s does not have any spinning reserves.\n",
-                Aptr->N, Aptr->Name);
+        fprintf(stderr, "\nError: Area %d %s does not have any spinning reserves.\n", Aptr->N, Aptr->Name);
         fprintf(stderr, "       Increase the maximum P generation in this "
                         "area, otherwise\n");
       } else {
-        fprintf(stderr,
-                "\nError: The system does not have any spinning reserves.\n");
+        fprintf(stderr, "\nError: The system does not have any spinning reserves.\n");
         fprintf(stderr, "       Increase the maximum P generation in this "
                         "system, otherwise\n");
       }
@@ -351,8 +320,7 @@ int Direction(SparseMatrix *Mptr, VALUETYPE *vec, bool flag)
       exit(1);
     }
     SortRowsColumns(Mptr);
-    if (factorns(Mptr, alpha, RowPartition, ColPartition, NewRow, NewCol,
-                 OldRow, OldCol)) {
+    if (factorns(Mptr, alpha, RowPartition, ColPartition, NewRow, NewCol, OldRow, OldCol)) {
       fprintf(stderr, "*** Singular Jacobian (possible voltage collapse, "
                       "contol or limit problems).\n");
       fprintf(stderr, "    Try changing the load levels, controls or limits, "
@@ -368,10 +336,8 @@ int Direction(SparseMatrix *Mptr, VALUETYPE *vec, bool flag)
       ;
     for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
       i = ACvar[ACptr->N];
-      vec[i] = ACptr->Pnl * pow(ACptr->V, ACptr->a) +
-               ACptr->Pzl * ACptr->V * ACptr->V;
-      vec[i + 1] = ACptr->Qnl * pow(ACptr->V, ACptr->b) +
-                   ACptr->Qzl * ACptr->V * ACptr->V;
+      vec[i] = ACptr->Pnl * pow(ACptr->V, ACptr->a) + ACptr->Pzl * ACptr->V * ACptr->V;
+      vec[i + 1] = ACptr->Qnl * pow(ACptr->V, ACptr->b) + ACptr->Qzl * ACptr->V * ACptr->V;
     }
   }
   repsolp(Mptr, vec, OldRow, NewCol);
@@ -407,8 +373,7 @@ bool ChangeParam(void)
       Bl = BlPtr->N;
       BlPtr->Cont = nullptr;
       if (ExistParameter('d'))
-        fprintf(stderr, "Change param. to V at %s %d %s.\n", BlPtr->Type,
-                BlPtr->Num, BlPtr->Name);
+        fprintf(stderr, "Change param. to V at %s %d %s.\n", BlPtr->Type, BlPtr->Num, BlPtr->Name);
       return (true);
     }
   } else
@@ -428,8 +393,7 @@ void VoltageSensFactor(VALUETYPE *vec, bool first)
   if (first)
     TVIbus = IntegerParameter('f', 0, 1, 9999);
   RankList = nullptr;
-  for (VSFinf = VSFone = TVI = 0, ACptr = dataPtr->ACbus; ACptr != nullptr;
-       ACptr = ACptr->Next) {
+  for (VSFinf = VSFone = TVI = 0, ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
     if (ACptr->Cont != nullptr) {
       i = ACvar[ACptr->N];
       val = fabs(vec[i + 1]);
@@ -457,8 +421,7 @@ void VoltageSensFactor(VALUETYPE *vec, bool first)
     for (l = 1; l <= N; l++) {
       if (RankList == nullptr || RankList->Next == nullptr)
         break;
-      for (val = -0.1, PrevPtr = Ptr = RankList; Ptr != nullptr;
-           PrevPtr = Ptr, Ptr = Ptr->Next) {
+      for (val = -0.1, PrevPtr = Ptr = RankList; Ptr != nullptr; PrevPtr = Ptr, Ptr = Ptr->Next) {
         if (Ptr->val > val) {
           val = Ptr->val;
           PtrMax = Ptr;
@@ -472,8 +435,7 @@ void VoltageSensFactor(VALUETYPE *vec, bool first)
           RankList = PtrMax->Next;
         if (ExistParameter('d')) {
           fprintf(stderr, "Ranked List: ");
-          fprintf(stderr, "%4d %12s %-11.5g\n", PtrMax->AC->Num,
-                  PtrMax->AC->Name, PtrMax->val);
+          fprintf(stderr, "%4d %12s %-11.5g\n", PtrMax->AC->Num, PtrMax->AC->Name, PtrMax->val);
         }
         if (TVIbus == PtrMax->AC->Num) {
           TVIrank = l;
@@ -494,19 +456,16 @@ bool CheckVIlimits(bool flagVoltage, bool flagCurrent) {
   ACbusData *ACptr;
   ElementData *Eptr;
   ElementList *ELptr;
-  VALUETYPE Pij, Qij, Vi, di, Vj, dj, Iij, G, B, Gi, Bi, Pl, Ql, Gp, Bp, Gj, Bj,
-      Pji, Qji, Iji;
+  VALUETYPE Pij, Qij, Vi, di, Vj, dj, Iij, G, B, Gi, Bi, Pl, Ql, Gp, Bp, Gj, Bj, Pji, Qji, Iji;
   bool FlagStopContinuation = false;
 
   TotalPl = TotalQl = TotalPg = TotalQg = 0;
   for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
     TotalPg = TotalPg + ACptr->PG;
-    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) +
-         (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
+    Pl = (ACptr->Pn + lambda * ACptr->Pnl) * pow(ACptr->V, ACptr->a) + (ACptr->Pz + lambda * ACptr->Pzl) * ACptr->V * ACptr->V;
     ACptr->PL = Pl;
     TotalPl = TotalPl + Pl;
-    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) +
-         (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
+    Ql = (ACptr->Qn + lambda * ACptr->Qnl) * pow(ACptr->V, ACptr->b) + (ACptr->Qz + lambda * ACptr->Qzl) * ACptr->V * ACptr->V;
     ACptr->QL = Ql;
     TotalQl = TotalQl + Ql;
     TotalQg = TotalQg + ACptr->Qg;
@@ -539,34 +498,24 @@ bool CheckVIlimits(bool flagVoltage, bool flagCurrent) {
           B = (Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
           Gi = (Eptr->G1 + Eptr->G) * pow(Eptr->Tap, 2.0) - G;
           Bi = (Eptr->B1 + Eptr->B) * pow(Eptr->Tap, 2.0) - B;
-          Gp =
-              (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
-          Bp = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) *
-               Eptr->Tap;
+          Gp = (Eptr->G * cos(Eptr->Ang) + Eptr->B * sin(Eptr->Ang)) * Eptr->Tap;
+          Bp = (-Eptr->G * sin(Eptr->Ang) + Eptr->B * cos(Eptr->Ang)) * Eptr->Tap;
           Gj = Eptr->G + Eptr->G2 - Gp;
           Bj = Eptr->B + Eptr->B2 - Bp;
-          Pij = Vi * Vi * (Gi + G) -
-                Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
-          Qij = -Vi * Vi * (Bi + B) -
-                Vi * Vj * (G * sin(di - dj) - B * cos(di - dj));
+          Pij = Vi * Vi * (Gi + G) - Vi * Vj * (G * cos(di - dj) + B * sin(di - dj));
+          Qij = -Vi * Vi * (Bi + B) - Vi * Vj * (G * sin(di - dj) - B * cos(di - dj));
           Iij = sqrt(Pij * Pij + Qij * Qij) / Vi;
-          Pji = Vj * Vj * (Gj + Gp) -
-                Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
-          Qji = -Vj * Vj * (Bj + Bp) -
-                Vi * Vj * (Gp * sin(dj - di) - Bp * cos(dj - di));
+          Pji = Vj * Vj * (Gj + Gp) - Vi * Vj * (Gp * cos(dj - di) + Bp * sin(dj - di));
+          Qji = -Vj * Vj * (Bj + Bp) - Vi * Vj * (Gp * sin(dj - di) - Bp * cos(dj - di));
           Iji = sqrt(Pji * Pji + Qji * Qji) / Vj;
           if (Iij >= Eptr->Imax) {
-            fprintf(stderr, "***Warning: Element %d %s to %d %s has reached\n",
-                    Eptr->From->Num, Eptr->From->Name, Eptr->To->Num,
-                    Eptr->To->Name);
+            fprintf(stderr, "***Warning: Element %d %s to %d %s has reached\n", Eptr->From->Num, Eptr->From->Name, Eptr->To->Num, Eptr->To->Name);
             fprintf(stderr, "            or exceeded its maximum I limit at "
                             "its first bus.\n");
             Eptr->CheckIlimits = false;
             FlagStopContinuation = true;
           } else if (Iji >= Eptr->Imax) {
-            fprintf(stderr, "***Warning: Element %d %s to %d %s has reached\n",
-                    Eptr->From->Num, Eptr->From->Name, Eptr->To->Num,
-                    Eptr->To->Name);
+            fprintf(stderr, "***Warning: Element %d %s to %d %s has reached\n", Eptr->From->Num, Eptr->From->Name, Eptr->To->Num, Eptr->To->Name);
             fprintf(stderr, "            or exceeded its maximum I limit at "
                             "its second bus.\n");
             Eptr->CheckIlimits = false;
@@ -597,16 +546,11 @@ int Homot(void)
 /* Build voltage profiles. */
 {
   VALUETYPE NDx, cons, PreviousLambda, StoplambdaVal, FirstVoltageSumUp = Tol;
-  int iter, iterp, CountCyclingSteps, CountVupSteps, NumHVsolutions, Steps,
-      IndicesSteps, MaxSteps, i, N, n, CountStepsAfterVup = 0;
-  bool flagLimits = false, flagSTOP = false, flagFACTSlimits = false,
-       flagt = false, stopValueSet = false, flagMakeVlist = true,
-       flagCountVupAfterFirstLimit = false, flagD = false,
-       ForceflagCountVupAfterFirstLimit = true, flagFirstStep = true,
-       flagCycling = false, flagRlimits = false, flagQlimits = false,
-       flagVlimits = false, flagVIlimits = false, flagDClimits = false,
-       flagVoltage = false, flagCurrent = false, flagSVClimits = false,
-       flagTCSClimits = false, flagSTATCOMlimits = false; /* FACTS */
+  int iter, iterp, CountCyclingSteps, CountVupSteps, NumHVsolutions, Steps, IndicesSteps, MaxSteps, i, N, n, CountStepsAfterVup = 0;
+  bool flagLimits = false, flagSTOP = false, flagFACTSlimits = false, flagt = false, stopValueSet = false, flagMakeVlist = true,
+       flagCountVupAfterFirstLimit = false, flagD = false, ForceflagCountVupAfterFirstLimit = true, flagFirstStep = true, flagCycling = false,
+       flagRlimits = false, flagQlimits = false, flagVlimits = false, flagVIlimits = false, flagDClimits = false, flagVoltage = false, flagCurrent = false,
+       flagSVClimits = false, flagTCSClimits = false, flagSTATCOMlimits = false; /* FACTS */
 
   BlPtr = nullptr;
   Dparam = param0 = 0;
@@ -725,8 +669,7 @@ int Homot(void)
     fprintf(OutputHomot, "\n");
     if (NDx) {
       if (ExistParameter('d'))
-        fprintf(stderr, "Lambda->%lf  SD0=%2d  Det.Sign=%2d  Kh=%lf\n", lambda,
-                SD0, DetSign, Kh);
+        fprintf(stderr, "Lambda->%lf  SD0=%2d  Det.Sign=%2d  Kh=%lf\n", lambda, SD0, DetSign, Kh);
       if (Bl) {
         cons = -1;
         Kh = -fabs(Kh);
@@ -767,8 +710,7 @@ int Homot(void)
       cons = LoadX0(true, true, true);
       if (!CountVupSteps)
         FirstVoltageSumUp = VoltageSum0;
-      if (flagReducedContinuation && flagReduceSystem &&
-          CountSteps >= NumSteps) {
+      if (flagReducedContinuation && flagReduceSystem && CountSteps >= NumSteps) {
         CountSteps = 0;
         if (NewNumEq < RedNumEq) {
           RedNumEq = NewNumEq;
@@ -778,9 +720,7 @@ int Homot(void)
       if (ExistParameter('d'))
         fprintf(stderr, "cons=%lf Dparam=%lf\n", cons, Dparam);
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "Num.Steps=%d  Num.Eqs.System=%d   Num.Eqs.Reduced=%d\n",
-                CountSteps, N - 1, RedNumEq);
+        fprintf(stderr, "Num.Steps=%d  Num.Eqs.System=%d   Num.Eqs.Reduced=%d\n", CountSteps, N - 1, RedNumEq);
       if (!flagt) {
         if (ExistParameter('H'))
           flagt = ChangeParam();
@@ -797,9 +737,7 @@ int Homot(void)
         for (i = 1; i <= N - 1; i++)
           Dx[i] = fabs(1 - cons + Htol * 0.1) * Dx[i];
         LoadX0(false, true, true);
-        if ((!ExistParameter('G') || !flagCountVupAfterFirstLimit ||
-             !CountVupSteps) &&
-            fabs(Dparam) <= Htol) {
+        if ((!ExistParameter('G') || !flagCountVupAfterFirstLimit || !CountVupSteps) && fabs(Dparam) <= Htol) {
           flagRlimits = CheckRlimits();
           flagVlimits = CheckVlimits();
           flagQlimits = CheckQlimits();
@@ -807,13 +745,11 @@ int Homot(void)
           flagSVClimits = ChangeSVCmode();         /* FACTS */
           flagTCSClimits = ChangeTCSCmode();       /* FACTS */
           flagSTATCOMlimits = ChangeSTATCOMmode(); /* FACTS */
-          if (flagRlimits || flagVlimits || flagQlimits || flagDClimits ||
-              flagSVClimits || flagTCSClimits || flagSTATCOMlimits)
+          if (flagRlimits || flagVlimits || flagQlimits || flagDClimits || flagSVClimits || flagTCSClimits || flagSTATCOMlimits)
             flagLimits = true; /* FACTS */
           else
             flagLimits = false;
-          if (flagDClimits || flagSVClimits || flagTCSClimits ||
-              flagSTATCOMlimits)
+          if (flagDClimits || flagSVClimits || flagTCSClimits || flagSTATCOMlimits)
             flagFACTSlimits = true; /* FACTS */
           else
             flagFACTSlimits = false; /* FACTS */
@@ -846,18 +782,13 @@ int Homot(void)
       }
 
       /* Turning point computations */
-      if (flagCountVupAfterFirstLimit && VoltageSum > FirstVoltageSumUp &&
-          Kh < 0)
+      if (flagCountVupAfterFirstLimit && VoltageSum > FirstVoltageSumUp && Kh < 0)
         CountVupSteps++;
       else
         CountVupSteps = 0;
       if (ExistParameter('d'))
-        fprintf(stderr,
-                "V summation->%lf     First V sum Up->%lf    Vup Steps->%d\n",
-                VoltageSum, FirstVoltageSumUp, CountVupSteps);
-      if (ExistParameter('G') && flagCountVupAfterFirstLimit &&
-          (CountVupSteps >= NumHVsolutions ||
-           (CountCyclingSteps > 0 && iterp < 0))) {
+        fprintf(stderr, "V summation->%lf     First V sum Up->%lf    Vup Steps->%d\n", VoltageSum, FirstVoltageSumUp, CountVupSteps);
+      if (ExistParameter('G') && flagCountVupAfterFirstLimit && (CountVupSteps >= NumHVsolutions || (CountCyclingSteps > 0 && iterp < 0))) {
         Kh = -Kh;
         ForceflagCountVupAfterFirstLimit = flagCountVupAfterFirstLimit = false;
         if (iterp < 0)
@@ -872,8 +803,7 @@ int Homot(void)
         StoplambdaVal = PreviousLambda * StoplambdaVal;
         if (ExistParameter('E') && !NullName(NameParameter('E'))) {
           if (ExistParameter('d'))
-            fprintf(stderr, "Write right e-vector at lambda->%lf\n",
-                    PreviousLambda);
+            fprintf(stderr, "Write right e-vector at lambda->%lf\n", PreviousLambda);
           PrintDirection('E', Dx, 1.0);
         }
       }
@@ -884,14 +814,11 @@ int Homot(void)
         stopValueSet = false;
       }
 
-      if ((MaxSteps > 0 && Steps >= MaxSteps) ||
-          (lambda - StoplambdaVal) <= 1e-5)
+      if ((MaxSteps > 0 && Steps >= MaxSteps) || (lambda - StoplambdaVal) <= 1e-5)
         flagSTOP = true;
       if (iterp < 0) {
         iter = -iterp;
-        fprintf(
-            stderr,
-            "\n *** The case diverges (possible AC/DC control problems).\n");
+        fprintf(stderr, "\n *** The case diverges (possible AC/DC control problems).\n");
         fprintf(stderr, "     Try reducing the step size (-k option).\n");
         fprintf(stderr, "Loading Factor -> %-6.3lf\n", lambda);
         WriteSolution(--iter, TrueParamStr(2), "Divergence:");

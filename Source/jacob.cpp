@@ -30,8 +30,7 @@ void JacElement(SparseMatrix *Mptr, INDEX I, INDEX J, VALUETYPE val)
         Ptr->Value = Ptr->Value + val;
       break;
     }
-  if (Ptr == nullptr &&
-      (i == j || !(flagReducedContinuation && (DxZero[i] || DxZero[j])))) {
+  if (Ptr == nullptr && (i == j || !(flagReducedContinuation && (DxZero[i] || DxZero[j])))) {
     Ptr = new SparseMatrixElement;
     Ptr->Row = I;
     Ptr->Col = J;

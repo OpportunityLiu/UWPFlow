@@ -20,8 +20,7 @@ extern VALUETYPE Sn, K3;
 void SVCinit(void) {
   SVCbusData *SVCptr;
   INDEX i, j;
-  VALUETYPE Vc, V, Vref, Xsl, Bv, Xl, Xc, Be, Ssvc, I, alpha, x, dx, dxp, k, f,
-      df;
+  VALUETYPE Vc, V, Vref, Xsl, Bv, Xl, Xc, Be, Ssvc, I, alpha, x, dx, dxp, k, f, df;
 
   for (SVCptr = dataPtr->SVCbus; SVCptr != nullptr; SVCptr = SVCptr->Next) {
     Vc = SVCptr->Ctrl->V;
@@ -73,19 +72,13 @@ void SVCinit(void) {
     if (alpha <= SVCptr->AlphaMin) {
       alpha = SVCptr->alpha_svc = SVCptr->AlphaMin;
       strcpy(SVCptr->Cont, "MN");
-      fprintf(
-          stderr,
-          "***Warning: SVC %s initial firing angle is at its minimum limit.\n",
-          SVCptr->Name);
+      fprintf(stderr, "***Warning: SVC %s initial firing angle is at its minimum limit.\n", SVCptr->Name);
       fprintf(stderr, "            The SVC will be treated as a fixed "
                       "inductive reactance.\n");
     } else if (alpha >= SVCptr->AlphaMax) {
       alpha = SVCptr->alpha_svc = SVCptr->AlphaMax;
       strcpy(SVCptr->Cont, "MX");
-      fprintf(
-          stderr,
-          "***Warning: SVC %s initial firing angle is at its maximum limit.\n",
-          SVCptr->Name);
+      fprintf(stderr, "***Warning: SVC %s initial firing angle is at its maximum limit.\n", SVCptr->Name);
       fprintf(stderr, "            The SVC will be treated as a fixed "
                       "capacitive reactance.\n");
     }
@@ -104,11 +97,9 @@ void SVCinit(void) {
 void TCSCinit(void) {
   TCSCbusData *TCSCptr;
   VALUETYPE Stcsc, Vn, Max, Ctrl, Kf;
-  VALUETYPE Vk, thk, Vm, thm, Xc, Xl, Ptcsc, Qtcsck, Qtcscm, Be, alpha, Itcsc,
-      delta_t;
+  VALUETYPE Vk, thk, Vm, thm, Xc, Xl, Ptcsc, Qtcsck, Qtcscm, Be, alpha, Itcsc, delta_t;
 
-  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr;
-       TCSCptr = TCSCptr->Next) {
+  for (TCSCptr = dataPtr->TCSCbus; TCSCptr != nullptr; TCSCptr = TCSCptr->Next) {
     /* --------------- Initialize the TCSC system variables
      * ---------------------- */
     if (TCSCptr->To->Ang == 0.0)
@@ -139,18 +130,12 @@ void TCSCinit(void) {
       alpha = 2.8;
     else if (alpha < TCSCptr->AlphaMin) {
       TCSCptr->alpha_tcsc = alpha = 2.8;
-      fprintf(stderr,
-              "***Warning: %s TCSC firing angle is below its minimum limit.\n",
-              TCSCptr->Name);
-      fprintf(stderr,
-              "            The TCSC will be initialized with a flat start.\n");
+      fprintf(stderr, "***Warning: %s TCSC firing angle is below its minimum limit.\n", TCSCptr->Name);
+      fprintf(stderr, "            The TCSC will be initialized with a flat start.\n");
     } else if (alpha > TCSCptr->AlphaMax) {
       TCSCptr->alpha_tcsc = alpha = 2.8;
-      fprintf(stderr,
-              "***Warning: %s TCSC firing angle is above its maximum limit.\n",
-              TCSCptr->Name);
-      fprintf(stderr,
-              "            The TCSC will be initialized with a flat start.\n");
+      fprintf(stderr, "***Warning: %s TCSC firing angle is above its maximum limit.\n", TCSCptr->Name);
+      fprintf(stderr, "            The TCSC will be initialized with a flat start.\n");
     }
     if (!strcmp(TCSCptr->Cont, "X")) {
       Be = 100.0 / (Ctrl * Max * Xc);
@@ -158,19 +143,11 @@ void TCSCinit(void) {
       TCSCptr->Control = Be;
       /* } else Be=1.0/Xc-(2.0*PI-2.0*alpha+sin(2.0*alpha))/(PI*Xl); */
     } else {
-      Be = PI * cos(Kf * (-PI + alpha)) * (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) /
-           Xc /
-           (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) +
-            PI * cos(Kf * (-PI + alpha)) +
-            2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
-            2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) +
-            pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) *
-                cos(Kf * (-PI + alpha)) -
-            sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) -
-            4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) *
-                sin(Kf * (-PI + alpha)) +
-            4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) *
-                cos(Kf * (-PI + alpha)));
+      Be = PI * cos(Kf * (-PI + alpha)) * (pow(Kf, 4.0) - 2.0 * Kf * Kf + 1.0) / Xc /
+           (-PI * pow(Kf, 4.0) * cos(Kf * (-PI + alpha)) + PI * cos(Kf * (-PI + alpha)) + 2.0 * pow(Kf, 4.0) * alpha * cos(Kf * (-PI + alpha)) -
+            2.0 * alpha * Kf * Kf * cos(Kf * (-PI + alpha)) + pow(Kf, 4.0) * sin(-2.0 * PI + 2.0 * alpha) * cos(Kf * (-PI + alpha)) -
+            sin(-2.0 * PI + 2.0 * alpha) * Kf * Kf * cos(Kf * (-PI + alpha)) - 4.0 * Kf * Kf * Kf * pow(cos(-PI + alpha), 2.0) * sin(Kf * (-PI + alpha)) +
+            4.0 * Kf * Kf * cos(-PI + alpha) * sin(-PI + alpha) * cos(Kf * (-PI + alpha)));
     }
     if (!strcmp(TCSCptr->Cont, "P")) {
       Ptcsc = Ctrl / Sn;
@@ -212,11 +189,9 @@ void TCSCinit(void) {
 /* transform variables to the system p.u. base. */
 void STATCOMinit(void) {
   STATCOMbusData *STATCOMptr;
-  VALUETYPE Sb, Vco, Vo, deltao, Io, thetao, Imin, Imax, R, G, B, Gc, Xsl, Ko,
-      Vdco, Vref, Cref, Qo;
+  VALUETYPE Sb, Vco, Vo, deltao, Io, thetao, Imin, Imax, R, G, B, Gc, Xsl, Ko, Vdco, Vref, Cref, Qo;
 
-  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr;
-       STATCOMptr = STATCOMptr->Next) {
+  for (STATCOMptr = dataPtr->STATCOMbus; STATCOMptr != nullptr; STATCOMptr = STATCOMptr->Next) {
     Sb = STATCOMptr->MVA;
     Vo = STATCOMptr->From->V;
     deltao = STATCOMptr->From->Ang;

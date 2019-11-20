@@ -15,16 +15,13 @@ void UpdateDCvar(VALUETYPE cons, INDEX j, bool Limits);
 /* ------- Global Variables ------ */
 extern Data *dataPtr;
 extern SparseMatrix *Jac;
-extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea,
-    NacVar, Bl, NZbuses, NXbuses;
+extern INDEX MaxIter, Nac, NacEl, NregPQ, NregV, Ndc, Nslack, Nvolt, Narea, NacVar, Bl, NZbuses, NXbuses;
 extern INDEX *ACvar;
 extern VALUETYPE *dx, *dF, tol, Tol, Sn, lambda, *x0;
 extern VALUETYPE K1, K2, MaxdFi, alpha;
-extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition,
-    *ColPartition;
+extern IntegerVector *NewRow, *OldRow, *NewCol, *OldCol, *RowPartition, *ColPartition;
 extern IntegerVector *RowPer, *ColPer;
-extern bool Acont, PQcont, QRcont, Rcont, Xcont, PQlim, Tlim, Qlim, Vlim, Elim,
-    Ilim, Zlim, Xlim, flagH, flagPoC, flagL, flagR, flagBS, flagPgMax, flagSmax;
+extern bool Acont, PQcont, QRcont, Rcont, Xcont, PQlim, Tlim, Qlim, Vlim, Elim, Ilim, Zlim, Xlim, flagH, flagPoC, flagL, flagR, flagBS, flagPgMax, flagSmax;
 
 /* -----------------UpdateACvar ---------------------------- */
 void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
@@ -120,11 +117,9 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
         if (j == 0)
           ACptr->val = ACptr->Qg;
         ACptr->val = ACptr->val + cons * dx[k + 1];
-        if (Recover && ACptr->V >= ACptr->Vmax && ACptr->val > ACptr->VCont &&
-            Limits)
+        if (Recover && ACptr->V >= ACptr->Vmax && ACptr->val > ACptr->VCont && Limits)
           ACptr->Qg = ACptr->VCont;
-        else if (Recover && ACptr->V <= ACptr->Vmin &&
-                 ACptr->val < ACptr->VCont && Limits)
+        else if (Recover && ACptr->V <= ACptr->Vmin && ACptr->val < ACptr->VCont && Limits)
           ACptr->Qg = ACptr->VCont;
         else
           ACptr->Qg = ACptr->val;
@@ -153,8 +148,7 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
         ACptr->V = 0.00001;
       else
         ACptr->V = ACptr->val;
-    } else if (strpbrk(ACptr->Type, "Q,S") ||
-               (!QRcont && strpbrk(ACptr->Type, "G"))) {
+    } else if (strpbrk(ACptr->Type, "Q,S") || (!QRcont && strpbrk(ACptr->Type, "G"))) {
       k = ACvar[ACptr->N];
       if (!strpbrk(ACptr->Type, "S"))
         ACptr->Ang = ACptr->Ang + cons * dx[k];
@@ -175,26 +169,21 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
         if (ACptr->val <= 0)
           ACptr->V = 0.00001;
         else if (strpbrk(ACptr->cont, "Q")) {
-          if (Recover && ACptr->Qg >= ACptr->Max && ACptr->val > ACptr->VCont &&
-              Limits)
+          if (Recover && ACptr->Qg >= ACptr->Max && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
-          else if (Recover && ACptr->Qg <= ACptr->Min &&
-                   ACptr->val < ACptr->VCont && Limits)
+          else if (Recover && ACptr->Qg <= ACptr->Min && ACptr->val < ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
         } else if (strpbrk(ACptr->cont, "E")) {
-          if (Recover && ACptr->Gen->Eq >= ACptr->Gen->EqMax &&
-              ACptr->val > ACptr->VCont && Limits)
+          if (Recover && ACptr->Gen->Eq >= ACptr->Gen->EqMax && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
-          else if (Recover && ACptr->Gen->Eq <= ACptr->Gen->EqMin &&
-                   ACptr->val < ACptr->VCont && Limits)
+          else if (Recover && ACptr->Gen->Eq <= ACptr->Gen->EqMin && ACptr->val < ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
         } else if (strpbrk(ACptr->cont, "I")) {
-          if (Recover && ACptr->Gen->Ia >= ACptr->Gen->IaMax &&
-              ACptr->val > ACptr->VCont && Limits)
+          if (Recover && ACptr->Gen->Ia >= ACptr->Gen->IaMax && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
@@ -247,11 +236,9 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
         ACptr->Qg = ACptr->val * ACptr->val * ACptr->Bz;
         if (ACptr->val <= 0)
           ACptr->V = 0.00001;
-        else if (Recover && ACptr->Qg >= ACptr->Qmax &&
-                 ACptr->val > ACptr->VCont && Limits)
+        else if (Recover && ACptr->Qg >= ACptr->Qmax && ACptr->val > ACptr->VCont && Limits)
           ACptr->V = ACptr->VCont;
-        else if (Recover && ACptr->Qg <= ACptr->Qmin &&
-                 ACptr->val < ACptr->VCont && Limits)
+        else if (Recover && ACptr->Qg <= ACptr->Qmin && ACptr->val < ACptr->VCont && Limits)
           ACptr->V = ACptr->VCont;
         else
           ACptr->V = ACptr->val;
@@ -276,26 +263,21 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
         if (ACptr->val <= 0)
           ACptr->V = 0.00001;
         else if (strpbrk(ACptrp->cont, "Q")) {
-          if (Recover && ACptrp->Qg >= ACptrp->Max &&
-              ACptr->val > ACptr->VCont && Limits)
+          if (Recover && ACptrp->Qg >= ACptrp->Max && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
-          else if (Recover && ACptrp->Qg <= ACptrp->Min &&
-                   ACptr->val < ACptr->VCont && Limits)
+          else if (Recover && ACptrp->Qg <= ACptrp->Min && ACptr->val < ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
         } else if (strpbrk(ACptrp->cont, "E")) {
-          if (Recover && ACptrp->Gen->Eq >= ACptrp->Gen->EqMax &&
-              ACptr->val > ACptr->VCont && Limits)
+          if (Recover && ACptrp->Gen->Eq >= ACptrp->Gen->EqMax && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
-          else if (Recover && ACptrp->Gen->Eq <= ACptrp->Gen->EqMin &&
-                   ACptr->val < ACptr->VCont && Limits)
+          else if (Recover && ACptrp->Gen->Eq <= ACptrp->Gen->EqMin && ACptr->val < ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
         } else if (strpbrk(ACptrp->cont, "I")) {
-          if (Recover && ACptrp->Gen->Ia >= ACptrp->Gen->IaMax &&
-              ACptr->val > ACptr->VCont && Limits)
+          if (Recover && ACptrp->Gen->Ia >= ACptrp->Gen->IaMax && ACptr->val > ACptr->VCont && Limits)
             ACptr->V = ACptr->VCont;
           else
             ACptr->V = ACptr->val;
@@ -406,11 +388,9 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
           ACptr->vals = ACptr->Qg;
         ACptr->vals = ACptr->vals + cons * dx[k + 1];
         if (strpbrk(ACptr->Type, "V")) {
-          if (Recover && ACptr->Gen->Eq >= ACptr->Gen->EqMax &&
-              ACptr->vals > ACptr->VCont && Limits)
+          if (Recover && ACptr->Gen->Eq >= ACptr->Gen->EqMax && ACptr->vals > ACptr->VCont && Limits)
             ACptr->Qg = ACptr->VCont;
-          else if (Recover && ACptr->Gen->Eq <= ACptr->Gen->EqMin &&
-                   ACptr->vals < ACptr->VCont && Limits)
+          else if (Recover && ACptr->Gen->Eq <= ACptr->Gen->EqMin && ACptr->vals < ACptr->VCont && Limits)
             ACptr->Qg = ACptr->VCont;
           else
             ACptr->Qg = ACptr->vals;
@@ -447,8 +427,7 @@ void UpdateACvar(VALUETYPE cons, INDEX j, bool Limits, bool Recover) {
           ACptr->valt = ACptr->Qg;
         ACptr->valt = ACptr->valt + cons * dx[k + 11];
         if (strpbrk(ACptr->Type, "V")) {
-          if (Recover && ACptr->Gen->Ia >= ACptr->Gen->IaMax &&
-              ACptr->valt > ACptr->VCont && Limits)
+          if (Recover && ACptr->Gen->Ia >= ACptr->Gen->IaMax && ACptr->valt > ACptr->VCont && Limits)
             ACptr->Qg = ACptr->VCont;
           else
             ACptr->Qg = ACptr->valt;
@@ -505,11 +484,8 @@ void UpdateDCvar(VALUETYPE cons, INDEX j, bool Limits) {
           if (j == 0)
             DCptr->val[i] = DCptr->Vd;
           DCptr->val[i] = DCptr->val[i] + cons * dx[++k];
-          if (DCptr->VdN &&
-              ((DCptr->Tap >= DCptr->TapMax && DCptr->val[i] > DCptr->VdN) ||
-               (DCptr->Tap <= DCptr->TapMin && DCptr->val[i] < DCptr->VdN) ||
-               (strpbrk(DCptr->Cont1, "IP") && DCptr->Tap > DCptr->TapMin &&
-                DCptr->val[i] > DCptr->VdN)))
+          if (DCptr->VdN && ((DCptr->Tap >= DCptr->TapMax && DCptr->val[i] > DCptr->VdN) || (DCptr->Tap <= DCptr->TapMin && DCptr->val[i] < DCptr->VdN) ||
+                             (strpbrk(DCptr->Cont1, "IP") && DCptr->Tap > DCptr->TapMin && DCptr->val[i] > DCptr->VdN)))
             DCptr->Vd = DCptr->VdN;
           else
             DCptr->Vd = DCptr->val[i];
@@ -535,10 +511,8 @@ void UpdateDCvar(VALUETYPE cons, INDEX j, bool Limits) {
             DCptr->Alfa = DCptr->AlfaMax;
           else if (DCptr->val[i] > cos(DCptr->AlfaMin))
             DCptr->Alfa = DCptr->AlfaMin;
-          else if (DCptr->AlfaN && ((DCptr->Tap >= DCptr->TapMax &&
-                                     DCptr->val[i] < cos(DCptr->AlfaN)) ||
-                                    (DCptr->Tap <= DCptr->TapMin &&
-                                     DCptr->val[i] > cos(DCptr->AlfaN))))
+          else if (DCptr->AlfaN &&
+                   ((DCptr->Tap >= DCptr->TapMax && DCptr->val[i] < cos(DCptr->AlfaN)) || (DCptr->Tap <= DCptr->TapMin && DCptr->val[i] > cos(DCptr->AlfaN))))
             DCptr->Alfa = DCptr->AlfaN;
           else
             DCptr->Alfa = acos(DCptr->val[i]);
@@ -559,8 +533,7 @@ void UpdateDCvar(VALUETYPE cons, INDEX j, bool Limits) {
         if (strcmp(DCptr->Cont1, "QA") && strcmp(DCptr->Cont2, "QA"))
           DCptr->Q = DCptr->Q + cons * dx[++k];
       }
-      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") &&
-          strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID"))
+      if (strcmp(DCptrR->Cont1, "ID") && strcmp(DCptrR->Cont2, "ID") && strcmp(DCptrI->Cont1, "ID") && strcmp(DCptrI->Cont2, "ID"))
         DCptrI->Id = DCptrR->Id = DCptrR->Id + cons * dx[++k];
     }
   }

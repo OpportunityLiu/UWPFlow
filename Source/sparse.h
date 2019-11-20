@@ -4,25 +4,25 @@
 
 #include "constant.h"
 
-typedef struct IntegerVector {
+struct IntegerVector {
   INDEX N;
   INDEX *p;
-} IntegerVector;
+};
 
-typedef struct SparseMatrixElement {
+struct SparseMatrixElement {
   INDEX Row;
   INDEX Col;
   ELEMENTVALUETYPE Value;
-  struct SparseMatrixElement *RowNext;
-  struct SparseMatrixElement *ColNext;
-} SparseMatrixElement;
+  SparseMatrixElement *RowNext;
+  SparseMatrixElement *ColNext;
+};
 
-typedef struct /* SparseMatrix */ {
+struct SparseMatrix {
   INDEX n1;
   INDEX n2;
   SparseMatrixElement **RowHead;
   SparseMatrixElement **ColHead;
-} SparseMatrix;
+};
 
 void ErrorHalt(char *Msg);
 void TransposeMatrix(SparseMatrix *Matrix);

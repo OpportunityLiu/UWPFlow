@@ -37,24 +37,19 @@ bool ReadInit(void)
           for (ptr = Line; *ptr != '\"' && *ptr != '\''; ptr++)
             ;
           ptr++;
-          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n';
-               BusName[i] = *ptr, i++, ptr++)
+          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n'; BusName[i] = *ptr, i++, ptr++)
             ;
           BusName[i] = '\0';
           ptr++;
-          count += sscanf(ptr, "%lf %lf %lf %lf %lf %lf %lf %lf", &DPg, &Pn,
-                          &Qn, &PgMax, &Smax, &Vmax, &Vmin, &Pz, &Qz);
+          count += sscanf(ptr, "%lf %lf %lf %lf %lf %lf %lf %lf", &DPg, &Pn, &Qn, &PgMax, &Smax, &Vmax, &Vmin, &Pz, &Qz);
         } else {
-          count =
-              sscanf(Line, "%d %s %lf %lf %lf %lf %lf %lf %lf %lf", &N, BusName,
-                     &DPg, &Pn, &Qn, &PgMax, &Smax, &Vmax, &Vmin, &Pz, &Qz);
+          count = sscanf(Line, "%d %s %lf %lf %lf %lf %lf %lf %lf %lf", &N, BusName, &DPg, &Pn, &Qn, &PgMax, &Smax, &Vmax, &Vmin, &Pz, &Qz);
         }
         if (!strcmp(BusName, "0"))
           BusName[0] = '\n';
         if (count >= num) {
           for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
-            if (N == ACptr->Num ||
-                !strncmp(ACptr->Name, BusName, strlen(BusName)))
+            if (N == ACptr->Num || !strncmp(ACptr->Name, BusName, strlen(BusName)))
               break;
           }
           if (ACptr != nullptr) {
@@ -152,8 +147,7 @@ bool ReadInit(void)
             for (ptr = Line; *ptr != '\"' && *ptr != '\''; ptr++)
               ;
             ptr++;
-            for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n';
-                 BusName[i] = *ptr, i++, ptr++)
+            for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n'; BusName[i] = *ptr, i++, ptr++)
               ;
             BusName[i] = '\0';
             ptr++;
@@ -169,8 +163,7 @@ bool ReadInit(void)
           }
           if (count) {
             for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-              if (N == ACptr->Num ||
-                  !strncmp(ACptr->Name, BusName, strlen(BusName)))
+              if (N == ACptr->Num || !strncmp(ACptr->Name, BusName, strlen(BusName)))
                 break;
             if (ACptr != nullptr) {
               if (ptr != nullptr)
@@ -193,8 +186,7 @@ bool ReadInit(void)
                 count = 0;
               val = 0;
               if (ExistParameter('d'))
-                printf("Read initial values for DC bus %s -> %s\n", DCptr->Name,
-                       Vars);
+                printf("Read initial values for DC bus %s -> %s\n", DCptr->Name, Vars);
               if (count)
                 for (i = 1; i <= strlen(Vars) && count; i = i + 2) {
                   GetStr(Vars, i, 2, 2, variable);
@@ -207,30 +199,22 @@ bool ReadInit(void)
                   if (ptr != nullptr) {
                     count = sscanf(ptr, "%lf", &val);
                     if (ExistParameter('d'))
-                      printf("                                           %lf\n",
-                             val);
+                      printf("                                           %lf\n", val);
                   } else
                     count = 0;
-                  if (!strcmp(variable, "PA") && strcmp(DCptr->Cont1, "PA") &&
-                      strcmp(DCptr->Cont2, "PA"))
+                  if (!strcmp(variable, "PA") && strcmp(DCptr->Cont1, "PA") && strcmp(DCptr->Cont2, "PA"))
                     DCptr->P = val;
-                  if (!strcmp(variable, "AL") && strcmp(DCptr->Cont1, "AL") &&
-                      strcmp(DCptr->Cont2, "AL"))
+                  if (!strcmp(variable, "AL") && strcmp(DCptr->Cont1, "AL") && strcmp(DCptr->Cont2, "AL"))
                     DCptr->Alfa = val;
-                  if (!strcmp(variable, "GA") && strcmp(DCptr->Cont1, "GA") &&
-                      strcmp(DCptr->Cont2, "GA"))
+                  if (!strcmp(variable, "GA") && strcmp(DCptr->Cont1, "GA") && strcmp(DCptr->Cont2, "GA"))
                     DCptr->Gamma = val;
-                  if (!strcmp(variable, "VD") && strcmp(DCptr->Cont1, "VD") &&
-                      strcmp(DCptr->Cont2, "VD"))
+                  if (!strcmp(variable, "VD") && strcmp(DCptr->Cont1, "VD") && strcmp(DCptr->Cont2, "VD"))
                     DCptr->Vd = val;
-                  if (!strcmp(variable, "ID") && strcmp(DCptr->Cont1, "ID") &&
-                      strcmp(DCptr->Cont2, "ID"))
+                  if (!strcmp(variable, "ID") && strcmp(DCptr->Cont1, "ID") && strcmp(DCptr->Cont2, "ID"))
                     DCptr->Id = val;
-                  if (!strcmp(variable, "QA") && strcmp(DCptr->Cont1, "QA") &&
-                      strcmp(DCptr->Cont2, "QA"))
+                  if (!strcmp(variable, "QA") && strcmp(DCptr->Cont1, "QA") && strcmp(DCptr->Cont2, "QA"))
                     DCptr->Q = val;
-                  if (!strcmp(variable, "AT") && strcmp(DCptr->Cont1, "AT") &&
-                      strcmp(DCptr->Cont2, "AT"))
+                  if (!strcmp(variable, "AT") && strcmp(DCptr->Cont1, "AT") && strcmp(DCptr->Cont2, "AT"))
                     DCptr->Tap = val;
                 }
             }
@@ -271,30 +255,25 @@ bool ReadInit(void)
           for (ptr = Line; *ptr != '\"' && *ptr != '\''; ptr++)
             ;
           ptr++;
-          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n';
-               BusName[i] = *ptr, i++, ptr++)
+          for (i = 0; *ptr != '\"' && *ptr != '\'' && *ptr != '\n'; BusName[i] = *ptr, i++, ptr++)
             ;
           BusName[i] = '\0';
           ptr++;
-          count += sscanf(ptr, "%lf %lf %lf %lf %lf %lf", &Ra, &Xd, &Xq, &IaMax,
-                          &EqMax, &EqMin);
+          count += sscanf(ptr, "%lf %lf %lf %lf %lf %lf", &Ra, &Xd, &Xq, &IaMax, &EqMax, &EqMin);
         } else {
-          count = sscanf(Line, "%d %s %lf %lf %lf %lf %lf %lf", &N, BusName,
-                         &Ra, &Xd, &Xq, &IaMax, &EqMax, &EqMin);
+          count = sscanf(Line, "%d %s %lf %lf %lf %lf %lf %lf", &N, BusName, &Ra, &Xd, &Xq, &IaMax, &EqMax, &EqMin);
         }
         if (!strcmp(BusName, "0"))
           BusName[0] = '\n';
         if (count == 8) {
           for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
-            if (N == ACptr->Num ||
-                !strncmp(ACptr->Name, BusName, strlen(BusName)))
+            if (N == ACptr->Num || !strncmp(ACptr->Name, BusName, strlen(BusName)))
               break;
           }
           if (ACptr != nullptr) {
             if (strpbrk(ACptr->Type, "G,Q,E,S,V") == nullptr || Xd <= 0) {
               fprintf(stderr, "***Warning: Line-> %s", Line);
-              fprintf(stderr, "            will be ignored in file %s.\n",
-                      Name);
+              fprintf(stderr, "            will be ignored in file %s.\n", Name);
               if (Xd <= 0)
                 fprintf(stderr, "            The value of Xd is less than or "
                                 "equal to zero.\n");
@@ -305,20 +284,14 @@ bool ReadInit(void)
               ACptr->Gen = new GenModel;
               ACptr->Gen->Ra = fabs(Ra);
               if (Xd < Ra) {
-                fprintf(
-                    stderr,
-                    "***Warning: The generator steady-state data for bus:%s\n",
-                    ACptr->Name);
+                fprintf(stderr, "***Warning: The generator steady-state data for bus:%s\n", ACptr->Name);
                 fprintf(stderr, "            has Ra > Xd.\n");
               }
               ACptr->Gen->Xd = Xd;
               if (Xq == 0)
                 Xq = Xd;
               if (Xq > Xd) {
-                fprintf(
-                    stderr,
-                    "***Warning: The generator steady-state data for bus:%s\n",
-                    ACptr->Name);
+                fprintf(stderr, "***Warning: The generator steady-state data for bus:%s\n", ACptr->Name);
                 fprintf(stderr, "            has Xq > Xd.  The program will "
                                 "force Xq=Xd.\n");
                 Xq = Xd;
@@ -332,30 +305,21 @@ bool ReadInit(void)
           }
           */
               if (IaMax <= 0) {
-                fprintf(
-                    stderr,
-                    "***Warning: The generator steady-state data for bus:%s\n",
-                    ACptr->Name);
+                fprintf(stderr, "***Warning: The generator steady-state data for bus:%s\n", ACptr->Name);
                 fprintf(stderr, "            has IaxMax<=0.  The program will "
                                 "force IaMax=9999999999.\n");
                 IaMax = 9999999999.;
               }
               ACptr->Gen->IaMax = IaMax;
               if (EqMax <= 0) {
-                fprintf(
-                    stderr,
-                    "***Warning: The generator steady-state data for bus:%s\n",
-                    ACptr->Name);
+                fprintf(stderr, "***Warning: The generator steady-state data for bus:%s\n", ACptr->Name);
                 fprintf(stderr, "            has EqMax<=0.  The program will "
                                 "force EqMax=9999999999.\n");
                 EqMax = 9999999999.;
               }
               ACptr->Gen->EqMax = EqMax;
               if (EqMin > EqMax || EqMin < 0) {
-                fprintf(
-                    stderr,
-                    "***Warning: The generator steady-state data for bus:%s\n",
-                    ACptr->Name);
+                fprintf(stderr, "***Warning: The generator steady-state data for bus:%s\n", ACptr->Name);
                 fprintf(stderr, "            has EqMin>EqMax or EqMin<0.  The "
                                 "program will force EqMin=0.\n");
                 EqMax = 0.;
@@ -414,8 +378,7 @@ bool ReadInit(void)
   /* -------------------- Read OH Load Model --------------------- */
   if (!ReadOHload(NameParameter('D'))) {
     if (!NullName(NameParameter('D'))) {
-      fprintf(stderr, "Error in file %s.  The program will assume constant\n",
-              NameParameter('D'));
+      fprintf(stderr, "Error in file %s.  The program will assume constant\n", NameParameter('D'));
       fprintf(stderr, "P-Q load models.\n");
     }
     if (!flagVloads)
@@ -436,8 +399,7 @@ bool ReadInit(void)
       N = IntegerParameter('B', 0, 0, 9999);
       if (N) {
         for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next)
-          if ((!strcmp(ACptr->Type, "B") || !strcmp(ACptr->Type, "BA")) &&
-              ACptr->Num == N)
+          if ((!strcmp(ACptr->Type, "B") || !strcmp(ACptr->Type, "BA")) && ACptr->Num == N)
             break;
         if (ACptr == nullptr) {
           fprintf(stderr, "***Warning: The program will ignore the number in "
@@ -458,8 +420,7 @@ bool ReadInit(void)
                         "(there is no PQ bus).\n");
       }
     } else {
-      fprintf(stderr,
-              "***Warning: The program will ignore the -v option (mag=0).\n");
+      fprintf(stderr, "***Warning: The program will ignore the -v option (mag=0).\n");
     }
   }
   return (false);
@@ -501,8 +462,7 @@ bool ReadOHload(char *File)
       /* ------------ OH load Model ---------- */
       else if (!strncmp(Line, " NLBS", 5))
         flag = true;
-      else if (flag &&
-               (!strncmp(Line, "EDATA", 5) || !strncmp(Line, "  END", 5)))
+      else if (flag && (!strncmp(Line, "EDATA", 5) || !strncmp(Line, "  END", 5)))
         break;
       else if (flag) {
         GetStr(Line, 1, 12, 12, Name);
@@ -546,18 +506,14 @@ bool ReadOHload(char *File)
           Qz = 1 - Qn;
           b = GetValue(Line, 26, 10, 5);
           LineNum++;
-          if (fgets(Line, BUFLEN, Input) == nullptr ||
-              !strncmp(Line, "EDATA", 5) || !strncmp(Line, "  END", 5)) {
-            fprintf(stderr, "Range card is missing in line #%d of file %s.\n",
-                    LineNum, File);
+          if (fgets(Line, BUFLEN, Input) == nullptr || !strncmp(Line, "EDATA", 5) || !strncmp(Line, "  END", 5)) {
+            fprintf(stderr, "Range card is missing in line #%d of file %s.\n", LineNum, File);
             fclose(Input);
             return (false);
           }
           NA = GetInt(Line, 1, 5);
           if (!strncmp(Name, "50000", 5) && Narea <= 1) {
-            fprintf(stderr,
-                    "***Warning: Area %d doen't exist (line #%d of file %s).\n",
-                    NA, LineNum, File);
+            fprintf(stderr, "***Warning: Area %d doen't exist (line #%d of file %s).\n", NA, LineNum, File);
             fprintf(stderr, "            The program will assume these data "
                             "for all system loads.\n");
           }
@@ -572,8 +528,7 @@ bool ReadOHload(char *File)
           MinMVAR = GetValue(Line, 26, 10, 5);
           MinMVAR = MinMVAR / Sn;
           for (ACptr = dataPtr->ACbus; ACptr != nullptr; ACptr = ACptr->Next) {
-            if (!strncmp(Name, "60000", 5) || Narea <= 1 ||
-                ACptr->Area->N == NA) {
+            if (!strncmp(Name, "60000", 5) || Narea <= 1 || ACptr->Area->N == NA) {
               flagp = true;
               if (ACptr->Num <= Nhigh && ACptr->Num >= Nlow) {
                 if (ACptr->Pl > MinMW) {

@@ -18,4 +18,4 @@ jobs:
     - name: make
       run: xmake
     - name: test
-      run: xmake r uwpflow -I ieee300.cf
+      run: xmake r uwpflow -Im ieee300.cf -Wieee300.cfo -=ieee300.vo
